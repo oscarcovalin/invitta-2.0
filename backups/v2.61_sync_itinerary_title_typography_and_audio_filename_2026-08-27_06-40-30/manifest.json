@@ -1,0 +1,38 @@
+{
+  "label": "v2.61_sync_itinerary_title_typography_and_audio_filename",
+  "timestamp": "2026-08-27T12:40:30.554Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 222005
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 114897
+    },
+    {
+      "filename": "app.js",
+      "size": 111245
+    },
+    {
+      "filename": "style.css",
+      "size": 17423
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
