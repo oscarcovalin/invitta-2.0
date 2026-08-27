@@ -132,10 +132,17 @@ tailwind.config = {
     overflow: visible !important;
   }
   .heading-script-scaled {
-    font-family: var(--font-display) !important;
-    font-size: clamp(24px, calc((1.4rem + 1.8vw) * var(--scale-headings, 1.0)), 36px) !important;
+    font-family: var(--font-names, var(--font-display)) !important;
+    font-size: clamp(30px, calc((1.8rem + 2.4vw) * var(--scale-headings, 1.0)), 54px) !important;
     line-height: 1.25 !important;
-    font-weight: 400 !important;
+    font-weight: 300 !important;
+    overflow: visible !important;
+  }
+  #itineraryHeading {
+    font-family: var(--font-names, var(--font-display)) !important;
+    font-size: clamp(30px, calc((1.8rem + 2.4vw) * var(--scale-headings, 1.0)), 54px) !important;
+    font-weight: 300 !important;
+    line-height: 1.25 !important;
     overflow: visible !important;
   }
   .heading-display-scaled {

@@ -1,0 +1,38 @@
+{
+  "label": "v2.63_fix_itinerary_heading_script_scaled_font_override",
+  "timestamp": "2026-08-27T13:05:35.827Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 223664
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 120120
+    },
+    {
+      "filename": "app.js",
+      "size": 116594
+    },
+    {
+      "filename": "style.css",
+      "size": 17423
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
