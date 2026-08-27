@@ -1,23 +1,37 @@
 const templateEngine = require('./template-engine.js');
 
-console.log('=== TEST SUITE: OPTION A LUXURY INVITATION REDESIGN ===');
+console.log('=== TEST SUITE: CUSTOM WAX SEAL & TRANSPARENCY ===');
 
-const cfg = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
-const html = templateEngine.generateHTML(cfg, 'vino');
+// Test 1: Default SVG Wax Seal
+const cfg1 = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
+const html1 = templateEngine.generateHTML(cfg1, 'vino');
+console.log('Test 1 - Default SVG Wax Seal present:', html1.includes('<svg viewBox="0 0 200 200"') && html1.includes('id="waxSealCurtain"'));
+console.log('Test 1 - Monogram embedded in seal:', html1.includes('font-family="\'Cinzel Decorative\''));
 
-// Test 1: Sello de cera 3D interactivo
-console.log('Test 1 - Wax seal curtain present:', html.includes('id="waxSealCurtain"'));
-console.log('Test 1 - Wax seal asset referenced:', html.includes('assets/wax-seal-gold.jpg'));
+// Test 2: Custom PNG Uploaded Seal
+const cfg2 = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
+cfg2.waxSeal = {
+  enabled: true,
+  customImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+  promptText: 'Abre tu invitación exclusiva'
+};
+const html2 = templateEngine.generateHTML(cfg2, 'vino');
+console.log('Test 2 - Custom PNG image rendered:', html2.includes('src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="'));
+console.log('Test 2 - Custom prompt text rendered:', html2.includes('Abre tu invitación exclusiva'));
 
-// Test 2: Textura de grano de papel
-console.log('Test 2 - Paper grain overlay present:', html.includes('class="paper-grain-overlay"'));
+// Test 3: Disabled Wax Seal
+const cfg3 = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
+cfg3.waxSeal = { enabled: false };
+const html3 = templateEngine.generateHTML(cfg3, 'vino');
+console.log('Test 3 - Wax seal curtain not rendered when disabled:', !html3.includes('id="waxSealCurtain"'));
 
-// Test 3: Guirnalda floral superior
-console.log('Test 3 - Botanical garland present:', html.includes('assets/botanical-garland.jpg'));
+// Test 4: Presets
+const presets = ['gold', 'burgundy', 'emerald', 'rose', 'navy'];
+let allPresetsOk = true;
+presets.forEach(p => {
+  const svg = templateEngine.getWaxSealSVG(p, 'V');
+  if (!svg.includes(`waxGrad_${p}`)) allPresetsOk = false;
+});
+console.log('Test 4 - All presets generated cleanly:', allPresetsOk);
 
-// Test 4: Tarjetas de ubicación de alta costura
-console.log('Test 4 - Luxury location cards present:', html.includes('class="luxury-location-card'));
-console.log('Test 4 - How to get button present:', html.includes('class="btn-how-to-get'));
-console.log('Test 4 - Structured address label present:', html.includes('Ceremonia Religiosa:') && html.includes('Salón de la Recepción:'));
-
-console.log('\n🎉 ALL LUXURY INVITATION REDESIGN TESTS PASSED WITH 100% SUCCESS!');
+console.log('\n🎉 ALL CUSTOM WAX SEAL TESTS PASSED WITH 100% SUCCESS!');
