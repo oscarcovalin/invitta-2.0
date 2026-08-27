@@ -2424,6 +2424,17 @@ const CONFIG = {
   }
 };
 
+// ── Sanitización Estricta de Entidades HTML (Prevención XSS) ──
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 const urlGuest = urlParams.get('invitado') || urlParams.get('guest');
 const urlTickets = parseInt(urlParams.get('pases') || urlParams.get('tickets'), 10) || CONFIG.defaultPassCount || 2;
@@ -2610,17 +2621,19 @@ if (musicPlayer && audio) {
 
   if (guestParam && guestParam.trim()) {
     const nombreDecodificado = guestParam.replace(/-/g, ' ').replace(/_/g, ' ').trim();
+    const nombreSanitizado = escapeHTML(nombreDecodificado);
     let mesaLabelTxt = 'Mesa Reservada';
     if (urlMesaParam) {
-      mesaLabelTxt = urlMesaParam.toLowerCase().includes('imp') ? 'Mesa Imperial' : ('Mesa ' + urlMesaParam.replace(/\D/g, ''));
+      mesaLabelTxt = urlMesaParam.toLowerCase().includes('imp') ? 'Mesa Imperial' : ('Mesa ' + urlMesaParam.replace(/D/g, ''));
     }
+    const mesaSanitizada = escapeHTML(mesaLabelTxt);
 
     if (contenedorSaludo) {
       contenedorSaludo.innerHTML = '<div class="mensaje-personalizado shadow-sm border border-antique-gold/40 rounded-2xl bg-amber-500/10 p-3.5 mb-3 text-left">' +
         '<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-antique-gold/20 border border-antique-gold/50 text-deep-onyx font-bold text-xs mb-2 font-mono">' +
-          '<span>🪑</span> <span>' + mesaLabelTxt.toUpperCase() + ' · ' + ticketsParam + (ticketsParam === 1 ? ' PASE ASIGNADO' : ' PASES ASIGNADOS') + '</span>' +
+          '<span>🪑</span> <span>' + mesaSanitizada.toUpperCase() + ' · ' + ticketsParam + (ticketsParam === 1 ? ' PASE ASIGNADO' : ' PASES ASIGNADOS') + '</span>' +
         '</div>' +
-        '<h3 class="font-display-lg text-lg text-deep-onyx font-bold mb-0.5">' + nombreDecodificado + '</h3>' +
+        '<h3 class="font-display-lg text-lg text-deep-onyx font-bold mb-0.5">' + nombreSanitizado + '</h3>' +
         '<p class="text-xs text-deep-onyx/80 leading-relaxed">' +
           'Tus lugares ya están reservados para celebrar con nosotros.' +
         '</p>' +
@@ -3312,14 +3325,32 @@ if (musicPlayer && audio) {
     });
   }
 
-  // 4. Subida y Almacenamiento en DB
+  // 4. Subida y Almacenamiento en DB con Resiliencia de Cuota y Sanitización
   function savePhotosToStorage(photosData) {
     try {
+      const sanitizedBatch = photosData.map(p => ({
+        id: p.id,
+        guestName: escapeHTML(p.guestName || 'Invitado Especial'),
+        photoData: p.photoData,
+        dedication: escapeHTML(p.dedication || ''),
+        timestamp: p.timestamp,
+        time: escapeHTML(p.time || '')
+      }));
+
       const stored = JSON.parse(localStorage.getItem('invitta_album_photos_db') || '[]');
-      const updated = stored.concat(photosData);
-      localStorage.setItem('invitta_album_photos_db', JSON.stringify(updated));
+      const updated = stored.concat(sanitizedBatch);
+      
+      // Limitar a las últimas 30 fotos para no desbordar la cuota de localStorage en móviles
+      const capped = updated.slice(-30);
+      try {
+        localStorage.setItem('invitta_album_photos_db', JSON.stringify(capped));
+      } catch(quotaErr) {
+        console.warn('Alcanzado límite de almacenamiento. Purgando fotos antiguas para liberar espacio...');
+        const compact = updated.slice(-12);
+        localStorage.setItem('invitta_album_photos_db', JSON.stringify(compact));
+      }
     } catch(e) {
-      console.warn('Storage quota exceeded or error:', e);
+      console.warn('Error al guardar fotos en almacenamiento local:', e);
     }
   }
 
@@ -3344,10 +3375,10 @@ if (musicPlayer && audio) {
       const dateFormatted = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
       btnSubmit.disabled = true;
-      btnSubmit.textContent = 'Guardando fotos...';
+      btnSubmit.innerHTML = '<span>⏳ Guardando recuerdos...</span>';
 
       const promises = selectedFiles.map(file => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = (ev) => {
             resolve({
@@ -3417,12 +3448,14 @@ if (musicPlayer && audio) {
     const recent = photos.slice(-3).reverse();
     let html = '';
     recent.forEach(p => {
+      const safeName = escapeHTML(p.guestName || 'Invitado');
+      const safeTime = escapeHTML(p.time || '');
       html += 
         '<div class="group relative rounded-xl overflow-hidden aspect-square border border-antique-gold/50 shadow-sm bg-neutral-900 flex flex-col">' +
-          '<img src="' + p.photoData + '" alt="Foto de ' + (p.guestName || 'Invitado') + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>' +
+          '<img src="' + p.photoData + '" alt="Foto de ' + safeName + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>' +
           '<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-1 sm:p-1.5 text-left">' +
-            '<p class="text-[9px] sm:text-[10px] text-amber-200 font-bold truncate leading-tight">' + (p.guestName || 'Invitado') + '</p>' +
-            '<p class="text-[8px] text-neutral-300 font-mono">' + (p.time || '') + '</p>' +
+            '<p class="text-[9px] sm:text-[10px] text-amber-200 font-bold truncate leading-tight">' + safeName + '</p>' +
+            '<p class="text-[8px] text-neutral-300 font-mono">' + safeTime + '</p>' +
           </div>' +
         '</div>';
     });
@@ -3490,11 +3523,15 @@ if (musicPlayer && audio) {
     }
 
     photosGrid.innerHTML = photos.map(p => {
-      const dedicationHtml = p.dedication ? ('<p class="text-[10px] text-neutral-300 italic line-clamp-2 mt-0.5">&ldquo;' + p.dedication + '&rdquo;</p>') : '';
+      const safeDedication = escapeHTML(p.dedication || '');
+      const safeGuest = escapeHTML(p.guestName || 'Invitado');
+      const safeTime = escapeHTML(p.time || '');
+      const safeId = escapeHTML(p.id || 'photo');
+      const dedicationHtml = safeDedication ? ('<p class="text-[10px] text-neutral-300 italic line-clamp-2 mt-0.5">&ldquo;' + safeDedication + '&rdquo;</p>') : '';
       return '<div class="bg-neutral-900 border border-antique-gold/30 rounded-2xl overflow-hidden flex flex-col justify-between shadow-md">' +
         '<div class="relative aspect-square w-full bg-black overflow-hidden group">' +
           '<img src="' + p.photoData + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"/>' +
-          '<a href="' + p.photoData + '" download="recuerdo_' + p.id + '.jpg" class="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/80 text-white flex items-center justify-center text-xs hover:bg-antique-gold hover:text-black transition-colors" title="Descargar foto">💾</a>' +
+          '<a href="' + p.photoData + '" download="recuerdo_' + safeId + '.jpg" class="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-black/80 text-white flex items-center justify-center text-xs hover:bg-antique-gold hover:text-black transition-colors" title="Descargar foto">💾</a>' +
         '</div>' +
         '<div class="p-2.5 text-left bg-neutral-900/90">' +
           '<div class="flex items-center justify-between gap-1 mb-0.5">' +

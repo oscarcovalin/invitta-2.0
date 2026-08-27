@@ -238,6 +238,17 @@
     let currentCameraFacing = 'environment';
     let currentStream = null;
 
+    // Helper de sanitización XSS
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     // Elementos DOM
     const video = document.getElementById('cameraVideo');
     const canvas = document.getElementById('scanCanvas');
@@ -476,13 +487,16 @@
         searchResultsList.innerHTML = matches.map(g => {
           const isChecked = g.status === 'CHECKED_IN';
           const folio = guestManager.generateFolio(g);
+          const safeName = escapeHTML(g.name);
+          const safeFolio = escapeHTML(folio);
+          const safeId = escapeHTML(g.id);
           return `
             <div class="bg-neutral-900 border border-neutral-700/60 rounded-xl p-2.5 flex items-center justify-between">
               <div>
-                <p class="font-bold text-white text-xs">${g.name}</p>
-                <p class="text-[10px] text-neutral-400 font-mono-code">${folio} · ${g.passes} pases</p>
+                <p class="font-bold text-white text-xs">${safeName}</p>
+                <p class="text-[10px] text-neutral-400 font-mono-code">${safeFolio} · ${parseInt(g.passes, 10) || 1} pases</p>
               </div>
-              <button onclick="selectManualGuest('${g.id}')" class="px-3 py-1 rounded-lg ${isChecked ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500 text-neutral-950 font-bold'} text-xs active:scale-95 transition-transform">
+              <button onclick="selectManualGuest('${safeId}')" class="px-3 py-1 rounded-lg ${isChecked ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500 text-neutral-950 font-bold'} text-xs active:scale-95 transition-transform">
                 ${isChecked ? '✓ Ingresado' : 'Validar'}
               </button>
             </div>
@@ -524,13 +538,16 @@
 
       checkinHistoryList.innerHTML = logs.slice(0, 5).map(log => {
         const timeStr = log.timestamp ? new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Reciente';
+        const safeName = escapeHTML(log.guestName || 'Invitado');
+        const safeFolio = escapeHTML(log.folio || '');
+        const safePasses = parseInt(log.admittedPasses, 10) || 1;
         return `
           <div class="bg-neutral-900/60 border border-emerald-500/20 rounded-xl p-2 flex items-center justify-between text-[11px]">
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
               <div>
-                <p class="font-semibold text-white">${log.guestName} <span class="text-amber-300 font-mono-code">(${log.admittedPasses} pax)</span></p>
-                <p class="text-[10px] text-neutral-400 font-mono-code">${log.folio}</p>
+                <p class="font-semibold text-white">${safeName} <span class="text-amber-300 font-mono-code">(${safePasses} pax)</span></p>
+                <p class="text-[10px] text-neutral-400 font-mono-code">${safeFolio}</p>
               </div>
             </div>
             <span class="text-[10px] text-neutral-400 font-mono-code">${timeStr}</span>
