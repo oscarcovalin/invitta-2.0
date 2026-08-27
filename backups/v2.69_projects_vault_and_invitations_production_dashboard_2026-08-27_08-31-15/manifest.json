@@ -1,0 +1,38 @@
+{
+  "label": "v2.69_projects_vault_and_invitations_production_dashboard",
+  "timestamp": "2026-08-27T14:31:15.765Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 237772
+    },
+    {
+      "filename": "index.html",
+      "size": 31644
+    },
+    {
+      "filename": "portal.html",
+      "size": 31644
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 126363
+    },
+    {
+      "filename": "app.js",
+      "size": 125982
+    },
+    {
+      "filename": "style.css",
+      "size": 22660
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}

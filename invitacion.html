@@ -2802,6 +2802,19 @@ if (btnCopyAlbumCode) {
   });
 }
 
+
+// 0. Carga de Proyecto desde Bóveda si existe en URL (?project=...)
+(function loadVaultProjectInClient() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
+  if (projId && typeof ProjectsVault !== 'undefined') {
+    const p = ProjectsVault.getById(projId);
+    if (p && p.config) {
+      console.log('⚡ Active project from vault:', p.title);
+    }
+  }
+})();
+
 // 0. Sello de Cera 3D Interactivo
 const waxCurtain = document.getElementById('waxSealCurtain');
 const btnBreakWax = document.getElementById('btnBreakWaxSeal');

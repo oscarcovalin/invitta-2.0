@@ -74,6 +74,70 @@
 
   <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
   <main class="max-w-6xl mx-auto w-full space-y-10 mb-16">
+
+    <!-- ==================== SECCIÓN 0: BÓVEDA DE INVITACIONES PRODUCIDAS ==================== -->
+    <section id="boveda-proyectos" class="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#161a22]/90 to-[#0d1015]/95 border border-amber-500/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative overflow-hidden">
+      <!-- Decoración de Fondo -->
+      <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+      
+      <!-- Cabecera de la Sección -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-amber-500/20 relative z-10">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[11px] font-mono mb-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>BÓVEDA DE INVITACIONES & PROYECTOS</span>
+          </div>
+          <h2 class="font-['Cinzel'] text-2xl sm:text-3xl font-bold text-white tracking-wide">
+            Invitaciones Producidas & Eventos
+          </h2>
+          <p class="text-xs sm:text-sm text-neutral-400 mt-1 max-w-xl font-light">
+            Gestiona, visualiza, edita o descarga tus invitaciones creadas con 1 solo clic.
+          </p>
+        </div>
+
+        <!-- Botones de Acción Global -->
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="btnNewProjectModal" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+            <span class="material-symbols-outlined text-lg">add_circle</span>
+            <span>+ Nueva Invitación</span>
+          </button>
+          
+          <label class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-amber-400/30 text-amber-300 font-semibold text-xs uppercase tracking-wider cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+            <input type="file" id="inputImportVaultFile" accept=".json" class="hidden">
+            <span class="material-symbols-outlined text-lg">upload_file</span>
+            <span>Importar JSON</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Barra de Búsqueda y Filtros -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 my-6 relative z-10">
+        <!-- Filtros por tipo -->
+        <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0" id="vaultFilterGroup">
+          <button type="button" data-filter="all" class="vault-filter-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-amber-500 text-neutral-950 shadow-md">
+            Todos (<span id="countFilterAll">0</span>)
+          </button>
+          <button type="button" data-filter="boda" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10">
+            💍 Bodas (<span id="countFilterBoda">0</span>)
+          </button>
+          <button type="button" data-filter="xv" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10">
+            👑 XV Años (<span id="countFilterXv">0</span>)
+          </button>
+        </div>
+
+        <!-- Buscador -->
+        <div class="relative w-full sm:w-72">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm pointer-events-none">search</span>
+          <input type="text" id="vaultSearchInput" placeholder="Buscar por anfitrión o lugar..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors">
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Tarjetas de Invitaciones -->
+      <div id="vaultProjectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+        <!-- Renderizado dinámico vía JavaScript -->
+      </div>
+    </section>
+
     
     <!-- SECCIÓN 1: GENERADOR & INVITACIÓN DIGITAL -->
     <section>
@@ -303,6 +367,198 @@
     </div>
     <span class="font-mono text-neutral-500">invitta-2.0-beta</span>
   </footer>
+
+
+  <!-- Scripts de la Bóveda de Proyectos -->
+  <script src="projects-vault.js"></script>
+  <script src="template-engine.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderVaultProjects();
+
+      // Buscador
+      const searchInput = document.getElementById('vaultSearchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          renderVaultProjects(e.target.value, currentFilter);
+        });
+      }
+
+      // Filtros
+      let currentFilter = 'all';
+      const filterBtns = document.querySelectorAll('.vault-filter-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('bg-amber-500', 'text-neutral-950', 'shadow-md', 'active');
+            b.classList.add('bg-white/5', 'text-neutral-300', 'border', 'border-white/10');
+          });
+          btn.classList.add('bg-amber-500', 'text-neutral-950', 'shadow-md', 'active');
+          btn.classList.remove('bg-white/5', 'text-neutral-300', 'border', 'border-white/10');
+          currentFilter = btn.dataset.filter;
+          renderVaultProjects(searchInput ? searchInput.value : '', currentFilter);
+        });
+      });
+
+      // Importar archivo JSON
+      const importInput = document.getElementById('inputImportVaultFile');
+      if (importInput) {
+        importInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (re) => {
+              const res = ProjectsVault.importJSON(re.target.result);
+              if (res) {
+                alert('¡Proyecto "' + res.title + '" importado exitosamente a la Bóveda!');
+                renderVaultProjects();
+              } else {
+                alert('Error al importar el archivo JSON. Verifica el formato.');
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+      }
+
+      // Modal Nueva Invitación
+      const btnNew = document.getElementById('btnNewProjectModal');
+      if (btnNew) {
+        btnNew.addEventListener('click', () => {
+          const type = confirm('¿Deseas crear una invitación de BODA?\n\n[Aceptar] = Boda\n[Cancelar] = Mis XV Años') ? 'boda' : 'xv';
+          const name = prompt(type === 'boda' ? 'Nombres de los Novios (ej. Sofia & Mateo):' : 'Nombre de la Quinceañera (ej. Camila):');
+          if (name && name.trim()) {
+            const defaultCfg = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
+            defaultCfg.eventType = type;
+            if (type === 'boda') {
+              const parts = name.split('&');
+              defaultCfg.brideName = (parts[0] || 'Novia').trim();
+              defaultCfg.groomName = (parts[1] || 'Novio').trim();
+            } else {
+              defaultCfg.name = name.trim();
+            }
+            const newProj = ProjectsVault.save({
+              title: type === 'boda' ? 'Boda ' + name.trim() : 'XV Años ' + name.trim(),
+              config: defaultCfg
+            });
+            window.location.href = 'invitacion-estudio.html?project=' + newProj.id;
+          }
+        });
+      }
+    });
+
+    function renderVaultProjects(query = '', filter = 'all') {
+      const grid = document.getElementById('vaultProjectsGrid');
+      if (!grid) return;
+
+      const projects = ProjectsVault.getAll();
+      
+      // Actualizar contadores
+      const cAll = document.getElementById('countFilterAll');
+      const cBoda = document.getElementById('countFilterBoda');
+      const cXv = document.getElementById('countFilterXv');
+      if (cAll) cAll.textContent = projects.length;
+      if (cBoda) cBoda.textContent = projects.filter(p => p.eventType === 'boda').length;
+      if (cXv) cXv.textContent = projects.filter(p => p.eventType === 'xv').length;
+
+      let filtered = projects;
+      if (filter !== 'all') {
+        filtered = filtered.filter(p => p.eventType === filter);
+      }
+      if (query && query.trim()) {
+        const q = query.toLowerCase().trim();
+        filtered = filtered.filter(p => 
+          (p.title && p.title.toLowerCase().includes(q)) ||
+          (p.hosts && p.hosts.toLowerCase().includes(q)) ||
+          (p.venue && p.venue.toLowerCase().includes(q))
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-neutral-400 bg-white/[0.02] border border-white/10 rounded-2xl">
+            <span class="material-symbols-outlined text-4xl text-neutral-500 mb-2">folder_open</span>
+            <p class="text-sm font-medium">No se encontraron invitaciones guardadas con ese criterio.</p>
+            <p class="text-xs text-neutral-500 mt-1">Crea una nueva o importa un archivo JSON para comenzar.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const isBoda = p.eventType === 'boda';
+        const dateStr = p.date ? new Date(p.date + 'T00:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Fecha por definir';
+        const themeColor = p.theme === 'rosa' ? '#f472b6' : (p.theme === 'esmeralda' ? '#34d399' : (p.theme === 'medianoche' ? '#60a5fa' : '#fbbf24'));
+
+        return `
+          <div class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between border border-amber-500/25 bg-black/40 hover:border-amber-400 transition-all group">
+            <!-- Header Tarjeta -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${isBoda ? 'bg-amber-500/15 border border-amber-400/40 text-amber-300' : 'bg-pink-500/15 border border-pink-400/40 text-pink-300'}">
+                  <span>${isBoda ? '💍 Boda' : '👑 Mis XV'}</span>
+                </span>
+                
+                <span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 font-semibold">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span>Activa</span>
+                </span>
+              </div>
+
+              <!-- Título / Nombres -->
+              <h3 class="font-['Cinzel'] text-lg font-bold text-white group-hover:text-amber-300 transition-colors mb-1 truncate" title="${p.title}">
+                ${p.hosts || p.title}
+              </h3>
+
+              <!-- Detalles de Fecha y Salón -->
+              <div class="space-y-1 text-xs text-neutral-400 font-light mb-4">
+                <p class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[15px] text-amber-400/80">calendar_today</span>
+                  <span>${dateStr}</span>
+                </p>
+                <p class="flex items-center gap-1.5 truncate" title="${p.venue || 'Salón por definir'}">
+                  <span class="material-symbols-outlined text-[15px] text-amber-400/80">location_on</span>
+                  <span class="truncate">${p.venue || 'Salón por definir'}</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Suite de Acciones Rápidas -->
+            <div class="pt-4 border-t border-white/10 space-y-2">
+              <div class="grid grid-cols-2 gap-2">
+                <a href="invitacion.html?project=${p.id}" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-xs font-semibold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">visibility</span>
+                  <span>Ver en Vivo ↗</span>
+                </a>
+                
+                <a href="invitacion-estudio.html?project=${p.id}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 text-xs font-semibold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">edit</span>
+                  <span>Editar</span>
+                </a>
+              </div>
+
+              <!-- Menú de Acciones Secundarias -->
+              <div class="flex items-center justify-between pt-1 text-[11px] text-neutral-400">
+                <a href="organizador-mesas.html?project=${p.id}" class="hover:text-amber-300 transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">table_restaurant</span> Mesas
+                </a>
+                <button type="button" onclick="ProjectsVault.duplicate('${p.id}'); renderVaultProjects();" class="hover:text-white transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">content_copy</span> Duplicar
+                </button>
+                <button type="button" onclick="ProjectsVault.exportJSON('${p.id}')" class="hover:text-white transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">download</span> JSON
+                </button>
+                <button type="button" onclick="if(confirm('¿Eliminar la invitación \'${p.hosts}\' de la bóveda?')){ ProjectsVault.delete('${p.id}'); renderVaultProjects(); }" class="hover:text-rose-400 transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">delete</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
 
 </body>
 </html>
