@@ -1,0 +1,38 @@
+{
+  "label": "v2.64_ultra_discreet_floating_circular_music_button",
+  "timestamp": "2026-08-27T13:13:39.955Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 224031
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 120120
+    },
+    {
+      "filename": "app.js",
+      "size": 116594
+    },
+    {
+      "filename": "style.css",
+      "size": 17423
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
