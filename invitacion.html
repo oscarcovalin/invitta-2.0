@@ -1025,10 +1025,8 @@ tailwind.config = {
     <div class="space-y-12 max-w-lg mx-auto gsap-stagger-container">
       
       <!-- Ceremonia -->
-      <div id="ceremonyCard" class="luxury-location-card gsap-stagger-item ">
-        <img src="assets/botanical-garland.jpg" alt="Corona Floral" class="card-top-garland" />
-        
-        <div class="location-icon-badge">
+      <div id="ceremonyCard" class="relative bg-white/50 backdrop-blur-xl p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgba(165,110,14,0.08)] border border-antique-gold/50 gsap-stagger-item ">
+        <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-champagne-cream rounded-full flex items-center justify-center border border-antique-gold shadow-sm text-antique-gold">
           
       <svg viewBox="0 0 32 32" class="w-7 h-7 text-antique-gold mx-auto" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
         <path d="M16 3v4m-2-2h4"/>
@@ -1040,42 +1038,48 @@ tailwind.config = {
       </svg>
     
         </div>
+        <h3 class="font-display-lg text-[21px] sm:text-[23px] font-normal text-deep-onyx mb-2 mt-4 gsap-title tracking-wide">Ceremonia Religiosa</h3>
         
-        <h3 class="font-display text-[17px] sm:text-[19px] font-semibold text-deep-onyx mb-3 tracking-[0.15em] uppercase">
-          Ceremonia Religiosa:
-        </h3>
-        
-        <div class="space-y-1.5 text-deep-onyx font-body text-[14px] sm:text-[15px] max-w-sm mx-auto leading-relaxed">
-          <p><span class="font-bold text-tertiary">Lugar:</span> <span class="font-medium">Parroquia San Rafael</span></p>
-          <p><span class="font-bold text-tertiary">Dir.:</span> Av. de las Rosas 123, Col. Centro</p>
-          
-          <div class="my-2.5 flex items-center justify-center">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-antique-gold/[0.12] border border-antique-gold/40 text-antique-gold font-bold text-[11.5px] tracking-[0.2em] uppercase">
-              
+        <!-- Horario Destacado con Insignia Dorada -->
+        <div class="my-3 flex items-center justify-center ">
+          <span class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-antique-gold/[0.09] border border-antique-gold/40 shadow-[0_2px_8px_rgba(165,110,14,0.06)]">
+            
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-antique-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="8" cy="8" r="6.25"/>
         <path d="M8 4.25v3.75l2.5 1.5"/>
       </svg>
     
-              <span>Horario: 4:00 PM</span>
-            </span>
-          </div>
-          
+            <span id="ceremonyTime" class="font-label-caps text-[12px] sm:text-[13px] text-antique-gold font-semibold tracking-[0.25em] uppercase">4:00 PM</span>
+          </span>
         </div>
 
-        <div class="flex flex-wrap justify-center items-center gap-3 mt-3">
-          <a class="btn-how-to-get " href="https://maps.google.com/?q=Parroquia+San+Rafael" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            <span>¿Cómo llegar?</span>
+        <p class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx leading-[1.4] font-light tracking-wide mb-1">Parroquia San Rafael</p>
+        <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide">Av. de las Rosas 123, Col. Centro</p>
+        
+        <div class="flex flex-wrap justify-center items-center gap-3">
+          <a id="ceremonyMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Parroquia+San+Rafael" target="_blank" rel="noopener noreferrer">
+            
+      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1.5 3.5l4.25-1.75 4.5 1.75 4.25-1.75v10.5l-4.25 1.75-4.5-1.75-4.25 1.75V3.5z"/>
+        <path d="M5.75 1.75v10.5m4.5-8.75v10.5"/>
+      </svg>
+    
+            <span>Google Maps</span>
+          </a>
+          <a id="ceremonyWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://waze.com/ul?q=Parroquia+San+Rafael" target="_blank" rel="noopener noreferrer">
+            
+      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="8,1.5 14.5,13.5 8,10.75 1.5,13.5"/>
+      </svg>
+    
+            <span>Waze</span>
           </a>
         </div>
       </div>
 
       <!-- Recepción -->
-      <div id="receptionCard" class="luxury-location-card gsap-stagger-item ">
-        <img src="assets/botanical-garland.jpg" alt="Corona Floral" class="card-top-garland" />
-        
-        <div class="location-icon-badge">
+      <div id="receptionCard" class="relative bg-white/50 backdrop-blur-xl p-8 sm:p-10 rounded-2xl shadow-[0_8px_30px_rgba(165,110,14,0.08)] border border-antique-gold/50 gsap-stagger-item ">
+        <div class="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-champagne-cream rounded-full flex items-center justify-center border border-antique-gold shadow-sm text-antique-gold">
           
       <svg viewBox="0 0 32 32" class="w-7 h-7 text-antique-gold mx-auto" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
         <g transform="translate(1, 0)">
@@ -1089,33 +1093,41 @@ tailwind.config = {
       </svg>
     
         </div>
+        <h3 class="font-display-lg text-[21px] sm:text-[23px] font-normal text-deep-onyx mb-2 mt-4 gsap-title tracking-wide">Recepción</h3>
         
-        <h3 class="font-display text-[17px] sm:text-[19px] font-semibold text-deep-onyx mb-3 tracking-[0.15em] uppercase">
-          Salón de la Recepción:
-        </h3>
-        
-        <div class="space-y-1.5 text-deep-onyx font-body text-[14px] sm:text-[15px] max-w-sm mx-auto leading-relaxed">
-          <p><span class="font-bold text-tertiary">Recepción:</span> <span class="font-medium">Jardín Las Magnolias</span></p>
-          <p><span class="font-bold text-tertiary">Dir.:</span> Camino Real 456, Valle Alto</p>
-          
-          <div class="my-2.5 flex items-center justify-center">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-antique-gold/[0.12] border border-antique-gold/40 text-antique-gold font-bold text-[11.5px] tracking-[0.2em] uppercase">
-              
+        <!-- Horario Destacado con Insignia Dorada -->
+        <div class="my-3 flex items-center justify-center ">
+          <span class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-antique-gold/[0.09] border border-antique-gold/40 shadow-[0_2px_8px_rgba(165,110,14,0.06)]">
+            
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 text-antique-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="8" cy="8" r="6.25"/>
         <path d="M8 4.25v3.75l2.5 1.5"/>
       </svg>
     
-              <span>Horario: 6:30 PM</span>
-            </span>
-          </div>
-          
+            <span id="receptionTime" class="font-label-caps text-[12px] sm:text-[13px] text-antique-gold font-semibold tracking-[0.25em] uppercase">6:30 PM</span>
+          </span>
         </div>
 
-        <div class="flex flex-wrap justify-center items-center gap-3 mt-3">
-          <a class="btn-how-to-get " href="https://maps.google.com/?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            <span>¿Cómo llegar?</span>
+        <p class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx leading-[1.4] font-light tracking-wide mb-1">Jardín Las Magnolias</p>
+        <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide">Camino Real 456, Valle Alto</p>
+
+        <div class="flex flex-wrap justify-center items-center gap-3">
+          <a id="receptionMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
+            
+      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1.5 3.5l4.25-1.75 4.5 1.75 4.25-1.75v10.5l-4.25 1.75-4.5-1.75-4.25 1.75V3.5z"/>
+        <path d="M5.75 1.75v10.5m4.5-8.75v10.5"/>
+      </svg>
+    
+            <span>Google Maps</span>
+          </a>
+          <a id="receptionWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://waze.com/ul?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
+            
+      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="8,1.5 14.5,13.5 8,10.75 1.5,13.5"/>
+      </svg>
+    
+            <span>Waze</span>
           </a>
         </div>
       </div>

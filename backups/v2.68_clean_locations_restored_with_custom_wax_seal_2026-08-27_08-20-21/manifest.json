@@ -1,0 +1,38 @@
+{
+  "label": "v2.68_clean_locations_restored_with_custom_wax_seal",
+  "timestamp": "2026-08-27T14:20:21.904Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 232628
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 124344
+    },
+    {
+      "filename": "app.js",
+      "size": 122644
+    },
+    {
+      "filename": "style.css",
+      "size": 22660
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}

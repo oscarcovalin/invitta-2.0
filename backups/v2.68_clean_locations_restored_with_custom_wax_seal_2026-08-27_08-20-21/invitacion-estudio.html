@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitta Studio · Generador de Invitaciones de Lujo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Great+Vibes&family=Cinzel:wght@600;700&family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+
+  <!-- ==================== STUDIO HEADER ==================== -->
+  <header class="app-header">
+    <div class="brand">
+      <a href="index.html" class="brand-link" title="Invitta Studio · Inicio">
+        <img src="invitta-logo-light.png" alt="Invitta Logo" class="brand-logo-img">
+        <div class="brand-info">
+          <div class="brand-meta" style="display:flex; align-items:center; gap:6px;">
+            <span class="brand-studio">STUDIO PRO</span>
+            <span class="brand-version" style="font-family:'Plus Jakarta Sans',sans-serif; font-size:9.5px; font-weight:800; color:#d4af37; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.35); padding:1px 5px; border-radius:4px;">2.65</span>
+          </div>
+          <span class="brand-tagline">Atelier Digital de Alta Costura</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Mode Switcher Pill (Boda / XV Años) -->
+    <div class="mode-pill-switcher" id="topModeSwitcher">
+      <button type="button" class="mode-pill-btn active" id="btnModeXv" data-type="xv">
+        <span>👑</span> Mis XV Años
+      </button>
+      <button type="button" class="mode-pill-btn" id="btnModeBoda" data-type="boda">
+        <span>💍</span> Nuestra Boda
+      </button>
+    </div>
+
+    <!-- Live Sync Status Pill -->
+    <div class="sync-indicator" id="syncStatusIndicator" title="Todos los cambios se procesan en tiempo real">
+      <span class="sync-dot"></span>
+      <span id="syncStatusText">Sincronizado</span>
+    </div>
+
+    <div class="header-actions">
+      <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+      
+      <!-- Badge de Rol Diseñador -->
+      <div id="designerRoleBadge" style="display:none; align-items:center; gap:6px; padding:5px 12px; background:rgba(212,175,55,0.12); border:1px solid rgba(212,175,55,0.4); border-radius:10px; font-size:11px; font-weight:700; color:#D4AF37; letter-spacing:0.05em;">
+        <span>🎨 DISEÑADOR</span>
+      </div>
+
+      <!-- Enlaces Master / Salón (Ocultos en Modo Diseñador) -->
+      <div id="adminNavigationLinks" style="display:inline-flex; align-items:center; gap:8px;">
+        <a href="index.html" class="btn btn-secondary" title="Ir al Portal de Módulos (Inicio)">
+          <span class="material-symbols-outlined">apps</span>
+          Portal
+        </a>
+
+        <a href="organizador-mesas.html" class="btn btn-secondary" style="background:#163C2B; color:#C7B299; border-color:#A38047;" title="Ir al Organizador de Mesas y Centro de Envíos">
+          <span class="material-symbols-outlined">table_restaurant</span>
+          Mesas & Envíos
+        </a>
+      </div>
+
+      <button type="button" class="btn btn-secondary" id="btnImportJson" title="Cargar proyecto guardado (.json)">
+        <span class="material-symbols-outlined">upload_file</span>
+        Cargar
+      </button>
+
+      <button type="button" class="btn btn-secondary" id="btnExportJson" title="Guardar configuración (.json)">
+        <span class="material-symbols-outlined">save</span>
+        Guardar
+      </button>
+
+      <button type="button" class="btn btn-secondary" id="btnOpenNewTab" title="Ver invitación en pestaña completa">
+        <span class="material-symbols-outlined">open_in_new</span>
+        Pestaña
+      </button>
+
+      <button type="button" class="btn btn-primary" id="btnExportHtml" title="Descargar archivo HTML final para entrega">
+        <span class="material-symbols-outlined">download</span>
+        Exportar (.html)
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <main class="app-workspace">
+
+    <!-- ==================== SIDEBAR / EDITOR ==================== -->
+    <aside class="editor-sidebar" id="editorSidebar">
+      <div class="accordion-group">
+
+        <!-- 1. EVENTO & PROTAGONISTA(S) -->
+        <div class="accordion-item active">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">person</span></span>
+              Evento & Protagonista(s)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="form-group">
+              <label for="selectEventType">Tipo de Evento</label>
+              <select id="selectEventType">
+                <option value="xv">Mis XV Años</option>
+                <option value="boda">Nuestra Boda</option>
+                <option value="otro">Evento Exclusivo</option>
+              </select>
+            </div>
+
+            <!-- Single Name para XV -->
+            <div class="form-group" id="groupSingleName">
+              <label for="inputName">Nombre de la Festejada</label>
+              <input type="text" id="inputName" placeholder="Valentina">
+            </div>
+
+            <!-- Dual Names para Boda con Selector de Conector (+, &, y) -->
+            <div id="groupWeddingNames" style="display:none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputBrideName">Nombre de la Novia</label>
+                  <input type="text" id="inputBrideName" placeholder="Catalina">
+                </div>
+                <div class="form-group">
+                  <label for="inputGroomName">Nombre del Novio</label>
+                  <input type="text" id="inputGroomName" placeholder="Julián">
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:4px;">
+                <label for="selectNameConnector">Símbolo Conector entre Nombres</label>
+                <select id="selectNameConnector">
+                  <option value="&">& (Ampersand elegante: Catalina & Julián)</option>
+                  <option value="+">+ (Signo más moderno: Catalina + Julián)</option>
+                  <option value="y">y (Conjunción clásica: Catalina y Julián)</option>
+                  <option value="custom">Personalizado (ej: 🤍, ·)</option>
+                </select>
+                <input type="text" id="inputCustomNameConnector" placeholder="Escribe el símbolo (ej: 🤍, ·)" style="display:none; margin-top:6px;">
+              </div>
+            </div>
+
+            
+            <!-- SELLO DE CERA / LACRA DE APERTURA -->
+            <div class="panel-luxury-subcard" style="margin-top:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <label class="toggle-switch" for="checkWaxSealEnabled" style="margin:0;">
+                  <input type="checkbox" id="checkWaxSealEnabled" checked>
+                  <span class="toggle-slider"></span>
+                  <span class="toggle-label-text">👑 Sello de Cera / Lacra Interactivo</span>
+                </label>
+              </div>
+
+              <div id="waxSealControls" style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+                <!-- Subir Sello Personalizado (PNG Transparente) -->
+                <div class="form-group">
+                  <label for="fileWaxSeal">Sello Personalizado <span class="hint">(PNG transparente sin fondo)</span></label>
+                  <div class="input-file-wrapper">
+                    <input type="file" id="fileWaxSeal" accept="image/png,image/webp,image/jpeg" style="display:none;">
+                    <button type="button" class="file-btn" onclick="document.getElementById('fileWaxSeal').click()">
+                      <span class="material-symbols-outlined" style="font-size:16px;">upload</span> Subir PNG
+                    </button>
+                    <button type="button" class="btn-icon-danger" id="btnClearWaxSeal" title="Quitar sello personalizado" style="display:none;">&times;</button>
+                    <input type="text" id="inputWaxSealCustom" placeholder="O pega URL de imagen PNG" style="flex:1;">
+                  </div>
+                </div>
+
+                <!-- Selector de Estilo / Color Predeterminado -->
+                <div class="form-group" id="groupWaxSealPreset">
+                  <label for="selectWaxSealPreset">Color del Sello Predeterminado</label>
+                  <select id="selectWaxSealPreset">
+                    <option value="gold">🥇 Oro Real Biselado</option>
+                    <option value="burgundy">🍷 Lacre Borgoña / Vino</option>
+                    <option value="emerald">🌲 Esmeralda Imperial</option>
+                    <option value="rose">🌸 Rosa Gold Satinado</option>
+                    <option value="navy">🌌 Azul Medianoche</option>
+                  </select>
+                </div>
+
+                <!-- Frase de Apertura -->
+                <div class="form-group">
+                  <label for="inputWaxSealPrompt">Texto del Indicador de Apertura</label>
+                  <input type="text" id="inputWaxSealPrompt" placeholder="Toca el sello para abrir">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputMonogram">Monograma / Iniciales del Sello Superior (Opcional)</label>
+              <input type="text" id="inputMonogram" placeholder="Dejar vacío para auto: C & J o V">
+            </div>
+            <div class="form-group">
+              <label for="inputEyebrow">Encabezado / Título</label>
+              <input type="text" id="inputEyebrow" placeholder="Mis XV años / Nuestra Boda">
+            </div>
+            <div class="form-group">
+              <label for="inputWelcome">Mensaje de Bienvenida</label>
+              <textarea id="inputWelcome" rows="2" placeholder="Con todo mi cariño, te invito a celebrar conmigo..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="inputQuote">Frase Emotiva / Cita</label>
+              <textarea id="inputQuote" rows="3" placeholder="Hay momentos que se guardan en el corazón para siempre..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="inputFooterClosing">Frase de Cierre / Despedida (Pie de Página)</label>
+              <input type="text" id="inputFooterClosing" placeholder="Con amor,">
+            </div>
+            <div class="form-group">
+              <label for="inputFooterText">Texto Adicional del Pie de Página (Opcional)</label>
+              <input type="text" id="inputFooterText" placeholder="ej. #BodaCatayJulian o frase complementaria">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. HISTORIA DE AMOR / SEMBLANZA -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">auto_stories</span></span>
+              Historia de Amor / Semblanza
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="margin-bottom:12px;">
+              <label class="toggle-switch" for="checkStoryEnabled">
+                <input type="checkbox" id="checkStoryEnabled" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label-text">Mostrar sección de Historia / Semblanza</span>
+              </label>
+            </div>
+
+            <div id="storyFields">
+              <div class="form-group">
+                <label for="inputStoryTitle">Título de la Sección</label>
+                <input type="text" id="inputStoryTitle" placeholder="Nuestra Historia / Mi Trayectoria">
+              </div>
+              <div class="form-group">
+                <label for="inputStorySubtitle">Subtítulo</label>
+                <input type="text" id="inputStorySubtitle" placeholder="Un camino lleno de momentos inolvidables">
+              </div>
+              <div class="form-group">
+                <label for="inputStoryText">Relato o Historia</label>
+                <textarea id="inputStoryText" rows="4" placeholder="Comparte cómo se conocieron, anécdotas o reflexiones..."></textarea>
+              </div>
+              <div class="form-group">
+                <label>Foto de Recuerdo</label>
+                <div class="input-file-wrapper">
+                  <input type="text" id="inputStoryPhoto" placeholder="URL o sube una fotografía">
+                  <label class="file-btn">
+                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileStoryPhoto" accept="image/*" style="display:none;">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. FECHA, HORA & CUENTA REGRESIVA -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">hourglass_empty</span></span>
+              Fecha, Hora & Cuenta Regresiva
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="margin-bottom:12px;">
+              <label class="toggle-switch" for="checkCountdownEnabled">
+                <input type="checkbox" id="checkCountdownEnabled" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label-text">Mostrar sección de Fecha & Cuenta Regresiva</span>
+              </label>
+            </div>
+
+            <div id="countdownFields">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputEventDate">Fecha y Hora de Inicio</label>
+                  <input type="datetime-local" id="inputEventDate">
+                </div>
+                <div class="form-group">
+                  <label for="inputTimezone">Zona Horaria Offset</label>
+                  <select id="inputTimezone">
+                    <option value="-06:00">México / Centro (UTC-6)</option>
+                    <option value="-05:00">Cancún / Colombia / Perú (UTC-5)</option>
+                    <option value="-07:00">Montaña / Sonora (UTC-7)</option>
+                    <option value="-08:00">Pacífico / Tijuana (UTC-8)</option>
+                    <option value="-03:00">Argentina / Chile (UTC-3)</option>
+                    <option value="+01:00">España (UTC+1)</option>
+                    <option value="+02:00">España Verano (UTC+2)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputDateLabel">Etiqueta de Fecha Larga</label>
+                  <input type="text" id="inputDateLabel" placeholder="20 de Marzo, 2027">
+                </div>
+                <div class="form-group">
+                  <label for="inputDateShort">Etiqueta de Fecha Corta</label>
+                  <input type="text" id="inputDateShort" placeholder="20 · Marzo · 2027">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputCountdownPhrase">Frase Emotiva del Contador</label>
+                <input type="text" id="inputCountdownPhrase" placeholder="Para casarme con el amor de mi vida">
+              </div>
+
+              <!-- Personalización de Cristal del Contador -->
+              <div class="panel-luxury-subcard" style="margin-top:6px;">
+                <label style="font-weight:600; margin-bottom:8px;">Estilo del Contador de Cristal</label>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="inputCountdownBgColor">Color de Fondo</label>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                      <input type="color" id="inputCountdownBgColor" value="#121214" style="width:34px; height:32px; padding:0; cursor:pointer;">
+                      <input type="text" id="inputCountdownBgColorHex" value="#121214" placeholder="#121214" style="flex:1;">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputCountdownTextColor">Color de Texto</label>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                      <input type="color" id="inputCountdownTextColor" value="#121214" style="width:34px; height:32px; padding:0; cursor:pointer;">
+                      <input type="text" id="inputCountdownTextColorHex" value="#121214" placeholder="#121214" style="flex:1;">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top:8px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label for="inputCountdownOpacity" style="margin-bottom:0;">Opacidad del Cristal</label>
+                    <span id="valCountdownOpacity" style="font-size:12px; font-weight:700; color:var(--primary);">55%</span>
+                  </div>
+                  <input type="range" id="inputCountdownOpacity" min="0" max="100" value="55" step="1">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputDuration">Duración Estimada (Horas para Calendario)</label>
+                <input type="number" id="inputDuration" min="1" max="24" value="6">
+              </div>
+
+              <!-- Fotografía del Contador -->
+              <div class="panel-luxury-subcard" style="margin-top:6px;">
+                <label style="font-weight:600; margin-bottom:8px;">Fotografía del Contador</label>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px; line-height:1.5;">
+                  Aparecerá en grande entre la fecha y el temporizador, como en el diseño de referencia.
+                </p>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                  <input type="checkbox" id="checkCountdownPhotoEnabled" checked style="width:16px; height:16px;">
+                  <label for="checkCountdownPhotoEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:500;">Mostrar fotografía en el contador</label>
+                </div>
+                <div class="form-group" id="countdownPhotoFields">
+                  <label for="inputCountdownPhoto">URL de la Fotografía</label>
+                  <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                    <input type="text" id="inputCountdownPhoto" placeholder="https://... o sube una imagen" style="flex:1;">
+                    <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="inputCountdownPhotoFile" accept="image/*" style="display:none;"></label>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnClearCountdownPhoto" title="Quitar fotografía del contador" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. FAMILIA & PADRINOS -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">group</span></span>
+              Familia & Padrinos
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkFamilyEnabled" checked style="width:16px; height:16px;">
+              <label for="checkFamilyEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar sección de Familia & Padrinos</label>
+            </div>
+
+            <div id="familyFields">
+              <div class="form-group">
+                <label for="inputBlessing">Texto de Bendición</label>
+                <textarea id="inputBlessing" rows="2" placeholder="Con la bendición de Dios y el amor de nuestros padres..."></textarea>
+              </div>
+
+              <!-- Bloque Padres para XV Años -->
+              <div id="parentsXvFields">
+                <label style="color:var(--primary); margin-bottom:6px;">Mis Padres</label>
+                <div class="form-row">
+                  <div class="form-group"><label for="inputMother">Mamá</label><input type="text" id="inputMother" placeholder="Gabriela Torres"></div>
+                  <div class="form-group"><label for="inputFather">Papá</label><input type="text" id="inputFather" placeholder="Fernando Medina"></div>
+                </div>
+              </div>
+
+              <!-- Bloque Padres para BODA (Novia y Novio) -->
+              <div id="parentsBodaFields" style="display:none;">
+                <label style="color:var(--primary); margin-bottom:6px;">Padres de la Novia</label>
+                <div class="form-row">
+                  <div class="form-group"><label for="inputBrideMother">Mamá de la Novia</label><input type="text" id="inputBrideMother" placeholder="Gabriela Torres"></div>
+                  <div class="form-group"><label for="inputBrideFather">Papá de la Novia</label><input type="text" id="inputBrideFather" placeholder="Fernando Medina"></div>
+                </div>
+
+                <label style="color:var(--primary); margin:12px 0 6px;">Padres del Novio</label>
+                <div class="form-row">
+                  <div class="form-group"><label for="inputGroomMother">Mamá del Novio</label><input type="text" id="inputGroomMother" placeholder="Patricia Mendoza"></div>
+                  <div class="form-group"><label for="inputGroomFather">Papá del Novio</label><input type="text" id="inputGroomFather" placeholder="Ricardo Morales"></div>
+                </div>
+              </div>
+
+              <hr style="border:none; border-top:1px solid var(--border-subtle); margin:10px 0;">
+
+              <!-- Padrinos -->
+              <label style="color:var(--primary); margin-bottom:6px;" id="lblGodparentsHeader">Padrinos de Honor</label>
+              <div class="form-row">
+                <div class="form-group"><label for="inputGodmother">Madrina</label><input type="text" id="inputGodmother" placeholder="Claudia Reyes"></div>
+                <div class="form-group"><label for="inputGodfather">Padrino</label><input type="text" id="inputGodfather" placeholder="Roberto Salinas"></div>
+              </div>
+
+              <!-- Corte / Damas & Best Men -->
+              <div class="form-group" style="margin-top:10px;">
+                <label id="lblCourtHeader">Mis Chambelanes</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="inputCourtMember" placeholder="Nombre y presiona Enter">
+                  <button type="button" class="btn btn-secondary" id="btnAddCourtMember">
+                    <span class="material-symbols-outlined">add</span> Añadir
+                  </button>
+                </div>
+                <div class="tags-container" id="courtTagsContainer"></div>
+              </div>
+
+              <!-- ==================== ESTILO EDITORIAL & DESPLAZAMIENTO VANGUARDISTA ==================== -->
+              <div class="luxury-card" style="background:var(--bg-subtle, #f8f6f0); border:1px solid var(--border-subtle, #e5dfd5); border-radius:12px; padding:14px; margin-top:16px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                  <span style="font-size:11.5px; font-weight:700; color:var(--primary, #163C2B); text-transform:uppercase; letter-spacing:0.12em; display:flex; align-items:center; gap:6px;">
+                    <span class="material-symbols-outlined" style="font-size:17px; color:var(--gold, #A38047);">format_size</span>
+                    Tamaño de Letra & Desplazamiento
+                  </span>
+                </div>
+
+                <!-- Control de Tamaño de Letra -->
+                <div class="form-group" style="margin-bottom:12px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <label for="rangeFamilyFontSize" style="margin:0; font-size:11.5px; font-weight:600;">Tamaño de Letra de Nombres</label>
+                    <span id="valFamilyFontSize" style="font-size:11.5px; font-weight:700; color:var(--primary, #163C2B); background:rgba(163,128,71,0.12); padding:1px 6px; border-radius:4px;">19px</span>
+                  </div>
+                  <input type="range" id="rangeFamilyFontSize" min="14" max="32" step="1" value="19" style="width:100%;">
+                </div>
+
+                <!-- Presets Rápidos de Distribución -->
+                <div class="form-group" style="margin-bottom:12px;">
+                  <label style="font-size:11px; font-weight:600; margin-bottom:6px; display:block;">Distribución de Filas (Presets)</label>
+                  <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnPresetLayoutCenter" title="Centrado Clásico" style="padding:6px 2px; font-size:10px; justify-content:center; font-weight:600;">🎯 Centro</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnPresetLayoutStagger" title="Escalonado Editorial Zig-Zag" style="padding:6px 2px; font-size:10px; justify-content:center; font-weight:600; background:rgba(163,128,71,0.12); color:var(--primary);">⚡ Zig-Zag</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnPresetLayoutLeft" title="Desplazado a la Izquierda" style="padding:6px 2px; font-size:10px; justify-content:center; font-weight:600;">◀ Izq</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btnPresetLayoutRight" title="Desplazado a la Derecha" style="padding:6px 2px; font-size:10px; justify-content:center; font-weight:600;">Der ▶</button>
+                  </div>
+                </div>
+
+                <!-- Deslizadores Horizontales Individuales -->
+                <div style="border-top:1px dashed var(--border-subtle, #ddd); padding-top:10px;">
+                  <!-- Fila 1: Padres -->
+                  <div class="form-group" style="margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                      <label for="rangeParentsOffset" style="margin:0; font-size:11px;">Deslizar Fila Padres (Izq ⟵ ⟶ Der)</label>
+                      <span id="valParentsOffset" style="font-size:10.5px; font-weight:700; color:var(--primary);">0px</span>
+                    </div>
+                    <input type="range" id="rangeParentsOffset" min="-60" max="60" step="2" value="0" style="width:100%;">
+                  </div>
+
+                  <!-- Fila 2: Padrinos -->
+                  <div class="form-group" style="margin-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                      <label for="rangeGodparentsOffset" style="margin:0; font-size:11px;">Deslizar Fila Padrinos (Izq ⟵ ⟶ Der)</label>
+                      <span id="valGodparentsOffset" style="font-size:10.5px; font-weight:700; color:var(--primary);">0px</span>
+                    </div>
+                    <input type="range" id="rangeGodparentsOffset" min="-60" max="60" step="2" value="0" style="width:100%;">
+                  </div>
+
+                  <!-- Fila 3: Chambelanes / Corte -->
+                  <div class="form-group" style="margin-bottom:2px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                      <label for="rangeCourtOffset" style="margin:0; font-size:11px;">Deslizar Fila Chambelanes / Corte</label>
+                      <span id="valCourtOffset" style="font-size:10.5px; font-weight:700; color:var(--primary);">0px</span>
+                    </div>
+                    <input type="range" id="rangeCourtOffset" min="-60" max="60" step="2" value="0" style="width:100%;">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. UBICACIONES (MAPS & WAZE) -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">location_on</span></span>
+              Ubicaciones (Maps & Waze)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkLocationsEnabled" checked style="width:16px; height:16px;">
+              <label for="checkLocationsEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar sección de Ubicaciones (Maps & Waze)</label>
+            </div>
+
+            <div id="locationsFields">
+              <label style="color:var(--primary); margin-bottom:4px;">Ceremonia Religiosa / Protocolo</label>
+              <div class="form-group">
+                <label for="inputCeremonyVenue">Nombre del Recinto / Templo</label>
+                <input type="text" id="inputCeremonyVenue" placeholder="Parroquia San Rafael">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputCeremonyAddress">Dirección</label>
+                  <input type="text" id="inputCeremonyAddress" placeholder="Av. de los Encinos 214">
+                </div>
+                <div class="form-group">
+                  <label for="inputCeremonyTime">Horario</label>
+                  <input type="text" id="inputCeremonyTime" placeholder="6:00 p.m.">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputCeremonyMap">Google Maps URL</label>
+                  <input type="url" id="inputCeremonyMap" placeholder="https://maps.google.com/...">
+                </div>
+                <div class="form-group">
+                  <label for="inputCeremonyWaze">Waze URL</label>
+                  <input type="url" id="inputCeremonyWaze" placeholder="https://waze.com/ul?...">
+                </div>
+              </div>
+
+              <hr style="border:none; border-top:1px solid var(--border-subtle); margin:10px 0;">
+
+              <label style="color:var(--primary); margin-bottom:4px;">Recepción / Fiesta</label>
+              <div class="form-group">
+                <label for="inputReceptionVenue">Nombre del Salón o Jardín</label>
+                <input type="text" id="inputReceptionVenue" placeholder="Jardín Las Magnolias">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputReceptionAddress">Dirección</label>
+                  <input type="text" id="inputReceptionAddress" placeholder="Camino Real 88">
+                </div>
+                <div class="form-group">
+                  <label for="inputReceptionTime">Horario</label>
+                  <input type="text" id="inputReceptionTime" placeholder="8:00 p.m.">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputReceptionMap">Google Maps URL</label>
+                  <input type="url" id="inputReceptionMap" placeholder="https://maps.google.com/...">
+                </div>
+                <div class="form-group">
+                  <label for="inputReceptionWaze">Waze URL</label>
+                  <input type="url" id="inputReceptionWaze" placeholder="https://waze.com/ul?...">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4.5. SUGERENCIAS DE HOSPEDAJE -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">hotel</span></span>
+              Sugerencias de Hospedaje
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkLodgingEnabled" checked style="width:16px; height:16px;">
+              <label for="checkLodgingEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar sección de Hospedaje Sugerido</label>
+            </div>
+
+            <div id="lodgingFields">
+              <div class="form-group">
+                <label for="inputLodgingTitle">Título de la Sección</label>
+                <input type="text" id="inputLodgingTitle" placeholder="Sugerencias de Hospedaje">
+              </div>
+              <div class="form-group">
+                <label for="inputLodgingSubtitle">Subtítulo</label>
+                <input type="text" id="inputLodgingSubtitle" placeholder="Para tu comodidad">
+              </div>
+              <div class="form-group">
+                <label for="inputLodgingDesc">Descripción / Mensaje</label>
+                <textarea id="inputLodgingDesc" rows="2" placeholder="Hemos seleccionado estas opciones recomendadas para facilitar tu estancia..."></textarea>
+              </div>
+
+              <div style="margin-top:14px;">
+                <label style="font-weight:600; margin-bottom:8px; display:block;">Hoteles y Alojamientos Sugeridos</label>
+                <div class="dynamic-list" id="hotelsList"></div>
+                <button type="button" class="btn btn-secondary" id="btnAddHotel" style="width:100%; justify-content:center; margin-top:8px;">
+                  <span class="material-symbols-outlined">add</span> Añadir Hotel Sugerido
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. DRESS CODE & PALETA DE COLORES -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">checkroom</span></span>
+              Dress Code & Paleta de Colores
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkDressCodeEnabled" checked style="width:16px; height:16px;">
+              <label for="checkDressCodeEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar sección de Código de Vestimenta</label>
+            </div>
+
+            <div id="dressCodeFields">
+              <div class="form-group">
+                <label for="inputDressTitle">Tipo de Etiqueta</label>
+                <input type="text" id="inputDressTitle" placeholder="Rigurosa Etiqueta / Formal / Cocktail">
+              </div>
+              <div class="form-group">
+                <label for="inputDressDesc">Descripción & Recomendaciones</label>
+                <textarea id="inputDressDesc" rows="2" placeholder="Agradecemos tu compañía con la mayor elegancia..."></textarea>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                <input type="checkbox" id="checkDressColors" checked style="width:16px; height:16px;">
+                <label for="checkDressColors" style="margin:0; text-transform:none; cursor:pointer;">Mostrar paleta visual de colores para invitados</label>
+              </div>
+
+              <div id="dressPaletteFields" style="margin-top:10px;">
+                <label>Círculos de Colores Sugeridos</label>
+                <div class="dynamic-list" id="dressColorsList"></div>
+                <button type="button" class="btn btn-secondary" id="btnAddDressColor" style="width:100%; justify-content:center; margin-top:8px;">
+                  <span class="material-symbols-outlined">add</span> Añadir Color Sugerido
+                </button>
+
+                <div class="form-group" style="margin-top:12px;">
+                  <label for="inputReservedColors">Nota de Colores Reservados</label>
+                  <input type="text" id="inputReservedColors" placeholder="Ej: Los colores Blanco y Oro están reservados para los novios.">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. FOTOGRAFÍAS & GALERÍA -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">photo_library</span></span>
+              Galería Fotográfica & Fotos
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="margin-bottom:12px;">
+              <label class="toggle-switch" for="checkGalleryEnabled">
+                <input type="checkbox" id="checkGalleryEnabled" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label-text">Mostrar sección de Galería Fotográfica</span>
+              </label>
+            </div>
+
+            <div id="galleryFields">
+              <div class="form-group">
+                <label>Foto Principal (Hero Portada)</label>
+                <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                  <input type="text" id="inputPhotoHero" placeholder="URL o sube una imagen" style="flex:1;">
+                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoHero" accept="image/*" style="display:none;"></label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnClearPhotoHero" title="Quitar foto de portada" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Foto Save The Date (Fondo 2)</label>
+                <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                  <input type="text" id="inputPhotoDate" placeholder="URL o sube una imagen" style="flex:1;">
+                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoDate" accept="image/*" style="display:none;"></label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnClearPhotoDate" title="Quitar foto Save The Date" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Retrato Circular de Bienvenida</label>
+                <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                  <input type="text" id="inputPhotoPortrait" placeholder="URL o sube una imagen" style="flex:1;">
+                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoPortrait" accept="image/*" style="display:none;"></label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnClearPhotoPortrait" title="Quitar retrato de bienvenida" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                </div>
+              </div>
+
+              <label style="margin-top:8px;">Fotos de la Galería Continua (Sin Cortes)</label>
+              <div class="dynamic-list" id="galleryPhotosList"></div>
+              <button type="button" class="btn btn-secondary" id="btnAddGalleryPhoto" style="width:100%; justify-content:center;">
+                <span class="material-symbols-outlined">add</span> Añadir Foto a la Galería
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6.5 ILUSTRACIONES MULTI-PLANO (PARALLAX) -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">layers</span></span>
+              Ilustraciones Multi-Plano (Parallax)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <span class="hint" style="margin-bottom:8px;">
+              Sube imágenes PNG con fondo transparente. La ilustración "flotará" dinámicamente entre el fondo y el contenido al hacer scroll, creando un efecto de profundidad tridimensional.
+            </span>
+
+            <!-- ILUSTRACIÓN 1: Debajo de Nuestra Historia → Cuenta Regresiva -->
+            <div class="panel-luxury-subcard">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="checkbox" id="checkIllHeroEnabled" style="width:16px;height:16px;">
+                  <label for="checkIllHeroEnabled" style="margin:0;text-transform:none;font-weight:700;font-size:12px;cursor:pointer;color:var(--text-main);">
+                    Capa 1 — Debajo de Historia → Cuenta Regresiva
+                  </label>
+                </div>
+                <button type="button" id="btnResetIllHero" class="btn btn-secondary" style="padding:2px 8px; font-size:11px;" title="Restablecer posición">
+                  <span class="material-symbols-outlined" style="font-size:14px;">refresh</span> Reset
+                </button>
+              </div>
+
+              <label style="margin-bottom:4px;">Imagen PNG Transparente</label>
+              <div style="display:flex;gap:6px;margin-bottom:6px;">
+                <input type="text" id="inputIllHeroImage" placeholder="URL de la ilustración PNG..." style="flex:1;">
+                <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir
+                  <input type="file" id="fileIllHero" accept="image/*" style="display:none;">
+                </label>
+                <button type="button" id="btnClearIllHero" class="btn btn-secondary" style="padding:0 8px;" title="Quitar">&times;</button>
+              </div>
+
+              <!-- Presets Rápidos -->
+              <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px;">
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="hero" data-preset="goldArch" style="font-size:10.5px; padding:3px 8px; border-color:var(--primary);">🌸 Guirnalda Dorada</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="hero" data-preset="oliveBranch" style="font-size:10.5px; padding:3px 8px;">🌿 Rama Olivo</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="hero" data-preset="champagneFlowers" style="font-size:10.5px; padding:3px 8px;">💐 Follaje Champagne</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="hero" data-preset="botanicalCrest" style="font-size:10.5px; padding:3px 8px;">👑 Corona Botánica</button>
+              </div>
+
+              <!-- Alineación Horizontal -->
+              <div style="margin-bottom:10px;">
+                <label style="margin-bottom:4px;display:block;">Alineación Horizontal</label>
+                <div style="display:flex;gap:4px;">
+                  <button type="button" class="btn btn-secondary btn-ill-align" data-target="hero" data-align="left" id="btnIllHeroAlignLeft">Izquierda</button>
+                  <button type="button" class="btn btn-secondary btn-ill-align active" data-target="hero" data-align="center" id="btnIllHeroAlignCenter">Centro</button>
+                  <button type="button" class="btn btn-secondary btn-ill-align" data-target="hero" data-align="right" id="btnIllHeroAlignRight">Derecha</button>
+                </div>
+              </div>
+
+              <!-- Dimensiones: Ancho % y Ancho Máx px -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ancho (%)</span>
+                    <strong id="valIllHeroWidth" style="color:var(--primary);">85%</strong>
+                  </div>
+                  <input type="range" id="inputIllHeroWidth" min="30" max="100" value="85" step="1">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Tamaño Máx</span>
+                    <strong id="valIllHeroMaxWidth" style="color:var(--primary);">560px</strong>
+                  </div>
+                  <input type="range" id="inputIllHeroMaxWidth" min="250" max="900" value="560" step="10">
+                </div>
+              </div>
+
+              <!-- Posición Vertical: Overlap % y Desplazamiento Y px -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Caída / Overlap</span>
+                    <strong id="valIllHeroOverlap" style="color:var(--primary);">50%</strong>
+                  </div>
+                  <input type="range" id="inputIllHeroOverlap" min="0" max="100" value="50" step="5">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ajuste Fino Y</span>
+                    <strong id="valIllHeroOffsetY" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllHeroOffsetY" min="-200" max="200" value="0" step="5">
+                </div>
+              </div>
+
+              <!-- Desplazamiento Horizontal X y Espacio Inferior -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ajuste Fino X</span>
+                    <strong id="valIllHeroOffsetX" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllHeroOffsetX" min="-150" max="150" value="0" step="5">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Espacio Inferior</span>
+                    <strong id="valIllHeroExtraPad" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllHeroExtraPad" min="0" max="250" value="0" step="10">
+                </div>
+              </div>
+
+              <!-- Velocidad de Parallax -->
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                  <span>Intensidad Parallax (Profundidad)</span>
+                  <strong id="valIllHeroParallaxSpeed" style="color:var(--primary);">25%</strong>
+                </div>
+                <input type="range" id="inputIllHeroParallaxSpeed" min="0" max="60" value="25" step="5">
+              </div>
+            </div>
+
+            <!-- ILUSTRACIÓN 2: Cuenta Regresiva → Familia y Padrinos -->
+            <div class="panel-luxury-subcard">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="checkbox" id="checkIllCountdownEnabled" style="width:16px;height:16px;">
+                  <label for="checkIllCountdownEnabled" style="margin:0;text-transform:none;font-weight:700;font-size:12px;cursor:pointer;color:var(--text-main);">
+                    Capa 2 — Cuenta Regresiva → Familia y Padrinos
+                  </label>
+                </div>
+                <button type="button" id="btnResetIllCountdown" class="btn btn-secondary" style="padding:2px 8px; font-size:11px;" title="Restablecer posición">
+                  <span class="material-symbols-outlined" style="font-size:14px;">refresh</span> Reset
+                </button>
+              </div>
+
+              <label style="margin-bottom:4px;">Imagen PNG Transparente</label>
+              <div style="display:flex;gap:6px;margin-bottom:6px;">
+                <input type="text" id="inputIllCountdownImage" placeholder="URL de la ilustración PNG..." style="flex:1;">
+                <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir
+                  <input type="file" id="fileIllCountdown" accept="image/*" style="display:none;">
+                </label>
+                <button type="button" id="btnClearIllCountdown" class="btn btn-secondary" style="padding:0 8px;" title="Quitar">&times;</button>
+              </div>
+
+              <!-- Presets Rápidos -->
+              <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px;">
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="countdown" data-preset="oliveBranch" style="font-size:10.5px; padding:3px 8px; border-color:var(--primary);">🌿 Rama Olivo</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="countdown" data-preset="goldArch" style="font-size:10.5px; padding:3px 8px;">🌸 Guirnalda Dorada</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="countdown" data-preset="champagneFlowers" style="font-size:10.5px; padding:3px 8px;">💐 Follaje Champagne</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="countdown" data-preset="botanicalCrest" style="font-size:10.5px; padding:3px 8px;">👑 Corona Botánica</button>
+              </div>
+
+              <!-- Alineación Horizontal -->
+              <div style="margin-bottom:10px;">
+                <label style="margin-bottom:4px;display:block;">Alineación Horizontal</label>
+                <div style="display:flex;gap:4px;">
+                  <button type="button" class="btn btn-secondary btn-ill-align" data-target="countdown" data-align="left" id="btnIllCountdownAlignLeft">Izquierda</button>
+                  <button type="button" class="btn btn-secondary btn-ill-align active" data-target="countdown" data-align="center" id="btnIllCountdownAlignCenter">Centro</button>
+                  <button type="button" class="btn btn-secondary btn-ill-align" data-target="countdown" data-align="right" id="btnIllCountdownAlignRight">Derecha</button>
+                </div>
+              </div>
+
+              <!-- Dimensiones: Ancho % y Ancho Máx px -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ancho (%)</span>
+                    <strong id="valIllCountdownWidth" style="color:var(--primary);">80%</strong>
+                  </div>
+                  <input type="range" id="inputIllCountdownWidth" min="30" max="100" value="80" step="1">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Tamaño Máx</span>
+                    <strong id="valIllCountdownMaxWidth" style="color:var(--primary);">540px</strong>
+                  </div>
+                  <input type="range" id="inputIllCountdownMaxWidth" min="250" max="900" value="540" step="10">
+                </div>
+              </div>
+
+              <!-- Posición Vertical: Overlap % y Desplazamiento Y px -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Caída / Overlap</span>
+                    <strong id="valIllCountdownOverlap" style="color:var(--primary);">50%</strong>
+                  </div>
+                  <input type="range" id="inputIllCountdownOverlap" min="0" max="100" value="50" step="5">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ajuste Fino Y</span>
+                    <strong id="valIllCountdownOffsetY" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllCountdownOffsetY" min="-200" max="200" value="0" step="5">
+                </div>
+              </div>
+
+              <!-- Desplazamiento Horizontal X y Espacio Inferior -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ajuste Fino X</span>
+                    <strong id="valIllCountdownOffsetX" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllCountdownOffsetX" min="-150" max="150" value="0" step="5">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Espacio Inferior</span>
+                    <strong id="valIllCountdownExtraPad" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllCountdownExtraPad" min="0" max="250" value="0" step="10">
+                </div>
+              </div>
+
+              <!-- Velocidad de Parallax -->
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                  <span>Intensidad Parallax (Profundidad)</span>
+                  <strong id="valIllCountdownParallaxSpeed" style="color:var(--primary);">25%</strong>
+                </div>
+                <input type="range" id="inputIllCountdownParallaxSpeed" min="0" max="60" value="25" step="5">
+              </div>
+            </div>
+
+            <!-- ILUSTRACIÓN 3: Familia → Ubicaciones -->
+            <div class="panel-luxury-subcard">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="checkbox" id="checkIllFamilyEnabled" style="width:16px;height:16px;">
+                  <label for="checkIllFamilyEnabled" style="margin:0;text-transform:none;font-weight:700;font-size:12px;cursor:pointer;color:var(--text-main);">
+                    Capa 3 — Familia → Ubicaciones
+                  </label>
+                </div>
+                <button type="button" id="btnResetIllFamily" class="btn btn-secondary" style="padding:2px 8px; font-size:11px;" title="Restablecer posición">
+                  <span class="material-symbols-outlined" style="font-size:14px;">refresh</span> Reset
+                </button>
+              </div>
+
+              <label style="margin-bottom:4px;">Imagen PNG Transparente</label>
+              <div style="display:flex;gap:6px;margin-bottom:6px;">
+                <input type="text" id="inputIllFamilyImage" placeholder="URL de la ilustración PNG..." style="flex:1;">
+                <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir
+                  <input type="file" id="fileIllFamily" accept="image/*" style="display:none;">
+                </label>
+                <button type="button" id="btnClearIllFamily" class="btn btn-secondary" style="padding:0 8px;" title="Quitar">&times;</button>
+              </div>
+
+              <!-- Presets Rápidos -->
+              <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px;">
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="family" data-preset="champagneFlowers" style="font-size:10.5px; padding:3px 8px; border-color:var(--primary);">💐 Follaje Champagne</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="family" data-preset="goldArch" style="font-size:10.5px; padding:3px 8px;">🌸 Guirnalda Dorada</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="family" data-preset="oliveBranch" style="font-size:10.5px; padding:3px 8px;">🌿 Rama Olivo</button>
+                <button type="button" class="btn btn-secondary btn-preset-ill" data-target="family" data-preset="botanicalCrest" style="font-size:10.5px; padding:3px 8px;">👑 Corona Botánica</button>
+              </div>
+
+              <!-- Alineación Horizontal -->
+              <div style="margin-bottom:10px;">
+                <label style="margin-bottom:4px;display:block;">Alineación Horizontal</label>
+                <div style="display:flex;gap:4px;">
+                  <button type="button" class="btn btn-secondary btn-ill-align" data-target="family" data-align="left" id="btnIllFamilyAlignLeft">Izquierda</button>
+                  <button type="button" class="btn btn-secondary btn-ill-align active" data-target="family" data-align="center" id="btnIllFamilyAlignCenter">Centro</button>
+                  <button type="button" class="btn btn-secondary btn-ill-align" data-target="family" data-align="right" id="btnIllFamilyAlignRight">Derecha</button>
+                </div>
+              </div>
+
+              <!-- Dimensiones: Ancho % y Ancho Máx px -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ancho (%)</span>
+                    <strong id="valIllFamilyWidth" style="color:var(--primary);">82%</strong>
+                  </div>
+                  <input type="range" id="inputIllFamilyWidth" min="30" max="100" value="82" step="1">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Tamaño Máx</span>
+                    <strong id="valIllFamilyMaxWidth" style="color:var(--primary);">560px</strong>
+                  </div>
+                  <input type="range" id="inputIllFamilyMaxWidth" min="250" max="900" value="560" step="10">
+                </div>
+              </div>
+
+              <!-- Posición Vertical: Overlap % y Desplazamiento Y px -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Caída / Overlap</span>
+                    <strong id="valIllFamilyOverlap" style="color:var(--primary);">50%</strong>
+                  </div>
+                  <input type="range" id="inputIllFamilyOverlap" min="0" max="100" value="50" step="5">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ajuste Fino Y</span>
+                    <strong id="valIllFamilyOffsetY" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllFamilyOffsetY" min="-200" max="200" value="0" step="5">
+                </div>
+              </div>
+
+              <!-- Desplazamiento Horizontal X y Espacio Inferior -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Ajuste Fino X</span>
+                    <strong id="valIllFamilyOffsetX" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllFamilyOffsetX" min="-150" max="150" value="0" step="5">
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                    <span>Espacio Inferior</span>
+                    <strong id="valIllFamilyExtraPad" style="color:var(--primary);">0px</strong>
+                  </div>
+                  <input type="range" id="inputIllFamilyExtraPad" min="0" max="250" value="0" step="10">
+                </div>
+              </div>
+
+              <!-- Velocidad de Parallax -->
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;">
+                  <span>Intensidad Parallax (Profundidad)</span>
+                  <strong id="valIllFamilyParallaxSpeed" style="color:var(--primary);">25%</strong>
+                </div>
+                <input type="range" id="inputIllFamilyParallaxSpeed" min="0" max="60" value="25" step="5">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. MESA DE REGALOS & TRANSFERENCIA -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">card_giftcard</span></span>
+              Mesa de Regalos & Transferencia
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="checkGiftEnabled" checked style="width:16px; height:16px;">
+              <label for="checkGiftEnabled" style="margin:0; text-transform:none; cursor:pointer;">Mostrar Mesa de Regalos</label>
+            </div>
+
+            <div id="giftRegistryFields">
+              <div class="form-group">
+                <label for="inputGiftIntro">Mensaje Introductorio</label>
+                <textarea id="inputGiftIntro" rows="2" placeholder="Tu cariño y compañía son el mejor regalo..."></textarea>
+              </div>
+
+              <label style="margin-top:6px;">Tiendas Departamentales</label>
+              <div class="dynamic-list" id="giftStoresList"></div>
+              <button type="button" class="btn btn-secondary" id="btnAddGiftStore" style="width:100%; justify-content:center;">
+                <span class="material-symbols-outlined">add</span> Añadir Tienda
+              </button>
+
+              <label style="color:var(--primary); margin-top:14px;">Datos Bancarios</label>
+              <div class="form-row">
+                <div class="form-group"><label for="inputBankName">Banco</label><input type="text" id="inputBankName" placeholder="BBVA / Santander"></div>
+                <div class="form-group"><label for="inputBankHolder">Titular</label><input type="text" id="inputBankHolder" placeholder="Nombre completo"></div>
+              </div>
+              <div class="form-group">
+                <label for="inputBankClabe">CLABE Interbancaria (18 dígitos)</label>
+                <input type="text" id="inputBankClabe" placeholder="0121 8001 2345 6789 01">
+              </div>
+              <div class="form-group">
+                <label for="inputEnvelopeNote">Nota de Lluvia de Sobres</label>
+                <input type="text" id="inputEnvelopeNote" placeholder="Aceptamos con mucho cariño lluvia de sobres.">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. PROGRAMA / ITINERARIO -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">event_note</span></span>
+              Programa / Itinerario
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkItineraryEnabled" checked style="width:16px; height:16px;">
+              <label for="checkItineraryEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar sección de Programa / Itinerario</label>
+            </div>
+
+            <div id="itineraryFields">
+              <div class="form-group" style="margin-bottom:12px;">
+                <label for="inputItineraryTitle">Título de la Sección</label>
+                <input type="text" id="inputItineraryTitle" placeholder="Programa (o Itinerario)">
+              </div>
+              <div class="dynamic-list" id="itineraryList"></div>
+              <div style="display:flex; gap:8px; margin-top:8px;">
+                <button type="button" class="btn btn-secondary" id="btnAddItineraryStep" style="flex:1.8; justify-content:center;">
+                  <span class="material-symbols-outlined">add</span> Añadir Momento
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnAddChoreographyStep" style="flex:1.2; justify-content:center; background:var(--primary-light); color:var(--primary); font-weight:600;" title="Añadir Coreografías / Baile Sorpresa">
+                  <span class="material-symbols-outlined">theater_comedy</span> + Coreografía
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8.05 POLVO DE ESTRELLAS (MOMENTO MÁGICO & LUCES) -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">auto_awesome</span></span>
+              Polvo de Estrellas (Luces & Vals)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkStardustEnabled" checked style="width:16px; height:16px;">
+              <label for="checkStardustEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar módulo Polvo de Estrellas debajo del Programa</label>
+            </div>
+
+            <div id="stardustFields">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputStardustTitle">Título del Módulo</label>
+                  <input type="text" id="inputStardustTitle" placeholder="Polvo de Estrellas">
+                </div>
+                <div class="form-group">
+                  <label for="inputStardustSubtitle">Insignia / Subtítulo</label>
+                  <input type="text" id="inputStardustSubtitle" placeholder="Momento Mágico">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="inputStardustTime">Horario del Momento</label>
+                  <input type="text" id="inputStardustTime" placeholder="21:30 HRS">
+                </div>
+                <div class="form-group">
+                  <label for="inputStardustBtnText">Texto del Botón Interactivo</label>
+                  <input type="text" id="inputStardustBtnText" placeholder="✨ Encender mi Luz">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStardustText">Mensaje / Indicaciones para Invitados</label>
+                <textarea id="inputStardustText" rows="2" placeholder="Al caer la noche, encenderemos juntos una constelación de luces y bengalas para iluminar nuestro primer baile."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8.1 ÁLBUM COLABORATIVO -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">photo_camera</span></span>
+              Álbum Colaborativo (Fotos & Videos)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <input type="checkbox" id="checkSharedAlbumEnabled" checked style="width:16px; height:16px;">
+              <label for="checkSharedAlbumEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar Álbum Colaborativo</label>
+            </div>
+
+            <div id="sharedAlbumFields">
+              <div class="form-group">
+                <label for="inputSharedAlbumTitle">Título de la Sección</label>
+                <input type="text" id="inputSharedAlbumTitle" placeholder="Álbum Colaborativo">
+              </div>
+              <div class="form-group">
+                <label for="inputSharedAlbumSubtitle">Subtítulo / Etiqueta</label>
+                <input type="text" id="inputSharedAlbumSubtitle" placeholder="Comparte tus Fotos y Videos">
+              </div>
+              <div class="form-group">
+                <label for="inputSharedAlbumDesc">Descripción & Instrucciones</label>
+                <textarea id="inputSharedAlbumDesc" rows="3" placeholder="¡Ayúdanos a capturar cada momento! Sube aquí todas las fotos y videos que tomes durante nuestro gran día usando tu código personalizado de invitado."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="inputSharedAlbumCode">Código de Acceso General / PIN</label>
+                <input type="text" id="inputSharedAlbumCode" placeholder="BODA2027">
+              </div>
+              <div class="form-group">
+                <label for="inputSharedAlbumUrl">Enlace al Álbum (Google Photos, Drive, Dropbox, etc.)</label>
+                <input type="url" id="inputSharedAlbumUrl" placeholder="https://photos.google.com/...">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. INSTAGRAM HASHTAG -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">tag</span></span>
+              Instagram Hashtag
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="checkInstagramEnabled" checked style="width:16px; height:16px;">
+              <label for="checkInstagramEnabled" style="margin:0; text-transform:none; cursor:pointer;">Mostrar sección de Instagram Hashtag</label>
+            </div>
+
+            <div id="instagramFields">
+              <div class="form-group">
+                <label for="inputInstagramHashtag">Hashtag Oficial</label>
+                <input type="text" id="inputInstagramHashtag" placeholder="#BodaCatalinayJulian">
+              </div>
+              <div class="form-group">
+                <label for="inputInstagramText">Instrucción para Invitados</label>
+                <textarea id="inputInstagramText" rows="2" placeholder="Comparte tus fotos y momentos especiales con nosotros usando nuestro hashtag oficial."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. PASES & CONFIRMACIÓN RSVP -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">how_to_reg</span></span>
+              Pases & Confirmación (RSVP)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkRsvpEnabled" checked style="width:16px; height:16px;">
+              <label for="checkRsvpEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar sección de Confirmación de Asistencia</label>
+            </div>
+
+            <div id="rsvpFields">
+              <div class="form-group">
+                <label for="selectRsvpTitle">Texto del Encabezado</label>
+                <select id="selectRsvpTitle">
+                  <option value="Confirmación de Asistencia" selected>Confirmación de Asistencia</option>
+                  <option value="RSVP">RSVP</option>
+                  <option value="custom">Personalizado...</option>
+                </select>
+                <input type="text" id="inputCustomRsvpTitle" placeholder="Escribe el título..." style="margin-top:6px; display:none;">
+              </div>
+
+              <!-- WhatsApp de Anfitriones (Hasta 3 números) -->
+              <div style="background:var(--bg-card-header); border:1px solid var(--border-subtle); border-radius:8px; padding:10px; margin-bottom:12px;">
+                <label style="font-weight:700; color:var(--primary); font-size:12px; margin-bottom:6px; display:block;">
+                  📲 WhatsApp de Anfitriones para Notificaciones
+                </label>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <label for="inputHostPhone1" style="font-size:11px; margin-bottom:2px;">1. Anfitrión Principal / Novia (con lada)</label>
+                  <input type="tel" id="inputHostPhone1" placeholder="5215512345678">
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <label for="inputHostPhone2" style="font-size:11px; margin-bottom:2px;">2. Segundo Anfitrión / Novio (con lada) (Opcional)</label>
+                  <input type="tel" id="inputHostPhone2" placeholder="5215587654321">
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <label for="inputHostPhone3" style="font-size:11px; margin-bottom:2px;">3. Coordinador / Wedding Planner (con lada) (Opcional)</label>
+                  <input type="tel" id="inputHostPhone3" placeholder="5215599887766">
+                </div>
+                <!-- Campo de compatibilidad -->
+                <input type="hidden" id="inputWhatsapp">
+
+                <div class="form-group" style="margin-top:8px; margin-bottom:0;">
+                  <label for="inputRsvpWebhook" style="font-size:11px; margin-bottom:2px;">URL de Webhook / API en la Nube (Opcional)</label>
+                  <input type="url" id="inputRsvpWebhook" placeholder="https://tu-api.com/webhook-rsvp">
+                  <span class="hint" style="font-size:10px; margin-top:2px;">Dispara envíos automáticos o sincroniza con Google Sheets/Firebase en segundo plano.</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Fecha Límite de Confirmación</label>
+                <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+                  <div style="width:100px;">
+                    <label for="selectRsvpDay" style="font-size:11px; margin-bottom:2px; color:var(--text-secondary);">Día</label>
+                    <select id="selectRsvpDay">
+                    </select>
+                  </div>
+                  <div style="flex:1;">
+                    <label for="selectRsvpMonth" style="font-size:11px; margin-bottom:2px; color:var(--text-secondary);">Mes</label>
+                    <select id="selectRsvpMonth">
+                      <option value="Enero">Enero</option>
+                      <option value="Febrero" selected>Febrero</option>
+                      <option value="Marzo">Marzo</option>
+                      <option value="Abril">Abril</option>
+                      <option value="Mayo">Mayo</option>
+                      <option value="Junio">Junio</option>
+                      <option value="Julio">Julio</option>
+                      <option value="Agosto">Agosto</option>
+                      <option value="Septiembre">Septiembre</option>
+                      <option value="Octubre">Octubre</option>
+                      <option value="Noviembre">Noviembre</option>
+                      <option value="Diciembre">Diciembre</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="font-size:11px; color:var(--text-secondary); background:var(--bg-card-header); border:1px solid var(--border-subtle); border-radius:6px; padding:6px 10px; line-height:1.4;">
+                  <span style="font-weight:600; color:var(--primary);">Frase generada:</span><br>
+                  <span id="previewRsvpDeadlinePhrase" style="font-style:italic;">Por favor, haznos saber si podrás acompañarnos antes del 20 de Febrero.</span>
+                </div>
+                <input type="hidden" id="inputRsvpDeadline">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIPOGRAFÍAS & FUENTES MANUALES -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">format_shapes</span></span>
+              Tipografías & Fuentes (.TTF / .OTF / .WOFF)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            
+            <!-- 1. Names Font (Solo Portada y Firma) -->
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label for="selectFontNames" style="font-weight:600; color:var(--primary);">1. Fuente de Nombres (Portada & Firma)</label>
+                <label class="file-btn" style="padding:4px 8px; font-size:11px;" title="Subir archivo .ttf, .otf, .woff o .woff2">
+                  <span class="material-symbols-outlined" style="font-size:14px;">upload_file</span> Cargar Fuente <input type="file" id="fileFontNames" accept=".ttf,.otf,.woff,.woff2" style="display:none;">
+                </label>
+              </div>
+              <span class="hint" style="margin-top:2px; margin-bottom:6px; font-size:11px; display:block;">Personaliza <strong>únicamente</strong> los nombres de los novios en la portada y la firma final, sin alterar las demás secciones.</span>
+              <div id="badgeCustomNamesFile" style="display:none; align-items:center; justify-content:space-between; background:var(--primary-light); border:1px solid var(--primary); padding:6px 10px; border-radius:6px; margin-bottom:6px; font-size:12px; color:var(--primary);">
+                <span><strong id="nameCustomNamesFile">fuente.ttf</strong> (Cargada localmente)</span>
+                <button type="button" id="btnClearNamesFile" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:700;">&times; Quitar</button>
+              </div>
+              <select id="selectFontNames">
+                <option value="Cormorant Garamond">Cormorant Garamond (Serif Editorial / Recomendada)</option>
+                <option value="Playfair Display">Playfair Display (Serif Elegante)</option>
+                <option value="Cinzel">Cinzel (Romana Imperial / Lujo)</option>
+                <option value="Bodoni Moda">Bodoni Moda (Editorial / Vogue)</option>
+                <option value="Cardo">Cardo (Romana Clásica)</option>
+                <option value="Parisienne">Parisienne (Script Sofisticada)</option>
+                <option value="Alex Brush">Alex Brush (Script Fina)</option>
+                <option value="Great Vibes">Great Vibes (Script Romántica)</option>
+                <option value="Pinyon Script">Pinyon Script (Script Gala Tradicional)</option>
+                <option value="Allura">Allura (Script Caligráfica)</option>
+                <option value="custom">Otra Google Font personalizada...</option>
+              </select>
+              <input type="text" id="inputCustomNames" placeholder="Nombre en Google Fonts (ej: Italiana o Monsieur La Doulaise)" style="display:none; margin-top:4px;">
+            </div>
+
+            <!-- 2. Script Font (Acento Conector) -->
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label for="selectFontScript">2. Fuente Conector de Nombres (& / y)</label>
+                <label class="file-btn" style="padding:4px 8px; font-size:11px;" title="Subir archivo .ttf, .otf, .woff o .woff2">
+                  <span class="material-symbols-outlined" style="font-size:14px;">upload_file</span> Cargar Fuente <input type="file" id="fileFontScript" accept=".ttf,.otf,.woff,.woff2" style="display:none;">
+                </label>
+              </div>
+              <div id="badgeCustomScriptFile" style="display:none; align-items:center; justify-content:space-between; background:var(--primary-light); border:1px solid var(--primary); padding:6px 10px; border-radius:6px; margin-bottom:6px; font-size:12px; color:var(--primary);">
+                <span><strong id="nameCustomScriptFile">fuente.ttf</strong> (Cargada localmente)</span>
+                <button type="button" id="btnClearScriptFile" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:700;">&times; Quitar</button>
+              </div>
+              <select id="selectFontScript">
+                <option value="Parisienne">Parisienne (Acento Sofisticado / Recomendada)</option>
+                <option value="Alex Brush">Alex Brush (Elegante Fina)</option>
+                <option value="Great Vibes">Great Vibes (Romántica / Fluida)</option>
+                <option value="Allura">Allura (Manuscrita Caligráfica)</option>
+                <option value="Pinyon Script">Pinyon Script (Gala Tradicional)</option>
+                <option value="Playfair Display">Playfair Display (Serif Elegante)</option>
+                <option value="custom">Otra Google Font personalizada...</option>
+              </select>
+              <input type="text" id="inputCustomScript" placeholder="Nombre en Google Fonts (ej: Monsieur La Doulaise)" style="display:none; margin-top:4px;">
+            </div>
+
+            <!-- 3. Display Font (Títulos de Secciones & Fecha) -->
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label for="selectFontDisplay">3. Fuente de Títulos de Sección & Editorial</label>
+                <label class="file-btn" style="padding:4px 8px; font-size:11px;" title="Subir archivo .ttf, .otf, .woff o .woff2">
+                  <span class="material-symbols-outlined" style="font-size:14px;">upload_file</span> Cargar Fuente <input type="file" id="fileFontDisplay" accept=".ttf,.otf,.woff,.woff2" style="display:none;">
+                </label>
+              </div>
+              <div id="badgeCustomDisplayFile" style="display:none; align-items:center; justify-content:space-between; background:var(--primary-light); border:1px solid var(--primary); padding:6px 10px; border-radius:6px; margin-bottom:6px; font-size:12px; color:var(--primary);">
+                <span><strong id="nameCustomDisplayFile">fuente.ttf</strong> (Cargada localmente)</span>
+                <button type="button" id="btnClearDisplayFile" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:700;">&times; Quitar</button>
+              </div>
+              <select id="selectFontDisplay">
+                <option value="Cormorant Garamond">Cormorant Garamond (Editorial / Alta Gama / Recomendada)</option>
+                <option value="Playfair Display">Playfair Display (Serif Elegante)</option>
+                <option value="Cinzel">Cinzel (Clásica / Imperial)</option>
+                <option value="Bodoni Moda">Bodoni Moda (Editorial / Vogue)</option>
+                <option value="Cardo">Cardo (Romana Pura)</option>
+                <option value="custom">Otra Google Font personalizada...</option>
+              </select>
+              <input type="text" id="inputCustomDisplay" placeholder="Nombre en Google Fonts (ej: Italiana)" style="display:none; margin-top:4px;">
+            </div>
+
+            <!-- 4. Body Font (Lectura & Etiquetas) -->
+            <div class="form-group">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label for="selectFontBody">4. Fuente de Lectura & Botones (Sans / Texto)</label>
+                <label class="file-btn" style="padding:4px 8px; font-size:11px;" title="Subir archivo .ttf, .otf, .woff o .woff2">
+                  <span class="material-symbols-outlined" style="font-size:14px;">upload_file</span> Cargar Fuente <input type="file" id="fileFontBody" accept=".ttf,.otf,.woff,.woff2" style="display:none;">
+                </label>
+              </div>
+              <div id="badgeCustomBodyFile" style="display:none; align-items:center; justify-content:space-between; background:var(--primary-light); border:1px solid var(--primary); padding:6px 10px; border-radius:6px; margin-bottom:6px; font-size:12px; color:var(--primary);">
+                <span><strong id="nameCustomBodyFile">fuente.ttf</strong> (Cargada localmente)</span>
+                <button type="button" id="btnClearBodyFile" style="background:none; border:none; color:var(--danger); cursor:pointer; font-weight:700;">&times; Quitar</button>
+              </div>
+              <select id="selectFontBody">
+                <option value="Inter">Inter (Sans Limpia / Alta Legibilidad / Recomendada)</option>
+                <option value="Work Sans">Work Sans (Moderna Sans)</option>
+                <option value="Source Serif 4">Source Serif 4 (Serif Clásica)</option>
+                <option value="Lora">Lora (Serif Caligráfica)</option>
+                <option value="custom">Otra Google Font personalizada...</option>
+              </select>
+              <input type="text" id="inputCustomBody" placeholder="Nombre en Google Fonts" style="display:none; margin-top:4px;">
+            </div>
+
+            <!-- 5. Acabado de Títulos: Color Sólido vs Degradado Metálico -->
+            <div class="form-group" style="border-top:1px solid var(--border-subtle); padding-top:14px; margin-top:14px;">
+              <label for="selectTitleEffect" style="font-weight:600;">5. Efecto de Títulos y Nombres</label>
+              <select id="selectTitleEffect">
+                <option value="solid">Color Sólido Clásico / Editorial (Recomendado)</option>
+                <option value="metallic">Degradado Metálico (Foil de Lujo)</option>
+              </select>
+            </div>
+
+            <!-- Opciones para Degradado Metálico -->
+            <div id="wrapTitleMetallic" class="form-group">
+              <label for="selectTitleMetallicPreset">Tipo de Metal / Foil</label>
+              <select id="selectTitleMetallicPreset">
+                <option value="gold">Oro Clásico / Dorado (Gold Foil)</option>
+                <option value="rosegold">Oro Rosa (Rose Gold Foil)</option>
+                <option value="silver">Plata / Platino (Silver Foil)</option>
+                <option value="bronze">Bronce / Cobre (Bronze Foil)</option>
+                <option value="custom">Degradado Metálico Personalizado...</option>
+              </select>
+              <input type="text" id="inputCustomMetallicGradient" placeholder="linear-gradient(135deg, #d4af37, #fff8c4, #aa771c)" style="display:none; margin-top:6px;">
+            </div>
+
+            <!-- Opciones para Color Sólido -->
+            <div id="wrapTitleSolid" class="form-group" style="display:none;">
+              <label for="inputTitleSolidColor">Color Sólido de Títulos</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input type="color" id="inputTitleSolidColor" value="#ffffff" style="width:34px; height:32px; padding:0; cursor:pointer;">
+                <input type="text" id="inputTitleSolidColorHex" value="#ffffff" placeholder="#ffffff" style="flex:1;">
+              </div>
+            </div>
+
+            <!-- 5. Ajuste Fino de Escala y Tamaños Tipográficos -->
+            <div class="form-group" style="border-top:1px solid var(--border-subtle); padding-top:14px; margin-top:14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <label style="font-weight:700; color:var(--primary); margin:0;">Escala & Tamaños de Letra</label>
+                <button type="button" id="btnResetFontScales" class="btn btn-secondary" style="padding:2px 8px; font-size:11px;" title="Restablecer escalas al 100%">
+                  <span class="material-symbols-outlined" style="font-size:14px;">refresh</span> 100%
+                </button>
+              </div>
+              <span class="hint" style="margin-bottom:10px;">
+                Ajusta el tamaño visual en tiempo real. Los cambios se reflejan al instante en la vista previa.
+              </span>
+
+              <!-- Presets Rápidos -->
+              <div style="display:flex; gap:5px; margin-bottom:12px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary btn-font-preset" data-hero="0.75" data-headings="0.80" data-body="0.90" style="flex:1; font-size:11px; padding:4px 6px;">S (75%)</button>
+                <button type="button" class="btn btn-secondary btn-font-preset" data-hero="1.00" data-headings="1.00" data-body="1.00" style="flex:1; font-size:11px; padding:4px 6px;">M (100%)</button>
+                <button type="button" class="btn btn-secondary btn-font-preset" data-hero="1.35" data-headings="1.20" data-body="1.10" style="flex:1; font-size:11px; padding:4px 6px;">L (135%)</button>
+                <button type="button" class="btn btn-secondary btn-font-preset" data-hero="1.70" data-headings="1.45" data-body="1.20" style="flex:1; font-size:11px; padding:4px 6px;">XL (170%)</button>
+              </div>
+
+              <!-- Escala Nombres Principales (Hero) -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Nombres en Portada (Hero)</strong>
+                  <span id="valScaleHero" style="font-size:12px; font-weight:700; color:var(--primary);">100%</span>
+                </div>
+                <input type="range" id="rangeScaleHero" min="0.50" max="2.00" step="0.05" value="1.0">
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-dim); margin-top:2px;">
+                  <span>50% (Compacto)</span>
+                  <span>100% (Clásico)</span>
+                  <span>200% (Gigante)</span>
+                </div>
+              </div>
+
+              <!-- Escala Títulos de Secciones -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Títulos de Secciones (Programa, RSVP, etc.)</strong>
+                  <span id="valScaleHeadings" style="font-size:12px; font-weight:700; color:var(--primary);">100%</span>
+                </div>
+                <input type="range" id="rangeScaleHeadings" min="0.50" max="1.80" step="0.05" value="1.0">
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-dim); margin-top:2px;">
+                  <span>50%</span>
+                  <span>100%</span>
+                  <span>180%</span>
+                </div>
+              </div>
+
+              <!-- Escala Textos de Lectura -->
+              <div class="panel-luxury-subcard">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Cuerpo de Texto & Detalles</strong>
+                  <span id="valScaleBody" style="font-size:12px; font-weight:700; color:var(--primary);">100%</span>
+                </div>
+                <input type="range" id="rangeScaleBody" min="0.70" max="1.50" step="0.05" value="1.0">
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-dim); margin-top:2px;">
+                  <span>70%</span>
+                  <span>100%</span>
+                  <span>150%</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 13. PALETAS DE COLOR & ESTILO -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">palette</span></span>
+              Paletas de Color & Estilo
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <label>Elige una Paleta</label>
+            <div class="theme-grid visual-cards-grid" id="themeGrid">
+              <div class="theme-visual-card selected" data-theme="vino">
+                <div class="theme-palette-preview">
+                  <span class="theme-palette-color" style="background:#4d142b"></span>
+                  <span class="theme-palette-color" style="background:#c59d60"></span>
+                  <span class="theme-palette-color" style="background:#fdfaf5"></span>
+                </div>
+                <span>Vino & Oro</span>
+              </div>
+
+              <div class="theme-visual-card" data-theme="rosa">
+                <div class="theme-palette-preview">
+                  <span class="theme-palette-color" style="background:#6e1f46"></span>
+                  <span class="theme-palette-color" style="background:#d694ab"></span>
+                  <span class="theme-palette-color" style="background:#fdf8f5"></span>
+                </div>
+                <span>Rose Gold</span>
+              </div>
+
+              <div class="theme-visual-card" data-theme="esmeralda">
+                <div class="theme-palette-preview">
+                  <span class="theme-palette-color" style="background:#163c2b"></span>
+                  <span class="theme-palette-color" style="background:#bca663"></span>
+                  <span class="theme-palette-color" style="background:#f7f6ec"></span>
+                </div>
+                <span>Esmeralda</span>
+              </div>
+
+              <div class="theme-visual-card" data-theme="medianoche">
+                <div class="theme-palette-preview">
+                  <span class="theme-palette-color" style="background:#15243d"></span>
+                  <span class="theme-palette-color" style="background:#a0abc2"></span>
+                  <span class="theme-palette-color" style="background:#f5f6f9"></span>
+                </div>
+                <span>Midnight</span>
+              </div>
+
+              <div class="theme-visual-card" data-theme="atardecer">
+                <div class="theme-palette-preview">
+                  <span class="theme-palette-color" style="background:#6b3319"></span>
+                  <span class="theme-palette-color" style="background:#d19256"></span>
+                  <span class="theme-palette-color" style="background:#fdf8f0"></span>
+                </div>
+                <span>Terracota</span>
+              </div>
+
+              <div class="theme-visual-card" data-theme="custom">
+                <div class="theme-palette-preview">
+                  <span class="theme-palette-color" style="background:#c59d60"></span>
+                  <span class="theme-palette-color" style="background:#2a0918"></span>
+                  <span class="theme-palette-color" style="background:#fff"></span>
+                </div>
+                <span>Personalizada</span>
+              </div>
+            </div>
+            </div>
+
+            <!-- Custom Colors Picker -->
+            <div id="customColorsWrapper" style="display:none;">
+              <label style="margin-top:10px;">Personalizar Colores Globales</label>
+              <div class="color-custom-grid">
+                <div class="color-item">
+                  <input type="color" id="colWine900" value="#2a0918">
+                  <span>Fondo Oscuro</span>
+                </div>
+                <div class="color-item">
+                  <input type="color" id="colWine700" value="#4d142b">
+                  <span>Acento Primario</span>
+                </div>
+                <div class="color-item">
+                  <input type="color" id="colGold500" value="#c59d60">
+                  <span>Dorado Metálico</span>
+                </div>
+                <div class="color-item">
+                  <input type="color" id="colCream" value="#fdfaf5">
+                  <span>Fondo Claro</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 14. FONDOS POR SECCIÓN -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">wallpaper</span></span>
+              Fondos por Sección
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <span class="hint">Sube imágenes o texturas de fondo con transparencia ajustable para cada sección.</span>
+
+            <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+              <button type="button" id="btnClearAllBgs" class="btn btn-secondary" style="font-size:11px; padding:5px 10px; color:var(--danger); display:inline-flex; align-items:center; gap:4px;">
+                <span class="material-symbols-outlined" style="font-size:14px;">delete_sweep</span> Limpiar todos los fondos
+              </button>
+            </div>
+
+            <!-- Lista de Secciones -->
+            <div id="sectionBackgroundsContainer">
+
+              <!-- 1. Familia & Padrinos -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Familia y Padrinos</strong>
+                  <span id="valBgFamilyOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">35%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgFamilyImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgFamily" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgFamilyOpacity" min="0" max="100" value="35" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgFamily" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 2. Ubicaciones (Dónde y Cuándo) -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Dónde y Cuándo (Ubicaciones)</strong>
+                  <span id="valBgDetailsOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">30%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgDetailsImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgDetails" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgDetailsOpacity" min="0" max="100" value="30" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgDetails" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 3. Dress Code -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Código de Vestimenta</strong>
+                  <span id="valBgDressCodeOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">25%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgDressCodeImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgDressCode" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgDressCodeOpacity" min="0" max="100" value="25" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgDressCode" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 4. Galería Fotográfica -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Galería Fotográfica</strong>
+                  <span id="valBgGalleryOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">25%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgGalleryImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgGallery" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgGalleryOpacity" min="0" max="100" value="25" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgGallery" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 5. Mesa de Regalos -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Mesa de Regalos</strong>
+                  <span id="valBgGiftRegistryOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">25%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgGiftRegistryImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgGiftRegistry" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgGiftRegistryOpacity" min="0" max="100" value="25" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgGiftRegistry" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 6. Programa / Itinerario -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Programa / Itinerario</strong>
+                  <span id="valBgItineraryOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">30%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgItineraryImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgItinerary" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgItineraryOpacity" min="0" max="100" value="30" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgItinerary" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 7. Álbum Colaborativo -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Álbum Colaborativo</strong>
+                  <span id="valBgSharedAlbumOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">30%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgSharedAlbumImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgSharedAlbum" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgSharedAlbumOpacity" min="0" max="100" value="30" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgSharedAlbum" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 8. Instagram Hashtag -->
+              <div class="panel-luxury-subcard" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Instagram Hashtag</strong>
+                  <span id="valBgInstagramOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">25%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgInstagramImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgInstagram" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgInstagramOpacity" min="0" max="100" value="25" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgInstagram" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+              <!-- 9. Confirmación / RSVP -->
+              <div class="panel-luxury-subcard">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <strong style="font-size:11.5px; color:var(--text-main);">Confirmación (RSVP)</strong>
+                  <span id="valBgRsvpOpacity" style="font-size:11px; font-weight:700; color:var(--primary);">35%</span>
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                  <div class="input-file-wrapper">
+                    <input type="text" id="inputBgRsvpImage" placeholder="URL o sube imagen...">
+                    <label class="file-btn"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileBgRsvp" accept="image/*" style="display:none;"></label>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <label style="font-size:10.5px; margin-bottom:0; text-transform:none; flex-shrink:0;">Opacidad:</label>
+                  <input type="range" id="inputBgRsvpOpacity" min="0" max="100" value="35" step="1" style="flex:1;">
+                  <button type="button" id="btnClearBgRsvp" class="btn btn-secondary" style="padding:2px 6px; font-size:11px;" title="Quitar imagen">&times;</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 15. MÚSICA & AUDIO -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">graphic_eq</span></span>
+              Música & Audio
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <input type="checkbox" id="checkMusicEnabled" checked style="width:16px; height:16px;">
+              <label for="checkMusicEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Activar Reproductor de Música Discreto</label>
+            </div>
+
+            <div id="musicFields">
+              <div class="form-group">
+                <label for="inputMusicTitle">Título de la Canción</label>
+                <input type="text" id="inputMusicTitle" placeholder="A Thousand Years (Acústico)">
+              </div>
+              <div class="form-group">
+                <label>Archivo o URL de Audio MP3</label>
+                <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                  <input type="url" id="inputMusicUrl" placeholder="URL de audio .mp3" style="flex:1;">
+                  <label class="file-btn" style="cursor:pointer; margin:0;">
+                    <span class="material-symbols-outlined">upload_file</span> Subir MP3 <input type="file" id="fileMusicAudio" accept="audio/*" style="display:none;">
+                  </label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnClearMusicAudio" title="Quitar archivo de audio" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 16. TARJETA DE CONTRATACIÓN & WHATSAPP (LEAD MAGNET) -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            <span class="accordion-title">
+              <span class="accordion-icon"><span class="material-symbols-outlined">support_agent</span></span>
+              Tarjeta de Contratación & WhatsApp (Ventas)
+            </span>
+            <span class="accordion-arrow">▼</span>
+          </button>
+          <div class="accordion-content">
+            <span class="hint">Tarjeta elegante y discreta al pie de la invitación para que los invitados y prospectos interesados en cotizar o contratar sus propias invitaciones digitales te contacten directamente por WhatsApp.</span>
+
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+              <input type="checkbox" id="checkVendorCardEnabled" checked style="width:16px; height:16px;">
+              <label for="checkVendorCardEnabled" style="margin:0; text-transform:none; cursor:pointer; font-weight:600;">Mostrar Tarjeta de Contratación al final</label>
+            </div>
+
+            <div id="vendorCardFields">
+              <div class="form-group">
+                <label for="inputVendorCardBadge">Insignia / Subtítulo</label>
+                <input type="text" id="inputVendorCardBadge" placeholder="¿Deseas una invitación como esta?">
+              </div>
+
+              <div class="form-group">
+                <label for="inputVendorCardTitle">Título Principal</label>
+                <input type="text" id="inputVendorCardTitle" placeholder="Diseña tu Invitación Digital de Lujo">
+              </div>
+
+              <div class="form-group">
+                <label for="inputVendorCardDesc">Descripción / Llamado a la Acción</label>
+                <textarea id="inputVendorCardDesc" rows="3" placeholder="Sorprende a tus invitados con una experiencia interactiva inolvidable para Bodas, XV Años y Eventos Exclusivos."></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="inputVendorCardWhatsapp">WhatsApp de Ventas/Contacto (con lada)</label>
+                <input type="tel" id="inputVendorCardWhatsapp" placeholder="5215512345678">
+              </div>
+
+              <div class="form-group">
+                <label for="inputVendorCardMsg">Mensaje Predefinido de WhatsApp</label>
+                <textarea id="inputVendorCardMsg" rows="2" placeholder="¡Hola! Vi esta invitación digital y me gustaría solicitar información y cotización para mi próximo evento ✨"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="inputVendorCardBtnText">Texto del Botón</label>
+                <input type="text" id="inputVendorCardBtnText" placeholder="Solicitar Información por WhatsApp">
+              </div>
+
+              <div class="form-group">
+                <label for="inputVendorCardAgency">Firma / Marca de Agencia (Opcional)</label>
+                <input type="text" id="inputVendorCardAgency" placeholder="Invitta Studio · Invitaciones Digitales de Lujo">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- ==================== PREVIEW STAGE ==================== -->
+    <section class="preview-stage">
+      <div class="preview-toolbar">
+        <div class="device-switcher">
+          <button type="button" class="device-btn active" data-device="mobile">
+            <span class="material-symbols-outlined" style="font-size:15px;">smartphone</span> iPhone 16 Pro
+          </button>
+          <button type="button" class="device-btn" data-device="tablet">
+            <span class="material-symbols-outlined" style="font-size:15px;">tablet</span> iPad Pro
+          </button>
+          <button type="button" class="device-btn" data-device="desktop">
+            <span class="material-symbols-outlined" style="font-size:15px;">laptop</span> Escritorio
+          </button>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="zoom-controls">
+            <button type="button" class="btn-zoom" id="btnZoomOut" title="Reducir zoom">-</button>
+            <span class="zoom-val" id="zoomVal">100%</span>
+            <button type="button" class="btn-zoom" id="btnZoomIn" title="Aumentar zoom">+</button>
+            <button type="button" class="btn-zoom" id="btnZoomReset" title="Restablecer zoom" style="font-size:10px; width:auto; padding:0 6px;">100%</button>
+          </div>
+
+          <button type="button" class="btn btn-secondary" id="btnRefreshPreview" style="padding:6px 12px; font-size:12px;">
+            <span class="material-symbols-outlined" style="font-size:16px;">autorenew</span> Actualizar
+          </button>
+        </div>
+      </div>
+
+      <div class="preview-viewport-container" id="viewportContainer">
+        <div class="device-frame mobile" id="deviceFrame">
+          <div class="device-dynamic-island">
+            <div class="dynamic-island-sensor"></div>
+            <div class="dynamic-island-cam"></div>
+          </div>
+          <iframe id="previewFrame" class="preview-iframe" title="Vista Previa"></iframe>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="appToast">
+    <span id="toastIcon" class="material-symbols-outlined" style="color:var(--primary); font-size:18px;">check_circle</span>
+    <span id="toastMessage">Cambios guardados</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="decor-assets.js"></script>
+  <script src="template-engine.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // =========================================================================
+    // AISLAMIENTO DE ROL: DISEÑADOR CREATIVO (role=designer)
+    // =========================================================================
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const role = params.get('role');
+      if (role === 'designer') {
+        const adminLinks = document.getElementById('adminNavigationLinks');
+        const badge = document.getElementById('designerRoleBadge');
+        if (adminLinks) adminLinks.style.display = 'none';
+        if (badge) badge.style.display = 'inline-flex';
+      }
+    })();
+  </script>
+</body>
+</html>
