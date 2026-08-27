@@ -84,7 +84,7 @@ tailwind.config = {
 
     /* Personalización de Cristal del Contador */
     --countdown-bg: rgba(18, 18, 20, 0.55);
-    --countdown-text: #ffffff;
+    --countdown-text: #121214;
   }
 
   @layer base {
@@ -2098,7 +2098,7 @@ const CONFIG = {
   "countdownStyle": {
     "bgColor": "#121214",
     "opacity": 0.55,
-    "textColor": "#ffffff"
+    "textColor": "#121214"
   },
   "quote": "El amor no se mira, se siente, y aún más cuando ella está junto a ti.",
   "blessingIntro": "Con la bendición de nuestros padres",
@@ -2461,39 +2461,68 @@ if(urlGuest && urlGuest.trim()){
 const ticketsHint = document.getElementById('allowedTicketsHint');
 if(ticketsHint) ticketsHint.textContent = `Máximo ${urlTickets} personas`;
 
-// 2. Countdown Timer
-if(CONFIG.eventDateISO){
-  let rawDate = String(CONFIG.eventDateISO).trim();
-  if (rawDate.includes(' ') && !rawDate.includes('T')) {
-    rawDate = rawDate.replace(' ', 'T');
-  }
-  const tz = String(CONFIG.timezoneOffset || '').trim();
-  let target = NaN;
-  if (tz && !rawDate.endsWith('Z') && !/[+-]d{2}:d{2}$/.test(rawDate)) {
-    target = new Date(rawDate + tz).getTime();
-  }
-  if (isNaN(target)) {
-    target = new Date(rawDate).getTime();
-  }
-  const elDays = document.getElementById("days");
-  const elHours = document.getElementById("hours");
-  const elMinutes = document.getElementById("minutes");
-  const elSeconds = document.getElementById("seconds");
+// 2. Countdown Timer (Universal Robust Realtime Engine)
+(function initCountdownTimer() {
+  const dateStr = String(CONFIG.eventDateISO || '2027-03-20T16:00:00').trim();
+  const tz = String(CONFIG.timezoneOffset || '-06:00').trim();
+  
+  function getEventTimestamp(rawStr, tzStr) {
+    if (!rawStr) return Date.now() + 86400000 * 180;
+    let s = rawStr.replace(' ', 'T');
+    
+    if (/^d{4}-d{2}-d{2}Td{2}:d{2}$/.test(s)) {
+      s += ':00';
+    } else if (/^d{4}-d{2}-d{2}$/.test(s)) {
+      s += 'T00:00:00';
+    }
 
+    let ts = NaN;
+    if (tzStr && !s.endsWith('Z') && !/[+-]d{2}:d{2}$/.test(s)) {
+      ts = new Date(s + tzStr).getTime();
+    }
+    if (isNaN(ts)) {
+      ts = new Date(s).getTime();
+    }
+    if (isNaN(ts)) {
+      const parts = s.split(/[-T:]/).map(Number);
+      if (parts.length >= 3 && !isNaN(parts[0])) {
+        const y = parts[0];
+        const m = (parts[1] || 1) - 1;
+        const d = parts[2] || 1;
+        const h = parts[3] || 0;
+        const min = parts[4] || 0;
+        const sec = parts[5] || 0;
+        ts = new Date(y, m, d, h, min, sec).getTime();
+      }
+    }
+    return isNaN(ts) ? (Date.now() + 86400000 * 180) : ts;
+  }
+
+  const target = getEventTimestamp(dateStr, tz);
   const pad = n => String(Math.max(0, n || 0)).padStart(2, '0');
 
   const updateCountdown = () => {
-    if (isNaN(target)) return;
     const now = Date.now();
     const diff = Math.max(0, target - now);
-    if(elDays) elDays.innerText = pad(Math.floor(diff / (1000 * 60 * 60 * 24)));
-    if(elHours) elHours.innerText = pad(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    if(elMinutes) elMinutes.innerText = pad(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
-    if(elSeconds) elSeconds.innerText = pad(Math.floor((diff % (1000 * 60)) / 1000));
+    const dVal = pad(Math.floor(diff / (1000 * 60 * 60 * 24)));
+    const hVal = pad(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const mVal = pad(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+    const sVal = pad(Math.floor((diff % (1000 * 60)) / 1000));
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+
+    setVal('days', dVal);
+    setVal('hours', hVal);
+    setVal('minutes', mVal);
+    setVal('seconds', sVal);
   };
+
   updateCountdown();
   setInterval(updateCountdown, 1000);
-}
+})();
 
 // Google Calendar URL
   const gStart = new Date(CONFIG.eventDateISO);
