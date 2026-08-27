@@ -83,25 +83,25 @@ assert(links.hostess.url.includes('scanner-acceso.html'), `Hostess link leads to
 assert(links.emergency.url.includes('generador-emergencia.html'), `Emergency link leads to generador-emergencia.html (${links.emergency.url})`);
 assert(links.catering.url.includes('catering-tactical-sheet.html'), `Catering link leads to tactical sheet (${links.catering.url})`);
 
-// 5. Integración en index.html, portal.html y invitacion-estudio.html
-const indexHtml = fs.readFileSync('./index.html', 'utf-8');
-assert(indexHtml.includes('badgeRoleAdmin'), 'index.html contains badgeRoleAdmin');
-assert(indexHtml.includes('badgeRolePlanner'), 'index.html contains badgeRolePlanner');
-assert(indexHtml.includes('sidebarPrivateBrideLinks'), 'index.html contains sidebarPrivateBrideLinks');
-assert(indexHtml.includes('modalShareAccess'), 'index.html contains modalShareAccess');
-assert(indexHtml.includes('btnGenerateMasterPin'), 'index.html contains btnGenerateMasterPin button');
-assert(indexHtml.includes('btnWaDesigner'), 'index.html contains btnWaDesigner in modalShareAccess');
-assert(indexHtml.includes('modalUnlockAdmin'), 'index.html contains modalUnlockAdmin');
-assert(indexHtml.includes('applyRoleInterface'), 'index.html has applyRoleInterface function');
+// 5. Integración en organizador-mesas.html, index.html y invitacion-estudio.html
+const seatingHtml = fs.readFileSync('./organizador-mesas.html', 'utf-8');
+assert(seatingHtml.includes('badgeRoleAdmin'), 'organizador-mesas.html contains badgeRoleAdmin');
+assert(seatingHtml.includes('badgeRolePlanner'), 'organizador-mesas.html contains badgeRolePlanner');
+assert(seatingHtml.includes('sidebarPrivateBrideLinks'), 'organizador-mesas.html contains sidebarPrivateBrideLinks');
+assert(seatingHtml.includes('modalShareAccess'), 'organizador-mesas.html contains modalShareAccess');
+assert(seatingHtml.includes('btnGenerateMasterPin'), 'organizador-mesas.html contains btnGenerateMasterPin button');
+assert(seatingHtml.includes('btnWaDesigner'), 'organizador-mesas.html contains btnWaDesigner in modalShareAccess');
+assert(seatingHtml.includes('modalUnlockAdmin'), 'organizador-mesas.html contains modalUnlockAdmin');
+assert(seatingHtml.includes('applyRoleInterface'), 'organizador-mesas.html has applyRoleInterface function');
 
 const studioHtml = fs.readFileSync('./invitacion-estudio.html', 'utf-8');
 assert(studioHtml.includes('designerRoleBadge'), 'invitacion-estudio.html contains designerRoleBadge');
 assert(studioHtml.includes('adminNavigationLinks'), 'invitacion-estudio.html contains adminNavigationLinks');
 assert(studioHtml.includes('role === \'designer\''), 'invitacion-estudio.html contains designer isolation script');
 
-const portalHtml = fs.readFileSync('./portal.html', 'utf-8');
-assert(portalHtml.includes('index.html?role=planner'), 'portal.html contains direct card for Wedding Planner (?role=planner)');
-assert(portalHtml.includes('invitacion-estudio.html?role=designer'), 'portal.html contains direct card for Designer (?role=designer)');
+const portalHtml = fs.readFileSync('./index.html', 'utf-8');
+assert(portalHtml.includes('organizador-mesas.html?role=planner'), 'index.html contains direct card for Wedding Planner (?role=planner)');
+assert(portalHtml.includes('invitacion-estudio.html?role=designer'), 'index.html contains direct card for Designer (?role=designer)');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);

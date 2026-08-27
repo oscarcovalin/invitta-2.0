@@ -1,0 +1,38 @@
+{
+  "label": "v2.50_portal_dashboard_set_as_official_home_page_index_html",
+  "timestamp": "2026-08-27T03:02:53.551Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 216582
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 109810
+    },
+    {
+      "filename": "app.js",
+      "size": 102574
+    },
+    {
+      "filename": "style.css",
+      "size": 17423
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}

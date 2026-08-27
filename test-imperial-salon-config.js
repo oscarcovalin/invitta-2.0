@@ -17,12 +17,12 @@ function assert(condition, message) {
 
 console.log("\n🧪 Testing Salon Configuration with Imperial Table Capacity & Bilateral Distribution...");
 
-// 1. Check HTML elements in index.html
-const indexHtml = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
-assert(indexHtml.includes('id="inputImperialGuests"'), 'index.html contains inputImperialGuests');
-assert(indexHtml.includes('id="badgeImperialRatio"'), 'index.html contains badgeImperialRatio');
-assert(indexHtml.includes('id="labelRemainingGuests"'), 'index.html contains labelRemainingGuests');
-assert(indexHtml.includes('btn-quick-imperial'), 'index.html contains btn-quick-imperial quick buttons');
+// 1. Check HTML elements in organizador-mesas.html
+const seatingMasterHtml = fs.readFileSync(path.join(__dirname, 'organizador-mesas.html'), 'utf-8');
+assert(seatingMasterHtml.includes('id="inputImperialGuests"'), 'organizador-mesas.html contains inputImperialGuests');
+assert(seatingMasterHtml.includes('id="badgeImperialRatio"'), 'organizador-mesas.html contains badgeImperialRatio');
+assert(seatingMasterHtml.includes('id="labelRemainingGuests"'), 'organizador-mesas.html contains labelRemainingGuests');
+assert(seatingMasterHtml.includes('btn-quick-imperial'), 'organizador-mesas.html contains btn-quick-imperial quick buttons');
 
 // 2. Check HTML elements in seating-module/index.html
 const seatingHtml = fs.readFileSync(path.join(__dirname, 'seating-module', 'index.html'), 'utf-8');

@@ -4,7 +4,11 @@
   "routes": [
     {
       "src": "/",
-      "dest": "/portal.html"
+      "dest": "/index.html"
+    },
+    {
+      "src": "/portal",
+      "dest": "/index.html"
     },
     {
       "src": "/estudio",
@@ -16,7 +20,7 @@
     },
     {
       "src": "/mesas",
-      "dest": "/index.html"
+      "dest": "/organizador-mesas.html"
     },
     {
       "src": "/scanner",

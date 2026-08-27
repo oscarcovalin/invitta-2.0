@@ -109,19 +109,19 @@ assert(emergHtml.includes('resultQrContainer'), 'generador-emergencia.html has i
 assert(emergHtml.includes('btnShareWhatsApp'), 'generador-emergencia.html has direct WhatsApp share button');
 
 // ============================================================================
-// 4. TEST DASHBOARD & PORTAL INTEGRATION
+// 4. TEST ORGANIZADOR-MESAS & PORTAL INTEGRATION
 // ============================================================================
-const indexHtml = fs.readFileSync('./index.html', 'utf-8');
-assert(indexHtml.includes('scanner-acceso.html'), 'index.html links to scanner-acceso.html');
-assert(indexHtml.includes('generador-emergencia.html'), 'index.html links to generador-emergencia.html');
-assert(indexHtml.includes('statInSalonPax'), 'index.html contains 🟢 statInSalonPax counter');
-assert(indexHtml.includes('statInTransitPax'), 'index.html contains 🟡 statInTransitPax counter');
-assert(indexHtml.includes('statPendingPax'), 'index.html contains 🔴 statPendingPax counter');
-assert(indexHtml.includes('statEmergencyPax'), 'index.html contains 🔵 statEmergencyPax counter');
+const seatingHtml = fs.readFileSync('./organizador-mesas.html', 'utf-8');
+assert(seatingHtml.includes('scanner-acceso.html'), 'organizador-mesas.html links to scanner-acceso.html');
+assert(seatingHtml.includes('generador-emergencia.html'), 'organizador-mesas.html links to generador-emergencia.html');
+assert(seatingHtml.includes('statInSalonPax'), 'organizador-mesas.html contains 🟢 statInSalonPax counter');
+assert(seatingHtml.includes('statInTransitPax'), 'organizador-mesas.html contains 🟡 statInTransitPax counter');
+assert(seatingHtml.includes('statPendingPax'), 'organizador-mesas.html contains 🔴 statPendingPax counter');
+assert(seatingHtml.includes('statEmergencyPax'), 'organizador-mesas.html contains 🔵 statEmergencyPax counter');
 
-const portalHtml = fs.readFileSync('./portal.html', 'utf-8');
-assert(portalHtml.includes('scanner-acceso.html'), 'portal.html contains Escáner de Acceso card');
-assert(portalHtml.includes('generador-emergencia.html'), 'portal.html contains Generador de Emergencia card');
+const portalHtml = fs.readFileSync('./index.html', 'utf-8');
+assert(portalHtml.includes('scanner-acceso.html'), 'index.html contains Escáner de Acceso card');
+assert(portalHtml.includes('generador-emergencia.html'), 'index.html contains Generador de Emergencia card');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);

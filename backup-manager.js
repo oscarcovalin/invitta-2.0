@@ -13,6 +13,9 @@ const BACKUPS_DIR = path.join(PROJECT_DIR, 'backups');
 const CORE_FILES = [
   'template-engine.js',
   'index.html',
+  'portal.html',
+  'organizador-mesas.html',
+  'invitacion-estudio.html',
   'app.js',
   'style.css',
   'decor-assets.js'
