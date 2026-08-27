@@ -2463,16 +2463,27 @@ if(ticketsHint) ticketsHint.textContent = `Máximo ${urlTickets} personas`;
 
 // 2. Countdown Timer
 if(CONFIG.eventDateISO){
-  const isoString = CONFIG.eventDateISO + (CONFIG.timezoneOffset || "");
-  const target = new Date(isoString).getTime() || new Date(CONFIG.eventDateISO).getTime();
+  let rawDate = String(CONFIG.eventDateISO).trim();
+  if (rawDate.includes(' ') && !rawDate.includes('T')) {
+    rawDate = rawDate.replace(' ', 'T');
+  }
+  const tz = String(CONFIG.timezoneOffset || '').trim();
+  let target = NaN;
+  if (tz && !rawDate.endsWith('Z') && !/[+-]d{2}:d{2}$/.test(rawDate)) {
+    target = new Date(rawDate + tz).getTime();
+  }
+  if (isNaN(target)) {
+    target = new Date(rawDate).getTime();
+  }
   const elDays = document.getElementById("days");
   const elHours = document.getElementById("hours");
   const elMinutes = document.getElementById("minutes");
   const elSeconds = document.getElementById("seconds");
 
-  const pad = n => String(n).padStart(2, '0');
+  const pad = n => String(Math.max(0, n || 0)).padStart(2, '0');
 
   const updateCountdown = () => {
+    if (isNaN(target)) return;
     const now = Date.now();
     const diff = Math.max(0, target - now);
     if(elDays) elDays.innerText = pad(Math.floor(diff / (1000 * 60 * 60 * 24)));
@@ -2482,6 +2493,7 @@ if(CONFIG.eventDateISO){
   };
   updateCountdown();
   setInterval(updateCountdown, 1000);
+}
 
 // Google Calendar URL
   const gStart = new Date(CONFIG.eventDateISO);
@@ -2630,7 +2642,7 @@ if (musicPlayer && audio) {
     const nombreSanitizado = escapeHTML(nombreDecodificado);
     let mesaLabelTxt = 'Mesa Reservada';
     if (urlMesaParam) {
-      mesaLabelTxt = urlMesaParam.toLowerCase().includes('imp') ? 'Mesa Imperial' : ('Mesa ' + urlMesaParam.replace(/D/g, ''));
+      mesaLabelTxt = urlMesaParam.toLowerCase().includes('imp') ? 'Mesa Imperial' : ('Mesa ' + urlMesaParam.replace(/[^0-9]/g, ''));
     }
     const mesaSanitizada = escapeHTML(mesaLabelTxt);
 
@@ -2806,8 +2818,7 @@ if (musicPlayer && audio) {
           lines.push('🔖 *Folio de Acceso:* ' + folio);
           if (allergies) lines.push('🍽️ *Nota / Dieta:* ' + allergies);
         }
-        return lines.join('
-');
+        return lines.join(String.fromCharCode(10));
       };
 
       const buildGuestMessageText = () => {
@@ -2821,8 +2832,7 @@ if (musicPlayer && audio) {
         if (CONFIG.eventDateShort) lines.push('📅 *Fecha:* ' + CONFIG.eventDateShort);
         if (CONFIG.reception && CONFIG.reception.venue) lines.push('📍 *Recepción:* ' + CONFIG.reception.venue);
         lines.push('✨ *¡Nos vemos pronto!*');
-        return lines.join('
-');
+        return lines.join(String.fromCharCode(10));
       };
 
       // ── Resolución de Anfitriones Multi-WhatsApp ──
@@ -3462,7 +3472,7 @@ if (musicPlayer && audio) {
           '<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-1 sm:p-1.5 text-left">' +
             '<p class="text-[9px] sm:text-[10px] text-amber-200 font-bold truncate leading-tight">' + safeName + '</p>' +
             '<p class="text-[8px] text-neutral-300 font-mono">' + safeTime + '</p>' +
-          </div>' +
+          '</div>' +
         '</div>';
     });
 
@@ -3541,9 +3551,9 @@ if (musicPlayer && audio) {
         '</div>' +
         '<div class="p-2.5 text-left bg-neutral-900/90">' +
           '<div class="flex items-center justify-between gap-1 mb-0.5">' +
-            '<strong class="text-[11px] text-amber-200 truncate">' + (p.guestName || 'Invitado') + '</strong>' +
-            '<span class="text-[9px] text-neutral-400 font-mono">' + (p.time || '') + '</span>' +
-          </div>' +
+            '<strong class="text-[11px] text-amber-200 truncate">' + safeGuest + '</strong>' +
+            '<span class="text-[9px] text-neutral-400 font-mono">' + safeTime + '</span>' +
+          '</div>' +
           dedicationHtml +
         '</div>' +
       '</div>';

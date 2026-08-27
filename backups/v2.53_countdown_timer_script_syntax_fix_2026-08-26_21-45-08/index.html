@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Invitta 2.0 Beta — Portal Central de Módulos</title>
+
+  <!-- Tipografías de Lujo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Iconos Material Symbols -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background-color: #0b0d11;
+      color: #e5e7eb;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .glass-portal-card {
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+    .glass-portal-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.7);
+      background: rgba(255, 255, 255, 0.065);
+      box-shadow: 0 16px 40px rgba(212, 175, 55, 0.18);
+    }
+
+    .badge-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 selection:bg-amber-500/30">
+
+  <!-- ==================== ENCABEZADO PRINCIPAL ==================== -->
+  <header class="max-w-6xl mx-auto w-full text-center pt-4 pb-10">
+    
+    <!-- Imagotipo Oficial Invitta -->
+    <div class="flex justify-center mb-5">
+      <img src="invitta-logo-light.png" alt="Invitta Logo" class="h-16 sm:h-20 w-auto object-contain drop-shadow-[0_4px_25px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform">
+    </div>
+
+    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-300 text-xs font-mono mb-3">
+      <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+      <span>PORTAL CENTRAL · SUITE 2.0 BETA</span>
+    </div>
+
+    <h1 class="font-['Cinzel'] text-3xl sm:text-4xl font-normal tracking-widest text-white uppercase mb-2">
+      Tablero de Control y Módulos Activos
+    </h1>
+    <p class="text-xs sm:text-sm text-neutral-400 max-w-2xl mx-auto font-light leading-relaxed">
+      Acceso centralizado a las herramientas oficiales de diseño, logística de mesas, recepción de accesos y visualización de invitaciones.
+    </p>
+  </header>
+
+  <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
+  <main class="max-w-6xl mx-auto w-full space-y-10 mb-16">
+    
+    <!-- SECCIÓN 1: GENERADOR & INVITACIÓN DIGITAL -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-amber-400 text-xl">auto_fix_high</span>
+        <h2 class="font-['Cinzel'] text-lg sm:text-xl font-bold text-white tracking-wider uppercase">
+          1. Diseño & Generador de Invitaciones
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Invitta Estudio (Generador Completo) -->
+        <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/50 bg-amber-950/20">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 flex items-center justify-center shadow-md">
+                <span class="material-symbols-outlined text-2xl">palette</span>
+              </div>
+              <span class="badge-pill bg-amber-500/20 text-amber-300 border border-amber-500/40">★ Generador Master</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+              Invitta Estudio (Generador de Invitaciones)
+            </h3>
+            <p class="text-xs text-neutral-300 leading-relaxed">
+              Panel maestro para personalizar la invitación digital: temas de color (Vino, Esmeralda, Noir, etc.), fotos, contador, historia, itinerario, código de vestimenta, mesa de regalos, música, tarjeta de contacto y exportación a HTML.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+            <span>Abrir Invitta Estudio</span>
+            <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        <!-- Invitación Digital Real en Vivo -->
+        <a href="invitacion.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-emerald-400/50 bg-emerald-950/20">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 flex items-center justify-center shadow-md">
+                <span class="material-symbols-outlined text-2xl">visibility</span>
+              </div>
+              <span class="badge-pill bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">★ Vista Invitados ↗</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">
+              Invitación Digital (Vista Final en Vivo)
+            </h3>
+            <p class="text-xs text-neutral-300 leading-relaxed">
+              Página web interactiva final que reciben los invitados con música de fondo, portada fotográfica, cuenta regresiva, programa sincronizado, álbum colaborativo con candado, momento Polvo de Estrellas y RSVP Pergamino.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-emerald-300 font-bold uppercase tracking-wider">
+            <span>Ver Invitación en Vivo ↗</span>
+            <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: LOGÍSTICA DE SALÓN, COMENSALES & ENVIOS -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-amber-400 text-xl">table_restaurant</span>
+        <h2 class="font-['Cinzel'] text-lg sm:text-xl font-bold text-white tracking-wider uppercase">
+          2. Logística de Salón, Comensales & Envíos
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Organizador de Mesas & Floor Plan Drag & Drop Studio -->
+        <a href="organizador-mesas.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/50 bg-amber-500/10">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/25 border border-amber-400 text-amber-300 flex items-center justify-center shadow-lg">
+                <span class="material-symbols-outlined text-2xl">drag_indicator</span>
+              </div>
+              <span class="badge-pill bg-amber-400/20 text-amber-300 border border-amber-400/50 font-bold">Floor Plan & RSVP</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+              Organizador de Mesas & Centro de Control
+            </h3>
+            <p class="text-xs text-neutral-300 leading-relaxed">
+              Plano táctil del salón con asignación de comensales, calculadora de mesas (8, 10 y 12), auto-distribución balanceada y centro de envíos WhatsApp con monitor de confirmaciones RSVP en tiempo real.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+            <span>Abrir Organizador de Mesas</span>
+            <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        <!-- Catering Táctico (Hoja de Ruta de Banquetes) -->
+        <a href="catering-module/catering-tactical-sheet.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/30 bg-white/[0.02]">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shadow-md">
+                <span class="material-symbols-outlined text-2xl">restaurant_menu</span>
+              </div>
+              <span class="badge-pill bg-blue-500/20 text-blue-300 border border-blue-400/40">Imprimible PDF</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+              Hoja Táctica de Catering & Banquetes
+            </h3>
+            <p class="text-xs text-neutral-300 leading-relaxed">
+              Mapa de ruta y reporte optimizado para imprimir en cocina y capitanes de meseros con desglose estricto de dietas, intolerancias, menús infantiles y ubicación de mesas VIP.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+            <span>Ver Hoja de Catering ↗</span>
+            <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: OPERACIÓN EL DÍA DEL EVENTO & ACCESOS POR ROL -->
+    <section>
+      <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-amber-400 text-xl">admin_panel_settings</span>
+        <h2 class="font-['Cinzel'] text-lg sm:text-xl font-bold text-white tracking-wider uppercase">
+          3. Operación en Puerta & Accesos por Rol
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Escáner de Acceso (Hostess) -->
+        <a href="scanner-acceso.html" target="_blank" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group border-emerald-500/40 bg-emerald-950/25">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+              </div>
+              <span class="badge-pill bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">Offline</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-base font-bold text-white group-hover:text-emerald-300 transition-colors mb-1">
+              Escáner Hostess
+            </h3>
+            <p class="text-[11.5px] text-neutral-300 leading-relaxed">
+              Lector QR por cámara en tiempo real con selector de pases parciales, vibración háptica y semáforo de aforo.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-emerald-300 font-medium">
+            <span>Abrir Escáner ↗</span>
+            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        <!-- Generador Express Móvil -->
+        <a href="generador-emergencia.html" target="_blank" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group border-blue-500/40 bg-blue-950/25">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400 text-blue-300 flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-xl">bolt</span>
+              </div>
+              <span class="badge-pill bg-blue-500/20 text-blue-300 border border-blue-500/40">Express</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-base font-bold text-white group-hover:text-blue-300 transition-colors mb-1">
+              Pase Express Móvil
+            </h3>
+            <p class="text-[11.5px] text-neutral-300 leading-relaxed">
+              Emisión de invitaciones y pases VIP de último minuto en 20 segundos desde el celular con QR inmediato.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-blue-300 font-medium">
+            <span>Abrir Express ↗</span>
+            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        <!-- Rol: Wedding Planner -->
+        <a href="organizador-mesas.html?role=planner" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group border-blue-400/40 bg-blue-950/15">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-400/50 text-blue-300 flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-xl">assignment_ind</span>
+              </div>
+              <span class="badge-pill bg-blue-500/20 text-blue-300 border border-blue-500/30">Planner</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-base font-bold text-white group-hover:text-blue-300 transition-colors mb-1">
+              Modo Planner
+            </h3>
+            <p class="text-[11.5px] text-neutral-300 leading-relaxed">
+              Acceso operativo al plano de mesas, catering e itinerario protegiendo configuraciones privadas de los novios.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-blue-300 font-medium">
+            <span>Abrir Planner</span>
+            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        <!-- Rol: Diseñador Creativo -->
+        <a href="invitacion-estudio.html?role=designer" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group border-amber-400/40 bg-amber-950/20">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/50 text-amber-300 flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-xl">brush</span>
+              </div>
+              <span class="badge-pill bg-amber-500/20 text-amber-300 border border-amber-500/30">Diseñador</span>
+            </div>
+            <h3 class="font-['Cinzel'] text-base font-bold text-white group-hover:text-amber-300 transition-colors mb-1">
+              Modo Diseñador
+            </h3>
+            <p class="text-[11.5px] text-neutral-300 leading-relaxed">
+              Maquetación visual de la invitación (fotos, música, dress code, stardust) aislado de teléfonos y mesas privadas.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-medium">
+            <span>Abrir Diseñador</span>
+            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== PIE DE PÁGINA ==================== -->
+  <footer class="max-w-6xl mx-auto w-full text-center border-t border-white/10 pt-6 pb-2 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-400 gap-4">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-mono text-neutral-300 font-semibold">Invitta 2.0 Beta · Ecosistema Oficial Unificado</span>
+    </div>
+    <span class="font-mono text-neutral-500">invitta-2.0-beta</span>
+  </footer>
+
+</body>
+</html>
