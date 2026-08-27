@@ -1,0 +1,34 @@
+﻿{
+  "version": 2,
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/portal.html"
+    },
+    {
+      "src": "/estudio",
+      "dest": "/invitacion-estudio.html"
+    },
+    {
+      "src": "/invitacion",
+      "dest": "/invitacion.html"
+    },
+    {
+      "src": "/mesas",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/scanner",
+      "dest": "/scanner-acceso.html"
+    },
+    {
+      "src": "/express",
+      "dest": "/generador-emergencia.html"
+    },
+    {
+      "src": "/catering",
+      "dest": "/catering-module/catering-tactical-sheet.html"
+    }
+  ]
+}
