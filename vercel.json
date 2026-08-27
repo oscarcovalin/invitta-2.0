@@ -1,4 +1,4 @@
-﻿{
+{
   "version": 2,
   "cleanUrls": true,
   "headers": [
@@ -28,38 +28,34 @@
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/",
-      "dest": "/index.html"
+      "source": "/portal",
+      "destination": "/index.html"
     },
     {
-      "src": "/portal",
-      "dest": "/index.html"
+      "source": "/estudio",
+      "destination": "/invitacion-estudio.html"
     },
     {
-      "src": "/estudio",
-      "dest": "/invitacion-estudio.html"
+      "source": "/invitacion",
+      "destination": "/invitacion.html"
     },
     {
-      "src": "/invitacion",
-      "dest": "/invitacion.html"
+      "source": "/mesas",
+      "destination": "/organizador-mesas.html"
     },
     {
-      "src": "/mesas",
-      "dest": "/organizador-mesas.html"
+      "source": "/scanner",
+      "destination": "/scanner-acceso.html"
     },
     {
-      "src": "/scanner",
-      "dest": "/scanner-acceso.html"
+      "source": "/express",
+      "destination": "/generador-emergencia.html"
     },
     {
-      "src": "/express",
-      "dest": "/generador-emergencia.html"
-    },
-    {
-      "src": "/catering",
-      "dest": "/catering-module/catering-tactical-sheet.html"
+      "source": "/catering",
+      "destination": "/catering-module/catering-tactical-sheet.html"
     }
   ]
 }
