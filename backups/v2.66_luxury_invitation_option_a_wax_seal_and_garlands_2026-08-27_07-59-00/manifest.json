@@ -1,0 +1,38 @@
+{
+  "label": "v2.66_luxury_invitation_option_a_wax_seal_and_garlands",
+  "timestamp": "2026-08-27T13:59:00.364Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 227469
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 121583
+    },
+    {
+      "filename": "app.js",
+      "size": 118773
+    },
+    {
+      "filename": "style.css",
+      "size": 22660
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
