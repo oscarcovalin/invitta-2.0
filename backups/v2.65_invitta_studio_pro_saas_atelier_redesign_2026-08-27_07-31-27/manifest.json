@@ -1,0 +1,38 @@
+{
+  "label": "v2.65_invitta_studio_pro_saas_atelier_redesign",
+  "timestamp": "2026-08-27T13:31:27.044Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 224031
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 121583
+    },
+    {
+      "filename": "app.js",
+      "size": 118773
+    },
+    {
+      "filename": "style.css",
+      "size": 22660
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
