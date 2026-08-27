@@ -1,0 +1,38 @@
+{
+  "label": "v2.62_family_names_font_size_and_horizontal_sliding_offsets",
+  "timestamp": "2026-08-27T12:59:40.541Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 223352
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 120120
+    },
+    {
+      "filename": "app.js",
+      "size": 116594
+    },
+    {
+      "filename": "style.css",
+      "size": 17423
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
