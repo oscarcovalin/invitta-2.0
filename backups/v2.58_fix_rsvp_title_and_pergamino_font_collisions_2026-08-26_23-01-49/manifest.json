@@ -1,0 +1,38 @@
+{
+  "label": "v2.58_fix_rsvp_title_and_pergamino_font_collisions",
+  "timestamp": "2026-08-27T05:01:49.580Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 221325
+    },
+    {
+      "filename": "index.html",
+      "size": 17407
+    },
+    {
+      "filename": "portal.html",
+      "size": 17407
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 114210
+    },
+    {
+      "filename": "app.js",
+      "size": 110652
+    },
+    {
+      "filename": "style.css",
+      "size": 17423
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
