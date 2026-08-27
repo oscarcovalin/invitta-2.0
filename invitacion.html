@@ -633,7 +633,9 @@ tailwind.config = {
     <div id="illustrationBridgeHero"
       class="absolute z-30 pointer-events-none will-change-transform hidden"
       style="bottom: calc(-25% + 0px); width: 85%; max-width: 560px; left: calc(50% + 0px); right: auto; transform: translateX(-50%);">
-      <img src="" alt="Ilustración decorativa" class="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]" loading="eager" />
+      <div class="ill-parallax-inner w-full h-auto will-change-transform">
+        <img src="" alt="Ilustración decorativa" class="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]" loading="eager" />
+      </div>
     </div>
   </section>
 
@@ -743,7 +745,9 @@ tailwind.config = {
     <div id="illustrationBridgeCountdown"
       class="absolute z-30 pointer-events-none will-change-transform hidden"
       style="bottom: calc(-25% + 0px); width: 80%; max-width: 540px; left: calc(50% + 0px); right: auto; transform: translateX(-50%);">
-      <img src="" alt="Ilustración decorativa" class="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]" loading="lazy" />
+      <div class="ill-parallax-inner w-full h-auto will-change-transform">
+        <img src="" alt="Ilustración decorativa" class="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]" loading="lazy" />
+      </div>
     </div>
   </section>
 
@@ -828,7 +832,9 @@ tailwind.config = {
     <div id="illustrationBridgeFamily"
       class="absolute z-30 pointer-events-none will-change-transform hidden"
       style="bottom: calc(-25% + 0px); width: 82%; max-width: 560px; left: calc(50% + 0px); right: auto; transform: translateX(-50%);">
-      <img src="" alt="Ilustración decorativa" class="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]" loading="lazy" />
+      <div class="ill-parallax-inner w-full h-auto will-change-transform">
+        <img src="" alt="Ilustración decorativa" class="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]" loading="lazy" />
+      </div>
     </div>
   </section>
 
@@ -3648,23 +3654,52 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    if (illBridgeHero && !illBridgeHero.classList.contains('hidden')) {
-      // CAPA 2 — Ilustración puente Hero / Historia: plano intermedio con velocidad configurable
-      const heroParallaxSpeed = 25;
-      const triggerSec = illBridgeHero.closest('section') || heroSection;
-      gsap.to(illBridgeHero, {
-        yPercent: -heroParallaxSpeed,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: triggerSec,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.8
-        }
-      });
-    }
+    // ── Parallax Ilustración Hero / Historia ──
+    const initIllustrationBridgeParallax = (bridgeId, speedPercent) => {
+      const bridge = document.getElementById(bridgeId);
+      if (!bridge || bridge.classList.contains('hidden')) return;
+      const inner = bridge.querySelector('.ill-parallax-inner') || bridge;
+      const triggerSec = bridge.closest('section') || bridge.parentElement || document.body;
+      const speed = Math.max(5, Math.min(80, Number(speedPercent) || 25));
 
-    const illBridgeCountdown = document.getElementById('illustrationBridgeCountdown');
+      // Parallax scroll scrub en la capa interna (viaje vertical suave sin alterar el centrado ni el layout exterior)
+      gsap.fromTo(inner,
+        { y: speed * 1.5 },
+        {
+          y: -(speed * 2.2),
+          ease: 'none',
+          scrollTrigger: {
+            trigger: triggerSec,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 0.6
+          }
+        }
+      );
+
+      // Entrada suave de opacidad sin alterar transform
+      gsap.fromTo(bridge,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1.0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: triggerSec,
+            start: 'top 92%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    };
+
+    const heroParallaxSpeed = 25;
+    const cdParallaxSpeed = 25;
+    const familyParallaxSpeed = 25;
+
+    initIllustrationBridgeParallax('illustrationBridgeHero', heroParallaxSpeed);
+    initIllustrationBridgeParallax('illustrationBridgeCountdown', cdParallaxSpeed);
+    initIllustrationBridgeParallax('illustrationBridgeFamily', familyParallaxSpeed);
 
     // ── Parallax Foto del Contador (sutil vertical a pantalla completa) ──────
     const countdownPhotoBlock = document.getElementById('countdownPhotoBlock');
@@ -3685,49 +3720,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
     }
-
-    if (illBridgeCountdown && !illBridgeCountdown.classList.contains('hidden')) {
-      // CAPA 2 — Ilustración puente Cuenta Regresiva → Familia: parallax marcado
-      const cdParallaxSpeed = 25;
-      const triggerSec = illBridgeCountdown.closest('section') || countdownSection;
-      gsap.to(illBridgeCountdown, {
-        yPercent: -cdParallaxSpeed,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: triggerSec,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 0.8
-        }
-      });
-    }
-
-    if (familySection && illBridgeFamily && !illBridgeFamily.classList.contains('hidden')) {
-      // CAPA 2 — Ilustración puente Familia: parallax marcado con velocidad configurable
-      const familyParallaxSpeed = 25;
-      gsap.to(illBridgeFamily, {
-        yPercent: -familyParallaxSpeed,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: familySection,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 0.8
-        }
-      });
-    }
-
-    // Entry animation for illustrations: más dramática (viene desde más abajo)
-    [illBridgeHero, illBridgeCountdown, illBridgeFamily].forEach(el => {
-      if (el && !el.classList.contains('hidden')) {
-        gsap.fromTo(el,
-          { opacity: 0, scale: 0.82, y: 70 },
-          { opacity: 1, scale: 1, y: 0, duration: 1.6, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 98%', toggleActions: 'play none none reverse' }
-          }
-        );
-      }
-    });
 
     // ─────────────────────────────────────────────────────────────────────────
     // PARALLAX GALERÍA: Cada foto se desplaza en scroll creando efecto de profundidad.

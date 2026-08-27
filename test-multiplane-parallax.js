@@ -11,10 +11,9 @@ console.log('illustrationBridgeHero present:', htmlBase.includes('id="illustrati
 console.log('illustrationBridgeCountdown present:', htmlBase.includes('id="illustrationBridgeCountdown"'));
 console.log('illustrationBridgeFamily present:', htmlBase.includes('id="illustrationBridgeFamily"'));
 console.log('GSAP parallaxBgHero animation present:', htmlBase.includes("getElementById('parallaxBgHero')"));
-console.log('GSAP illBridgeHero animation present:', htmlBase.includes("getElementById('illustrationBridgeHero')"));
-console.log('GSAP illBridgeCountdown animation present:', htmlBase.includes("getElementById('illustrationBridgeCountdown')"));
-console.log('GSAP illBridgeFamily animation present:', htmlBase.includes("getElementById('illustrationBridgeFamily')"));
-console.log('Countdown has adaptive padding class (default pt-2):', htmlBase.includes('pt-2 sm:pt-4 pb-20'));
+console.log('GSAP illBridgeHero animation present:', htmlBase.includes("initIllustrationBridgeParallax('illustrationBridgeHero'"));
+console.log('GSAP illBridgeCountdown animation present:', htmlBase.includes("initIllustrationBridgeParallax('illustrationBridgeCountdown'"));
+console.log('GSAP illBridgeFamily animation present:', htmlBase.includes("initIllustrationBridgeParallax('illustrationBridgeFamily'"));
 
 // 2. Test Hero illustration active with story section enabled (Debajo de Nuestra Historia)
 const configIllHero = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
