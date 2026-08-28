@@ -42,6 +42,14 @@
       "destination": "/invitacion.html"
     },
     {
+      "source": "/invitacion-boda",
+      "destination": "/invitacion-boda.html"
+    },
+    {
+      "source": "/invitacion-xv",
+      "destination": "/invitacion-xv.html"
+    },
+    {
       "source": "/mesas",
       "destination": "/organizador-mesas.html"
     },

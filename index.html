@@ -555,7 +555,7 @@
             <!-- Suite de Acciones Rápidas -->
             <div class="pt-4 border-t border-white/10 space-y-2">
               <div class="grid grid-cols-2 gap-2">
-                <a href="invitacion.html?project=${p.id}" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-xs font-semibold tracking-wider transition-all">
+                <a href="${isBoda ? 'invitacion-boda.html' : 'invitacion-xv.html'}?project=${p.id}" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-xs font-semibold tracking-wider transition-all">
                   <span class="material-symbols-outlined text-sm">visibility</span>
                   <span>Ver en Vivo ↗</span>
                 </a>
