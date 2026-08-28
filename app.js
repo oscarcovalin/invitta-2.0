@@ -1498,6 +1498,50 @@ function populateForm() {
 }
 
 function setupInputListeners() {
+
+  const elEventDate = document.getElementById('inputEventDate');
+  if (elEventDate) {
+    elEventDate.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (val) {
+        const [datePart] = val.split('T');
+        const [y, m, d] = datePart.split('-').map(Number);
+        const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const monthName = MESES[m - 1] || 'Marzo';
+        
+        const label = `${d} de ${monthName}, ${y}`;
+        const short = `${d} · ${monthName} · ${y}`;
+        
+        currentConfig.eventDateLabel = label;
+        currentConfig.eventDateShort = short;
+        
+        const inLabel = document.getElementById('inputDateLabel');
+        const inShort = document.getElementById('inputDateShort');
+        if (inLabel) inLabel.value = label;
+        if (inShort) inShort.value = short;
+
+        // Auto-update RSVP deadline default (1 month before event)
+        const prevMonthIdx = (m - 2 + 12) % 12;
+        const rsvpMonthName = MESES[prevMonthIdx];
+        const rsvpDayVal = Math.min(d, 28);
+        
+        const selectDay = document.getElementById('selectRsvpDay');
+        const selectMonth = document.getElementById('selectRsvpMonth');
+        if (selectDay) selectDay.value = String(rsvpDayVal);
+        if (selectMonth) selectMonth.value = rsvpMonthName;
+
+        const rsvpPhrase = `Por favor, haznos saber si podrás acompañarnos antes del ${rsvpDayVal} de ${rsvpMonthName}.`;
+        currentConfig.rsvpDeadlineLabel = rsvpPhrase;
+        const previewPhrase = document.getElementById('previewRsvpDeadlinePhrase');
+        const inputDeadline = document.getElementById('inputRsvpDeadline');
+        if (previewPhrase) previewPhrase.textContent = rsvpPhrase;
+        if (inputDeadline) inputDeadline.value = rsvpPhrase;
+
+        schedulePreviewUpdate();
+      }
+    });
+  }
+
   const bindings = [
     { id: 'selectEventType', path: 'eventType' },
     { id: 'inputName', path: 'name' },

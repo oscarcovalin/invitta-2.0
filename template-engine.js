@@ -121,7 +121,7 @@ const TemplateEngine = {
     "monogram": "C",
     "eyebrow": "Mis XV años",
     "welcomeMessage": "\"Hay momentos que se guardan para siempre... Acompáñame a celebrar uno de ellos: mis quince años.\"",
-    "eventDateISO": "2027-03-13T16:00",
+    "eventDateISO": "2027-03-20T16:00",
     "timezoneOffset": "-06:00",
     "eventDateLabel": "20 de Marzo, 2027",
     "eventDateShort": "20 · Marzo · 2027",
@@ -1182,6 +1182,10 @@ const TemplateEngine = {
       if (yMatch) dateYear = yMatch[1];
     }
     if (!dateYear) dateYear = '2027';
+
+    const formattedEventDate = (dateDayNumber && dateMonthName && dateYear)
+      ? `${dateDayNumber} · ${dateMonthName.charAt(0).toUpperCase() + dateMonthName.slice(1).toLowerCase()} · ${dateYear}`
+      : (config.eventDateShort || config.eventDateLabel || '20 · Marzo · 2027');
 
     return `<!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
