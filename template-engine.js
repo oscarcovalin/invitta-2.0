@@ -2601,14 +2601,15 @@ tailwind.config = {
       </div>
       
       <!-- Galería Editorial: Fotos Completas, Sin Esquinas Redondeadas, Con Parallax Individual -->
-      <div class="w-full flex flex-col gap-3" id="galleryGrid">
+      <div class="w-full flex flex-col gap-4" id="galleryGrid">
         ${((config.photos && config.photos.gallery) || []).map((url, i) => url ? `
-          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
+          <div class="gallery-item-wrap w-full relative" style="overflow: visible;">
             <!-- Marco interior que contiene la foto sin recortar -->
-            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
-              <img src="${url}" alt="Foto ${i+1}" loading="lazy"
+            <div class="w-full relative overflow-hidden bg-black/20" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35); min-height: 220px;">
+              <img src="${url}" alt="Foto ${i+1}" loading="eager" decoding="async"
                 class="gallery-photo w-full h-auto block"
-                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
+                style="display:block; width:100%; height:auto; object-fit:cover; border-radius:0; will-change:transform;"
+                onload="if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();"/>
             </div>
           </div>
         ` : '').join('')}
