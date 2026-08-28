@@ -2943,7 +2943,7 @@ tailwind.config = {
   </section>
 
   <!-- ==================== 10. RSVP PERGAMINO (CONFIRMACIÓN LIMPIA Y DIRECTA) ==================== -->
-  <section id="rsvp" class="pt-16 pb-36 px-margin-mobile bg-emerald-dark text-center relative overflow-hidden border-t border-antique-gold/30 ${isRsvpEnabled ? '' : 'hidden'}">
+  <section id="rsvp" class="pt-12 pb-8 px-margin-mobile bg-emerald-dark text-center relative overflow-hidden border-t border-antique-gold/30 ${isRsvpEnabled ? '' : 'hidden'}">
     ${(() => {
       const bg = getSectionBg(config, 'rsvp', 0.35);
       return (bg.image && bg.image.trim()) ? `
@@ -3103,7 +3103,7 @@ tailwind.config = {
 </div>
 
 <!-- ==================== 11. FOOTER ==================== -->
-<footer class="pt-16 pb-24 px-margin-mobile text-center bg-emerald-deep border-t border-antique-gold/30">
+<footer class="pt-8 pb-20 px-margin-mobile text-center bg-emerald-deep border-t border-antique-gold/30">
   ${(config.footerClosing !== undefined ? config.footerClosing : 'Con amor,') ? `
   <p class="font-script font-normal mb-1 gsap-fade-up overflow-visible text-2xl sm:text-3xl text-antique-gold" id="footerClosing">
     ${config.footerClosing !== undefined ? config.footerClosing : 'Con amor,'}
