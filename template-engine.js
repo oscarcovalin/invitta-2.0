@@ -113,27 +113,27 @@ const TemplateEngine = {
   },
 
   defaultConfig: {
-    eventType: "boda",
-    name: "Catalina & Julián",
+    eventType: "xv",
+    name: "Catalina",
     brideName: "Catalina",
     groomName: "Julián",
     nameConnector: "&", 
-    monogram: "", 
-    eyebrow: "Nuestra Boda",
-    welcomeMessage: "Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.",
-    eventDateISO: "2027-03-20T16:00:00",
+    monogram: "C", 
+    eyebrow: "Mis XV Años",
+    welcomeMessage: "Hay momentos que se guardan para siempre en el corazón... Acompáñame a celebrar uno de los días más especiales e inolvidables de mi vida: mis quince años.",
+    eventDateISO: "2027-03-20T18:00:00",
     timezoneOffset: "-06:00",
     eventDateLabel: "20 de Marzo, 2027",
     eventDateShort: "20 · Marzo · 2027",
     eventDurationHours: 6,
-    countdownPhrase: "Para casarme con el amor de mi vida",
+    countdownPhrase: "Para mi gran noche de XV Años",
     countdownStyle: {
       bgColor: "#121214",
       opacity: 0.55,
       textColor: "#121214"
     },
-    quote: "El amor no se mira, se siente, y aún más cuando ella está junto a ti.",
-    blessingIntro: "Con la bendición de nuestros padres",
+    quote: "Hoy comienzo a escribir un nuevo capítulo lleno de ilusiones, gratitud y sueños por cumplir.",
+    blessingIntro: "Con la bendición de Dios y mis padres",
     
     mother: "Elena de Martínez",
     father: "Roberto Martínez",
@@ -144,7 +144,7 @@ const TemplateEngine = {
 
     godmother: "Ana de López",
     godfather: "Javier López",
-    court: ["Camila Ortiz", "Renata Vega", "Diego Fuentes", "Emiliano Cruz", "Ximena Paredes"],
+    court: ["Mis Chambelanes de Honor", "Emiliano Cruz", "Diego Fuentes", "Mateo Soto", "Santiago Morales"],
     waxSeal: {
       enabled: true,
       customImage: '',
@@ -168,7 +168,7 @@ const TemplateEngine = {
 
     instagram: {
       enabled: true,
-      hashtag: "#BodaCatalinayJulian",
+      hashtag: "#MisXVCatalina",
       text: "Comparte tus fotos y momentos especiales con nosotros en Instagram usando nuestro hashtag oficial."
     },
 
@@ -177,7 +177,7 @@ const TemplateEngine = {
       title: "Álbum Colaborativo",
       subtitle: "Comparte tus Fotos y Videos",
       description: "¡Ayúdanos a capturar cada momento! Sube aquí todas las fotos y videos que tomes durante nuestro gran día usando tu código personalizado de invitado.",
-      accessCode: "BODA2027",
+      accessCode: "XV2027",
       albumUrl: "https://photos.google.com"
     },
 
@@ -240,7 +240,7 @@ const TemplateEngine = {
       wazeUrl: "https://waze.com/ul?q=Parroquia+San+Rafael"
     },
     reception: {
-      venue: "Jardín Las Magnolias",
+      venue: "Cantabria Salón de Eventos",
       address: "Camino Real 456, Valle Alto",
       time: "6:30 PM",
       mapsUrl: "https://maps.google.com/?q=Jardín+Las+Magnolias",
