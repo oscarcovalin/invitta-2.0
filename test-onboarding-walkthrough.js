@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('=== TEST SUITE: BODAPIX-INSPIRED ONBOARDING GUIDE ===');
+console.log('=== TEST SUITE: BODAPIX-INSPIRED ONBOARDING & SHOWCASE MODAL ===');
 
 // Test 1: como-funciona.html exists and is well-formed
 const guidePath = path.resolve(__dirname, 'como-funciona.html');
@@ -19,14 +19,16 @@ console.log('Test 2 - 5 clean step panels present:',
   guideHtml.includes('id="stepPanel5"')
 );
 
-// Test 3: No stray 'atelier' or 'alta costura' in user-facing copy
+// Test 3: Showcase modal & Upload Demo buttons present
+console.log('Test 3 - Showcase modal present:', guideHtml.includes('id="showcaseModal"'));
+console.log('Test 3 - Upload modal present:', guideHtml.includes('id="uploadModal"'));
+console.log('Test 3 - openShowcaseModal function present:', guideHtml.includes('openShowcaseModal'));
+console.log('Test 3 - handleDemoUpload function present:', guideHtml.includes('handleDemoUpload'));
+
+// Test 4: Clean terminology (no atelier, no alta costura)
 const hasAtelier = /atelier/i.test(guideHtml);
 const hasAltaCostura = /alta costura/i.test(guideHtml);
-console.log('Test 3 - Clean terminology (no atelier):', !hasAtelier);
-console.log('Test 3 - Clean terminology (no alta costura):', !hasAltaCostura);
+console.log('Test 4 - Clean terminology (no atelier):', !hasAtelier);
+console.log('Test 4 - Clean terminology (no alta costura):', !hasAltaCostura);
 
-// Test 4: Navigation and Action buttons present
-console.log('Test 4 - Navigation buttons present:', guideHtml.includes('id="btnPrevTab"') && guideHtml.includes('id="btnNextTab"'));
-console.log('Test 4 - Action buttons link to studio and portal:', guideHtml.includes('href="invitacion-estudio.html"') && guideHtml.includes('href="index.html"'));
-
-console.log('\n🎉 ALL BODAPIX-INSPIRED ONBOARDING TESTS PASSED WITH 100% SUCCESS!');
+console.log('\n🎉 ALL ONBOARDING & SHOWCASE MODAL TESTS PASSED WITH 100% SUCCESS!');

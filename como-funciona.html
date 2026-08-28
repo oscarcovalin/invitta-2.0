@@ -88,9 +88,6 @@
     .step-tab-btn.active .step-num {
       color: #C8E6D6;
     }
-    .step-tab-btn.active .step-icon {
-      color: #FFFFFF;
-    }
 
     /* Transición Suave de Pasos */
     .step-panel {
@@ -132,6 +129,12 @@
       border-color: var(--accent-gold);
       background: var(--accent-gold-light);
     }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      background: rgba(44, 40, 37, 0.65);
+      backdrop-filter: blur(8px);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-100 selection:text-amber-900">
@@ -162,51 +165,74 @@
   </aside>
 
   <!-- ==================== HEADER PRINCIPAL ==================== -->
-  <header class="w-full bg-[#FFFFFF]/90 backdrop-blur-md border-b border-[#EFE9E0] sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+  <header class="w-full bg-[#FFFFFF]/90 backdrop-blur-md border-b border-[#EFE9E0] sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between">
       
       <!-- Logotipo -->
       <a href="index.html" class="flex items-center gap-3 text-decoration-none group">
-        <img src="invitta-logo-light.png" alt="Invitta Logo" class="h-10 w-auto object-contain">
+        <img src="invitta-logo-light.png" alt="Invitta Logo" class="h-9 w-auto object-contain">
         <div class="border-l border-neutral-300 pl-3 hidden sm:block">
-          <span class="text-[11px] font-medium text-neutral-500 tracking-wider uppercase block">
-            Guía de Uso
+          <span class="text-[10.5px] font-medium text-neutral-500 tracking-wider uppercase block">
+            Guía & Muestras
           </span>
-          <span class="font-serif-title text-sm font-semibold text-neutral-800 block -mt-0.5">
+          <span class="font-serif-title text-xs sm:text-sm font-semibold text-neutral-800 block -mt-0.5">
             ¿Cómo Funciona?
           </span>
         </div>
       </a>
 
-      <!-- Accesos Rápidos -->
-      <div class="flex items-center gap-3">
-        <a href="index.html" class="btn-bodapix-secondary px-4 py-2 text-xs flex items-center gap-1.5 text-decoration-none">
-          <span class="material-symbols-outlined text-base">dashboard</span>
-          <span class="hidden sm:inline">Mis Proyectos</span>
-        </a>
-        <a href="invitacion-estudio.html" class="btn-bodapix-primary px-5 py-2 text-xs flex items-center gap-1.5 text-decoration-none shadow-sm">
+      <!-- Botones de Acción Superior -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- BOTÓN ESTELAR: VER MUESTRAS DE INVITACIONES -->
+        <button type="button" onclick="openShowcaseModal()" class="btn-bodapix-secondary px-3.5 sm:px-4 py-2 text-xs flex items-center gap-1.5 text-decoration-none border-amber-300 bg-amber-50/70 text-amber-950 font-semibold shadow-sm hover:bg-amber-100/80">
+          <span class="material-symbols-outlined text-amber-700 text-base">visibility</span>
+          <span>Ver Muestras</span>
+        </button>
+
+        <!-- BOTÓN SUBIR INVITACIÓN DEMO -->
+        <button type="button" onclick="openUploadModal()" class="btn-bodapix-secondary px-3.5 sm:px-4 py-2 text-xs flex items-center gap-1.5 text-decoration-none">
+          <span class="material-symbols-outlined text-base text-neutral-600">upload_file</span>
+          <span class="hidden md:inline">Subir Demo</span>
+        </button>
+
+        <!-- ACCESO AL ESTUDIO -->
+        <a href="invitacion-estudio.html" class="btn-bodapix-primary px-4 sm:px-5 py-2 text-xs flex items-center gap-1.5 text-decoration-none shadow-sm">
           <span class="material-symbols-outlined text-base">palette</span>
-          <span>Crear Invitación</span>
+          <span class="hidden sm:inline">Crear Invitación</span>
+          <span class="sm:hidden">Estudio</span>
         </a>
       </div>
 
     </div>
   </header>
 
-  <!-- ==================== HERO DE BIENVENIDA ==================== -->
-  <section class="max-w-4xl mx-auto px-6 pt-12 pb-8 text-center">
-    <span class="inline-block px-4 py-1 rounded-full bg-amber-50 border border-amber-200/60 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-4">
-      ✨ Guía Rápida para Novios, Festejadas y Planners
+  <!-- ==================== HERO DE BIENVENIDA CON BOTÓN DE MUESTRAS ==================== -->
+  <section class="max-w-4xl mx-auto px-6 pt-10 pb-8 text-center">
+    <span class="inline-block px-4 py-1 rounded-full bg-amber-50 border border-amber-200/60 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-3">
+      ✨ Guía Rápida & Catálogo de Muestras
     </span>
 
-    <h1 class="font-serif-title text-3xl sm:text-4xl md:text-5xl font-medium text-neutral-900 leading-[1.2] mb-4">
+    <h1 class="font-serif-title text-3xl sm:text-4xl md:text-5xl font-medium text-neutral-900 leading-[1.2] mb-3.5">
       Cómo crear y compartir tu invitación<br>
       <span class="italic font-normal text-[#8B263E]">fácilmente en 5 sencillos pasos</span>
     </h1>
 
-    <p class="text-neutral-600 text-sm sm:text-base font-normal max-w-2xl mx-auto leading-relaxed">
-      Desde la elección de colores y fotos hasta la recepción de confirmaciones RSVP y el acomodo de mesas. Todo pensado para que tu evento sea inolvidable y muy fácil de organizar.
+    <p class="text-neutral-600 text-xs sm:text-sm md:text-base font-normal max-w-2xl mx-auto leading-relaxed mb-6">
+      Desde la elección de colores y fotos hasta la recepción de confirmaciones RSVP y el acomodo de mesas. Todo pensado para que tu evento sea inolvidable.
     </p>
+
+    <!-- ACCESOS DESTACADOS HERO -->
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <button type="button" onclick="openShowcaseModal()" class="btn-bodapix-primary px-6 py-3 text-xs sm:text-sm flex items-center gap-2 shadow-md">
+        <span class="material-symbols-outlined text-base">auto_awesome</span>
+        <span>Ver Muestras de Invitaciones ➔</span>
+      </button>
+
+      <button type="button" onclick="openUploadModal()" class="btn-bodapix-secondary px-5 py-3 text-xs sm:text-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-base text-neutral-700">upload_file</span>
+        <span>Subir mi Invitación Demo (.json)</span>
+      </button>
+    </div>
   </section>
 
   <!-- ==================== BARRA DE PASOS INTERACTIVA ==================== -->
@@ -277,9 +303,14 @@
               </div>
             </div>
 
-            <div class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-xs text-amber-900 flex items-center gap-2.5">
-              <span class="material-symbols-outlined text-amber-700 text-lg flex-shrink-0">smartphone</span>
-              <span><strong>Vista Previa en Tiempo Real</strong>: Editas en la computadora y ves de inmediato cómo lucirá en el teléfono de tus invitados.</span>
+            <div class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-xs text-amber-900 flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5">
+                <span class="material-symbols-outlined text-amber-700 text-lg flex-shrink-0">visibility</span>
+                <span><strong>¿Quieres ver cómo queda una terminada?</strong></span>
+              </div>
+              <button type="button" onclick="openShowcaseModal()" class="text-xs font-bold text-amber-900 underline hover:text-amber-700">
+                Ver Muestras ➔
+              </button>
             </div>
           </div>
 
@@ -586,7 +617,7 @@
       </button>
     </div>
 
-    <!-- ==================== BANNER FINAL CTA (ESTILO BODAPIX) ==================== -->
+    <!-- ==================== BANNER FINAL CTA ==================== -->
     <div class="mt-14 p-8 sm:p-10 rounded-3xl bg-white border border-[#EFE9E0] text-center space-y-4 shadow-sm">
       <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full inline-block">
         ¿Todo Listo para Empezar?
@@ -597,22 +628,160 @@
       </h3>
 
       <p class="text-neutral-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-        Personaliza tu diseño en el estudio o consulta tus proyectos guardados en el panel principal.
+        Explora las muestras terminadas o sube tu propia invitación demo para verla en vivo.
       </p>
 
       <div class="flex flex-wrap justify-center gap-3 pt-2">
-        <a href="invitacion-estudio.html" class="btn-bodapix-primary px-7 py-3 text-xs flex items-center gap-2 text-decoration-none shadow-md">
-          <span class="material-symbols-outlined text-base">palette</span>
-          <span>Abrir Estudio de Diseño</span>
-        </a>
-        <a href="index.html" class="btn-bodapix-secondary px-6 py-3 text-xs flex items-center gap-2 text-decoration-none">
-          <span class="material-symbols-outlined text-base">dashboard</span>
-          <span>Ver Mis Proyectos</span>
-        </a>
+        <button type="button" onclick="openShowcaseModal()" class="btn-bodapix-primary px-7 py-3 text-xs flex items-center gap-2 shadow-md">
+          <span class="material-symbols-outlined text-base">visibility</span>
+          <span>Ver Muestras de Invitaciones</span>
+        </button>
+        <button type="button" onclick="openUploadModal()" class="btn-bodapix-secondary px-6 py-3 text-xs flex items-center gap-2">
+          <span class="material-symbols-outlined text-base text-neutral-700">upload_file</span>
+          <span>Subir Invitación Demo</span>
+        </button>
       </div>
     </div>
 
   </main>
+
+  <!-- ==================== MODAL DE MUESTRAS DE INVITACIONES ==================== -->
+  <div id="showcaseModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop" onclick="closeShowcaseModal(event)">
+    <div class="bg-white rounded-3xl border border-[#EDE7DF] max-w-4xl w-full p-6 sm:p-8 max-h-[90vh] overflow-y-auto shadow-2xl space-y-6" onclick="event.stopPropagation()">
+      
+      <!-- Cabecera del Modal -->
+      <div class="flex items-center justify-between border-b border-neutral-100 pb-4">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full inline-block mb-1">
+            ✨ Catálogo de Muestras en Vivo
+          </span>
+          <h3 class="font-serif-title text-2xl font-semibold text-neutral-900">
+            Muestras de Invitaciones Producidas
+          </h3>
+          <p class="text-xs text-neutral-500">
+            Haz clic en cualquier muestra para abrir la invitación real interactiva o editarla en el estudio.
+          </p>
+        </div>
+        <button type="button" onclick="closeShowcaseModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 flex items-center justify-center text-sm transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Cuadrícula de Muestras -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- MUESTRA 1: BODA CATALINA & JULIÁN -->
+        <div class="p-5 rounded-2xl bg-[#FAF8F5] border border-[#EFE9E0] space-y-3 hover:border-amber-400 transition-colors flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-bold uppercase">
+                💍 Boda Elegante
+              </span>
+              <span class="text-[11px] font-medium text-neutral-500">Paleta Vino & Oro</span>
+            </div>
+            <h4 class="font-serif-title text-lg font-bold text-neutral-900">
+              Nuestra Boda · Catalina & Julián
+            </h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              Fotografía real de pareja, Sello de Cera 3D con monograma <code class="bg-white px-1 rounded">C & J</code>, canción <em>A Thousand Years</em>, itinerario completo y confirmación RSVP en pergamino.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-neutral-200 flex items-center gap-2">
+            <a href="invitacion.html" target="_blank" class="flex-1 btn-bodapix-primary py-2 text-xs text-center flex items-center justify-center gap-1 text-decoration-none">
+              <span class="material-symbols-outlined text-sm">visibility</span>
+              <span>Ver Invitación ↗</span>
+            </a>
+            <a href="invitacion-estudio.html" class="px-3 py-2 rounded-full border border-neutral-300 text-neutral-700 text-xs font-medium hover:bg-white flex items-center gap-1 text-decoration-none">
+              <span class="material-symbols-outlined text-sm">edit</span>
+              <span>Editar</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- MUESTRA 2: MIS XV AÑOS VALENTINA -->
+        <div class="p-5 rounded-2xl bg-[#FAF8F5] border border-[#EFE9E0] space-y-3 hover:border-rose-300 transition-colors flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-900 text-[10px] font-bold uppercase">
+                👑 Mis XV Años
+              </span>
+              <span class="text-[11px] font-medium text-neutral-500">Paleta Rosa Gold</span>
+            </div>
+            <h4 class="font-serif-title text-lg font-bold text-neutral-900">
+              Mis XV Años · Valentina
+            </h4>
+            <p class="text-xs text-neutral-600 leading-relaxed">
+              Retrato de gala, Sello 3D con corona heráldica, vals de quinceañera, sección de chambelanes de honor, álbum colaborativo con PIN y lluvia de sobres.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-neutral-200 flex items-center gap-2">
+            <a href="invitacion.html?type=xv" target="_blank" class="flex-1 btn-bodapix-primary py-2 text-xs text-center flex items-center justify-center gap-1 text-decoration-none bg-rose-900 hover:bg-rose-950">
+              <span class="material-symbols-outlined text-sm">visibility</span>
+              <span>Ver Invitación ↗</span>
+            </a>
+            <a href="invitacion-estudio.html?type=xv" class="px-3 py-2 rounded-full border border-neutral-300 text-neutral-700 text-xs font-medium hover:bg-white flex items-center gap-1 text-decoration-none">
+              <span class="material-symbols-outlined text-sm">edit</span>
+              <span>Editar</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie del Modal: Subir Invitación Propia -->
+      <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-emerald-950">
+        <div class="flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-emerald-700 text-xl flex-shrink-0">upload_file</span>
+          <span>¿Tienes un archivo <strong>.json</strong> de una invitación que creaste? Puedes subirlo para probarlo aquí.</span>
+        </div>
+        <button type="button" onclick="closeShowcaseModal(); openUploadModal();" class="btn-bodapix-secondary px-4 py-1.5 text-xs font-semibold flex-shrink-0 bg-white">
+          Subir mi Archivo ➔
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE SUBIR INVITACIÓN DEMO ==================== -->
+  <div id="uploadModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 modal-backdrop" onclick="closeUploadModal(event)">
+    <div class="bg-white rounded-3xl border border-[#EDE7DF] max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5" onclick="event.stopPropagation()">
+      
+      <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+        <div>
+          <h3 class="font-serif-title text-xl font-semibold text-neutral-900">
+            Subir Invitación Demo (.json)
+          </h3>
+          <p class="text-xs text-neutral-500">
+            Carga una invitación guardada para verla en vivo de inmediato.
+          </p>
+        </div>
+        <button type="button" onclick="closeUploadModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 flex items-center justify-center text-sm">
+          ✕
+        </button>
+      </div>
+
+      <!-- Zona de Drop -->
+      <div class="border-2 border-dashed border-amber-300/80 rounded-2xl p-6 text-center bg-amber-50/40 space-y-3 cursor-pointer hover:bg-amber-50 transition-colors" onclick="document.getElementById('fileUploadInput').click()">
+        <input type="file" id="fileUploadInput" accept=".json" class="hidden" onchange="handleDemoUpload(event)">
+        <div class="w-12 h-12 mx-auto rounded-full bg-amber-100 text-amber-800 flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">cloud_upload</span>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-neutral-800">Haz clic aquí para seleccionar tu archivo .json</p>
+          <p class="text-[11px] text-neutral-500 mt-0.5">o arrastra tu archivo a esta ventana</p>
+        </div>
+      </div>
+
+      <div id="uploadFeedback" class="hidden p-3 rounded-xl text-xs"></div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeUploadModal()" class="btn-bodapix-secondary px-4 py-2 text-xs">
+          Cancelar
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ==================== FOOTER ==================== -->
   <footer class="w-full bg-white border-t border-[#EFE9E0] py-6 text-center text-xs text-neutral-500">
@@ -622,13 +791,15 @@
         <span>·</span>
         <span>Invitaciones Digitales y Gestión de Eventos</span>
       </div>
-      <p class="text-[11px] text-neutral-400">
-        Plataforma para Bodas, XV Años y Eventos Especiales.
-      </p>
+      <div class="flex items-center gap-3 text-[11px]">
+        <button type="button" onclick="openShowcaseModal()" class="text-neutral-600 hover:text-neutral-900 underline">Muestras de Invitaciones</button>
+        <span>·</span>
+        <button type="button" onclick="openUploadModal()" class="text-neutral-600 hover:text-neutral-900 underline">Subir Demo</button>
+      </div>
     </div>
   </footer>
 
-  <!-- ==================== LOGICA DE NAVEGACION ==================== -->
+  <!-- ==================== LOGICA DE NAVEGACION & MODALES ==================== -->
   <script>
     let currentStepIndex = 1;
     const maxSteps = 5;
@@ -661,8 +832,8 @@
 
       if (nextBtn) {
         if (currentStepIndex === maxSteps) {
-          nextBtn.innerHTML = '<span>Crear Invitación</span> <span class="material-symbols-outlined text-sm">palette</span>';
-          nextBtn.onclick = () => window.location.href = 'invitacion-estudio.html';
+          nextBtn.innerHTML = '<span>Ver Muestras</span> <span class="material-symbols-outlined text-sm">visibility</span>';
+          nextBtn.onclick = openShowcaseModal;
         } else {
           nextBtn.innerHTML = '<span>Siguiente Paso</span> <span class="material-symbols-outlined text-sm">arrow_forward</span>';
           nextBtn.onclick = () => showStep(currentStepIndex + 1);
@@ -678,6 +849,64 @@
 
     if (prevBtn) prevBtn.addEventListener('click', () => showStep(currentStepIndex - 1));
     if (nextBtn) nextBtn.addEventListener('click', () => showStep(currentStepIndex + 1));
+
+    // Modales de Muestras y Subida
+    function openShowcaseModal() {
+      const modal = document.getElementById('showcaseModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeShowcaseModal(e) {
+      if (!e || e.target.id === 'showcaseModal' || e.target.closest('button')) {
+        const modal = document.getElementById('showcaseModal');
+        if (modal) modal.classList.add('hidden');
+      }
+    }
+
+    function openUploadModal() {
+      const modal = document.getElementById('uploadModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeUploadModal(e) {
+      if (!e || e.target.id === 'uploadModal' || e.target.closest('button')) {
+        const modal = document.getElementById('uploadModal');
+        if (modal) modal.classList.add('hidden');
+      }
+    }
+
+    // Manejador para Subir Invitación Demo
+    function handleDemoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const config = JSON.parse(evt.target.result);
+          if (config && (config.name || config.brideName)) {
+            // Guardar en localStorage para visualización en Estudio
+            localStorage.setItem('invitta_wedding_config', JSON.stringify(config));
+            
+            const feedback = document.getElementById('uploadFeedback');
+            feedback.className = 'p-3 rounded-xl text-xs bg-emerald-100 text-emerald-900 border border-emerald-300 block space-y-2';
+            feedback.innerHTML = `
+              <p>✅ <strong>¡Invitación Demo cargada con éxito!</strong> (\${config.name || (config.brideName + ' & ' + config.groomName)})</p>
+              <div class="flex gap-2 pt-1">
+                <a href="invitacion-estudio.html" class="px-3 py-1.5 rounded-full bg-emerald-800 text-white text-xs font-semibold text-decoration-none">Abrir en el Estudio ➔</a>
+              </div>
+            `;
+          } else {
+            throw new Error('Formato JSON de invitación no válido');
+          }
+        } catch(err) {
+          const feedback = document.getElementById('uploadFeedback');
+          feedback.className = 'p-3 rounded-xl text-xs bg-red-100 text-red-900 border border-red-300 block';
+          feedback.innerHTML = '❌ Error al leer el archivo: asegúrate de que sea un archivo .json válido de Invitta.';
+        }
+      };
+      reader.readAsText(file);
+    }
 
     // Funciones del Simulador
     function testSealClick() {
