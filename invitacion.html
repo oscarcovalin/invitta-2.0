@@ -8,7 +8,7 @@
 
 <meta property="og:title" content="Mis XV Años · Catalina">
 <meta property="og:description" content="Hay momentos que se guardan para siempre en el corazón... Acompáñame a celebrar uno de los días más especiales e inolvidables de mi vida: mis quince años.">
-<meta property="og:image" content="https://lh3.googleusercontent.com/aida-public/AB6AXuAW__AHZ8__AeO-8geq_rACRvd89nSVY-g-aWGINTw7Bb3vY4BIanHsIVp5lwcRLZOLkei6_hGQ4P64mC2_6NVGDClxFvok9a49qUwtEsXaURlkL0vCPGXEVTr_sOXFYzj7kMM1tS1toTgeNWwlgEvOeFjFlNcXJqOXsixEtcM3rAWs5mzWZx_RcwLxmAwni9OsL_0QwgNXt6jq6UTsNus7SDrMVIDPYi72b0jrBGwgNbfCLM9lG6JM">
+<meta property="og:image" content="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -735,7 +735,7 @@ tailwind.config = {
     <!-- ╚══════════════════════════════════════════════════════════════╝ -->
     <div id="heroPhotoFrame" class="w-full relative h-[80vh] sm:h-[86vh] overflow-hidden mb-6">
       <div id="parallaxBgHero" class="absolute inset-0 w-full h-[115%] -top-[7%] will-change-transform">
-        <img id="heroPhotoImg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW__AHZ8__AeO-8geq_rACRvd89nSVY-g-aWGINTw7Bb3vY4BIanHsIVp5lwcRLZOLkei6_hGQ4P64mC2_6NVGDClxFvok9a49qUwtEsXaURlkL0vCPGXEVTr_sOXFYzj7kMM1tS1toTgeNWwlgEvOeFjFlNcXJqOXsixEtcM3rAWs5mzWZx_RcwLxmAwni9OsL_0QwgNXt6jq6UTsNus7SDrMVIDPYi72b0jrBGwgNbfCLM9lG6JM" alt="Mis XV Años · Catalina" class="w-full h-full object-cover object-center" loading="eager"/>
+        <img id="heroPhotoImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80" alt="Mis XV Años · Catalina" class="w-full h-full object-cover object-center" loading="eager"/>
       </div>
     </div>
 
@@ -763,6 +763,12 @@ tailwind.config = {
       </h1>
 
       <!-- Retrato Circular de Bienvenida (Opcional) -->
+      
+      <div id="welcomePortraitWrap" class="mt-5 mb-1 flex justify-center gsap-scale-up">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-antique-gold/70 p-1 shadow-lg overflow-hidden bg-champagne-cream ring-4 ring-antique-gold/20">
+          <img id="welcomePortraitImg" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80" alt="Retrato de Bienvenida" class="w-full h-full object-cover rounded-full" loading="lazy" />
+        </div>
+      </div>
       
 
       <!-- Frase / Cita de Bienvenida (Con holgura y aire para que luzca) -->
@@ -1302,7 +1308,7 @@ tailwind.config = {
   </section>
 
   <!-- ==================== 6. GALERÍA FOTOGRÁFICA ==================== -->
-  <section id="galeria" class="py-16 px-margin-mobile max-w-xl mx-auto relative overflow-hidden hidden">
+  <section id="galeria" class="py-16 px-margin-mobile max-w-xl mx-auto relative overflow-hidden ">
     
     <div class="relative z-10 w-full">
       <div class="text-center mb-8">
@@ -1312,6 +1318,42 @@ tailwind.config = {
       
       <!-- Galería Editorial: Fotos Completas, Sin Esquinas Redondeadas, Con Parallax Individual -->
       <div class="w-full flex flex-col gap-3" id="galleryGrid">
+        
+          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
+            <!-- Marco interior que contiene la foto sin recortar -->
+            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
+              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80" alt="Foto 1" loading="lazy"
+                class="gallery-photo w-full h-auto block"
+                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
+            </div>
+          </div>
+        
+          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
+            <!-- Marco interior que contiene la foto sin recortar -->
+            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
+              <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80" alt="Foto 2" loading="lazy"
+                class="gallery-photo w-full h-auto block"
+                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
+            </div>
+          </div>
+        
+          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
+            <!-- Marco interior que contiene la foto sin recortar -->
+            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
+              <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80" alt="Foto 3" loading="lazy"
+                class="gallery-photo w-full h-auto block"
+                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
+            </div>
+          </div>
+        
+          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
+            <!-- Marco interior que contiene la foto sin recortar -->
+            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
+              <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80" alt="Foto 4" loading="lazy"
+                class="gallery-photo w-full h-auto block"
+                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
+            </div>
+          </div>
         
       </div>
     </div>
@@ -2051,8 +2093,8 @@ tailwind.config = {
 </footer>
 
 <!-- ==================== REPRODUCTOR DE MÚSICA ULTRA-DISCRETO ==================== -->
-<div id="musicPlayer" class="fixed right-3.5 bottom-[72px] z-40 flex items-center group cursor-pointer transition-all duration-300 select-none" title="A Thousand Years (Acústico)">
-  <audio id="musicAudio" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"></audio>
+<div id="musicPlayer" class="fixed right-3.5 bottom-[72px] z-40 flex items-center group cursor-pointer transition-all duration-300 select-none" title="Vals de las Mariposas (Piano & Cuerdas)">
+  <audio id="musicAudio" loop preload="auto" src="assets/musica-vals.mp3"></audio>
   
   <button id="musicToggle" type="button" aria-label="Música" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-md border border-antique-gold/45 text-antique-gold flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:scale-105 group-hover:border-antique-gold group-active:scale-95">
     <span id="musicIconPlay" class="flex items-center justify-center text-xs ml-0.5">
@@ -2079,7 +2121,7 @@ tailwind.config = {
   <div id="musicPillLabel" class="hidden sm:group-hover:flex items-center gap-1.5 ml-2 px-2.5 py-1 bg-white/90 backdrop-blur-md border border-antique-gold/40 rounded-full shadow-sm text-left pointer-events-none transition-all duration-300 animate-fadeIn">
     <span id="musicStatus" class="font-label-caps text-[8px] uppercase tracking-[0.15em] text-antique-gold font-bold">Música</span>
     <span id="musicTitle" class="font-label-caps text-[9.5px] text-deep-onyx tracking-wider max-w-[120px] truncate font-medium">
-      A Thousand Years (Acústico)
+      Vals de las Mariposas (Piano & Cuerdas)
     </span>
   </div>
 </div>
@@ -2219,7 +2261,7 @@ tailwind.config = {
     
       <span class="font-label-caps text-[9px] uppercase tracking-wider">Lugar</span>
     </button>
-    <button type="button" data-nav="galeria" class="flex flex-col items-center justify-center gap-1 text-tertiary hover:text-antique-gold transition-colors bg-transparent border-0 cursor-pointer p-0 select-none hidden">
+    <button type="button" data-nav="galeria" class="flex flex-col items-center justify-center gap-1 text-tertiary hover:text-antique-gold transition-colors bg-transparent border-0 cursor-pointer p-0 select-none ">
       
       <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="14" height="14" rx="2"/>
@@ -2533,10 +2575,15 @@ const CONFIG = {
     "envelopeNote": "Agradecemos de corazón tu muestra de cariño en nuestra tradicional lluvia de sobres."
   },
   "photos": {
-    "hero": "https://lh3.googleusercontent.com/aida-public/AB6AXuAW__AHZ8__AeO-8geq_rACRvd89nSVY-g-aWGINTw7Bb3vY4BIanHsIVp5lwcRLZOLkei6_hGQ4P64mC2_6NVGDClxFvok9a49qUwtEsXaURlkL0vCPGXEVTr_sOXFYzj7kMM1tS1toTgeNWwlgEvOeFjFlNcXJqOXsixEtcM3rAWs5mzWZx_RcwLxmAwni9OsL_0QwgNXt6jq6UTsNus7SDrMVIDPYi72b0jrBGwgNbfCLM9lG6JM",
-    "saveTheDate": "https://lh3.googleusercontent.com/aida-public/AB6AXuDmfoTsh27k1L3TGdBgr3eB3wVklkukCMeb_D9D0x9bsC1orG7P5zdmOQYAWy6ItrFikXfoaCslUtH8jxsbSM1IA749IkYVpnCbWh3oxo_VMxj-GFJN29YBv2-UKvHUmzDUZTrEvVrROpsdHRNkHI6dEkN62delZNZKrGT3pqy9CpcQ8a4v4_6kTMx4WFLE9qI4sklEEGe5u3W8mxLA69-LNIu3SMlCbEOV13lWSC1PSPT97HzZVgs6",
-    "portrait": "",
-    "gallery": []
+    "hero": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
+    "saveTheDate": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=80",
+    "portrait": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80"
+    ]
   },
   "rsvpTitle": "Confirmación de Asistencia",
   "rsvpDeadlineLabel": "Por favor, haznos saber si podrás acompañarnos antes del 20 de Febrero.",
@@ -2561,8 +2608,8 @@ const CONFIG = {
   "defaultPassCount": 2,
   "music": {
     "enabled": true,
-    "url": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-    "title": "A Thousand Years (Acústico)"
+    "url": "assets/musica-vals.mp3",
+    "title": "Vals de las Mariposas (Piano & Cuerdas)"
   },
   "illustrations": {
     "hero": {

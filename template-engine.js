@@ -317,10 +317,15 @@ const TemplateEngine = {
     },
 
     photos: {
-      hero: "https://lh3.googleusercontent.com/aida-public/AB6AXuAW__AHZ8__AeO-8geq_rACRvd89nSVY-g-aWGINTw7Bb3vY4BIanHsIVp5lwcRLZOLkei6_hGQ4P64mC2_6NVGDClxFvok9a49qUwtEsXaURlkL0vCPGXEVTr_sOXFYzj7kMM1tS1toTgeNWwlgEvOeFjFlNcXJqOXsixEtcM3rAWs5mzWZx_RcwLxmAwni9OsL_0QwgNXt6jq6UTsNus7SDrMVIDPYi72b0jrBGwgNbfCLM9lG6JM",
-      saveTheDate: "https://lh3.googleusercontent.com/aida-public/AB6AXuDmfoTsh27k1L3TGdBgr3eB3wVklkukCMeb_D9D0x9bsC1orG7P5zdmOQYAWy6ItrFikXfoaCslUtH8jxsbSM1IA749IkYVpnCbWh3oxo_VMxj-GFJN29YBv2-UKvHUmzDUZTrEvVrROpsdHRNkHI6dEkN62delZNZKrGT3pqy9CpcQ8a4v4_6kTMx4WFLE9qI4sklEEGe5u3W8mxLA69-LNIu3SMlCbEOV13lWSC1PSPT97HzZVgs6",
-      portrait: "",
-      gallery: []
+      hero: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
+      saveTheDate: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=80",
+      portrait: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80",
+      gallery: [
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80"
+      ]
     },
 
     rsvpTitle: "Confirmación de Asistencia",
@@ -338,8 +343,8 @@ const TemplateEngine = {
 
     music: {
       enabled: true,
-      url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",
-      title: "A Thousand Years (Acústico)"
+      url: "assets/musica-vals.mp3",
+      title: "Vals de las Mariposas (Piano & Cuerdas)"
     },
 
     // ─── Multi-Plano Parallax ──────────────────────────────────────────────
