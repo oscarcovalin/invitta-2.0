@@ -1,0 +1,38 @@
+{
+  "label": "v2.70_interactive_onboarding_walkthrough_and_client_guide",
+  "timestamp": "2026-08-28T06:53:20.634Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 237772
+    },
+    {
+      "filename": "index.html",
+      "size": 32312
+    },
+    {
+      "filename": "portal.html",
+      "size": 32312
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 126704
+    },
+    {
+      "filename": "app.js",
+      "size": 125982
+    },
+    {
+      "filename": "style.css",
+      "size": 22660
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
