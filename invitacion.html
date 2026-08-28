@@ -4,11 +4,11 @@
 <meta charset="utf-8"/>
 <base target="_self"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
-<title>Mis XV Años · Catalina</title>
+<title>Nuestra Boda · Catalina & Julián</title>
 
-<meta property="og:title" content="Mis XV Años · Catalina">
-<meta property="og:description" content="Hay momentos que se guardan para siempre en el corazón... Acompáñame a celebrar uno de los días más especiales e inolvidables de mi vida: mis quince años.">
-<meta property="og:image" content="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80">
+<meta property="og:title" content="Nuestra Boda · Catalina & Julián">
+<meta property="og:description" content="Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.">
+<meta property="og:image" content="assets/hero-catalina.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -674,8 +674,8 @@ tailwind.config = {
       </g>
 
       <!-- Monograma en Relieve -->
-      <text x="100" y="116" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="34" font-weight="bold" fill="url(#goldGrad_gold)" text-anchor="middle" filter="url(#emboss_gold)" letter-spacing="1.5">
-        C
+      <text x="100" y="116" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="20" font-weight="bold" fill="url(#goldGrad_gold)" text-anchor="middle" filter="url(#emboss_gold)" letter-spacing="1.5">
+        C & J
       </text>
 
       <!-- Filigrana Inferior -->
@@ -689,7 +689,7 @@ tailwind.config = {
             Toca el sello para abrir
           </span>
           <span class="font-names text-[22px] sm:text-[26px] text-[#f7f6ec] font-light">
-            Catalina
+            Catalina & Julián
           </span>
         </div>
       </div>
@@ -705,11 +705,11 @@ tailwind.config = {
 <header class="fixed top-0 w-full z-50 bg-champagne-cream/85 backdrop-blur-xl border-b border-antique-gold/20 pt-safe transition-all duration-300">
   <div class="h-16 px-margin-mobile flex items-center justify-between max-w-4xl mx-auto">
     <div class="flex items-center gap-3">
-      <div id="headerMonogram" class="min-w-[34px] px-2 h-[34px] rounded-full border border-antique-gold flex items-center justify-center text-antique-gold font-script text-lg tracking-wide font-normal shadow-sm bg-white/20" style="font-family: var(--font-script);">
-        C
+      <div id="headerMonogram" class="min-w-[34px] px-2 h-[34px] rounded-full border border-antique-gold flex items-center justify-center text-antique-gold font-script text-sm sm:text-base tracking-normal font-normal shadow-sm bg-white/20" style="font-family: var(--font-script);">
+        C & J
       </div>
       <span class="font-display-lg text-base tracking-widest text-antique-gold" id="headerTitle">
-        Mis XV Años
+        Nuestra Boda
       </span>
     </div>
     
@@ -735,7 +735,7 @@ tailwind.config = {
     <!-- ╚══════════════════════════════════════════════════════════════╝ -->
     <div id="heroPhotoFrame" class="w-full relative h-[80vh] sm:h-[86vh] overflow-hidden mb-6">
       <div id="parallaxBgHero" class="absolute inset-0 w-full h-[115%] -top-[7%] will-change-transform">
-        <img id="heroPhotoImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80" alt="Mis XV Años · Catalina" class="w-full h-full object-cover object-center" loading="eager"/>
+        <img id="heroPhotoImg" src="assets/hero-catalina.jpg" alt="Nuestra Boda · Catalina & Julián" class="w-full h-full object-cover object-center" loading="eager"/>
       </div>
     </div>
 
@@ -753,20 +753,28 @@ tailwind.config = {
 
       <!-- Eyebrow: NUESTRA BODA / MIS XV AÑOS (Sans 11-14px Medium MAYÚSCULAS tracking +2 a +3px) -->
       <p id="heroEyebrow" class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium gsap-eyebrow mb-2 sm:mb-3">
-        Mis XV Años
+        Nuestra Boda
       </p>
 
       <!-- Nombres con Serif o Script (Personalizable exclusivamente para Portada & Firma) -->
       
-      <h1 id="heroName" class="font-names font-light my-2 sm:my-3 gsap-title overflow-visible hero-solo-name-scaled title-styled-solid" style="font-family: var(--font-names, var(--font-display));">
-        Catalina
-      </h1>
+      <div class="flex flex-col items-center my-1 sm:my-2 gsap-title overflow-visible">
+        <h1 class="font-names font-light overflow-visible hero-name-scaled title-styled-solid" id="heroBrideName" style="font-family: var(--font-names, var(--font-display));">
+          Catalina
+        </h1>
+        <span class="font-script text-antique-gold my-1.5 sm:my-2 font-normal leading-none select-none overflow-visible hero-connector-scaled" id="heroNameConnector" style="font-family: var(--font-script);">
+          &
+        </span>
+        <h1 class="font-names font-light overflow-visible hero-name-scaled title-styled-solid" id="heroGroomName" style="font-family: var(--font-names, var(--font-display));">
+          Julián
+        </h1>
+      </div>
 
       <!-- Retrato Circular de Bienvenida (Opcional) -->
       
       <div id="welcomePortraitWrap" class="mt-5 mb-1 flex justify-center gsap-scale-up">
         <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 border-antique-gold/70 p-1 shadow-lg overflow-hidden bg-champagne-cream ring-4 ring-antique-gold/20">
-          <img id="welcomePortraitImg" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80" alt="Retrato de Bienvenida" class="w-full h-full object-cover rounded-full" loading="lazy" />
+          <img id="welcomePortraitImg" src="assets/savethedate-catalina.jpg" alt="Retrato de Bienvenida" class="w-full h-full object-cover rounded-full" loading="lazy" />
         </div>
       </div>
       
@@ -774,14 +782,14 @@ tailwind.config = {
       <!-- Frase / Cita de Bienvenida (Con holgura y aire para que luzca) -->
       <div id="welcomeQuoteWrap" class="mt-4 sm:mt-6 max-w-[92%] sm:max-w-[460px] mx-auto px-4 ">
         <p id="welcomeQuote" class="font-display-lg text-[18px] sm:text-[20px] md:text-[22px] italic leading-[1.7] text-deep-onyx/85 font-light text-center">
-          &ldquo;Hoy comienzo a escribir un nuevo capítulo lleno de ilusiones, gratitud y sueños por cumplir.&rdquo;
+          &ldquo;El amor no se mira, se siente, y aún más cuando ella está junto a ti.&rdquo;
         </p>
       </div>
 
       <!-- Mensaje de Bienvenida (Serif Editorial 17-19px con espacio respirable) -->
       <div id="welcomeMessageWrap" class="max-w-[480px] mx-auto mt-4 sm:mt-5 mb-2 px-3 ">
         <p id="welcomeMessage" class="font-display-lg text-[16.5px] sm:text-[18.5px] text-deep-onyx/90 leading-[1.75] font-light tracking-wide text-center">
-          Hay momentos que se guardan para siempre en el corazón... Acompáñame a celebrar uno de los días más especiales e inolvidables de mi vida: mis quince años.
+          Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.
         </p>
       </div>
 
@@ -840,7 +848,7 @@ tailwind.config = {
         <div class="w-px h-12 sm:h-14 bg-antique-gold/40 flex-shrink-0"></div>
         <div class="flex-1 flex justify-start pl-4 sm:pl-6">
           <p id="heroDateTime" class="font-label-caps text-[11px] sm:text-[12.5px] tracking-[0.25em] uppercase font-medium text-deep-onyx/80 text-left leading-tight">
-            A LAS 6:00 PM
+            A LAS 4:00 PM
           </p>
         </div>
       </div>
@@ -883,7 +891,7 @@ tailwind.config = {
         <div class="flex items-center justify-center gap-3">
           <span class="w-6 h-px bg-antique-gold/40 flex-shrink-0"></span>
           <p id="countdownPhrase" class="font-display-lg text-lg sm:text-xl text-deep-onyx/85 italic leading-none font-light">
-            &ldquo;Para mi gran noche de XV Años&rdquo;
+            &ldquo;Para casarme con el amor de mi vida&rdquo;
           </p>
           <span class="w-6 h-px bg-antique-gold/40 flex-shrink-0"></span>
         </div>
@@ -934,12 +942,12 @@ tailwind.config = {
     
     <div class="max-w-2xl mx-auto relative z-10">
       <h2 id="blessingHeading" class="font-display-lg text-[28px] sm:text-[32px] font-normal text-[#f7f6ec] mb-12 px-4 gsap-title tracking-wide">
-        Con la bendición de Dios y mis padres
+        Con la bendición de Dios y nuestros padres
       </h2>
 
       
       <!-- Padres Boda (Dual) -->
-      <div id="parentsWeddingGrid" class="hidden grid-cols-1 md:grid-cols-2 gap-10 text-center gsap-stagger-container transition-transform duration-300 will-change-transform" style="">
+      <div id="parentsWeddingGrid" class="grid grid-cols-1 md:grid-cols-2 gap-10 text-center gsap-stagger-container transition-transform duration-300 will-change-transform" style="">
         <!-- Padres de la Novia -->
         <div id="brideParentsBlock" class="gsap-stagger-item ">
           <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres de la Novia</p>
@@ -966,7 +974,7 @@ tailwind.config = {
       </div>
 
       <!-- Padres XV (Single) -->
-      <div id="parentsXvGrid" class="block gsap-stagger-item transition-transform duration-300 will-change-transform" style="">
+      <div id="parentsXvGrid" class="hidden gsap-stagger-item transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Mis Padres</p>
         <div class="flex flex-col items-center">
           <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Roberto Martínez</p>
@@ -980,7 +988,7 @@ tailwind.config = {
       <!-- Padrinos -->
       <div id="godparentsBlock" class="mt-12 gsap-stagger-item  transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow" id="lblGodparentsSection">
-          Mis Padrinos
+          Padrinos de Velación
         </p>
         
         <div class="flex flex-col items-center">
@@ -994,10 +1002,10 @@ tailwind.config = {
       <!-- Corte de Honor -->
       <div id="courtBlock" class="mt-10 gsap-stagger-item  transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow" id="lblCourtSection">
-          Mis Chambelanes
+          Damas de Honor & Best Men
         </p>
         <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1.5 text-[#f7f6ec] max-w-xl mx-auto font-display-lg font-light tracking-wide leading-relaxed transition-all" style="font-size: 17px;">
-          <span class="inline-block whitespace-nowrap">Mis Chambelanes de Honor</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Emiliano Cruz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Diego Fuentes</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Mateo Soto</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Santiago Morales</span>
+          <span class="inline-block whitespace-nowrap">Camila Ortiz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Renata Vega</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Diego Fuentes</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Emiliano Cruz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Ximena Paredes</span>
         </div>
       </div>
         
@@ -1110,7 +1118,7 @@ tailwind.config = {
         <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide">Camino Real 456, Valle Alto</p>
 
         <div class="flex flex-wrap justify-center items-center gap-3">
-          <a id="receptionMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
+          <a id="receptionMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Cantabria+Salón" target="_blank" rel="noopener noreferrer">
             
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <path d="M1.5 3.5l4.25-1.75 4.5 1.75 4.25-1.75v10.5l-4.25 1.75-4.5-1.75-4.25 1.75V3.5z"/>
@@ -1119,7 +1127,7 @@ tailwind.config = {
     
             <span>Google Maps</span>
           </a>
-          <a id="receptionWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://waze.com/ul?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
+          <a id="receptionWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://waze.com/ul?q=Cantabria+Salón" target="_blank" rel="noopener noreferrer">
             
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="8,1.5 14.5,13.5 8,10.75 1.5,13.5"/>
@@ -1266,7 +1274,7 @@ tailwind.config = {
       </svg>
     
       <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] mb-2 uppercase font-medium gsap-eyebrow">Código de Vestimenta</p>
-      <h2 id="dressTitle" class="font-display-lg text-[28px] sm:text-[32px] font-normal text-[#f7f6ec] mb-4 gsap-title tracking-wide">Formal</h2>
+      <h2 id="dressTitle" class="font-display-lg text-[28px] sm:text-[32px] font-normal text-[#f7f6ec] mb-4 gsap-title tracking-wide">Rigurosa Etiqueta</h2>
       <p id="dressDesc" class="font-display-lg text-[16px] sm:text-[18px] text-[#f7f6ec]/90 mb-8 max-w-md mx-auto leading-[1.7] font-light tracking-wide gsap-fade-up">Sugerimos tonos cálidos y neutros. Por favor, reserven el color blanco y perla para la novia.</p>
       
       <div id="dressPaletteWrapper" class="flex flex-wrap justify-center items-center gap-4 sm:gap-6 gsap-fade-up ">
@@ -1322,7 +1330,7 @@ tailwind.config = {
           <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
             <!-- Marco interior que contiene la foto sin recortar -->
             <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
-              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80" alt="Foto 1" loading="lazy"
+              <img src="assets/hero-catalina.jpg" alt="Foto 1" loading="lazy"
                 class="gallery-photo w-full h-auto block"
                 style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
             </div>
@@ -1331,25 +1339,7 @@ tailwind.config = {
           <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
             <!-- Marco interior que contiene la foto sin recortar -->
             <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
-              <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80" alt="Foto 2" loading="lazy"
-                class="gallery-photo w-full h-auto block"
-                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
-            </div>
-          </div>
-        
-          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
-            <!-- Marco interior que contiene la foto sin recortar -->
-            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
-              <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80" alt="Foto 3" loading="lazy"
-                class="gallery-photo w-full h-auto block"
-                style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
-            </div>
-          </div>
-        
-          <div class="gallery-item-wrap w-full relative will-change-transform" style="overflow: visible;">
-            <!-- Marco interior que contiene la foto sin recortar -->
-            <div class="w-full relative overflow-hidden" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35);">
-              <img src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80" alt="Foto 4" loading="lazy"
+              <img src="assets/savethedate-catalina.jpg" alt="Foto 2" loading="lazy"
                 class="gallery-photo w-full h-auto block"
                 style="display:block; width:100%; height:auto; object-fit:contain; border-radius:0; will-change:transform;"/>
             </div>
@@ -1484,7 +1474,7 @@ tailwind.config = {
               <div class="w-[42%] text-left flex items-center justify-start timeline-right-col">
                 
                   <div class="timeline-text-wrap pl-3">
-                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">18:00 hrs</p>
+                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">16:00 hrs</p>
                     <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Ceremonia Religiosa</p>
                   </div>
                 
@@ -1497,8 +1487,8 @@ tailwind.config = {
               <div class="w-[42%] text-right flex items-center justify-end timeline-left-col">
                 
                   <div class="timeline-text-wrap pr-3">
-                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">19:00 hrs</p>
-                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Boda Civil</p>
+                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">18:30 hrs</p>
+                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Recepción & Brindis</p>
                   </div>
                 
               </div>
@@ -1516,11 +1506,14 @@ tailwind.config = {
                   <div class="timeline-icon-wrap p-2 flex justify-start">
                     
       <svg viewBox="0 0 64 64" class="w-14 h-14 text-antique-gold mx-auto transition-transform hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-        <ellipse cx="26" cy="38" rx="14" ry="14"/>
-        <ellipse cx="38" cy="38" rx="14" ry="14"/>
-        <path d="M38 24l-3-8h6l-3 8z"/>
-        <path d="M35 16l3-4 3 4"/>
-        <path d="M38 12v-3M32 14l-2-2M44 14l2-2"/>
+        <g transform="translate(4, 0)">
+          <path d="M22 14c-4 0-7 3-6 10l1.5 10c.8 2.5 3 4 5.5 4h1c2.5 0 4.7-1.5 5.5-4l1.5-10c1-7-2-10-6-10h-2.5z" transform="rotate(-14 22 24)"/>
+          <path d="M34 14c4 0 7 3 6 10l-1.5 10c-.8 2.5-3 4-5.5 4h-1c-2.5 0-4.7-1.5-5.5-4L26.5 24c-1-7 2-10 6-10H34z" transform="rotate(14 34 24)"/>
+          <path d="M18 42l-3 12M10 54h10M38 42l3 12M36 54h10"/>
+          <circle cx="28" cy="12" r="1.2" fill="currentColor"/>
+          <circle cx="25" cy="17" r="0.9" fill="currentColor"/>
+          <circle cx="31" cy="19" r="0.9" fill="currentColor"/>
+        </g>
       </svg>
     
                   </div>
@@ -1536,14 +1529,11 @@ tailwind.config = {
                   <div class="timeline-icon-wrap p-2 flex justify-end">
                     
       <svg viewBox="0 0 64 64" class="w-14 h-14 text-antique-gold mx-auto transition-transform hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-        <g transform="translate(4, 0)">
-          <path d="M22 14c-4 0-7 3-6 10l1.5 10c.8 2.5 3 4 5.5 4h1c2.5 0 4.7-1.5 5.5-4l1.5-10c1-7-2-10-6-10h-2.5z" transform="rotate(-14 22 24)"/>
-          <path d="M34 14c4 0 7 3 6 10l-1.5 10c-.8 2.5-3 4-5.5 4h-1c-2.5 0-4.7-1.5-5.5-4L26.5 24c-1-7 2-10 6-10H34z" transform="rotate(14 34 24)"/>
-          <path d="M18 42l-3 12M10 54h10M38 42l3 12M36 54h10"/>
-          <circle cx="28" cy="12" r="1.2" fill="currentColor"/>
-          <circle cx="25" cy="17" r="0.9" fill="currentColor"/>
-          <circle cx="31" cy="19" r="0.9" fill="currentColor"/>
-        </g>
+        <path d="M12 43h40a2 2 0 0 1 2 2v2H10v-2a2 2 0 0 1 2-2z"/>
+        <path d="M16 43c0-11 7-17 16-17s16 6 16 17H16z"/>
+        <circle cx="32" cy="22" r="2.5"/>
+        <path d="M8 51h48"/>
+        <path d="M25 35c2-2 4.5-3 7-3s5 1 7 3"/>
       </svg>
     
                   </div>
@@ -1562,7 +1552,7 @@ tailwind.config = {
                 
                   <div class="timeline-text-wrap pl-3">
                     <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">20:00 hrs</p>
-                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Recepción</p>
+                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Cena de Gala</p>
                   </div>
                 
               </div>
@@ -1574,8 +1564,8 @@ tailwind.config = {
               <div class="w-[42%] text-right flex items-center justify-end timeline-left-col">
                 
                   <div class="timeline-text-wrap pr-3">
-                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">20:30 hrs</p>
-                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Cena</p>
+                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">21:30 hrs</p>
+                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Primer Baile & Vals</p>
                   </div>
                 
               </div>
@@ -1593,11 +1583,12 @@ tailwind.config = {
                   <div class="timeline-icon-wrap p-2 flex justify-start">
                     
       <svg viewBox="0 0 64 64" class="w-14 h-14 text-antique-gold mx-auto transition-transform hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 43h40a2 2 0 0 1 2 2v2H10v-2a2 2 0 0 1 2-2z"/>
-        <path d="M16 43c0-11 7-17 16-17s16 6 16 17H16z"/>
-        <circle cx="32" cy="22" r="2.5"/>
-        <path d="M8 51h48"/>
-        <path d="M25 35c2-2 4.5-3 7-3s5 1 7 3"/>
+        <path d="M15 28c4 8 8 16 14 18l18 4c2 .5 4-1 4-3l-2-2c-4-4-10-8-14-10l-12-8-8 1z"/>
+        <path d="M15 28v20"/>
+        <path d="M38 13v12M46 9v12M38 13l8-4"/>
+        <circle cx="36" cy="25" r="2.2" fill="currentColor"/>
+        <circle cx="44" cy="21" r="2.2" fill="currentColor"/>
+        <path d="M50 17c1-1 2-2 3-1"/>
       </svg>
     
                   </div>
@@ -1613,12 +1604,12 @@ tailwind.config = {
                   <div class="timeline-icon-wrap p-2 flex justify-end">
                     
       <svg viewBox="0 0 64 64" class="w-14 h-14 text-antique-gold mx-auto transition-transform hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 28c4 8 8 16 14 18l18 4c2 .5 4-1 4-3l-2-2c-4-4-10-8-14-10l-12-8-8 1z"/>
-        <path d="M15 28v20"/>
-        <path d="M38 13v12M46 9v12M38 13l8-4"/>
-        <circle cx="36" cy="25" r="2.2" fill="currentColor"/>
-        <circle cx="44" cy="21" r="2.2" fill="currentColor"/>
-        <path d="M50 17c1-1 2-2 3-1"/>
+        <path d="M10 44h44l4-8-10-10H24l-8 10-6 2v6z"/>
+        <path d="M24 26l-6 10h14V26h-8zM36 26v10h10l-4-10h-6z"/>
+        <circle cx="20" cy="46" r="4.5"/>
+        <circle cx="48" cy="46" r="4.5"/>
+        <path d="M4 46h11M25 46h18M53 46h7"/>
+        <path d="M25 18c4-4 12-4 17 0" stroke-dasharray="2 2"/>
       </svg>
     
                   </div>
@@ -1636,46 +1627,8 @@ tailwind.config = {
               <div class="w-[42%] text-left flex items-center justify-start timeline-right-col">
                 
                   <div class="timeline-text-wrap pl-3">
-                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">21:30 hrs</p>
-                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Todo mundo a bailar</p>
-                  </div>
-                
-              </div>
-
-            </div>
-            
-            <div class="timeline-step-row flex items-center justify-between w-full" data-step-idx="5">
-              
-              <div class="w-[42%] text-right flex items-center justify-end timeline-left-col">
-                
-                  <div class="timeline-text-wrap pr-3">
-                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">2:00 hrs</p>
-                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Fin del evento</p>
-                  </div>
-                
-              </div>
-
-              <div class="w-[16%] flex justify-center timeline-node-col">
-                <div class="timeline-heart-node w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-champagne-cream border-2 border-antique-gold flex items-center justify-center text-antique-gold shadow-sm z-20">
-                  <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" class="text-antique-gold">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                </div>
-              </div>
-
-              <div class="w-[42%] text-left flex items-center justify-start timeline-right-col">
-                
-                  <div class="timeline-icon-wrap p-2 flex justify-start">
-                    
-      <svg viewBox="0 0 64 64" class="w-14 h-14 text-antique-gold mx-auto transition-transform hover:scale-105" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M10 44h44l4-8-10-10H24l-8 10-6 2v6z"/>
-        <path d="M24 26l-6 10h14V26h-8zM36 26v10h10l-4-10h-6z"/>
-        <circle cx="20" cy="46" r="4.5"/>
-        <circle cx="48" cy="46" r="4.5"/>
-        <path d="M4 46h11M25 46h18M53 46h7"/>
-        <path d="M25 18c4-4 12-4 17 0" stroke-dasharray="2 2"/>
-      </svg>
-    
+                    <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold font-medium uppercase tracking-wider">22:00 hrs</p>
+                    <p class="font-display-lg text-base sm:text-lg text-deep-onyx font-normal mt-0.5 leading-snug tracking-wide">Apertura de Pista</p>
                   </div>
                 
               </div>
@@ -1795,7 +1748,7 @@ tailwind.config = {
         </p>
 
         <div class="flex items-center gap-2">
-          <input id="inputAlbumUnlockCode" type="text" placeholder="Ej: XV2027 o tu Folio" 
+          <input id="inputAlbumUnlockCode" type="text" placeholder="Ej: BODA2027 o tu Folio" 
                  class="w-full text-center font-mono font-bold text-xs uppercase bg-white border border-antique-gold/40 rounded-xl py-2 px-3 outline-none focus:border-antique-gold">
           <button type="button" id="btnUnlockAlbumUpload" class="btn-luxury-primary text-[11px] py-2 px-3.5 whitespace-nowrap uppercase tracking-wider font-semibold">
             Desbloquear
@@ -1892,7 +1845,7 @@ tailwind.config = {
       </svg>
     
       <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-2">Comparte tus Recuerdos</p>
-      <h3 id="instagramHashtag" class="font-display-lg text-2xl sm:text-3xl font-light text-[#f7f6ec] mb-4 tracking-wide">#MisXVCatalina</h3>
+      <h3 id="instagramHashtag" class="font-display-lg text-2xl sm:text-3xl font-light text-[#f7f6ec] mb-4 tracking-wide">#BodaCatalinayJulian</h3>
       <p id="instagramText" class="font-display-lg text-[15.5px] sm:text-[17px] text-[#f7f6ec]/90 mb-6 leading-[1.7] font-light tracking-wide">Comparte tus fotos y momentos especiales con nosotros en Instagram usando nuestro hashtag oficial.</p>
       
       <button type="button" id="btnCopyHashtag" class="btn-luxury-secondary-dark text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-1.5">
@@ -1928,7 +1881,7 @@ tailwind.config = {
             </h2>
           
         <p class="font-display-lg italic text-sm sm:text-base text-antique-gold mb-2 font-light" id="subEventoRsvp">
-          Catalina · 20 · Marzo · 2027
+          Catalina & Julián · 20 · Marzo · 2027
         </p>
         
         <p class="font-display-lg italic text-[14.5px] sm:text-[16px] text-deep-onyx/85 mb-5 font-light leading-relaxed max-w-sm mx-auto" id="rsvpDeadlineText">
@@ -2063,9 +2016,12 @@ tailwind.config = {
     Con amor,
   </p>
   <p class="font-names text-xl sm:text-2xl text-[#f7f6ec] font-light gsap-fade-up my-1 overflow-visible" id="footerNames" style="font-family: var(--font-names, var(--font-display));">
-    Catalina
+    Catalina & Julián
   </p>
   
+  <p class="font-display-lg text-[14px] sm:text-[15px] text-[#f7f6ec]/60 mt-3 tracking-wider font-light" id="footerCustomText">
+    #BodaCatalinayJulian
+  </p>
 
   <!-- ==================== TARJETA DISCRETA DE CONTRATACIÓN (WHATSAPP) ==================== -->
   <div id="vendorCard" class="mt-8 pt-6 border-t border-antique-gold/20 max-w-xs mx-auto gsap-fade-up ">
@@ -2093,7 +2049,7 @@ tailwind.config = {
 </footer>
 
 <!-- ==================== REPRODUCTOR DE MÚSICA ULTRA-DISCRETO ==================== -->
-<div id="musicPlayer" class="fixed right-3.5 bottom-[72px] z-40 flex items-center group cursor-pointer transition-all duration-300 select-none" title="Vals de las Mariposas (Piano & Cuerdas)">
+<div id="musicPlayer" class="fixed right-3.5 bottom-[72px] z-40 flex items-center group cursor-pointer transition-all duration-300 select-none" title="A Thousand Years (Acústico)">
   <audio id="musicAudio" loop preload="auto" src="assets/musica-vals.mp3"></audio>
   
   <button id="musicToggle" type="button" aria-label="Música" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-md border border-antique-gold/45 text-antique-gold flex items-center justify-center shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:scale-105 group-hover:border-antique-gold group-active:scale-95">
@@ -2121,7 +2077,7 @@ tailwind.config = {
   <div id="musicPillLabel" class="hidden sm:group-hover:flex items-center gap-1.5 ml-2 px-2.5 py-1 bg-white/90 backdrop-blur-md border border-antique-gold/40 rounded-full shadow-sm text-left pointer-events-none transition-all duration-300 animate-fadeIn">
     <span id="musicStatus" class="font-label-caps text-[8px] uppercase tracking-[0.15em] text-antique-gold font-bold">Música</span>
     <span id="musicTitle" class="font-label-caps text-[9.5px] text-deep-onyx tracking-wider max-w-[120px] truncate font-medium">
-      Vals de las Mariposas (Piano & Cuerdas)
+      A Thousand Years (Acústico)
     </span>
   </div>
 </div>
@@ -2154,7 +2110,7 @@ tailwind.config = {
       ¡Ilumina a los Novios!
     </h2>
     <p class="font-display-lg text-xl sm:text-2xl text-amber-200/90 italic font-light max-w-xs drop-shadow-md">
-      Catalina
+      Catalina & Julián
     </p>
     <p class="font-label-caps text-[10.5px] uppercase tracking-[0.2em] text-amber-300/80 mt-5 font-semibold">
       ✨ Mueve o toca la pantalla para soltar chispas ✨
@@ -2296,27 +2252,27 @@ tailwind.config = {
 <!-- ==================== LOGICA JAVASCRIPT ==================== -->
 <script>
 const CONFIG = {
-  "eventType": "xv",
-  "name": "Catalina",
+  "eventType": "boda",
+  "name": "Catalina & Julián",
   "brideName": "Catalina",
   "groomName": "Julián",
   "nameConnector": "&",
-  "monogram": "C",
-  "eyebrow": "Mis XV Años",
-  "welcomeMessage": "Hay momentos que se guardan para siempre en el corazón... Acompáñame a celebrar uno de los días más especiales e inolvidables de mi vida: mis quince años.",
-  "eventDateISO": "2027-03-20T18:00:00",
+  "monogram": "C & J",
+  "eyebrow": "Nuestra Boda",
+  "welcomeMessage": "Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.",
+  "eventDateISO": "2027-03-20T16:00:00",
   "timezoneOffset": "-06:00",
   "eventDateLabel": "20 de Marzo, 2027",
   "eventDateShort": "20 · Marzo · 2027",
   "eventDurationHours": 6,
-  "countdownPhrase": "Para mi gran noche de XV Años",
+  "countdownPhrase": "Para casarme con el amor de mi vida",
   "countdownStyle": {
     "bgColor": "#121214",
     "opacity": 0.55,
     "textColor": "#121214"
   },
-  "quote": "Hoy comienzo a escribir un nuevo capítulo lleno de ilusiones, gratitud y sueños por cumplir.",
-  "blessingIntro": "Con la bendición de Dios y mis padres",
+  "quote": "El amor no se mira, se siente, y aún más cuando ella está junto a ti.",
+  "blessingIntro": "Con la bendición de Dios y nuestros padres",
   "mother": "Elena de Martínez",
   "father": "Roberto Martínez",
   "brideMother": "Elena de Martínez",
@@ -2326,11 +2282,11 @@ const CONFIG = {
   "godmother": "Ana de López",
   "godfather": "Javier López",
   "court": [
-    "Mis Chambelanes de Honor",
-    "Emiliano Cruz",
+    "Camila Ortiz",
+    "Renata Vega",
     "Diego Fuentes",
-    "Mateo Soto",
-    "Santiago Morales"
+    "Emiliano Cruz",
+    "Ximena Paredes"
   ],
   "waxSeal": {
     "enabled": true,
@@ -2349,11 +2305,11 @@ const CONFIG = {
     "title": "Nuestra Historia",
     "subtitle": "Un camino lleno de momentos inolvidables",
     "text": "Todo comenzó con una mirada y una conversación que duró horas. Desde ese instante supimos que nuestras vidas estarían unidas para siempre. Hoy damos el paso más importante y queremos compartirlo contigo.",
-    "photo": ""
+    "photo": "assets/savethedate-catalina.jpg"
   },
   "instagram": {
     "enabled": true,
-    "hashtag": "#MisXVCatalina",
+    "hashtag": "#BodaCatalinayJulian",
     "text": "Comparte tus fotos y momentos especiales con nosotros en Instagram usando nuestro hashtag oficial."
   },
   "sharedAlbum": {
@@ -2361,7 +2317,7 @@ const CONFIG = {
     "title": "Álbum Colaborativo",
     "subtitle": "Comparte tus Fotos y Videos",
     "description": "¡Ayúdanos a capturar cada momento! Sube aquí todas las fotos y videos que tomes durante nuestro gran día usando tu código personalizado de invitado.",
-    "accessCode": "XV2027",
+    "accessCode": "BODA2027",
     "albumUrl": "https://photos.google.com"
   },
   "typography": {
@@ -2463,8 +2419,8 @@ const CONFIG = {
     "venue": "Cantabria Salón de Eventos",
     "address": "Camino Real 456, Valle Alto",
     "time": "6:30 PM",
-    "mapsUrl": "https://maps.google.com/?q=Jardín+Las+Magnolias",
-    "wazeUrl": "https://waze.com/ul?q=Jardín+Las+Magnolias"
+    "mapsUrl": "https://maps.google.com/?q=Cantabria+Salón",
+    "wazeUrl": "https://waze.com/ul?q=Cantabria+Salón"
   },
   "stardust": {
     "enabled": true,
@@ -2500,36 +2456,31 @@ const CONFIG = {
     {
       "icon": "church",
       "label": "Ceremonia Religiosa",
-      "time": "18:00 hrs"
-    },
-    {
-      "icon": "rings",
-      "label": "Boda Civil",
-      "time": "19:00 hrs"
+      "time": "16:00 hrs"
     },
     {
       "icon": "toast",
-      "label": "Recepción",
-      "time": "20:00 hrs"
+      "label": "Recepción & Brindis",
+      "time": "18:30 hrs"
     },
     {
       "icon": "dinner",
-      "label": "Cena",
-      "time": "20:30 hrs"
+      "label": "Cena de Gala",
+      "time": "20:00 hrs"
     },
     {
       "icon": "dance",
-      "label": "Todo mundo a bailar",
+      "label": "Primer Baile & Vals",
       "time": "21:30 hrs"
     },
     {
       "icon": "car",
-      "label": "Fin del evento",
-      "time": "2:00 hrs"
+      "label": "Apertura de Pista",
+      "time": "22:00 hrs"
     }
   ],
   "dressCode": {
-    "title": "Formal",
+    "title": "Rigurosa Etiqueta",
     "description": "Sugerimos tonos cálidos y neutros. Por favor, reserven el color blanco y perla para la novia.",
     "colorsEnabled": true,
     "colorPalette": [
@@ -2575,20 +2526,18 @@ const CONFIG = {
     "envelopeNote": "Agradecemos de corazón tu muestra de cariño en nuestra tradicional lluvia de sobres."
   },
   "photos": {
-    "hero": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
-    "saveTheDate": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=80",
-    "portrait": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80",
+    "hero": "assets/hero-catalina.jpg",
+    "saveTheDate": "assets/savethedate-catalina.jpg",
+    "portrait": "assets/savethedate-catalina.jpg",
     "gallery": [
-      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80"
+      "assets/hero-catalina.jpg",
+      "assets/savethedate-catalina.jpg"
     ]
   },
   "rsvpTitle": "Confirmación de Asistencia",
   "rsvpDeadlineLabel": "Por favor, haznos saber si podrás acompañarnos antes del 20 de Febrero.",
   "footerClosing": "Con amor,",
-  "footerText": "",
+  "footerText": "#BodaCatalinayJulian",
   "whatsappNumber": "5215512345678",
   "whatsappHosts": [
     {
@@ -2609,7 +2558,7 @@ const CONFIG = {
   "music": {
     "enabled": true,
     "url": "assets/musica-vals.mp3",
-    "title": "Vals de las Mariposas (Piano & Cuerdas)"
+    "title": "A Thousand Years (Acústico)"
   },
   "illustrations": {
     "hero": {

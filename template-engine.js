@@ -113,27 +113,27 @@ const TemplateEngine = {
   },
 
   defaultConfig: {
-    eventType: "xv",
-    name: "Catalina",
+    eventType: "boda",
+    name: "Catalina & Julián",
     brideName: "Catalina",
     groomName: "Julián",
     nameConnector: "&", 
-    monogram: "C", 
-    eyebrow: "Mis XV Años",
-    welcomeMessage: "Hay momentos que se guardan para siempre en el corazón... Acompáñame a celebrar uno de los días más especiales e inolvidables de mi vida: mis quince años.",
-    eventDateISO: "2027-03-20T18:00:00",
+    monogram: "C & J", 
+    eyebrow: "Nuestra Boda",
+    welcomeMessage: "Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.",
+    eventDateISO: "2027-03-20T16:00:00",
     timezoneOffset: "-06:00",
     eventDateLabel: "20 de Marzo, 2027",
     eventDateShort: "20 · Marzo · 2027",
     eventDurationHours: 6,
-    countdownPhrase: "Para mi gran noche de XV Años",
+    countdownPhrase: "Para casarme con el amor de mi vida",
     countdownStyle: {
       bgColor: "#121214",
       opacity: 0.55,
       textColor: "#121214"
     },
-    quote: "Hoy comienzo a escribir un nuevo capítulo lleno de ilusiones, gratitud y sueños por cumplir.",
-    blessingIntro: "Con la bendición de Dios y mis padres",
+    quote: "El amor no se mira, se siente, y aún más cuando ella está junto a ti.",
+    blessingIntro: "Con la bendición de Dios y nuestros padres",
     
     mother: "Elena de Martínez",
     father: "Roberto Martínez",
@@ -144,7 +144,7 @@ const TemplateEngine = {
 
     godmother: "Ana de López",
     godfather: "Javier López",
-    court: ["Mis Chambelanes de Honor", "Emiliano Cruz", "Diego Fuentes", "Mateo Soto", "Santiago Morales"],
+    court: ["Camila Ortiz", "Renata Vega", "Diego Fuentes", "Emiliano Cruz", "Ximena Paredes"],
     waxSeal: {
       enabled: true,
       customImage: '',
@@ -163,12 +163,12 @@ const TemplateEngine = {
       title: "Nuestra Historia",
       subtitle: "Un camino lleno de momentos inolvidables",
       text: "Todo comenzó con una mirada y una conversación que duró horas. Desde ese instante supimos que nuestras vidas estarían unidas para siempre. Hoy damos el paso más importante y queremos compartirlo contigo.",
-      photo: ""
+      photo: "assets/savethedate-catalina.jpg"
     },
 
     instagram: {
       enabled: true,
-      hashtag: "#MisXVCatalina",
+      hashtag: "#BodaCatalinayJulian",
       text: "Comparte tus fotos y momentos especiales con nosotros en Instagram usando nuestro hashtag oficial."
     },
 
@@ -177,12 +177,12 @@ const TemplateEngine = {
       title: "Álbum Colaborativo",
       subtitle: "Comparte tus Fotos y Videos",
       description: "¡Ayúdanos a capturar cada momento! Sube aquí todas las fotos y videos que tomes durante nuestro gran día usando tu código personalizado de invitado.",
-      accessCode: "XV2027",
+      accessCode: "BODA2027",
       albumUrl: "https://photos.google.com"
     },
 
     typography: {
-      namesFont: "Cormorant Garamond", // Fuente exclusiva para Nombres de Protagonistas (Hero & Footer)
+      namesFont: "Cormorant Garamond",
       scriptFont: "Parisienne",
       displayFont: "Cormorant Garamond",
       bodyFont: "Inter",
@@ -199,16 +199,14 @@ const TemplateEngine = {
       customBodyFile: "",
       customBodyFileName: "",
       
-      // Efecto de Títulos (Sólido Clásico o Metálico)
-      titleEffect: "solid", // 'metallic' o 'solid'
-      titleMetallicPreset: "gold", // 'gold', 'rosegold', 'silver', 'bronze', 'custom'
+      titleEffect: "solid",
+      titleMetallicPreset: "gold",
       titleCustomMetallic: "",
       titleSolidColor: "#1E1E1E",
 
-      // Escala y Proporciones Tipográficas Controladas (1.0 = 100%)
-      scaleHero: 1.0,      // Portada / Nombres Principales (0.80 - 1.30)
-      scaleHeadings: 1.0,  // Títulos de Secciones (0.80 - 1.25)
-      scaleBody: 1.0       // Textos de Lectura & Cuerpo (0.85 - 1.20)
+      scaleHero: 1.0,
+      scaleHeadings: 1.0,
+      scaleBody: 1.0
     },
 
     decorations: {
@@ -243,8 +241,8 @@ const TemplateEngine = {
       venue: "Cantabria Salón de Eventos",
       address: "Camino Real 456, Valle Alto",
       time: "6:30 PM",
-      mapsUrl: "https://maps.google.com/?q=Jardín+Las+Magnolias",
-      wazeUrl: "https://waze.com/ul?q=Jardín+Las+Magnolias"
+      mapsUrl: "https://maps.google.com/?q=Cantabria+Salón",
+      wazeUrl: "https://waze.com/ul?q=Cantabria+Salón"
     },
 
     stardust: {
@@ -280,16 +278,15 @@ const TemplateEngine = {
     },
 
     itinerary: [
-      { icon: "church", label: "Ceremonia Religiosa", time: "18:00 hrs" },
-      { icon: "rings",  label: "Boda Civil",           time: "19:00 hrs" },
-      { icon: "toast",  label: "Recepción",            time: "20:00 hrs" },
-      { icon: "dinner", label: "Cena",                 time: "20:30 hrs" },
-      { icon: "dance",  label: "Todo mundo a bailar",  time: "21:30 hrs" },
-      { icon: "car",    label: "Fin del evento",       time: "2:00 hrs" }
+      { icon: "church", label: "Ceremonia Religiosa", time: "16:00 hrs" },
+      { icon: "toast",  label: "Recepción & Brindis", time: "18:30 hrs" },
+      { icon: "dinner", label: "Cena de Gala",        time: "20:00 hrs" },
+      { icon: "dance",  label: "Primer Baile & Vals", time: "21:30 hrs" },
+      { icon: "car",    label: "Apertura de Pista",   time: "22:00 hrs" }
     ],
 
     dressCode: {
-      title: "Formal",
+      title: "Rigurosa Etiqueta",
       description: "Sugerimos tonos cálidos y neutros. Por favor, reserven el color blanco y perla para la novia.",
       colorsEnabled: true,
       colorPalette: [
@@ -317,21 +314,19 @@ const TemplateEngine = {
     },
 
     photos: {
-      hero: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
-      saveTheDate: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1000&q=80",
-      portrait: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80",
+      hero: "assets/hero-catalina.jpg",
+      saveTheDate: "assets/savethedate-catalina.jpg",
+      portrait: "assets/savethedate-catalina.jpg",
       gallery: [
-        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
-        "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80",
-        "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1000&q=80"
+        "assets/hero-catalina.jpg",
+        "assets/savethedate-catalina.jpg"
       ]
     },
 
     rsvpTitle: "Confirmación de Asistencia",
     rsvpDeadlineLabel: "Por favor, haznos saber si podrás acompañarnos antes del 20 de Febrero.",
     footerClosing: "Con amor,",
-    footerText: "",
+    footerText: "#BodaCatalinayJulian",
     whatsappNumber: "5215512345678",
     whatsappHosts: [
       { label: "Anfitrión Principal / Novia", phone: "5215512345678" },
@@ -344,26 +339,21 @@ const TemplateEngine = {
     music: {
       enabled: true,
       url: "assets/musica-vals.mp3",
-      title: "Vals de las Mariposas (Piano & Cuerdas)"
+      title: "A Thousand Years (Acústico)"
     },
 
-    // ─── Multi-Plano Parallax ──────────────────────────────────────────────
-    // Ilustraciones PNG con fondo transparente que "flotan" entre secciones.
-    // La ilustración del Hero aparece al 50% hacia abajo del borde inferior,
-    // bridging el Hero (foto real) con la sección de Cuenta Regresiva.
-    // La ilustración de Familia bridgea la sección oscura con Ubicaciones.
     illustrations: {
       hero: {
         enabled: false,
-        image: "",        // URL o base64 de PNG con fondo transparente
-        widthPct: 85,     // Ancho como % del contenedor (30–100)
-        maxWidth: 560,    // Ancho máximo en px (250–900)
-        offsetY: 0,       // Ajuste vertical fino en px (-200 a +200)
-        offsetX: 0,       // Ajuste horizontal fino en px (-150 a +150)
-        overlapPct: 50,   // % de caída hacia la siguiente sección (0 a 100)
-        alignX: "center", // 'center', 'left', 'right'
-        parallaxSpeed: 25,// Velocidad GSAP yPercent (0 a 60)
-        extraPadding: 0   // Padding superior extra en la sección siguiente en px (0 a 250)
+        image: "",
+        widthPct: 85,
+        maxWidth: 560,
+        offsetY: 0,
+        offsetX: 0,
+        overlapPct: 50,
+        alignX: "center",
+        parallaxSpeed: 25,
+        extraPadding: 0
       },
       countdown: {
         enabled: false,
