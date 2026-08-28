@@ -1627,37 +1627,40 @@ tailwind.config = {
   }
 
   .btn-rsvp-submit-clean {
-    width: 100%;
-    padding: 16px 20px;
-    background: linear-gradient(135deg, #D4AF37 0%, #C59B27 50%, #A56E0E 100%) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 9999px !important;
-    font-family: var(--font-display, 'Cinzel', 'Playfair Display', serif) !important;
-    font-size: 0.94rem !important;
-    letter-spacing: 0.2em !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    cursor: pointer !important;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    box-shadow: 0 6px 22px rgba(165, 110, 14, 0.38) !important;
-    margin-top: 14px !important;
-    display: inline-flex !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    margin: 16px auto 0 auto !important;
+    display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 8px !important;
+    gap: 0.5rem !important;
+    padding: 0.65rem 1.5rem !important;
+    border-radius: 9999px !important;
+    background-color: var(--gold) !important;
+    color: #ffffff !important;
+    font-family: 'Work Sans', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.2em !important;
+    white-space: nowrap !important;
+    box-shadow: 0 4px 14px ${hexToRgba(activeTheme['gold-500'] || '#C59D60', 0.35)} !important;
+    border: 1px solid var(--gold) !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    cursor: pointer !important;
+    line-height: 1.2 !important;
   }
 
   .btn-rsvp-submit-clean:hover {
-    background: linear-gradient(135deg, #E5C07B 0%, #D4AF37 50%, #B8860B 100%) !important;
-    color: #ffffff !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 10px 28px rgba(165, 110, 14, 0.48) !important;
+    background-color: var(--gold-hover, #9A753C) !important;
+    border-color: var(--gold-hover, #9A753C) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px ${hexToRgba(activeTheme['gold-500'] || '#C59D60', 0.45)} !important;
   }
 
   .btn-rsvp-submit-clean:active {
     transform: translateY(0) !important;
-    box-shadow: 0 4px 14px rgba(165, 110, 14, 0.3) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   }
 
   .mensaje-personalizado-pergamino, .mensaje-personalizado {
