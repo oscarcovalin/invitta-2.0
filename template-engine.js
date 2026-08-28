@@ -534,7 +534,7 @@ const TemplateEngine = {
       </svg>
     `,
 
-    // 3. Código de Vestimenta (Gancho de Alta Costura, Moño Royal y Laureles)
+    // 3. Código de Vestimenta (Gancho Elegante, Moño Royal y Laureles)
     dressCode: `
       <svg viewBox="0 0 48 48" class="w-10 h-10 text-antique-gold mx-auto mb-4 gsap-fade-up" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
         <path d="M24 7a4.5 4.5 0 0 1 4.5 4.5c0 2.5-2.25 3.5-4.5 4.5"/>

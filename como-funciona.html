@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Protocolo & Experiencia Invitta 2.0 — Guía Editorial de Alta Costura</title>
+  <title>¿Cómo Funciona? — Invitaciones Digitales y Papelería a Juego | Invitta</title>
 
-  <!-- Tipografías de Alta Gama -->
+  <!-- Tipografías Bodapix Style: Fraunces / Cormorant + Jost / Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Jost:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
   
   <!-- Iconos Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -18,293 +18,296 @@
 
   <style>
     :root {
-      --gold-primary: #D4AF37;
-      --gold-light: #FFF2B2;
-      --gold-dark: #8C6D1F;
-      --gold-gradient: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #8C6D1F 100%);
-      --obsidian-bg: #07090e;
-      --card-bg: rgba(18, 22, 32, 0.7);
+      --bg-cream: #FAF8F5;
+      --bg-card: #FFFFFF;
+      --text-main: #2C2825;
+      --text-muted: #6B655E;
+      --border-soft: #EFE9E0;
+      --accent-green: #2E5A44;
+      --accent-green-light: #EBF2EE;
+      --accent-gold: #C5A059;
+      --accent-gold-light: #FBF6EB;
+      --accent-berry: #8B263E;
+      --accent-terracotta: #C86D51;
     }
 
     body {
-      background-color: var(--obsidian-bg);
-      color: #edeae2;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      overflow-x: hidden;
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      font-family: 'Jost', 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* Grano de Papel Fino */
-    .paper-grain {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.032;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    .font-serif-title {
+      font-family: 'Fraunces', 'Cormorant Garamond', serif;
     }
 
-    /* Resplandor Áureo */
-    .gold-glow {
-      text-shadow: 0 0 25px rgba(212, 175, 55, 0.45);
-    }
-    .box-glow {
-      box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px -5px rgba(212, 175, 55, 0.15);
+    .font-script {
+      font-family: 'Great Vibes', cursive;
     }
 
-    /* Tarjetas de Cristal Editorial */
-    .editorial-glass {
-      background: linear-gradient(145deg, rgba(25, 30, 44, 0.65) 0%, rgba(12, 15, 22, 0.85) 100%);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(212, 175, 55, 0.22);
-      box-shadow: 0 25px 60px -10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
-      border-radius: 28px;
+    /* Barra Superior de Confianza Estilo Bodapix */
+    .trust-bar {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 11.5px;
+      color: #6B655E;
+      letter-spacing: 0.03em;
     }
 
-    /* Stepper Tabs */
-    .stepper-btn {
-      position: relative;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Tarjetas Limpias con Sombras Suaves */
+    .boda-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-soft);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px -5px rgba(44, 40, 37, 0.05);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .stepper-btn::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-50%) scaleX(0);
-      width: 60%;
-      height: 2px;
-      background: var(--gold-gradient);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .stepper-btn.active {
-      background: rgba(212, 175, 55, 0.12);
-      border-color: rgba(212, 175, 55, 0.6);
-      color: #ffffff;
-      transform: translateY(-2px);
-    }
-    .stepper-btn.active::after {
-      transform: translateX(-50%) scaleX(1);
+    .boda-card:hover {
+      box-shadow: 0 16px 40px -5px rgba(44, 40, 37, 0.09);
+      border-color: #E2D7C8;
     }
 
-    /* Transición de Contenido */
-    .step-section {
+    /* Botones de Pasos Estilo Bodapix */
+    .step-tab-btn {
+      transition: all 0.25s ease;
+      background: #FFFFFF;
+      border: 1px solid var(--border-soft);
+      color: var(--text-muted);
+    }
+    .step-tab-btn:hover {
+      border-color: var(--accent-gold);
+      color: var(--text-main);
+      background: var(--accent-gold-light);
+    }
+    .step-tab-btn.active {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: #FFFFFF;
+      box-shadow: 0 6px 20px rgba(46, 90, 68, 0.25);
+    }
+    .step-tab-btn.active .step-num {
+      color: #C8E6D6;
+    }
+    .step-tab-btn.active .step-icon {
+      color: #FFFFFF;
+    }
+
+    /* Transición Suave de Pasos */
+    .step-panel {
       display: none;
-      animation: stageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeInStep 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-    .step-section.active {
+    .step-panel.active {
       display: block;
     }
 
-    @keyframes stageFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(16px) scale(0.99);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+    @keyframes fadeInStep {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .drop-cap::first-letter {
-      font-family: 'Cinzel', serif;
-      font-size: 3.2rem;
-      float: left;
-      line-height: 0.8;
-      margin-right: 0.75rem;
-      margin-top: 0.15rem;
-      color: var(--gold-primary);
-      text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+    /* Botón Primario Bodapix Style */
+    .btn-bodapix-primary {
+      background: var(--accent-green);
+      color: #FFFFFF;
+      border-radius: 9999px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
+    .btn-bodapix-primary:hover {
+      background: #234735;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(46, 90, 68, 0.25);
+    }
+
+    .btn-bodapix-secondary {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1px solid var(--border-soft);
+      border-radius: 9999px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+    .btn-bodapix-secondary:hover {
+      border-color: var(--accent-gold);
+      background: var(--accent-gold-light);
     }
   </style>
 </head>
-<body class="selection:bg-amber-500/30">
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-100 selection:text-amber-900">
 
-  <!-- Grano de Papel de Algodón -->
-  <div class="paper-grain"></div>
+  <!-- ==================== BARRA DE CONFIANZA SUPERIOR (ESTILO BODAPIX) ==================== -->
+  <aside class="trust-bar py-2 px-4 text-center">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-1">
+      <span class="inline-flex items-center gap-1.5 font-medium">
+        <span class="material-symbols-outlined text-amber-600 text-sm">auto_awesome</span>
+        Diseños Exclusivos
+      </span>
+      <span class="text-neutral-300 hidden sm:inline">|</span>
+      <span class="inline-flex items-center gap-1.5 font-medium">
+        <span class="material-symbols-outlined text-emerald-600 text-sm">palette</span>
+        Invitaciones y Papelería a Juego
+      </span>
+      <span class="text-neutral-300 hidden sm:inline">|</span>
+      <span class="inline-flex items-center gap-1.5 font-medium">
+        <span class="material-symbols-outlined text-amber-600 text-sm">chat</span>
+        Envíos Directos por WhatsApp
+      </span>
+      <span class="text-neutral-300 hidden sm:inline">|</span>
+      <span class="inline-flex items-center gap-1 font-medium text-neutral-800">
+        <span class="text-amber-500">★★★★★</span>
+        <strong>4.9/5</strong> Opiniones Reales
+      </span>
+    </div>
+  </aside>
 
-  <!-- Ambient Glows -->
-  <div class="fixed top-[-150px] left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-amber-600/10 rounded-full blur-[140px] pointer-events-none"></div>
-
-  <!-- ==================== HEADER OBSIDIAN ATELIER ==================== -->
-  <header class="w-full border-b border-amber-500/20 bg-[#07090e]/85 backdrop-blur-2xl sticky top-0 z-50 transition-all">
-    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-4 flex items-center justify-between">
+  <!-- ==================== HEADER PRINCIPAL ==================== -->
+  <header class="w-full bg-[#FFFFFF]/90 backdrop-blur-md border-b border-[#EFE9E0] sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       
-      <!-- Brand Logotype -->
-      <a href="index.html" class="flex items-center gap-3 group text-decoration-none">
-        <div class="w-10 h-10 rounded-full border border-amber-400/50 bg-gradient-to-tr from-amber-900/30 to-amber-400/10 flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.25)] group-hover:scale-105 transition-transform">
-          <span class="font-['Cinzel'] text-amber-300 font-bold text-base">IV</span>
-        </div>
-        <div>
-          <span class="font-['Cinzel'] text-lg tracking-[0.2em] font-bold text-white uppercase block leading-none group-hover:text-amber-300 transition-colors">
-            Invitta
+      <!-- Logotipo -->
+      <a href="index.html" class="flex items-center gap-3 text-decoration-none group">
+        <img src="invitta-logo-light.png" alt="Invitta Logo" class="h-10 w-auto object-contain">
+        <div class="border-l border-neutral-300 pl-3 hidden sm:block">
+          <span class="text-[11px] font-medium text-neutral-500 tracking-wider uppercase block">
+            Guía de Uso
           </span>
-          <span class="font-mono text-[9px] text-amber-400/80 uppercase tracking-[0.3em] block mt-1">
-            Atelier Digital 2.0
+          <span class="font-serif-title text-sm font-semibold text-neutral-800 block -mt-0.5">
+            ¿Cómo Funciona?
           </span>
         </div>
       </a>
 
-      <!-- Quick Nav Buttons -->
+      <!-- Accesos Rápidos -->
       <div class="flex items-center gap-3">
-        <a href="index.html" class="px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-neutral-300 transition-all flex items-center gap-2">
-          <span class="material-symbols-outlined text-sm text-amber-400">apps</span>
-          <span class="hidden sm:inline">Bóveda de Proyectos</span>
+        <a href="index.html" class="btn-bodapix-secondary px-4 py-2 text-xs flex items-center gap-1.5 text-decoration-none">
+          <span class="material-symbols-outlined text-base">dashboard</span>
+          <span class="hidden sm:inline">Mis Proyectos</span>
         </a>
-        <a href="invitacion-estudio.html" class="px-5 py-2 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:brightness-110 text-neutral-950 text-xs font-bold uppercase tracking-wider transition-all shadow-[0_4px_20px_rgba(212,175,55,0.35)] flex items-center gap-2">
+        <a href="invitacion-estudio.html" class="btn-bodapix-primary px-5 py-2 text-xs flex items-center gap-1.5 text-decoration-none shadow-sm">
           <span class="material-symbols-outlined text-base">palette</span>
-          <span>Abrir Estudio</span>
+          <span>Crear Invitación</span>
         </a>
       </div>
 
     </div>
   </header>
 
-  <!-- ==================== HERO EDITORIAL ==================== -->
-  <section class="max-w-5xl mx-auto px-6 sm:px-10 pt-14 pb-8 text-center relative z-10">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-[11px] font-mono tracking-[0.25em] uppercase mb-5">
-      <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-      <span>Protocolo de Producción · Guía Interactiva</span>
-    </div>
+  <!-- ==================== HERO DE BIENVENIDA ==================== -->
+  <section class="max-w-4xl mx-auto px-6 pt-12 pb-8 text-center">
+    <span class="inline-block px-4 py-1 rounded-full bg-amber-50 border border-amber-200/60 text-amber-900 text-xs font-semibold tracking-wide uppercase mb-4">
+      ✨ Guía Rápida para Novios, Festejadas y Planners
+    </span>
 
-    <h1 class="font-['Cinzel'] text-3xl sm:text-5xl md:text-6xl font-normal tracking-wide text-white mb-5 leading-[1.15]">
-      El Viaje de tu Invitación:<br>
-      <span class="font-['Cormorant_Garamond'] italic font-light text-amber-200/90 text-4xl sm:text-6xl md:text-7xl block mt-1">
-        Del Atelier al Gran Día
-      </span>
+    <h1 class="font-serif-title text-3xl sm:text-4xl md:text-5xl font-medium text-neutral-900 leading-[1.2] mb-4">
+      Cómo crear y compartir tu invitación<br>
+      <span class="italic font-normal text-[#8B263E]">fácilmente en 5 sencillos pasos</span>
     </h1>
 
-    <p class="text-neutral-400 font-light text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-      Diseñado para novios, quinceañeras y planners que buscan una experiencia de alta costura sin complicaciones técnicas. Aprende en 5 momentos cómo orquestar tu evento a la perfección.
+    <p class="text-neutral-600 text-sm sm:text-base font-normal max-w-2xl mx-auto leading-relaxed">
+      Desde la elección de colores y fotos hasta la recepción de confirmaciones RSVP y el acomodo de mesas. Todo pensado para que tu evento sea inolvidable y muy fácil de organizar.
     </p>
   </section>
 
-  <!-- ==================== STEPPER RUNWAY BAR ==================== -->
-  <section class="max-w-6xl mx-auto px-6 sm:px-10 mb-10 relative z-20">
-    <div class="p-2 rounded-2xl bg-black/60 border border-amber-500/20 backdrop-blur-xl flex items-center justify-between gap-1.5 overflow-x-auto no-scrollbar" id="stepperNav">
+  <!-- ==================== BARRA DE PASOS INTERACTIVA ==================== -->
+  <section class="max-w-6xl mx-auto px-6 mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5" id="stepTabsGroup">
       
-      <button type="button" data-step="1" class="stepper-btn active flex-1 min-w-[170px] px-4 py-3 rounded-xl border border-transparent text-left flex items-center gap-3">
-        <span class="font-['Cinzel'] text-amber-400 text-lg font-bold">I</span>
-        <div>
-          <span class="block text-[9px] font-mono uppercase tracking-[0.2em] text-neutral-400">Atelier</span>
-          <span class="block text-xs font-semibold text-white">1. El Diseño</span>
-        </div>
+      <button type="button" data-step="1" class="step-tab-btn active p-3 rounded-2xl text-left flex flex-col justify-between">
+        <span class="step-num text-[10px] font-bold uppercase tracking-wider block">Paso 01</span>
+        <span class="text-xs font-semibold block mt-1">1. Personaliza</span>
       </button>
 
-      <button type="button" data-step="2" class="stepper-btn flex-1 min-w-[170px] px-4 py-3 rounded-xl border border-transparent text-left flex items-center gap-3">
-        <span class="font-['Cinzel'] text-amber-400 text-lg font-bold">II</span>
-        <div>
-          <span class="block text-[9px] font-mono uppercase tracking-[0.2em] text-neutral-400">Pases VIP</span>
-          <span class="block text-xs font-semibold text-white">2. Envíos WhatsApp</span>
-        </div>
+      <button type="button" data-step="2" class="step-tab-btn p-3 rounded-2xl text-left flex flex-col justify-between">
+        <span class="step-num text-[10px] font-bold uppercase tracking-wider block text-neutral-400">Paso 02</span>
+        <span class="text-xs font-semibold block mt-1">2. Pases & WhatsApp</span>
       </button>
 
-      <button type="button" data-step="3" class="stepper-btn flex-1 min-w-[170px] px-4 py-3 rounded-xl border border-transparent text-left flex items-center gap-3">
-        <span class="font-['Cinzel'] text-amber-400 text-lg font-bold">III</span>
-        <div>
-          <span class="block text-[9px] font-mono uppercase tracking-[0.2em] text-neutral-400">Logística</span>
-          <span class="block text-xs font-semibold text-white">3. Plano de Mesas</span>
-        </div>
+      <button type="button" data-step="3" class="step-tab-btn p-3 rounded-2xl text-left flex flex-col justify-between">
+        <span class="step-num text-[10px] font-bold uppercase tracking-wider block text-neutral-400">Paso 03</span>
+        <span class="text-xs font-semibold block mt-1">3. Mesas & Salón</span>
       </button>
 
-      <button type="button" data-step="4" class="stepper-btn flex-1 min-w-[170px] px-4 py-3 rounded-xl border border-transparent text-left flex items-center gap-3">
-        <span class="font-['Cinzel'] text-amber-400 text-lg font-bold">IV</span>
-        <div>
-          <span class="block text-[9px] font-mono uppercase tracking-[0.2em] text-neutral-400">Pergamino</span>
-          <span class="block text-xs font-semibold text-white">4. Confirmación RSVP</span>
-        </div>
+      <button type="button" data-step="4" class="step-tab-btn p-3 rounded-2xl text-left flex flex-col justify-between">
+        <span class="step-num text-[10px] font-bold uppercase tracking-wider block text-neutral-400">Paso 04</span>
+        <span class="text-xs font-semibold block mt-1">4. Confirmaciones</span>
       </button>
 
-      <button type="button" data-step="5" class="stepper-btn flex-1 min-w-[170px] px-4 py-3 rounded-xl border border-transparent text-left flex items-center gap-3">
-        <span class="font-['Cinzel'] text-amber-400 text-lg font-bold">V</span>
-        <div>
-          <span class="block text-[9px] font-mono uppercase tracking-[0.2em] text-neutral-400">Recepción</span>
-          <span class="block text-xs font-semibold text-white">5. Noche de Gala</span>
-        </div>
+      <button type="button" data-step="5" class="step-tab-btn p-3 rounded-2xl text-left flex flex-col justify-between col-span-2 sm:col-span-1">
+        <span class="step-num text-[10px] font-bold uppercase tracking-wider block text-neutral-400">Paso 05</span>
+        <span class="text-xs font-semibold block mt-1">5. El Gran Día</span>
       </button>
 
     </div>
   </section>
 
-  <!-- ==================== MAIN INTERACTIVE STAGE ==================== -->
-  <main class="max-w-6xl mx-auto px-6 sm:px-10 pb-20 relative z-10">
+  <!-- ==================== CONTENEDOR DE CONTENIDO PRINCIPAL ==================== -->
+  <main class="max-w-6xl mx-auto px-6 pb-16 w-full flex-1">
     
-    <!-- ==================== PASO 1: EL DISEÑO DE ALTA COSTURA ==================== -->
-    <div id="stepStage1" class="step-section active">
-      <div class="editorial-glass p-8 sm:p-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+    <!-- ==================== PASO 1: PERSONALIZA TU INVITACIÓN ==================== -->
+    <div id="stepPanel1" class="step-panel active">
+      <div class="boda-card p-6 sm:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          <!-- Explicación Editorial -->
-          <div class="lg:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 font-mono text-xs">
-              <span>MOMENTO 01 · CREACIÓN & IDENTIDAD</span>
-            </div>
-            
-            <h2 class="font-['Cinzel'] text-3xl sm:text-4xl text-white font-normal leading-tight">
-              Diseño Editorial & Sello de Cera 3D
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-3 py-1 rounded-full">
+              Paso 1 · Diseño a tu Medida
+            </span>
+
+            <h2 class="font-serif-title text-2xl sm:text-3xl text-neutral-900 font-medium leading-tight">
+              Personaliza los colores, fotos, música y sello de tu invitación
             </h2>
-            
-            <p class="text-neutral-300 font-light text-sm sm:text-base leading-relaxed drop-cap">
-              En Invitta Estudio no llenas plantillas genéricas. Construyes una portada de revista digital con texturas táctiles de algodón de 300g, marcos de oro antiguo biselado y tipografía romana display que cautiva a tus invitados desde el primer segundo.
+
+            <p class="text-neutral-600 text-sm leading-relaxed">
+              En el <strong>Estudio de Diseño</strong> tienes el control total para crear una invitación digital elegante que refleje la personalidad de tu boda o XV años:
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div class="p-4 rounded-2xl bg-black/40 border border-white/10">
-                <div class="flex items-center gap-2 text-amber-300 font-bold text-xs mb-1">
-                  <span class="material-symbols-outlined text-base">fingerprint</span> Sello de Lacra Interactivo
-                </div>
-                <p class="text-neutral-400 text-xs font-light">
-                  Sello 3D con tu monograma heráldico en oro o lacre. El invitado toca el sello para abrir el sobre e iniciar la música.
-                </p>
+            <div class="space-y-2.5 pt-1 text-xs sm:text-sm text-neutral-700">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>5 Paletas de Color en Tendencia</strong>: Vino Borgoña, Rosa Gold Romántico, Verde Esmeralda, Azul Medianoche y Terracota Cálido.</span>
               </div>
-
-              <div class="p-4 rounded-2xl bg-black/40 border border-white/10">
-                <div class="flex items-center gap-2 text-amber-300 font-bold text-xs mb-1">
-                  <span class="material-symbols-outlined text-base">palette</span> 5 Paletas de Color Vivas
-                </div>
-                <p class="text-neutral-400 text-xs font-light">
-                  Vino Tinto & Borgoña, Rosa Gold Emulsionado, Esmeralda Imperial, Azul Medianoche y Terracota.
-                </p>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Sello de Lacre Interactivo</strong>: Tus iniciales en relieve dorado sobre cera. El invitado toca el sello para abrir el sobre e iniciar la música de fondo.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Tu Música Favorita</strong>: Reproductor discreto con ecualizador flotante y control de pausa/reproducción.</span>
               </div>
             </div>
 
-            <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/20 text-xs text-amber-200/90 flex items-center gap-3">
-              <span class="material-symbols-outlined text-amber-400 text-xl flex-shrink-0">auto_fix_high</span>
-              <span><strong>Previsualización en Vivo</strong>: Mientras editas en la computadora, el lienzo del iPhone 16 Pro replica con fidelidad milimétrica la experiencia móvil final.</span>
+            <div class="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-xs text-amber-900 flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-amber-700 text-lg flex-shrink-0">smartphone</span>
+              <span><strong>Vista Previa en Tiempo Real</strong>: Editas en la computadora y ves de inmediato cómo lucirá en el teléfono de tus invitados.</span>
             </div>
           </div>
 
-          <!-- Simulador Interactivo Paso 1 -->
-          <div class="lg:col-span-5 flex flex-col items-center">
-            <div class="w-full max-w-sm p-6 rounded-3xl bg-[#0b0e17] border border-amber-400/40 shadow-2xl text-center space-y-5">
-              <div class="flex items-center justify-between text-[11px] font-mono text-neutral-400 border-b border-white/10 pb-3">
-                <span>SIMULADOR DE APERTURA</span>
-                <span class="text-amber-400">● ACTIVO</span>
-              </div>
+          <!-- Muestra Visual Paso 1 -->
+          <div class="lg:col-span-5 bg-[#FAF7F2] p-6 rounded-3xl border border-[#EDE7DF] text-center space-y-4">
+            <span class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider block">
+              Prueba el Sello de Lacre
+            </span>
 
-              <!-- Sello 3D Clickeable -->
-              <div class="py-4">
-                <div id="demoWaxSeal" class="w-36 h-36 mx-auto cursor-pointer rounded-full p-1 bg-gradient-to-tr from-amber-700 via-amber-400 to-amber-200 shadow-[0_10px_40px_rgba(212,175,55,0.4)] hover:scale-105 active:scale-95 transition-transform flex items-center justify-center">
-                  <div class="w-full h-full rounded-full bg-[#160c07] border-2 border-amber-400/60 flex flex-col items-center justify-center">
-                    <span class="material-symbols-outlined text-amber-300 text-2xl">crown</span>
-                    <span class="font-['Cinzel_Decorative'] text-amber-200 text-lg font-bold">C & J</span>
-                  </div>
-                </div>
-                <p id="demoSealMsg" class="font-['Cinzel'] text-xs text-amber-300 mt-4 tracking-widest uppercase">
-                  Toca el sello para abrir
-                </p>
+            <!-- Sello Interactivo -->
+            <div id="demoSeal" class="w-32 h-32 mx-auto rounded-full bg-gradient-to-tr from-amber-700 via-amber-500 to-amber-300 p-1 shadow-md hover:scale-105 active:scale-95 transition-transform cursor-pointer flex items-center justify-center" onclick="testSealClick()">
+              <div class="w-full h-full rounded-full bg-[#5C061D] text-white flex flex-col items-center justify-center p-3 border-2 border-amber-300/40">
+                <span class="material-symbols-outlined text-amber-300 text-xl">crown</span>
+                <span class="font-serif-title font-bold text-base text-amber-200 mt-0.5">C & J</span>
               </div>
+            </div>
 
-              <!-- Selector de Color de Demostración -->
-              <div class="pt-3 border-t border-white/10">
-                <span class="text-[10px] font-mono uppercase text-neutral-400 block mb-2">Prueba otra paleta de color:</span>
-                <div class="flex justify-center gap-2" id="demoPaletteBtns">
-                  <button type="button" class="w-6 h-6 rounded-full bg-[#5c061d] border-2 border-white/40 hover:scale-110 transition-transform" title="Vino Tinto" onclick="setDemoTheme('#5c061d', 'C & J')"></button>
-                  <button type="button" class="w-6 h-6 rounded-full bg-[#1b5238] border-2 border-white/40 hover:scale-110 transition-transform" title="Esmeralda" onclick="setDemoTheme('#1b5238', 'C & J')"></button>
-                  <button type="button" class="w-6 h-6 rounded-full bg-[#c97d8a] border-2 border-white/40 hover:scale-110 transition-transform" title="Rosa Gold" onclick="setDemoTheme('#c97d8a', 'V')"></button>
-                  <button type="button" class="w-6 h-6 rounded-full bg-[#0f1a30] border-2 border-white/40 hover:scale-110 transition-transform" title="Medianoche" onclick="setDemoTheme('#0f1a30', 'C & J')"></button>
-                </div>
+            <p id="demoSealText" class="text-xs text-neutral-600 font-medium">
+              Toca el sello para abrir la invitación
+            </p>
+
+            <div class="pt-2 border-t border-neutral-200">
+              <span class="text-[11px] text-neutral-500 block mb-1.5">Elige un color para probar:</span>
+              <div class="flex justify-center gap-2">
+                <button type="button" class="w-6 h-6 rounded-full bg-[#5C061D] border-2 border-white shadow-sm hover:scale-110 transition-transform" title="Vino" onclick="changeSealColor('#5C061D', 'C & J')"></button>
+                <button type="button" class="w-6 h-6 rounded-full bg-[#1B5238] border-2 border-white shadow-sm hover:scale-110 transition-transform" title="Esmeralda" onclick="changeSealColor('#1B5238', 'C & J')"></button>
+                <button type="button" class="w-6 h-6 rounded-full bg-[#C97D8A] border-2 border-white shadow-sm hover:scale-110 transition-transform" title="Rosa" onclick="changeSealColor('#C97D8A', 'V')"></button>
+                <button type="button" class="w-6 h-6 rounded-full bg-[#0F1A30] border-2 border-white shadow-sm hover:scale-110 transition-transform" title="Medianoche" onclick="changeSealColor('#0F1A30', 'C & J')"></button>
               </div>
             </div>
           </div>
@@ -313,152 +316,68 @@
       </div>
     </div>
 
-    <!-- ==================== PASO 2: LOS PASES DE HONOR & WHATSAPP ==================== -->
-    <div id="stepStage2" class="step-section">
-      <div class="editorial-glass p-8 sm:p-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+    <!-- ==================== PASO 2: ASIGNA PASES & ENVIOS WHATSAPP ==================== -->
+    <div id="stepPanel2" class="step-panel">
+      <div class="boda-card p-6 sm:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          <div class="lg:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 font-mono text-xs">
-              <span>MOMENTO 02 · DISTRIBUCIÓN & RESPETO</span>
-            </div>
-            
-            <h2 class="font-['Cinzel'] text-3xl sm:text-4xl text-white font-normal leading-tight">
-              Pases de Honor Personalizados por WhatsApp
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full">
+              Paso 2 · Pases por Familia
+            </span>
+
+            <h2 class="font-serif-title text-2xl sm:text-3xl text-neutral-900 font-medium leading-tight">
+              Asigna el número de boletos y envía el enlace por WhatsApp
             </h2>
-            
-            <p class="text-neutral-300 font-light text-sm sm:text-base leading-relaxed drop-cap">
-              Se acabaron las dudas sobre cuántos acompañantes puede llevar cada invitado. El Centro de Envíos de Invitta genera enlaces inteligentes con el nombre y los boletos asignados para cada familia con 1 solo toque.
+
+            <p class="text-neutral-600 text-sm leading-relaxed">
+              Cada familia recibe su invitación personalizada con su número exacto de pases asignados, evitando confusiones o acompañantes no contemplados:
             </p>
 
-            <div class="space-y-3 pt-1 text-sm text-neutral-300">
-              <div class="flex items-start gap-3 p-3.5 rounded-2xl bg-black/30 border border-emerald-500/20">
-                <span class="material-symbols-outlined text-emerald-400 flex-shrink-0 mt-0.5">verified_user</span>
-                <div>
-                  <strong class="text-white">Cero Formularios para el Invitado</strong>: Al abrir el enlace desde su WhatsApp, el invitado ve de inmediato: <em>"Familia Morales, tienen 4 pases de honor reservados"</em>.
-                </div>
+            <div class="space-y-2.5 pt-1 text-xs sm:text-sm text-neutral-700">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Pases Exactos por Invitado</strong>: Asigna 1, 2, 4 o más boletos según cada familia o amigo.</span>
               </div>
-
-              <div class="flex items-start gap-3 p-3.5 rounded-2xl bg-black/30 border border-emerald-500/20">
-                <span class="material-symbols-outlined text-emerald-400 flex-shrink-0 mt-0.5">mark_chat_read</span>
-                <div>
-                  <strong class="text-white">Mensaje Listo para Enviar</strong>: Con redacción formal o cariñosa preconfigurada, fecha y botón directo para abrir la invitación.
-                </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Enlace Directo de WhatsApp con 1 Clic</strong>: El sistema prepara el mensaje con saludo y enlace listo para enviar.</span>
               </div>
-            </div>
-          </div>
-
-          <!-- Simulador Interactivo Paso 2 -->
-          <div class="lg:col-span-5 flex flex-col items-center">
-            <div class="w-full max-w-sm p-6 rounded-3xl bg-[#0b1411] border border-emerald-500/40 shadow-2xl space-y-4">
-              <div class="flex items-center justify-between text-[11px] font-mono text-emerald-400 border-b border-emerald-500/20 pb-3">
-                <span>SIMULADOR DE MENSAJE WHATSAPP</span>
-                <span>● 1 TOQUE</span>
-              </div>
-
-              <!-- Input Interactivo de Invitado -->
-              <div class="space-y-1 text-left">
-                <label class="text-[10px] uppercase font-mono text-neutral-400">Escribe el nombre del invitado:</label>
-                <input type="text" id="demoGuestName" value="Familia Morales" class="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-emerald-500/30 text-xs text-white focus:outline-none focus:border-emerald-400" oninput="updateDemoWhatsapp()">
-              </div>
-
-              <div class="space-y-1 text-left">
-                <label class="text-[10px] uppercase font-mono text-neutral-400">Pases asignados:</label>
-                <select id="demoGuestPasses" class="w-full px-3.5 py-2 rounded-xl bg-black/60 border border-emerald-500/30 text-xs text-white focus:outline-none" onchange="updateDemoWhatsapp()">
-                  <option value="1">1 Pase Individual</option>
-                  <option value="2">2 Pases Pareja</option>
-                  <option value="4" selected>4 Pases Familiares</option>
-                  <option value="6">6 Pases Especiales</option>
-                </select>
-              </div>
-
-              <!-- Burbuja de WhatsApp Dinámica -->
-              <div class="p-3.5 rounded-2xl bg-[#005c4b] text-white text-xs space-y-1.5 text-left shadow-lg">
-                <p id="demoWhatsappPreview" class="text-[11.5px] leading-relaxed">
-                  "¡Hola <strong>Familia Morales</strong>! Nos llena de ilusión invitarlos a nuestra boda. Tienen <strong>4 pases de honor</strong> reservados. Confirmen aquí: invitta.app/boda?n=Familia+Morales&p=4"
-                </p>
-                <span class="text-[9px] text-emerald-200/70 block text-right">12:00 PM · Enviado ✓✓</span>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Sin Registros ni Contraseñas</strong>: Tus invitados entran de inmediato con un toque desde su teléfono.</span>
               </div>
             </div>
           </div>
 
-        </div>
-      </div>
-    </div>
+          <!-- Simulador Mensaje WhatsApp Paso 2 -->
+          <div class="lg:col-span-5 bg-[#FAF7F2] p-6 rounded-3xl border border-[#EDE7DF] space-y-3 text-left">
+            <span class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider block text-center">
+              Simulador de Mensaje
+            </span>
 
-    <!-- ==================== PASO 3: EL PROTOCOLO DE SALÓN & MESAS ==================== -->
-    <div id="stepStage3" class="step-section">
-      <div class="editorial-glass p-8 sm:p-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          
-          <div class="lg:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 font-mono text-xs">
-              <span>MOMENTO 03 · LOGÍSTICA & SEATING</span>
+            <div class="space-y-1">
+              <label class="text-xs text-neutral-600 font-medium">Nombre de la familia:</label>
+              <input type="text" id="inputDemoFamily" value="Familia Morales" class="w-full px-3 py-1.5 rounded-xl bg-white border border-neutral-300 text-xs text-neutral-800 focus:outline-none focus:border-emerald-600" oninput="updateWhatsappSimulator()">
             </div>
-            
-            <h2 class="font-['Cinzel'] text-3xl sm:text-4xl text-white font-normal leading-tight">
-              Plano Táctil de Salón & Calculadora de Mesas
-            </h2>
-            
-            <p class="text-neutral-300 font-light text-sm sm:text-base leading-relaxed drop-cap">
-              Olvídate de listas desordenadas en Excel. El Organizador de Mesas de Invitta calcula automáticamente la capacidad del salón, distribuye a los invitados por afinidad o familia y genera el reporte oficial de banquetes.
-            </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-center">
-              <div class="p-3 rounded-2xl bg-black/40 border border-blue-500/20">
-                <span class="font-['Cinzel'] text-amber-300 text-lg font-bold">8, 10 ó 12</span>
-                <span class="text-[11px] text-neutral-400 block mt-1">Capacidad por mesa</span>
-              </div>
-              <div class="p-3 rounded-2xl bg-black/40 border border-blue-500/20">
-                <span class="font-['Cinzel'] text-amber-300 text-lg font-bold">Bilateral</span>
-                <span class="text-[11px] text-neutral-400 block mt-1">Ala Novia / Ala Novio</span>
-              </div>
-              <div class="p-3 rounded-2xl bg-black/40 border border-blue-500/20">
-                <span class="font-['Cinzel'] text-amber-300 text-lg font-bold">Imperial</span>
-                <span class="text-[11px] text-neutral-400 block mt-1">Mesa de Honor VIP</span>
-              </div>
+            <div class="space-y-1">
+              <label class="text-xs text-neutral-600 font-medium">Boletos reservados:</label>
+              <select id="selectDemoPasses" class="w-full px-3 py-1.5 rounded-xl bg-white border border-neutral-300 text-xs text-neutral-800 focus:outline-none" onchange="updateWhatsappSimulator()">
+                <option value="1">1 Pase Individual</option>
+                <option value="2">2 Pases Pareja</option>
+                <option value="4" selected>4 Pases Familiares</option>
+                <option value="6">6 Pases Especiales</option>
+              </select>
             </div>
-          </div>
 
-          <!-- Widget Interactivo Paso 3 -->
-          <div class="lg:col-span-5 flex flex-col items-center">
-            <div class="w-full max-w-sm p-6 rounded-3xl bg-[#09111c] border border-blue-500/40 shadow-2xl space-y-4 text-center">
-              <div class="flex items-center justify-between text-[11px] font-mono text-blue-400 border-b border-blue-500/20 pb-3">
-                <span>SIMULADOR DE SALÓN</span>
-                <span>● EN TIEMPO REAL</span>
+            <!-- Burbuja de WhatsApp Bodapix Style -->
+            <div class="p-3.5 rounded-2xl bg-[#DCF8C6] border border-[#C5E8A8] text-neutral-900 text-xs shadow-sm space-y-1">
+              <div class="font-semibold text-emerald-900 flex items-center gap-1 text-[11px]">
+                <span class="material-symbols-outlined text-sm">chat</span> Mensaje Listo para Enviar:
               </div>
-
-              <!-- Mesa Imperial de Honor -->
-              <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-400/40">
-                <span class="text-xs font-bold text-amber-300">👑 Mesa de Honor (Presidium)</span>
-                <span class="text-[10px] text-neutral-400 block mt-0.5">Novios & Padrinos · 12 Lugares</span>
-              </div>
-
-              <!-- Grid de Mesas Interactivas -->
-              <div class="grid grid-cols-2 gap-3 pt-1">
-                <div class="p-3.5 rounded-2xl bg-blue-950/40 border border-blue-400/30 text-left">
-                  <div class="flex justify-between items-center text-xs font-bold text-white mb-1">
-                    <span>Mesa 1 (Familia)</span>
-                    <span class="text-emerald-400 font-mono">10/10</span>
-                  </div>
-                  <div class="w-full bg-neutral-800 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-emerald-400 h-full w-full"></div>
-                  </div>
-                </div>
-
-                <div class="p-3.5 rounded-2xl bg-blue-950/40 border border-blue-400/30 text-left">
-                  <div class="flex justify-between items-center text-xs font-bold text-white mb-1">
-                    <span>Mesa 2 (Amigos)</span>
-                    <span class="text-amber-400 font-mono">8/10</span>
-                  </div>
-                  <div class="w-full bg-neutral-800 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-amber-400 h-full w-[80%]"></div>
-                  </div>
-                </div>
-              </div>
-
-              <p class="text-[11px] text-neutral-400 font-mono">
-                ✓ Reporte de Catering listo para el salón
+              <p id="previewWhatsappText" class="text-[11.5px] leading-relaxed text-neutral-800">
+                "¡Hola <strong>Familia Morales</strong>! Nos hace muy felices invitarlos a nuestra boda. Tienen <strong>4 pases reservados</strong>. Pueden ver la invitación y confirmar aquí: invitta.app/boda?n=Familia+Morales&p=4"
               </p>
             </div>
           </div>
@@ -467,56 +386,127 @@
       </div>
     </div>
 
-    <!-- ==================== PASO 4: LA RESPUESTA VIP (RSVP) ==================== -->
-    <div id="stepStage4" class="step-section">
-      <div class="editorial-glass p-8 sm:p-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+    <!-- ==================== PASO 3: ORGANIZA EL SALON & SEATING PLAN ==================== -->
+    <div id="stepPanel3" class="step-panel">
+      <div class="boda-card p-6 sm:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          <div class="lg:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 text-purple-300 font-mono text-xs">
-              <span>MOMENTO 04 · CONFIRMACIÓN & DIETA</span>
-            </div>
-            
-            <h2 class="font-['Cinzel'] text-3xl sm:text-4xl text-white font-normal leading-tight">
-              Confirmación RSVP & Pase con Código QR
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-800 bg-blue-50 px-3 py-1 rounded-full">
+              Paso 3 · Distribución de Mesas
+            </span>
+
+            <h2 class="font-serif-title text-2xl sm:text-3xl text-neutral-900 font-medium leading-tight">
+              Organiza las mesas de tus invitados y el seating plan del salón
             </h2>
-            
-            <p class="text-neutral-300 font-light text-sm sm:text-base leading-relaxed drop-cap">
-              Al final de la invitación, el módulo Pergamino VIP permite a tus comensales confirmar su asistencia en 2 toques, registrar preferencias de banquete (menú regular, vegetariano o alergias) y recibir su Pase de Acceso con Código QR.
+
+            <p class="text-neutral-600 text-sm leading-relaxed">
+              El <strong>Organizador de Mesas</strong> te ayuda a calcular el número exacto de mesas que necesitas y a distribuir a tus familiares y amigos por afinidad:
             </p>
 
-            <div class="space-y-3 pt-2 text-sm text-neutral-300">
-              <div class="p-4 rounded-2xl bg-black/40 border border-purple-500/20 flex items-center justify-between">
-                <div>
-                  <strong class="text-white block">Multi-Anfitrión WhatsApp</strong>
-                  <span class="text-neutral-400 text-xs">Las confirmaciones llegan directo al WhatsApp que elijas (Novia, Novio o Planner).</span>
-                </div>
-                <span class="material-symbols-outlined text-purple-400 text-2xl">send_to_mobile</span>
+            <div class="space-y-2.5 pt-1 text-xs sm:text-sm text-neutral-700">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Calculadora de Mesas de 8, 10 o 12 Lugares</strong>: Conoce cuántas mesas requieres según el número de invitados confirmados.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Acomodo por Grupos</strong>: Familia de la novia, familia del novio, amigos del trabajo o mesa de jóvenes.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Mesa de Honor Presidencial</strong>: Espacio destacado para los novios o la quinceañera y sus padrinos.</span>
               </div>
             </div>
           </div>
 
-          <!-- Widget Interactivo Paso 4 -->
-          <div class="lg:col-span-5 flex flex-col items-center">
-            <div class="w-full max-w-sm p-6 rounded-3xl bg-[#140b19] border border-purple-500/40 shadow-2xl text-center space-y-4">
-              <div class="flex items-center justify-between text-[11px] font-mono text-purple-400 border-b border-purple-500/20 pb-3">
-                <span>BOLETO DIGITAL GENERADO</span>
-                <span class="text-emerald-400">● CONFIRMADO</span>
+          <!-- Vista de Mesas Paso 3 -->
+          <div class="lg:col-span-5 bg-[#FAF7F2] p-6 rounded-3xl border border-[#EDE7DF] space-y-3 text-center">
+            <span class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider block">
+              Distribución de Mesas
+            </span>
+
+            <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs font-semibold text-amber-900">
+              👑 Mesa de Honor (12 Lugares)
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 text-left">
+              <div class="p-3 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                <div class="flex justify-between items-center text-xs font-semibold text-neutral-800">
+                  <span>Mesa 1 (Familia)</span>
+                  <span class="text-emerald-700 font-bold">10/10</span>
+                </div>
+                <div class="w-full bg-neutral-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                  <div class="bg-emerald-600 h-full w-full"></div>
+                </div>
               </div>
 
-              <!-- Tarjeta de Pase Realista -->
-              <div class="p-5 rounded-2xl bg-[#faf8f5] text-neutral-900 shadow-xl space-y-3 border border-amber-300">
-                <div class="border-b border-neutral-300 pb-2">
-                  <span class="font-['Cinzel'] text-xs text-amber-900 font-bold tracking-widest block">PASE DE HONOR OFICIAL</span>
-                  <span class="font-['Cormorant_Garamond'] italic text-sm text-neutral-600">Boda Catalina & Julián</span>
+              <div class="p-3 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                <div class="flex justify-between items-center text-xs font-semibold text-neutral-800">
+                  <span>Mesa 2 (Amigos)</span>
+                  <span class="text-amber-700 font-bold">8/10</span>
                 </div>
-
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=INVITTA-PASS-MORALES-4&color=5C061D" alt="QR Pase" class="w-28 h-28 mx-auto rounded-lg shadow-sm" />
-
-                <div class="text-xs">
-                  <p class="font-bold text-neutral-900">Familia Morales</p>
-                  <p class="text-[11px] text-amber-800 font-semibold">Mesa 4 · 4 Lugares Asignados</p>
+                <div class="w-full bg-neutral-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                  <div class="bg-amber-500 h-full w-[80%]"></div>
                 </div>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-neutral-500">
+              ✓ Hoja de Catering lista para imprimir para el salón
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== PASO 4: CONFIRMACIONES RSVP EN TIEMPO REAL ==================== -->
+    <div id="stepPanel4" class="step-panel">
+      <div class="boda-card p-6 sm:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-800 bg-purple-50 px-3 py-1 rounded-full">
+              Paso 4 · Respuestas en Vivo
+            </span>
+
+            <h2 class="font-serif-title text-2xl sm:text-3xl text-neutral-900 font-medium leading-tight">
+              Recibe confirmaciones RSVP y opciones de menú en tu celular
+            </h2>
+
+            <p class="text-neutral-600 text-sm leading-relaxed">
+              Tus invitados confirman su asistencia con solo dos toques y reciben su pase de acceso digital con código QR:
+            </p>
+
+            <div class="space-y-2.5 pt-1 text-xs sm:text-sm text-neutral-700">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Registro de Dietas & Alergias</strong>: Menú regular, vegetariano, vegano o especificación de alergias.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Notificaciones a WhatsApp</strong>: Las respuestas llegan al WhatsApp de la novia, novio o planner.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Boleto Digital con Código QR</strong>: El invitado guarda su pase para mostrarlo el día del evento.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Muestra de Boleto QR Paso 4 -->
+          <div class="lg:col-span-5 bg-[#FAF7F2] p-6 rounded-3xl border border-[#EDE7DF] text-center space-y-3">
+            <span class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider block">
+              Boleto Digital Generado
+            </span>
+
+            <div class="p-4 rounded-2xl bg-white border border-amber-200 shadow-sm max-w-[210px] mx-auto space-y-2 text-center">
+              <span class="font-serif-title text-xs font-bold text-amber-900 block">PASE DE ACCESO</span>
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=INVITTA-PASS-MORALES-4&color=5C061D" alt="QR Pase" class="w-24 h-24 mx-auto rounded-lg" />
+              <div class="text-[11px] text-neutral-700">
+                <p class="font-bold">Familia Morales</p>
+                <p class="text-neutral-500">Mesa 4 · 4 Pases</p>
               </div>
             </div>
           </div>
@@ -525,65 +515,53 @@
       </div>
     </div>
 
-    <!-- ==================== PASO 5: LA NOCHE DE GALA ==================== -->
-    <div id="stepStage5" class="step-section">
-      <div class="editorial-glass p-8 sm:p-12">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+    <!-- ==================== PASO 5: EL GRAN DIA ==================== -->
+    <div id="stepPanel5" class="step-panel">
+      <div class="boda-card p-6 sm:p-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          <div class="lg:col-span-7 space-y-6">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 font-mono text-xs">
-              <span>MOMENTO 05 · RECEPCIÓN & CELEBRACIÓN</span>
-            </div>
-            
-            <h2 class="font-['Cinzel'] text-3xl sm:text-4xl text-white font-normal leading-tight">
-              La Noche de Gala: Check-in, Luces & Álbum
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-3 py-1 rounded-full">
+              Paso 5 · Celebración & Recepción
+            </span>
+
+            <h2 class="font-serif-title text-2xl sm:text-3xl text-neutral-900 font-medium leading-tight">
+              Todo coordinado para el día de tu evento
             </h2>
-            
-            <p class="text-neutral-300 font-light text-sm sm:text-base leading-relaxed drop-cap">
-              El día de tu evento, Invitta acompaña la celebración con herramientas de vanguardia: tus hostesses escanean el código QR para dar acceso sin filas, tus invitados activan el espectáculo cinemático Polvo de Estrellas y suben sus fotos al Álbum Colaborativo privado.
+
+            <p class="text-neutral-600 text-sm leading-relaxed">
+              El día de la fiesta, Invitta facilita la bienvenida de tus invitados y recopila los mejores recuerdos:
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-center">
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/20">
-                <span class="material-symbols-outlined text-amber-400 text-xl block mb-1">qr_code_scanner</span>
-                <strong class="text-white text-xs block">Escáner Puerta</strong>
-                <span class="text-[10px] text-neutral-400">Acceso en 2 seg</span>
+            <div class="space-y-2.5 pt-1 text-xs sm:text-sm text-neutral-700">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Recepción Rápida con Código QR</strong>: El equipo de hostesses escanea el boleto en puerta y localiza su mesa en segundos.</span>
               </div>
-
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/20">
-                <span class="material-symbols-outlined text-amber-400 text-xl block mb-1">auto_awesome</span>
-                <strong class="text-white text-xs block">Polvo de Estrellas</strong>
-                <span class="text-[10px] text-neutral-400">Luces en primer vals</span>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Álbum de Fotos Colaborativo</strong>: Los invitados suben fotos de la fiesta desde su teléfono a una galería privada protegida con PIN.</span>
               </div>
-
-              <div class="p-3.5 rounded-2xl bg-black/40 border border-amber-500/20">
-                <span class="material-symbols-outlined text-amber-400 text-xl block mb-1">photo_library</span>
-                <strong class="text-white text-xs block">Álbum Privado</strong>
-                <span class="text-[10px] text-neutral-400">Fotos con PIN maestro</span>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-700 text-lg flex-shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Momento Polvo de Estrellas</strong>: Luces y animación en pantalla para el vals de novios o quinceañera.</span>
               </div>
             </div>
           </div>
 
-          <!-- Widget Interactivo Paso 5 -->
-          <div class="lg:col-span-5 flex flex-col items-center">
-            <div class="w-full max-w-sm p-6 rounded-3xl bg-[#141009] border border-amber-500/40 shadow-2xl text-center space-y-4">
-              <div class="flex items-center justify-between text-[11px] font-mono text-amber-400 border-b border-amber-500/20 pb-3">
-                <span>EXPERIENCIA EN VIVO</span>
-                <span>● CELEBRACIÓN</span>
-              </div>
+          <!-- Muestra de Recepción Paso 5 -->
+          <div class="lg:col-span-5 bg-[#FAF7F2] p-6 rounded-3xl border border-[#EDE7DF] text-center space-y-3">
+            <span class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider block">
+              Álbum Compartido en Vivo
+            </span>
 
-              <div class="p-6 rounded-2xl bg-black/60 border border-amber-400/30 text-center space-y-3">
-                <span class="material-symbols-outlined text-amber-300 text-4xl animate-bounce">auto_awesome</span>
-                <h4 class="font-['Cinzel'] text-sm font-bold text-white">Momento Polvo de Estrellas</h4>
-                <p class="text-xs text-neutral-400 font-light">
-                  Todos los celulares de los invitados sincronizan destellos dorados al ritmo del vals nupcial.
-                </p>
-                <div class="pt-2">
-                  <span class="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono">
-                    ✨ Cero descargas · Directo en navegador
-                  </span>
-                </div>
-              </div>
+            <div class="p-4 rounded-2xl bg-white border border-neutral-200 shadow-sm space-y-2">
+              <span class="material-symbols-outlined text-amber-600 text-3xl">photo_camera</span>
+              <div class="font-semibold text-xs text-neutral-800">Galería de Fotos de la Fiesta</div>
+              <p class="text-[11px] text-neutral-500">Tus invitados comparten sus mejores tomas sin descargar ninguna app</p>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-medium">
+                🔒 Galería Privada con PIN
+              </span>
             </div>
           </div>
 
@@ -591,156 +569,143 @@
       </div>
     </div>
 
-    <!-- ==================== NAVEGACIÓN INFERIOR DE PASOS ==================== -->
+    <!-- ==================== BOTONES DE NAVEGACION ANTERIOR / SIGUIENTE ==================== -->
     <div class="mt-8 flex items-center justify-between">
-      <button type="button" id="btnStepPrev" class="px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 text-neutral-300 text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2 disabled:opacity-30 disabled:pointer-events-none">
-        <span class="material-symbols-outlined text-base">arrow_back</span>
+      <button type="button" id="btnPrevTab" class="btn-bodapix-secondary px-5 py-2.5 text-xs flex items-center gap-1.5 disabled:opacity-40 disabled:pointer-events-none">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
         <span>Anterior</span>
       </button>
 
-      <span class="text-xs text-neutral-400 font-mono tracking-widest uppercase">
-        Paso <span id="lblStepNum" class="text-amber-400 font-bold">1</span> de 5
+      <span class="text-xs text-neutral-500 font-medium">
+        Paso <span id="lblStepDisplay" class="font-bold text-neutral-900">1</span> de 5
       </span>
 
-      <button type="button" id="btnStepNext" class="px-7 py-3 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-neutral-950 text-xs font-bold uppercase tracking-wider transition-all shadow-[0_4px_25px_rgba(212,175,55,0.35)] hover:brightness-110 flex items-center gap-2">
+      <button type="button" id="btnNextTab" class="btn-bodapix-primary px-6 py-2.5 text-xs flex items-center gap-1.5 shadow-sm">
         <span>Siguiente Paso</span>
-        <span class="material-symbols-outlined text-base">arrow_forward</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </button>
     </div>
 
-    <!-- ==================== BANNER FINAL CTA ATELIER ==================== -->
-    <div class="mt-16 p-10 rounded-3xl bg-gradient-to-br from-amber-950/40 via-[#10131d] to-black border border-amber-500/40 text-center relative overflow-hidden box-glow">
-      <div class="relative z-10 space-y-4 max-w-2xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono tracking-[0.25em] uppercase">
-          <span>COMIENZA HOY MISMO</span>
-        </div>
-        <h3 class="font-['Cinzel'] text-2xl sm:text-4xl font-normal text-white">
-          Crea tu Invitación de Alta Costura
-        </h3>
-        <p class="text-neutral-400 text-xs sm:text-sm font-light leading-relaxed">
-          Toma el control de tu evento con la plataforma más avanzada y elegante de México.
-        </p>
-        <div class="flex flex-wrap justify-center gap-4 pt-4">
-          <a href="invitacion-estudio.html" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-neutral-950 font-bold text-xs uppercase tracking-[0.2em] shadow-[0_8px_30px_rgba(212,175,55,0.4)] hover:scale-105 transition-all flex items-center gap-2 text-decoration-none">
-            <span class="material-symbols-outlined text-lg">palette</span>
-            <span>Entrar al Estudio</span>
-          </a>
-          <a href="index.html" class="px-7 py-3.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 font-semibold text-xs uppercase tracking-[0.2em] transition-all flex items-center gap-2 text-decoration-none">
-            <span class="material-symbols-outlined text-lg">dashboard</span>
-            <span>Tablero Principal</span>
-          </a>
-        </div>
+    <!-- ==================== BANNER FINAL CTA (ESTILO BODAPIX) ==================== -->
+    <div class="mt-14 p-8 sm:p-10 rounded-3xl bg-white border border-[#EFE9E0] text-center space-y-4 shadow-sm">
+      <span class="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full inline-block">
+        ¿Todo Listo para Empezar?
+      </span>
+
+      <h3 class="font-serif-title text-2xl sm:text-3xl text-neutral-900 font-medium">
+        Diseña la invitación de tu evento hoy mismo
+      </h3>
+
+      <p class="text-neutral-600 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
+        Personaliza tu diseño en el estudio o consulta tus proyectos guardados en el panel principal.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-3 pt-2">
+        <a href="invitacion-estudio.html" class="btn-bodapix-primary px-7 py-3 text-xs flex items-center gap-2 text-decoration-none shadow-md">
+          <span class="material-symbols-outlined text-base">palette</span>
+          <span>Abrir Estudio de Diseño</span>
+        </a>
+        <a href="index.html" class="btn-bodapix-secondary px-6 py-3 text-xs flex items-center gap-2 text-decoration-none">
+          <span class="material-symbols-outlined text-base">dashboard</span>
+          <span>Ver Mis Proyectos</span>
+        </a>
       </div>
     </div>
 
   </main>
 
   <!-- ==================== FOOTER ==================== -->
-  <footer class="w-full border-t border-white/10 py-8 text-center text-xs text-neutral-500">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+  <footer class="w-full bg-white border-t border-[#EFE9E0] py-6 text-center text-xs text-neutral-500">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center gap-2">
-        <span class="font-['Cinzel'] text-white font-bold tracking-widest uppercase">Invitta</span>
-        <span class="text-neutral-600">·</span>
-        <span class="text-neutral-400">Suite 2.0 Beta</span>
+        <span class="font-serif-title font-bold text-neutral-800 text-sm">Invitta</span>
+        <span>·</span>
+        <span>Invitaciones Digitales y Gestión de Eventos</span>
       </div>
-      <p class="text-[11px] text-neutral-500">
-        Tecnología digital de alta gama para Bodas, XV Años y Eventos Exclusivos.
+      <p class="text-[11px] text-neutral-400">
+        Plataforma para Bodas, XV Años y Eventos Especiales.
       </p>
     </div>
   </footer>
 
-  <!-- ==================== SCRIPT INTERACTIVO DEL ATELIER ==================== -->
+  <!-- ==================== LOGICA DE NAVEGACION ==================== -->
   <script>
-    let activeStep = 1;
-    const totalStepsCount = 5;
+    let currentStepIndex = 1;
+    const maxSteps = 5;
 
-    const stepButtons = document.querySelectorAll('.stepper-btn');
-    const stepStages = document.querySelectorAll('.step-section');
-    const btnPrev = document.getElementById('btnStepPrev');
-    const btnNext = document.getElementById('btnStepNext');
-    const lblStep = document.getElementById('lblStepNum');
+    const tabButtons = document.querySelectorAll('.step-tab-btn');
+    const panels = document.querySelectorAll('.step-panel');
+    const prevBtn = document.getElementById('btnPrevTab');
+    const nextBtn = document.getElementById('btnNextTab');
+    const stepDisplay = document.getElementById('lblStepDisplay');
 
-    function switchStep(step) {
-      if (step < 1 || step > totalStepsCount) return;
-      activeStep = step;
+    function showStep(index) {
+      if (index < 1 || index > maxSteps) return;
+      currentStepIndex = index;
 
-      // Actualizar botones de la barra
-      stepButtons.forEach(btn => {
+      tabButtons.forEach(btn => {
         const s = parseInt(btn.dataset.step, 10);
-        if (s === activeStep) {
+        if (s === currentStepIndex) {
           btn.classList.add('active');
         } else {
           btn.classList.remove('active');
         }
       });
 
-      // Actualizar pantallas
-      stepStages.forEach(stage => stage.classList.remove('active'));
-      const currentStage = document.getElementById('stepStage' + activeStep);
-      if (currentStage) currentStage.classList.add('active');
+      panels.forEach(p => p.classList.remove('active'));
+      const activePanel = document.getElementById('stepPanel' + currentStepIndex);
+      if (activePanel) activePanel.classList.add('active');
 
-      // Actualizar contador y botón siguiente
-      if (lblStep) lblStep.textContent = activeStep;
-      if (btnPrev) btnPrev.disabled = activeStep === 1;
+      if (stepDisplay) stepDisplay.textContent = currentStepIndex;
+      if (prevBtn) prevBtn.disabled = currentStepIndex === 1;
 
-      if (btnNext) {
-        if (activeStep === totalStepsCount) {
-          btnNext.innerHTML = '<span>Comenzar Ahora</span> <span class="material-symbols-outlined text-base">rocket_launch</span>';
-          btnNext.onclick = () => window.location.href = 'invitacion-estudio.html';
+      if (nextBtn) {
+        if (currentStepIndex === maxSteps) {
+          nextBtn.innerHTML = '<span>Crear Invitación</span> <span class="material-symbols-outlined text-sm">palette</span>';
+          nextBtn.onclick = () => window.location.href = 'invitacion-estudio.html';
         } else {
-          btnNext.innerHTML = '<span>Siguiente Paso</span> <span class="material-symbols-outlined text-base">arrow_forward</span>';
-          btnNext.onclick = () => switchStep(activeStep + 1);
+          nextBtn.innerHTML = '<span>Siguiente Paso</span> <span class="material-symbols-outlined text-sm">arrow_forward</span>';
+          nextBtn.onclick = () => showStep(currentStepIndex + 1);
         }
       }
     }
 
-    stepButtons.forEach(btn => {
+    tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        const s = parseInt(btn.dataset.step, 10);
-        switchStep(s);
+        showStep(parseInt(btn.dataset.step, 10));
       });
     });
 
-    if (btnPrev) {
-      btnPrev.addEventListener('click', () => switchStep(activeStep - 1));
-    }
-    if (btnNext) {
-      btnNext.addEventListener('click', () => switchStep(activeStep + 1));
-    }
+    if (prevBtn) prevBtn.addEventListener('click', () => showStep(currentStepIndex - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => showStep(currentStepIndex + 1));
 
-    // Funciones del Simulador Interactivo
-    function setDemoTheme(color, monogram) {
-      const seal = document.getElementById('demoWaxSeal');
-      if (seal) {
-        seal.style.background = color;
+    // Funciones del Simulador
+    function testSealClick() {
+      const seal = document.getElementById('demoSeal');
+      const text = document.getElementById('demoSealText');
+      if (seal) seal.style.transform = 'scale(1.1)';
+      if (text) {
+        text.textContent = '✨ ¡Sello abierto! La invitación inicia con música';
+        text.style.color = '#2E5A44';
       }
-      const sealMsg = document.getElementById('demoSealMsg');
-      if (sealMsg) {
-        sealMsg.textContent = 'Paleta seleccionada (' + monogram + ')';
-      }
+      setTimeout(() => {
+        if (seal) seal.style.transform = 'scale(1)';
+      }, 500);
     }
 
-    const demoSealEl = document.getElementById('demoWaxSeal');
-    if (demoSealEl) {
-      demoSealEl.addEventListener('click', () => {
-        demoSealEl.style.transform = 'scale(1.15)';
-        const sealMsg = document.getElementById('demoSealMsg');
-        if (sealMsg) {
-          sealMsg.textContent = '✨ ¡Sello abierto! Iniciando música...';
-          sealMsg.style.color = '#34d399';
-        }
-        setTimeout(() => {
-          demoSealEl.style.transform = 'scale(1)';
-        }, 600);
-      });
+    function changeSealColor(color, monogram) {
+      const sealInner = document.querySelector('#demoSeal > div');
+      if (sealInner) sealInner.style.backgroundColor = color;
+      const text = document.getElementById('demoSealText');
+      if (text) text.textContent = 'Color cambiado con monograma: ' + monogram;
     }
 
-    function updateDemoWhatsapp() {
-      const name = document.getElementById('demoGuestName').value || 'Invitado';
-      const passes = document.getElementById('demoGuestPasses').value || '2';
-      const preview = document.getElementById('demoWhatsappPreview');
+    function updateWhatsappSimulator() {
+      const family = document.getElementById('inputDemoFamily').value || 'Invitado';
+      const passes = document.getElementById('selectDemoPasses').value || '2';
+      const preview = document.getElementById('previewWhatsappText');
       if (preview) {
-        preview.innerHTML = `"¡Hola <strong>\${name}</strong>! Nos llena de ilusión invitarlos a nuestra boda. Tienen <strong>\${passes} \${passes === '1' ? 'pase de honor' : 'pases de honor'}</strong> reservados. Confirmen aquí: invitta.app/boda?n=\${encodeURIComponent(name)}&p=\${passes}"`;
+        preview.innerHTML = `"¡Hola <strong>\${family}</strong>! Nos hace muy felices invitarlos a nuestra boda. Tienen <strong>\${passes} \${passes === '1' ? 'pase reservado' : 'pases reservados'}</strong>. Pueden ver la invitación y confirmar aquí: invitta.app/boda?n=\${encodeURIComponent(family)}&p=\${passes}"`;
       }
     }
   </script>
