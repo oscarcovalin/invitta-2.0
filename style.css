@@ -313,7 +313,8 @@ body {
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border-subtle);
   overflow-y: auto;
-  padding: 14px;
+  scroll-behavior: smooth;
+  padding: 14px 14px 90px 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
