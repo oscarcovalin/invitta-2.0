@@ -12,7 +12,37 @@ const ProjectsVault = {
   getDefaultProjects() {
     const defaultEngineConfig = typeof TemplateEngine !== 'undefined' ? TemplateEngine.defaultConfig : {};
     
-    // 1. Proyecto Boda Muestra
+    // 1. Proyecto Mis XV Años Catalina (Muestra Principal)
+    const xvCatalinaConfig = JSON.parse(JSON.stringify(defaultEngineConfig));
+    xvCatalinaConfig.eventType = 'xv';
+    xvCatalinaConfig.name = 'Catalina';
+    xvCatalinaConfig.monogram = 'C';
+    xvCatalinaConfig.eyebrow = 'Mis XV años';
+    xvCatalinaConfig.welcomeMessage = 'Hay momentos que se guardan para siempre... Acompáñame a celebrar uno de ellos: mis quince años.';
+    xvCatalinaConfig.quote = '';
+    xvCatalinaConfig.footerClosing = 'Con cariño,';
+    xvCatalinaConfig.footerText = '#MisXVCatalina';
+    xvCatalinaConfig.eventDate = '2027-03-20T18:00:00';
+    xvCatalinaConfig.photos = {
+      hero: 'assets/hero-catalina-user.jpg',
+      saveTheDate: 'assets/savethedate-catalina.jpg',
+      portrait: '',
+      gallery: [
+        'assets/gallery-catalina-1.jpg',
+        'assets/gallery-catalina-2.jpg',
+        'assets/gallery-catalina-3.jpg',
+        'assets/gallery-catalina-4.jpg',
+        'assets/gallery-catalina-5.jpg',
+        'assets/gallery-catalina-6.jpg'
+      ]
+    };
+    xvCatalinaConfig.music = {
+      enabled: true,
+      url: 'assets/musica-catalina.mp3',
+      title: 'A Thousand Years (Acústico)'
+    };
+
+    // 2. Proyecto Boda Muestra
     const weddingConfig = JSON.parse(JSON.stringify(defaultEngineConfig));
     weddingConfig.eventType = 'boda';
     weddingConfig.brideName = 'Catalina';
@@ -26,19 +56,21 @@ const ProjectsVault = {
     weddingConfig.footerText = '#BodaCatayJulian';
     weddingConfig.eventDate = '2027-03-20T16:00:00';
 
-    // 2. Proyecto XV Años Muestra
-    const xvConfig = JSON.parse(JSON.stringify(defaultEngineConfig));
-    xvConfig.eventType = 'xv';
-    xvConfig.name = 'Valentina';
-    xvConfig.monogram = 'V';
-    xvConfig.eyebrow = 'Mis XV Años';
-    xvConfig.welcomeMessage = 'Hay momentos en la vida que son inolvidables, y compartirlos con quienes más quiero los hace eternos.';
-    xvConfig.quote = '"Hoy comienzo a escribir un nuevo capítulo lleno de ilusiones, sueños y gratitud."';
-    xvConfig.footerClosing = 'Con cariño,';
-    xvConfig.footerText = '#MisXVValentina';
-    xvConfig.eventDate = '2026-10-15T18:00:00';
-
     return [
+      {
+        id: 'proj_xv_catalina',
+        title: 'Mis XV Años · Catalina',
+        hosts: 'Catalina',
+        eventType: 'xv',
+        date: '2027-03-20',
+        venue: 'Jardín Las Magnolias',
+        city: 'Chihuahua, Chih.',
+        theme: 'medianoche',
+        status: 'active',
+        createdAt: '2026-08-27T10:00:00.000Z',
+        lastModified: new Date().toISOString(),
+        config: xvCatalinaConfig
+      },
       {
         id: 'proj_boda_catalina_julian',
         title: 'Nuestra Boda · Catalina & Julián',
@@ -48,24 +80,10 @@ const ProjectsVault = {
         venue: 'Cantabria Salón de Eventos',
         city: 'Chihuahua, Chih.',
         theme: 'vino',
-        status: 'active', // active | delivered | draft
+        status: 'active',
         createdAt: '2026-08-20T10:00:00.000Z',
         lastModified: new Date().toISOString(),
         config: weddingConfig
-      },
-      {
-        id: 'proj_xv_valentina',
-        title: 'Mis XV Años · Valentina',
-        hosts: 'Valentina',
-        eventType: 'xv',
-        date: '2026-10-15',
-        venue: 'Hacienda Los Laureles',
-        city: 'Guadalajara, Jal.',
-        theme: 'rosa',
-        status: 'active',
-        createdAt: '2026-08-22T14:30:00.000Z',
-        lastModified: new Date().toISOString(),
-        config: xvConfig
       }
     ];
   },
