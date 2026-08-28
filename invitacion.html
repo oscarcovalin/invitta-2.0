@@ -23,15 +23,17 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        "champagne-cream": "#f5f6f9",
-        "antique-gold": "#a0abc2",
-        "soft-gold": "#cdd3e0",
-        "deep-onyx": "#080b11",
-        "emerald-dark": "#0a1120",
-        "emerald-deep": "#080b11",
+        "champagne-cream": "#F5F6F9",
+        "antique-gold": "#98A7C7",
+        "soft-gold": "#CDD5E6",
+        "deep-onyx": "#0D1524",
+        "emerald-dark": "#0A1120",
+        "emerald-deep": "#0A1120",
+        "theme-dark": "#0A1120",
+        "theme-accent": "#15243D",
         "tertiary": "#5c5c5c",
-        "surface": "#f5f6f9",
-        "surface-container": "#edf1f7",
+        "surface": "#F5F6F9",
+        "surface-container": "#EDF1F7",
         "error": "#ba1a1a"
       },
       fontFamily: {
@@ -70,12 +72,12 @@ tailwind.config = {
       
 
   :root {
-    --champagne: #f5f6f9;
-    --gold: #a0abc2;
-    --gold-light: #cdd3e0;
-    --onyx: #080b11;
-    --emerald: #0a1120;
-    --emerald-dark: #080b11;
+    --champagne: #F5F6F9;
+    --gold: #98A7C7;
+    --gold-light: #CDD5E6;
+    --onyx: #0D1524;
+    --emerald: #0A1120;
+    --emerald-dark: #0D1524;
     --font-names: 'LocalCustomNames', serif;
     --font-script: 'Parisienne', cursive;
     --font-display: 'Cormorant Garamond', serif;
@@ -220,7 +222,7 @@ tailwind.config = {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    box-shadow: 0 4px 14px rgba(165, 110, 14, 0.25);
+    box-shadow: 0 4px 14px rgba(152, 167, 199, 0.35);
     border: 1px solid var(--gold);
     transition: all 0.25s ease;
     cursor: pointer;
@@ -229,10 +231,10 @@ tailwind.config = {
   }
 
   .btn-luxury-primary:hover {
-    background-color: #8c5d0b;
-    border-color: #8c5d0b;
+    background-color: var(--gold-hover, #9A753C);
+    border-color: var(--gold-hover, #9A753C);
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(165, 110, 14, 0.35);
+    box-shadow: 0 6px 18px rgba(152, 167, 199, 0.45);
   }
 
   .btn-luxury-primary:active {

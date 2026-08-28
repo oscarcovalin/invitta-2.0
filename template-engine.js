@@ -76,39 +76,39 @@ const TemplateEngine = {
 
   defaultThemes: {
     vino: {
-      "wine-900": "#163C2B", "wine-700": "#163C2B", "wine-500": "#24583F",
-      "blush-100": "#F5F2EB", "blush-200": "#EDE8DE", "cream": "#FAF8F5",
-      "gold-300": "#D4B67D", "gold-500": "#A38047", "gold-700": "#7A5E30",
-      "ink-900": "#1E1E1E", "ink-700": "#2E2E2E",
-      "rose-600": "#A38047", "text-cream": "#FAF8F5"
+      "wine-900": "#2A0818", "wine-700": "#4D142B", "wine-500": "#6E2040",
+      "blush-100": "#FAF4F6", "blush-200": "#F5E6EC", "cream": "#FAF7F2",
+      "gold-300": "#E8D5B5", "gold-500": "#C59D60", "gold-700": "#9A753C",
+      "ink-900": "#1F1419", "ink-700": "#2E1E26",
+      "rose-600": "#C59D60", "text-cream": "#FAF7F2"
     },
     rosa: {
-      "wine-900": "#3d0b26", "wine-700": "#6e1f46", "wine-500": "#8e325d",
-      "blush-100": "#fdf2f5", "blush-200": "#fbe3eb", "cream": "#fdf8f5",
-      "gold-300": "#f2ccd7", "gold-500": "#d694ab", "gold-700": "#ab6781",
-      "ink-900": "#210d13", "ink-700": "#2f171c",
-      "rose-600": "#b34469", "text-cream": "#fcf0f3"
+      "wine-900": "#3D0B26", "wine-700": "#6E1F46", "wine-500": "#8E325D",
+      "blush-100": "#FDF2F5", "blush-200": "#FBE3EB", "cream": "#FDF8F5",
+      "gold-300": "#F2CCD7", "gold-500": "#C77D98", "gold-700": "#9E5671",
+      "ink-900": "#2B121C", "ink-700": "#3D1E2A",
+      "rose-600": "#B34469", "text-cream": "#FCF0F3"
     },
     esmeralda: {
-      "wine-900": "#0b2118", "wine-700": "#163c2b", "wine-500": "#24583f",
-      "blush-100": "#f1f6ed", "blush-200": "#e1ebd8", "cream": "#f7f6ec",
-      "gold-300": "#dccf96", "gold-500": "#A56E0E", "gold-700": "#7f5300",
-      "ink-900": "#0d130e", "ink-700": "#182219",
-      "rose-600": "#163c2b", "text-cream": "#f7f6ec"
+      "wine-900": "#0B2118", "wine-700": "#163C2B", "wine-500": "#24583F",
+      "blush-100": "#F1F6ED", "blush-200": "#E1EBD8", "cream": "#F7F6EC",
+      "gold-300": "#E2D6A5", "gold-500": "#C5A059", "gold-700": "#967530",
+      "ink-900": "#0F1A13", "ink-700": "#1B2A20",
+      "rose-600": "#163C2B", "text-cream": "#F7F6EC"
     },
     medianoche: {
-      "wine-900": "#0a1120", "wine-700": "#15243d", "wine-500": "#243c5e",
-      "blush-100": "#edf1f7", "blush-200": "#dae2ef", "cream": "#f5f6f9",
-      "gold-300": "#cdd3e0", "gold-500": "#a0abc2", "gold-700": "#727e99",
-      "ink-900": "#080b11", "ink-700": "#121722",
-      "rose-600": "#43649e", "text-cream": "#eff1f6"
+      "wine-900": "#0A1120", "wine-700": "#15243D", "wine-500": "#243C5E",
+      "blush-100": "#EDF1F7", "blush-200": "#DAE2EF", "cream": "#F5F6F9",
+      "gold-300": "#CDD5E6", "gold-500": "#98A7C7", "gold-700": "#6B7B9E",
+      "ink-900": "#0D1524", "ink-700": "#182338",
+      "rose-600": "#43649E", "text-cream": "#EFF1F6"
     },
     atardecer: {
-      "wine-900": "#3d1c0e", "wine-700": "#6b3319", "wine-500": "#914a27",
-      "blush-100": "#faf1e6", "blush-200": "#f5e1cb", "cream": "#fdf8f0",
-      "gold-300": "#ebb987", "gold-500": "#d19256", "gold-700": "#9e6c3a",
-      "ink-900": "#1c0d05", "ink-700": "#2b160b",
-      "rose-600": "#b85f2e", "text-cream": "#faeee2"
+      "wine-900": "#3D1C0E", "wine-700": "#6B3319", "wine-500": "#914A27",
+      "blush-100": "#FAF1E6", "blush-200": "#F5E1CB", "cream": "#FDF8F0",
+      "gold-300": "#EBB987", "gold-500": "#D19256", "gold-700": "#A36830",
+      "ink-900": "#261208", "ink-700": "#3D2010",
+      "rose-600": "#B85F2E", "text-cream": "#FAEEE2"
     }
   },
 
@@ -1208,15 +1208,17 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        "champagne-cream": "${activeTheme['cream'] || '#f7f6ec'}",
-        "antique-gold": "${activeTheme['gold-500'] || '#A56E0E'}",
-        "soft-gold": "${activeTheme['gold-300'] || '#EAB479'}",
-        "deep-onyx": "${activeTheme['ink-900'] || '#222222'}",
-        "emerald-dark": "${activeTheme['wine-900'] || '#163c2b'}",
-        "emerald-deep": "${activeTheme['ink-900'] || '#0d130e'}",
+        "champagne-cream": "${activeTheme['cream'] || '#FAF8F5'}",
+        "antique-gold": "${activeTheme['gold-500'] || '#C59D60'}",
+        "soft-gold": "${activeTheme['gold-300'] || '#E8D5B5'}",
+        "deep-onyx": "${activeTheme['ink-900'] || '#1E1E1E'}",
+        "emerald-dark": "${activeTheme['wine-900'] || '#2A0818'}",
+        "emerald-deep": "${activeTheme['wine-900'] || '#2A0818'}",
+        "theme-dark": "${activeTheme['wine-900'] || '#2A0818'}",
+        "theme-accent": "${activeTheme['wine-700'] || '#4D142B'}",
         "tertiary": "#5c5c5c",
-        "surface": "${activeTheme['cream'] || '#f7f6ec'}",
-        "surface-container": "${activeTheme['blush-100'] || '#f5f3ef'}",
+        "surface": "${activeTheme['cream'] || '#FAF8F5'}",
+        "surface-container": "${activeTheme['blush-100'] || '#FAF4F6'}",
         "error": "#ba1a1a"
       },
       fontFamily: {
@@ -1397,7 +1399,7 @@ tailwind.config = {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    box-shadow: 0 4px 14px rgba(165, 110, 14, 0.25);
+    box-shadow: 0 4px 14px ${hexToRgba(activeTheme['gold-500'] || '#C59D60', 0.35)};
     border: 1px solid var(--gold);
     transition: all 0.25s ease;
     cursor: pointer;
@@ -1406,10 +1408,10 @@ tailwind.config = {
   }
 
   .btn-luxury-primary:hover {
-    background-color: #8c5d0b;
-    border-color: #8c5d0b;
+    background-color: var(--gold-hover, #9A753C);
+    border-color: var(--gold-hover, #9A753C);
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(165, 110, 14, 0.35);
+    box-shadow: 0 6px 18px ${hexToRgba(activeTheme['gold-500'] || '#C59D60', 0.45)};
   }
 
   .btn-luxury-primary:active {
