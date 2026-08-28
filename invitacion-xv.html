@@ -4,10 +4,10 @@
 <meta charset="utf-8"/>
 <base target="_self"/>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
-<title>Nuestra Boda · Catalina & Julián</title>
+<title>Mis XV años · Catalina</title>
 
-<meta property="og:title" content="Nuestra Boda · Catalina & Julián">
-<meta property="og:description" content="Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.">
+<meta property="og:title" content="Mis XV años · Catalina">
+<meta property="og:description" content="Hay momentos que se guardan para siempre... Acompáñame a celebrar uno de ellos: mis quince años.">
 <meta property="og:image" content="assets/hero-catalina-user.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,17 +23,17 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        "champagne-cream": "#FAF7F2",
-        "antique-gold": "#C59D60",
-        "soft-gold": "#E8D5B5",
-        "deep-onyx": "#1F1419",
-        "emerald-dark": "#2A0818",
-        "emerald-deep": "#2A0818",
-        "theme-dark": "#2A0818",
-        "theme-accent": "#4D142B",
+        "champagne-cream": "#F5F6F9",
+        "antique-gold": "#98A7C7",
+        "soft-gold": "#CDD5E6",
+        "deep-onyx": "#0D1524",
+        "emerald-dark": "#0A1120",
+        "emerald-deep": "#0A1120",
+        "theme-dark": "#0A1120",
+        "theme-accent": "#15243D",
         "tertiary": "#5c5c5c",
-        "surface": "#FAF7F2",
-        "surface-container": "#FAF4F6",
+        "surface": "#F5F6F9",
+        "surface-container": "#EDF1F7",
         "error": "#ba1a1a"
       },
       fontFamily: {
@@ -72,12 +72,12 @@ tailwind.config = {
       
 
   :root {
-    --champagne: #FAF7F2;
-    --gold: #C59D60;
-    --gold-light: #E8D5B5;
-    --onyx: #1F1419;
-    --emerald: #2A0818;
-    --emerald-dark: #1F1419;
+    --champagne: #F5F6F9;
+    --gold: #98A7C7;
+    --gold-light: #CDD5E6;
+    --onyx: #0D1524;
+    --emerald: #0A1120;
+    --emerald-dark: #0D1524;
     --font-names: 'LocalCustomNames', serif;
     --font-script: 'Parisienne', cursive;
     --font-display: 'Cormorant Garamond', serif;
@@ -222,7 +222,7 @@ tailwind.config = {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    box-shadow: 0 4px 14px rgba(197, 157, 96, 0.35);
+    box-shadow: 0 4px 14px rgba(152, 167, 199, 0.35);
     border: 1px solid var(--gold);
     transition: all 0.25s ease;
     cursor: pointer;
@@ -234,7 +234,7 @@ tailwind.config = {
     background-color: var(--gold-hover, #9A753C);
     border-color: var(--gold-hover, #9A753C);
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(197, 157, 96, 0.45);
+    box-shadow: 0 6px 18px rgba(152, 167, 199, 0.45);
   }
 
   .btn-luxury-primary:active {
@@ -463,7 +463,7 @@ tailwind.config = {
     text-transform: uppercase !important;
     letter-spacing: 0.2em !important;
     white-space: nowrap !important;
-    box-shadow: 0 4px 14px rgba(197, 157, 96, 0.35) !important;
+    box-shadow: 0 4px 14px rgba(152, 167, 199, 0.35) !important;
     border: 1px solid var(--gold) !important;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
     cursor: pointer !important;
@@ -474,7 +474,7 @@ tailwind.config = {
     background-color: var(--gold-hover, #9A753C) !important;
     border-color: var(--gold-hover, #9A753C) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 6px 18px rgba(197, 157, 96, 0.45) !important;
+    box-shadow: 0 6px 18px rgba(152, 167, 199, 0.45) !important;
   }
 
   .btn-rsvp-submit-clean:active {
@@ -687,8 +687,8 @@ tailwind.config = {
       </g>
 
       <!-- Monograma en Relieve -->
-      <text x="100" y="116" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="20" font-weight="bold" fill="url(#goldGrad_gold)" text-anchor="middle" filter="url(#emboss_gold)" letter-spacing="1.5">
-        C & J
+      <text x="100" y="116" font-family="'Cinzel Decorative', 'Cinzel', serif" font-size="34" font-weight="bold" fill="url(#goldGrad_gold)" text-anchor="middle" filter="url(#emboss_gold)" letter-spacing="1.5">
+        C
       </text>
 
       <!-- Filigrana Inferior -->
@@ -702,7 +702,7 @@ tailwind.config = {
             Toca el sello para abrir
           </span>
           <span class="font-names text-[22px] sm:text-[26px] text-[#f7f6ec] font-light">
-            Catalina & Julián
+            Catalina
           </span>
         </div>
       </div>
@@ -718,11 +718,11 @@ tailwind.config = {
 <header class="fixed top-0 w-full z-50 bg-champagne-cream/85 backdrop-blur-xl border-b border-antique-gold/20 pt-safe transition-all duration-300">
   <div class="h-16 px-margin-mobile flex items-center justify-between max-w-4xl mx-auto">
     <div class="flex items-center gap-3">
-      <div id="headerMonogram" class="min-w-[34px] px-2 h-[34px] rounded-full border border-antique-gold flex items-center justify-center text-antique-gold font-script text-sm sm:text-base tracking-normal font-normal shadow-sm bg-white/20" style="font-family: var(--font-script);">
-        C & J
+      <div id="headerMonogram" class="min-w-[34px] px-2 h-[34px] rounded-full border border-antique-gold flex items-center justify-center text-antique-gold font-script text-lg tracking-wide font-normal shadow-sm bg-white/20" style="font-family: var(--font-script);">
+        C
       </div>
       <span class="font-display-lg text-base tracking-widest text-antique-gold" id="headerTitle">
-        Nuestra Boda
+        Mis XV años
       </span>
     </div>
     
@@ -748,7 +748,7 @@ tailwind.config = {
     <!-- ╚══════════════════════════════════════════════════════════════╝ -->
     <div id="heroPhotoFrame" class="w-full relative h-[80vh] sm:h-[86vh] overflow-hidden mb-6">
       <div id="parallaxBgHero" class="absolute inset-0 w-full h-[115%] -top-[7%] will-change-transform">
-        <img id="heroPhotoImg" src="assets/hero-catalina-user.jpg" alt="Nuestra Boda · Catalina & Julián" class="w-full h-full object-cover object-center" loading="eager"/>
+        <img id="heroPhotoImg" src="assets/hero-catalina-user.jpg" alt="Mis XV años · Catalina" class="w-full h-full object-cover object-center" loading="eager"/>
       </div>
     </div>
 
@@ -766,37 +766,29 @@ tailwind.config = {
 
       <!-- Eyebrow: NUESTRA BODA / MIS XV AÑOS (Sans 11-14px Medium MAYÚSCULAS tracking +2 a +3px) -->
       <p id="heroEyebrow" class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium gsap-eyebrow mb-2 sm:mb-3">
-        Nuestra Boda
+        Mis XV años
       </p>
 
       <!-- Nombres con Serif o Script (Personalizable exclusivamente para Portada & Firma) -->
       
-      <div class="flex flex-col items-center my-1 sm:my-2 gsap-title overflow-visible">
-        <h1 class="font-names font-light overflow-visible hero-name-scaled title-styled-metallic" id="heroBrideName" style="font-family: var(--font-names, var(--font-display));">
-          Catalina
-        </h1>
-        <span class="font-script text-antique-gold my-1.5 sm:my-2 font-normal leading-none select-none overflow-visible hero-connector-scaled" id="heroNameConnector" style="font-family: var(--font-script);">
-          &
-        </span>
-        <h1 class="font-names font-light overflow-visible hero-name-scaled title-styled-metallic" id="heroGroomName" style="font-family: var(--font-names, var(--font-display));">
-          Julián
-        </h1>
-      </div>
+      <h1 id="heroName" class="font-names font-light my-2 sm:my-3 gsap-title overflow-visible hero-solo-name-scaled title-styled-metallic" style="font-family: var(--font-names, var(--font-display));">
+        Catalina
+      </h1>
 
       <!-- Retrato Circular de Bienvenida (Opcional) -->
       
 
       <!-- Frase / Cita de Bienvenida (Con holgura y aire para que luzca) -->
-      <div id="welcomeQuoteWrap" class="mt-4 sm:mt-6 max-w-[92%] sm:max-w-[460px] mx-auto px-4 ">
+      <div id="welcomeQuoteWrap" class="mt-4 sm:mt-6 max-w-[92%] sm:max-w-[460px] mx-auto px-4 hidden">
         <p id="welcomeQuote" class="font-display-lg text-[18px] sm:text-[20px] md:text-[22px] italic leading-[1.7] text-deep-onyx/85 font-light text-center">
-          &ldquo;El amor no se mira, se siente, y aún más cuando ella está junto a ti.&rdquo;
+          &ldquo;&rdquo;
         </p>
       </div>
 
       <!-- Mensaje de Bienvenida (Serif Editorial 17-19px con espacio respirable) -->
       <div id="welcomeMessageWrap" class="max-w-[480px] mx-auto mt-4 sm:mt-5 mb-2 px-3 ">
         <p id="welcomeMessage" class="font-display-lg text-[16.5px] sm:text-[18.5px] text-deep-onyx/90 leading-[1.75] font-light tracking-wide text-center">
-          Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.
+          Hay momentos que se guardan para siempre... Acompáñame a celebrar uno de ellos: mis quince años.
         </p>
       </div>
 
@@ -897,7 +889,7 @@ tailwind.config = {
         <div class="flex items-center justify-center gap-3">
           <span class="w-6 h-px bg-antique-gold/40 flex-shrink-0"></span>
           <p id="countdownPhrase" class="font-display-lg text-lg sm:text-xl text-deep-onyx/85 italic leading-none font-light">
-            &ldquo;Para casarme con el amor de mi vida&rdquo;
+            &ldquo;15 años significan un nuevo comienzo y quiero compartirlos contigo.&rdquo;
           </p>
           <span class="w-6 h-px bg-antique-gold/40 flex-shrink-0"></span>
         </div>
@@ -948,12 +940,12 @@ tailwind.config = {
     
     <div class="max-w-2xl mx-auto relative z-10">
       <h2 id="blessingHeading" class="font-display-lg text-[28px] sm:text-[32px] font-normal text-[#f7f6ec] mb-12 px-4 gsap-title tracking-wide">
-        CON LA BENDICIÓN DE DIOS Y NUESTROS PADRES
+        CON LA BENDICIÓN DE MIS PADRES
       </h2>
 
       
       <!-- Padres Boda (Dual) -->
-      <div id="parentsWeddingGrid" class="grid grid-cols-1 md:grid-cols-2 gap-10 text-center gsap-stagger-container transition-transform duration-300 will-change-transform" style="">
+      <div id="parentsWeddingGrid" class="hidden grid-cols-1 md:grid-cols-2 gap-10 text-center gsap-stagger-container transition-transform duration-300 will-change-transform" style="">
         <!-- Padres de la Novia -->
         <div id="brideParentsBlock" class="gsap-stagger-item ">
           <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres de la Novia</p>
@@ -980,7 +972,7 @@ tailwind.config = {
       </div>
 
       <!-- Padres XV (Single) -->
-      <div id="parentsXvGrid" class="hidden gsap-stagger-item transition-transform duration-300 will-change-transform" style="">
+      <div id="parentsXvGrid" class="block gsap-stagger-item transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Mis Padres</p>
         <div class="flex flex-col items-center">
           <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Roberto Martínez</p>
@@ -994,7 +986,7 @@ tailwind.config = {
       <!-- Padrinos -->
       <div id="godparentsBlock" class="mt-12 gsap-stagger-item  transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow" id="lblGodparentsSection">
-          Padrinos de Velación
+          Mis Padrinos
         </p>
         
         <div class="flex flex-col items-center">
@@ -1008,7 +1000,7 @@ tailwind.config = {
       <!-- Corte de Honor -->
       <div id="courtBlock" class="mt-10 gsap-stagger-item  transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow" id="lblCourtSection">
-          Damas de Honor & Best Men
+          Mis Chambelanes
         </p>
         <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1.5 text-[#f7f6ec] max-w-xl mx-auto font-display-lg font-light tracking-wide leading-relaxed transition-all" style="font-size: 17px;">
           <span class="inline-block whitespace-nowrap">Camila Ortiz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Renata Vega</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Diego Fuentes</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Emiliano Cruz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Ximena Paredes</span>
@@ -2021,7 +2013,7 @@ tailwind.config = {
             </h2>
           
         <p class="font-display-lg italic text-sm sm:text-base text-antique-gold mb-2 font-light" id="subEventoRsvp">
-          Catalina & Julián · 20 · Marzo · 2027
+          Catalina · 20 · Marzo · 2027
         </p>
         
         <p class="font-display-lg italic text-[14.5px] sm:text-[16px] text-deep-onyx/85 mb-5 font-light leading-relaxed max-w-sm mx-auto" id="rsvpDeadlineText">
@@ -2153,12 +2145,15 @@ tailwind.config = {
 <footer class="pt-8 pb-20 px-margin-mobile text-center bg-emerald-deep border-t border-antique-gold/30">
   
   <p class="font-script font-normal mb-1 gsap-fade-up overflow-visible text-2xl sm:text-3xl text-antique-gold" id="footerClosing">
-    Con amor,
+    Con cariño,
   </p>
   <p class="font-names text-xl sm:text-2xl text-[#f7f6ec] font-light gsap-fade-up my-1 overflow-visible" id="footerNames" style="font-family: var(--font-names, var(--font-display));">
-    Catalina & Julián
+    Catalina
   </p>
   
+  <p class="font-display-lg text-[14px] sm:text-[15px] text-[#f7f6ec]/60 mt-3 tracking-wider font-light" id="footerCustomText">
+    #MisXVCatalina
+  </p>
 
   <!-- ==================== TARJETA DISCRETA DE CONTRATACIÓN (WHATSAPP) ==================== -->
   <div id="vendorCard" class="mt-8 pt-6 border-t border-antique-gold/20 max-w-xs mx-auto gsap-fade-up ">
@@ -2247,7 +2242,7 @@ tailwind.config = {
       ¡Ilumina a los Novios!
     </h2>
     <p class="font-display-lg text-xl sm:text-2xl text-amber-200/90 italic font-light max-w-xs drop-shadow-md">
-      Catalina & Julián
+      Catalina
     </p>
     <p class="font-label-caps text-[10.5px] uppercase tracking-[0.2em] text-amber-300/80 mt-5 font-semibold">
       ✨ Mueve o toca la pantalla para soltar chispas ✨
@@ -2389,27 +2384,27 @@ tailwind.config = {
 <!-- ==================== LOGICA JAVASCRIPT ==================== -->
 <script>
 const CONFIG = {
-  "eventType": "boda",
+  "eventType": "xv",
   "name": "Catalina",
   "brideName": "Catalina",
   "groomName": "Julián",
   "nameConnector": "&",
-  "monogram": "C & J",
-  "eyebrow": "Nuestra Boda",
-  "welcomeMessage": "Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.",
+  "monogram": "C",
+  "eyebrow": "Mis XV años",
+  "welcomeMessage": "Hay momentos que se guardan para siempre... Acompáñame a celebrar uno de ellos: mis quince años.",
   "eventDateISO": "2027-03-20T16:00",
   "timezoneOffset": "-06:00",
   "eventDateLabel": "20 de Marzo, 2027",
   "eventDateShort": "20 · Marzo · 2027",
   "eventDurationHours": 6,
-  "countdownPhrase": "Para casarme con el amor de mi vida",
+  "countdownPhrase": "15 años significan un nuevo comienzo y quiero compartirlos contigo.",
   "countdownStyle": {
     "bgColor": "#c1c1cd",
     "opacity": 0.87,
     "textColor": "#211c1c"
   },
-  "quote": "El amor no se mira, se siente, y aún más cuando ella está junto a ti.",
-  "blessingIntro": "CON LA BENDICIÓN DE DIOS Y NUESTROS PADRES",
+  "quote": "",
+  "blessingIntro": "CON LA BENDICIÓN DE MIS PADRES",
   "mother": "Elena de Martínez",
   "father": "Roberto Martínez",
   "brideMother": "Elena de Martínez",
@@ -2675,8 +2670,8 @@ const CONFIG = {
   },
   "rsvpTitle": "RSVP",
   "rsvpDeadlineLabel": "Por favor, haznos saber si podrás acompañarnos antes del 20 de Febrero.",
-  "footerClosing": "Con amor,",
-  "footerText": "",
+  "footerClosing": "Con cariño,",
+  "footerText": "#MisXVCatalina",
   "whatsappNumber": "5215512345678",
   "whatsappHosts": [
     {
@@ -2757,7 +2752,8 @@ const CONFIG = {
     "customImage": "",
     "preset": "gold",
     "promptText": "Toca el sello para abrir"
-  }
+  },
+  "hashtag": "#MisXVCatalina"
 };
 
 // ── Sanitización Estricta de Entidades HTML (Prevención XSS) ──

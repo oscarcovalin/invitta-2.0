@@ -113,27 +113,27 @@ const TemplateEngine = {
   },
 
   defaultConfig: {
-    "eventType": "xv",
+    "eventType": "boda",
     "name": "Catalina",
     "brideName": "Catalina",
     "groomName": "Julián",
     "nameConnector": "&",
-    "monogram": "C",
-    "eyebrow": "Mis XV años",
-    "welcomeMessage": "\"Hay momentos que se guardan para siempre... Acompáñame a celebrar uno de ellos: mis quince años.\"",
+    "monogram": "C & J",
+    "eyebrow": "Nuestra Boda",
+    "welcomeMessage": "Tenemos el honor de invitarte a celebrar el inicio de nuestra nueva vida juntos. Tu presencia es el mejor regalo que podríamos recibir en este día tan especial.",
     "eventDateISO": "2027-03-20T16:00",
     "timezoneOffset": "-06:00",
     "eventDateLabel": "20 de Marzo, 2027",
     "eventDateShort": "20 · Marzo · 2027",
     "eventDurationHours": 6,
-    "countdownPhrase": "\"15 años significan un nuevo comienzo y quiero compartirlos contigo.\"",
+    "countdownPhrase": "Para casarme con el amor de mi vida",
     "countdownStyle": {
         "bgColor": "#c1c1cd",
         "opacity": 0.87,
         "textColor": "#211c1c"
     },
-    "quote": "",
-    "blessingIntro": "CON LA BENDICION DE MIS PADRES",
+    "quote": "El amor no se mira, se siente, y aún más cuando ella está junto a ti.",
+    "blessingIntro": "CON LA BENDICIÓN DE DIOS Y NUESTROS PADRES",
     "mother": "Elena de Martínez",
     "father": "Roberto Martínez",
     "brideMother": "Elena de Martínez",
@@ -158,7 +158,7 @@ const TemplateEngine = {
     },
     "instagram": {
         "enabled": true,
-        "hashtag": "#XVcatalina2027",
+        "hashtag": "#BodaCatayJulian",
         "text": "Comparte tus fotos y momentos especiales conmigo  en Instagram usando mi  hashtag oficial."
     },
     "sharedAlbum": {
