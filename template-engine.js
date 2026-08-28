@@ -385,7 +385,7 @@ const TemplateEngine = {
         "envelopeNote": "Agradecemos de corazón tu muestra de cariño en nuestra tradicional lluvia de sobres."
     },
     "photos": {
-        "hero": "assets/hero-catalina-user.jpg",
+        "hero": "assets/hero-catalina.jpg",
         "saveTheDate": "assets/savethedate-catalina.jpg",
         "portrait": "",
         "gallery": [

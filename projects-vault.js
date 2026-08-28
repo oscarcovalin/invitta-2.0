@@ -6,7 +6,7 @@
  */
 
 const ProjectsVault = {
-  STORAGE_KEY: 'invitta_projects_vault',
+  STORAGE_KEY: 'invitta_projects_vault_v3',
 
   // Proyectos Iniciales de Demostración
   getDefaultProjects() {
@@ -315,7 +315,7 @@ const ProjectsVault = {
         "envelopeNote": "Agradecemos de corazón tu muestra de cariño en nuestra tradicional lluvia de sobres."
     },
     "photos": {
-        "hero": "assets/hero-catalina-user.jpg",
+        "hero": "assets/hero-catalina.jpg",
         "saveTheDate": "assets/savethedate-catalina.jpg",
         "portrait": "",
         "gallery": [
