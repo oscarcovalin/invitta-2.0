@@ -1,0 +1,38 @@
+{
+  "label": "v5.6_estable",
+  "timestamp": "2026-09-01T17:07:06.194Z",
+  "files": [
+    {
+      "filename": "template-engine.js",
+      "size": 2750056
+    },
+    {
+      "filename": "index.html",
+      "size": 33643
+    },
+    {
+      "filename": "portal.html",
+      "size": 32312
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 127211
+    },
+    {
+      "filename": "app.js",
+      "size": 127913
+    },
+    {
+      "filename": "style.css",
+      "size": 22702
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    }
+  ]
+}
