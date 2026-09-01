@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Invitta 2.0 Beta — Organizador de Mesas & Centro de Control de Invitados</title>
+
+  <!-- Google Fonts Oficiales -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Iconos Material Symbols -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e9e8e8",
+            "on-secondary-container": "#6e6354",
+            "soft-linen": "#F5F2ED",
+            "stone-deep": "#262626",
+            "surface": "#faf9f9",
+            "surface-variant": "#e3e2e2",
+            "outline-variant": "#c4c7c7",
+            "surface-container": "#efeded",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#747878",
+            "charcoal": "#3A3A3A",
+            "primary": "#242525",
+            "warm-grey": "#8C8C8C",
+            "on-surface-variant": "#444748",
+            "brushed-champagne": "#C7B299",
+            "on-surface": "#1b1c1c",
+            "gold-accent": "#A38047",
+            "wine-forest": "#163C2B"
+          },
+          fontFamily: {
+            "body": ["Inter", "sans-serif"],
+            "display": ["Playfair Display", "serif"],
+            "cinzel": ["Cinzel", "serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      overscroll-behavior: none;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar {
+      display: block;
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d4cfc7;
+      border-radius: 6px;
+    }
+
+    .cursor-grab {
+      cursor: grab;
+    }
+    .cursor-grab:active {
+      cursor: grabbing;
+    }
+
+    @keyframes dropInertia {
+      0% { transform: scale(0.85); opacity: 0; }
+      60% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .seat-pill {
+      animation: dropInertia 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .modal-backdrop {
+      background: rgba(20, 20, 22, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .table-overcapacity {
+      border-color: #A38047 !important;
+      box-shadow: 0 0 25px rgba(163, 128, 71, 0.35) !important;
+      outline: 2px solid #A38047 !important;
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased flex h-screen overflow-hidden select-none">
+
+  <!-- ==================== BARRA LATERAL FIJA (300px) ==================== -->
+  <aside class="fixed left-0 top-0 h-full w-[300px] bg-surface-container-lowest border-r border-outline-variant z-50 flex flex-col pt-7 shadow-sm">
+    
+    <!-- Logo Oficial Invitta Studio -->
+    <a id="sidebarLogoLink" href="index.html" class="px-6 mb-6 flex flex-col gap-2 group block" title="Invitta Studio">
+      <div class="flex items-center justify-between">
+        <img src="invitta-logo-dark.png" alt="Invitta" class="h-10 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-sm">
+        <span class="text-[9.5px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-900 font-mono font-bold">2.0 Beta</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="h-px flex-1 bg-outline-variant/60"></span>
+        <span class="text-on-surface-variant tracking-[0.22em] text-[9px] uppercase font-semibold">Guest Command</span>
+        <span class="h-px flex-1 bg-outline-variant/60"></span>
+      </div>
+    </a>
+
+    <!-- INSIGNIA DE ROL & SEGURIDAD (ADMIN VS ORGANIZADOR) -->
+    <div id="sidebarRoleContainer" class="px-5 mb-4">
+      <!-- 👑 Modo Novios / Admin Master -->
+      <div id="badgeRoleAdmin" class="flex items-center justify-between p-2.5 rounded-xl bg-amber-500/10 border border-amber-400/50 text-amber-950 shadow-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-base">👑</span>
+          <div>
+            <strong class="block font-bold text-[10.5px] uppercase tracking-wider text-primary">Modo Novios</strong>
+            <span class="text-[9.5px] text-amber-800 font-medium">Control Master Total</span>
+          </div>
+        </div>
+        <button type="button" id="btnOpenShareAccessModal" class="p-1.5 rounded-lg bg-amber-200/80 hover:bg-amber-300 text-amber-950 transition-colors" title="Compartir Accesos con Organizador y Staff">
+          <span class="material-symbols-outlined text-[17px]">share</span>
+        </button>
+      </div>
+
+      <!-- 📋 Modo Organizador / Planner (Limitado) -->
+      <div id="badgeRolePlanner" class="hidden flex items-center justify-between p-2.5 rounded-xl bg-blue-500/15 border border-blue-400/60 text-blue-950 shadow-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📋</span>
+          <div>
+            <strong class="block font-bold text-[10.5px] uppercase tracking-wider text-blue-900">Modo Organizador</strong>
+            <span class="text-[9.5px] text-blue-700 font-medium">Acceso Operativo Limitado</span>
+          </div>
+        </div>
+        <button type="button" id="btnUnlockAdminModal" class="p-1.5 rounded-lg bg-blue-200/80 hover:bg-blue-300 text-blue-950 transition-colors" title="Desbloquear Modo Master con PIN">
+          <span class="material-symbols-outlined text-[17px]">lock_open</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- NAVEGACIÓN TOTALMENTE CONECTADA -->
+    <nav class="flex-1 flex flex-col gap-1.5 px-4" id="sidebarNav">
+      
+      <!-- 1. Mesas (PÁGINA PRINCIPAL ACTIVA) -->
+      <a aria-current="page" href="#" class="nav-item group flex items-center px-4 py-3 rounded-xl transition-all bg-primary text-white font-medium shadow-sm" title="Organizador de Mesas y Floor Plan Drag & Drop">
+        <span class="material-symbols-outlined mr-3 font-light text-[20px] text-amber-300">table_restaurant</span>
+        <span class="uppercase tracking-wider text-xs font-semibold">Organizador de Mesas</span>
+      </a>
+
+      <!-- 2. Directorio & Registro de Invitados (Modal) -->
+      <button type="button" id="btnOpenGuestDirectory" class="nav-item w-full text-left group flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all" title="Captura y Directorio de Invitados">
+        <span class="material-symbols-outlined mr-3 font-light text-[20px] group-hover:text-primary transition-colors">person_add</span>
+        <span class="uppercase tracking-wider text-xs font-medium">Captura de Invitados</span>
+      </button>
+
+      <!-- 3. Centro de Envíos & Monitor RSVP (Modal) -->
+      <button type="button" id="btnOpenDispatchCenter" class="nav-item w-full text-left group flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all" title="Centro de Envíos WhatsApp y Monitor RSVP">
+        <span class="material-symbols-outlined mr-3 font-light text-[20px] group-hover:text-primary transition-colors">mark_chat_read</span>
+        <span class="uppercase tracking-wider text-xs font-medium">Envíos & RSVP (?guest=id)</span>
+      </button>
+
+      <!-- 4. Catering (Tabla Táctica WeasyPrint) -->
+      <a href="catering-module/catering-tactical-sheet.html" target="_blank" rel="noopener noreferrer" class="nav-item group flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all" title="Abrir Tabla Táctica de Catering en Nueva Pestaña">
+        <span class="material-symbols-outlined mr-3 font-light text-[20px] group-hover:text-primary transition-colors">restaurant_menu</span>
+        <span class="uppercase tracking-wider text-xs font-medium">Catering Táctico ↗</span>
+      </a>
+
+      <!-- 5. Cronograma (Modal de Itinerario) -->
+      <button type="button" id="btnOpenTimeline" class="nav-item w-full text-left group flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all" title="Cronograma e Itinerario del Evento">
+        <span class="material-symbols-outlined mr-3 font-light text-[20px] group-hover:text-primary transition-colors">calendar_today</span>
+        <span class="uppercase tracking-wider text-xs font-medium">Cronograma</span>
+      </button>
+
+      <!-- 6. Configuración del Salón (Modal de Capacidad 8/10/12) -->
+      <button type="button" id="btnOpenSettings" class="nav-item w-full text-left group flex items-center px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all" title="Ajustes de Capacidad (8, 10 y 12) y Calculadora">
+        <span class="material-symbols-outlined mr-3 font-light text-[20px] group-hover:text-primary transition-colors">tune</span>
+        <span class="uppercase tracking-wider text-xs font-medium">Configuración Salón</span>
+      </button>
+
+      <!-- SECCIÓN EXCLUSIVA NOVIOS / MASTER (OCULTA EN MODO ORGANIZADOR) -->
+      <div id="sidebarPrivateBrideLinks" class="space-y-1.5 pt-2">
+        <div class="my-1 border-t border-outline-variant/60"></div>
+
+        <!-- Enlace al Portal de Todos los Módulos -->
+        <a href="index.html" target="_blank" rel="noopener noreferrer" class="nav-item group flex items-center px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-primary transition-all text-xs" title="Ver todos los módulos y pruebas del ecosistema en nueva pestaña">
+          <span class="material-symbols-outlined mr-3 font-light text-[18px] text-amber-700">apps</span>
+          <span class="tracking-wide">Portal de Módulos ↗</span>
+        </a>
+
+        <!-- Diseñar / Crear Invitación Digital Original -->
+        <a href="invitacion-estudio.html" target="_blank" rel="noopener noreferrer" class="nav-item group flex items-center px-4 py-2 rounded-xl text-amber-950 bg-amber-50/80 hover:bg-amber-100/90 transition-all text-xs font-semibold" title="Abrir Estudio Generador de Invitación Digital Original">
+          <span class="material-symbols-outlined mr-3 font-light text-[18px] text-amber-700">auto_fix_high</span>
+          <span class="tracking-wide">Estudio de Invitación ↗</span>
+        </a>
+
+        <!-- Ver Invitación Digital Real Completa -->
+        <a href="invitacion.html" target="_blank" rel="noopener noreferrer" class="nav-item group flex items-center px-4 py-2 rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-all text-xs font-semibold" title="Abrir Invitación Digital Real en Pantalla Completa">
+          <span class="material-symbols-outlined mr-3 font-light text-[18px] text-emerald-700">visibility</span>
+          <span class="tracking-wide">Ver Invitación Real ↗</span>
+        </a>
+      </div>
+
+    </nav>
+
+    <!-- Indicador de Enlace en Vivo en Footer de Sidebar -->
+    <div class="px-7 py-4 border-t border-outline-variant/60 flex items-center justify-between text-on-surface-variant text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-mono text-[10px] text-emerald-800 font-bold uppercase tracking-wider">Online Sync</span>
+      </div>
+      <span class="font-mono text-[10.5px] text-neutral-400">20 Mar 2027</span>
+    </div>
+  </aside>
+
+  <!-- ==================== CONTENIDO PRINCIPAL (DRAG & DROP WORKSPACE) ==================== -->
+  <div class="pl-[300px] flex-1 flex flex-col h-full overflow-hidden">
+    
+    <!-- HEADER SUPERIOR -->
+    <header class="h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 px-8 flex items-center justify-between border-b border-outline-variant flex-shrink-0">
+      
+      <div class="flex items-center bg-surface-container px-3.5 py-2 rounded-xl border border-outline-variant w-80">
+        <span class="material-symbols-outlined text-on-surface-variant font-light text-[18px] mr-2.5">search</span>
+        <input id="searchTopInput" class="bg-transparent border-none focus:ring-0 text-xs text-on-surface placeholder-on-surface-variant w-full outline-none" placeholder="Buscar invitado, familia o mesa..." type="text">
+      </div>
+      
+      <!-- Botones de Acción Superior -->
+      <div class="flex items-center gap-2.5">
+        
+        <a href="scanner-acceso.html" target="_blank" class="flex items-center gap-1.5 px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition-all shadow-sm text-xs font-bold tracking-wide">
+          <span class="material-symbols-outlined text-base">qr_code_scanner</span>
+          <span>Escáner Puerta ↗</span>
+        </a>
+
+        <a href="generador-emergencia.html" target="_blank" class="flex items-center gap-1.5 px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl transition-all shadow-sm text-xs font-bold tracking-wide">
+          <span class="material-symbols-outlined text-base">bolt</span>
+          <span>Pase Emergencia ↗</span>
+        </a>
+
+        <button type="button" id="btnTopAutoDistribute" class="flex items-center gap-1.5 px-3.5 py-2 bg-primary text-white rounded-xl hover:bg-charcoal transition-all shadow-sm text-xs font-semibold tracking-wider uppercase">
+          <span class="material-symbols-outlined text-amber-300 text-base">magic_button</span>
+          <span>Auto-Distribuir</span>
+        </button>
+
+        <button type="button" id="btnTopOpenSettings" class="flex items-center gap-1.5 px-3 py-2 bg-surface-container border border-outline-variant hover:border-primary text-primary rounded-xl transition-all text-xs font-medium">
+          <span class="material-symbols-outlined text-base">settings</span>
+          <span>Acomodo</span>
+        </button>
+
+        <button type="button" id="btnTopDispatch" class="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 border border-emerald-600/30 hover:bg-emerald-100 text-emerald-800 rounded-xl transition-all text-xs font-semibold">
+          <span class="material-symbols-outlined text-base text-emerald-700">send</span>
+          <span>Envíos</span>
+        </button>
+
+      </div>
+    </header>
+
+    <!-- ÁREA DE TRABAJO (Stats Bar + Layout Drag & Drop de 2 Columnas) -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-background">
+      
+      <!-- STATS BAR SUPERIOR EN VIVO CON SEMÁFORO DE 4 COLORES -->
+      <div class="flex flex-wrap items-center justify-between px-8 py-3.5 bg-surface-container-lowest border-b border-outline-variant flex-shrink-0 z-10">
+        <div class="flex items-center gap-6">
+          
+          <!-- Asignados -->
+          <div class="flex flex-col gap-0.5">
+            <span class="text-on-surface-variant uppercase tracking-widest text-[9.5px] font-semibold">Comensales Asignados</span>
+            <div class="flex items-baseline gap-1.5">
+              <span class="font-['Cinzel'] text-primary text-xl font-bold" id="statAssignedCount">14</span>
+              <span class="font-mono text-xs text-on-surface-variant" id="statTotalCount">/ 14 invitados</span>
+            </div>
+          </div>
+          
+          <div class="w-px h-8 bg-outline-variant/70"></div>
+          
+          <!-- SEMÁFORO EN TIEMPO REAL: 4 ESTADOS -->
+          <div class="flex items-center gap-2 text-xs font-mono">
+            <!-- 🟢 Ingresados al Salón -->
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-900 font-bold" title="Invitados con Check-in confirmado en puerta">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span id="statInSalonPax">0</span> pax en Salón
+            </span>
+
+            <!-- 🟡 Confirmados en Camino -->
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-400/40 text-amber-900 font-semibold" title="Confirmaron asistencia por RSVP Pergamino">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span id="statInTransitPax">6</span> en camino
+            </span>
+
+            <!-- 🔴 Pendientes -->
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-400/30 text-rose-800 font-medium" title="Pendientes de confirmar">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+              <span id="statPendingPax">8</span> pendientes
+            </span>
+
+            <!-- 🔵 Emergencias / VIP -->
+            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/15 border border-blue-400/40 text-blue-900 font-bold" title="Pases de emergencia generados en puerta">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              <span id="statEmergencyPax">0</span> express
+            </span>
+          </div>
+
+          <div class="w-px h-8 bg-outline-variant/70"></div>
+
+          <!-- Ocupación de Mesas -->
+          <div class="flex flex-col gap-0.5">
+            <span class="text-on-surface-variant uppercase tracking-widest text-[9.5px] font-semibold">Ocupación Física</span>
+            <div class="flex items-center gap-2.5 mt-0.5">
+              <div class="w-24 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-600 rounded-full transition-all duration-500" id="statProgressBar" style="width: 100%;"></div>
+              </div>
+              <span class="font-mono text-xs text-on-surface-variant font-bold" id="statPercent">100%</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Alerta de Sobrecupo & Botón Nueva Mesa -->
+        <div class="flex items-center gap-3">
+          <div id="statOvercapacityBadge" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-on-surface-variant border border-outline-variant rounded-xl text-xs font-mono">
+            <span class="material-symbols-outlined text-base text-amber-700">info</span>
+            <span>0 Sobrecupo</span>
+          </div>
+          
+          <button type="button" id="btnAddNewTable" class="flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-xl hover:bg-charcoal transition-all shadow-sm text-xs font-semibold uppercase tracking-wider">
+            <span class="material-symbols-outlined text-base">add</span>
+            <span>+ Nueva Mesa</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- WORKSPACE AREA: 2 COLUMNAS DRAG & DROP -->
+      <div class="flex flex-1 overflow-hidden">
+        
+        <!-- SIDEBAR IZQUIERDA: PENDIENTES & FAMILIAS (w-96) -->
+        <div class="w-96 bg-surface-container-lowest border-r border-outline-variant flex flex-col h-full z-10 shrink-0">
+          
+          <div class="p-5 border-b border-outline-variant bg-surface-container-lowest space-y-3">
+            <div class="flex items-center justify-between">
+              <h2 class="font-['Cinzel'] text-primary text-lg font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-700 text-xl">group</span>
+                <span>Invitados Pendientes</span>
+              </h2>
+              <button type="button" id="btnQuickAddGuest" class="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-400/40 text-amber-900 hover:bg-amber-100 text-xs font-semibold flex items-center gap-1 transition-all">
+                <span class="material-symbols-outlined text-sm">add</span>
+                <span>Registrar</span>
+              </button>
+            </div>
+
+            <!-- Búsqueda reactiva -->
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-base">search</span>
+              <input id="searchGuestsInput" class="w-full bg-surface-container rounded-xl py-2 pl-9 pr-3 text-xs text-on-surface placeholder-on-surface-variant focus:outline-none border border-outline-variant focus:border-charcoal transition-all" placeholder="Buscar familia o invitado..." type="text">
+            </div>
+          </div>
+
+          <!-- LISTA SCROLLABLE DE INVITADOS ARRASTRABLES -->
+          <div class="flex-1 overflow-y-auto p-5 space-y-3.5 custom-scrollbar" id="unassignedList"></div>
+
+          <!-- ZONA DE SOLTAR PARA DESASIGNAR -->
+          <div id="dropzoneUnassignLeft" class="p-3 mx-4 mb-4 rounded-xl border-2 border-dashed border-outline-variant/70 bg-surface-container text-center text-xs text-on-surface-variant hover:border-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-all cursor-default flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">move_to_inbox</span>
+            <span>Arrastra aquí para desasignar</span>
+          </div>
+
+        </div>
+
+        <!-- CANVAS: FLOOR PLAN DE MESAS INTERACTIVAS (bg-soft-linen) -->
+        <div class="flex-1 bg-soft-linen relative overflow-auto p-8 custom-scrollbar" id="floorPlanCanvas">
+          
+          <!-- Decoración Gráfica Sutil de Fondo -->
+          <div class="absolute top-6 right-6 pointer-events-none opacity-20">
+            <div class="border border-dashed border-charcoal px-3 py-1.5 rounded-lg text-[10px] font-mono uppercase tracking-widest text-charcoal">
+              Floor Plan Táctico · Catalina & Julián
+            </div>
+          </div>
+
+          <!-- CONTENEDOR DE MESAS: Presidencia Superior + Alas Izquierda / Derecha -->
+          <div class="w-full max-w-[1020px] mx-auto relative pt-2 pb-24" id="tablesContainer"></div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- FOOTER FIJO -->
+    <footer class="h-12 bg-surface-container-lowest border-t border-outline-variant z-40 px-8 flex items-center justify-between flex-shrink-0 text-xs">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span class="text-on-surface-variant uppercase tracking-wider text-[10px] font-semibold">Ecosistema Invitta 2.0 Sincronizado</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-on-surface-variant">
+          <span class="material-symbols-outlined text-sm">chair</span>
+          <span class="text-[10.5px]" id="footerCapacityLabel">Capacidad Instalada: 120 Asientos</span>
+        </div>
+      </div>
+      <div class="font-mono text-on-surface-variant opacity-70 text-[10px]">
+        invitta-2.0-beta // high-end-production
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ==================== MODAL 1: REGISTRAR / EDITAR INVITADO ==================== -->
+  <div id="modalGuestForm" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl p-6 flex flex-col gap-4 animate-fadeIn">
+      
+      <div class="flex items-center justify-between border-b border-outline-variant pb-3">
+        <h3 class="font-['Cinzel'] text-lg text-primary font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-700" id="modalGuestIcon">person_add</span>
+          <span id="modalGuestTitleText">Registrar Invitado o Familia</span>
+        </h3>
+        <button type="button" class="btn-close-guest-modal text-on-surface-variant hover:text-primary text-2xl">&times;</button>
+      </div>
+
+      <form id="formGuest" class="space-y-3.5 text-xs">
+        <input type="hidden" id="inputGuestId" value="">
+        
+        <div>
+          <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Nombre Completo o Familia *</label>
+          <input type="text" id="inputGuestName" placeholder="Ej. Familia Martínez Valdés ó Camila Ortiz" required
+            class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Pases Asignados *</label>
+            <input type="number" id="inputGuestPasses" min="1" max="12" value="2" required
+              class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs font-bold text-primary border border-outline-variant focus:border-primary focus:outline-none">
+          </div>
+          <div>
+            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Distinción / Rol</label>
+            <select id="inputGuestRole" class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+              <option value="general">Invitado General</option>
+              <option value="family_bride">Familia de la Novia</option>
+              <option value="family_groom">Familia del Novio</option>
+              <option value="court">Dama de Honor / Best Man (Corte)</option>
+              <option value="vip">Invitado VIP / Padrino</option>
+              <option value="friends">Amigos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Mesa Asignada</label>
+            <select id="inputGuestTable" class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+              <option value="">Sin Asignar (En lista)</option>
+              <!-- Llenado dinámico -->
+            </select>
+          </div>
+          <div>
+            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Estado RSVP</label>
+            <select id="inputGuestStatus" class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+              <option value="DRAFT">Sin Enviar</option>
+              <option value="SENT">Enviado (Pendiente)</option>
+              <option value="CONFIRMED">✓ Confirmado</option>
+              <option value="DECLINED">✕ Declinado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Teléfono / WhatsApp</label>
+            <input type="tel" id="inputGuestPhone" placeholder="+52 55 1234 5678"
+              class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+          </div>
+          <div>
+            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Correo Electrónico</label>
+            <input type="email" id="inputGuestEmail" placeholder="invitado@ejemplo.com"
+              class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Notas / Restricciones Alimenticias</label>
+          <input type="text" id="inputGuestNotes" placeholder="Ej. Menú sin gluten, vegetariano o menú infantil"
+            class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t border-outline-variant">
+          <button type="button" class="btn-close-guest-modal px-4 py-2 rounded-xl bg-surface border border-outline-variant text-on-surface-variant text-xs">Cancelar</button>
+          <button type="submit" id="btnSubmitGuest" class="px-5 py-2 rounded-xl bg-primary text-white text-xs font-semibold uppercase tracking-wider hover:bg-charcoal transition-all">Guardar Invitado</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: CONFIGURACIÓN DE MESAS & CALCULADORA 8/10/12 ==================== -->
+  <div id="modalSettings" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-6 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl p-7 flex flex-col gap-5 animate-fadeIn">
+      <div class="flex items-center justify-between border-b border-outline-variant pb-3">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-base">tune</span>
+          </span>
+          <div>
+            <h3 class="font-['Cinzel'] text-primary text-lg font-bold">Configuración del Salón</h3>
+            <span class="text-on-surface-variant text-[10.5px]">Ajustes de Capacidad (8, 10 y 12) & Cálculo</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal text-on-surface-variant hover:text-primary text-2xl font-light">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        
+        <!-- 1. Entrada de Invitados Contemplados -->
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant space-y-3">
+          <div class="flex items-center justify-between">
+            <label for="inputContemplatedGuests" class="text-primary font-bold uppercase tracking-wider text-[10.5px] flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base text-amber-700">groups</span>
+              Total de Invitados Contemplados
+            </label>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary font-bold" id="badgeQuickRatio">12 Mesas requeridas</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <input type="number" id="inputContemplatedGuests" min="1" max="1500" value="120"
+                class="w-full bg-surface border border-outline-variant rounded-xl py-2 px-3.5 text-lg font-['Cinzel'] font-bold text-primary focus:outline-none focus:border-primary">
+              <span class="absolute right-3 top-2.5 text-[11px] text-on-secondary-container font-mono">comensales</span>
+            </div>
+            
+            <!-- Botones Rápidos Total -->
+            <div class="flex gap-1">
+              <button type="button" class="btn-quick-guests px-2 py-2 rounded-lg bg-surface border border-outline-variant hover:border-primary text-[10px] font-mono text-primary font-bold transition-all" data-val="80">80</button>
+              <button type="button" class="btn-quick-guests px-2 py-2 rounded-lg bg-surface border border-outline-variant hover:border-primary text-[10px] font-mono text-primary font-bold transition-all" data-val="120">120</button>
+              <button type="button" class="btn-quick-guests px-2 py-2 rounded-lg bg-surface border border-outline-variant hover:border-primary text-[10px] font-mono text-primary font-bold transition-all" data-val="150">150</button>
+              <button type="button" class="btn-quick-guests px-2 py-2 rounded-lg bg-surface border border-outline-variant hover:border-primary text-[10px] font-mono text-primary font-bold transition-all" data-val="200">200</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Entrada de Invitados en Mesa Imperial (Presidencia / Novios & Corte) -->
+        <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-300/70 space-y-3">
+          <div class="flex items-center justify-between">
+            <label for="inputImperialGuests" class="text-amber-950 font-bold uppercase tracking-wider text-[10.5px] flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base text-amber-700">stars</span>
+              Invitados en Mesa Imperial (Presidencia)
+            </label>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-200/80 text-amber-900 font-bold" id="badgeImperialRatio">Novios & Corte (10 pases)</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="relative flex-1">
+              <input type="number" id="inputImperialGuests" min="2" max="30" value="10"
+                class="w-full bg-white border border-amber-300/80 rounded-xl py-2 px-3.5 text-lg font-['Cinzel'] font-bold text-amber-950 focus:outline-none focus:border-amber-700">
+              <span class="absolute right-3 top-2.5 text-[11px] text-amber-800 font-mono">asientos</span>
+            </div>
+            
+            <!-- Botones Rápidos Mesa Imperial -->
+            <div class="flex gap-1">
+              <button type="button" class="btn-quick-imperial px-2 py-2 rounded-lg bg-white border border-amber-300/70 hover:border-amber-700 text-[10px] font-mono text-amber-900 font-bold transition-all" data-val="6">6</button>
+              <button type="button" class="btn-quick-imperial px-2 py-2 rounded-lg bg-white border border-amber-300/70 hover:border-amber-700 text-[10px] font-mono text-amber-900 font-bold transition-all" data-val="8">8</button>
+              <button type="button" class="btn-quick-imperial px-2 py-2 rounded-lg bg-white border border-amber-300/70 hover:border-amber-700 text-[10px] font-mono text-amber-900 font-bold transition-all" data-val="10">10</button>
+              <button type="button" class="btn-quick-imperial px-2 py-2 rounded-lg bg-white border border-amber-300/70 hover:border-amber-700 text-[10px] font-mono text-amber-900 font-bold transition-all" data-val="12">12</button>
+              <button type="button" class="btn-quick-imperial px-2 py-2 rounded-lg bg-white border border-amber-300/70 hover:border-amber-700 text-[10px] font-mono text-amber-900 font-bold transition-all" data-val="14">14</button>
+            </div>
+          </div>
+          <p class="text-[10px] text-amber-800/90 leading-tight">
+            Asientos reservados para los Novios y Corte. El resto (<strong id="labelRemainingGuests" class="font-bold text-amber-950">110 comensales</strong>) se distribuirá en las mesas de las alas izquierda y derecha.
+          </p>
+        </div>
+
+        <!-- 3. Selector de Acomodo en Mesas Circulares (8, 10 y 12 por mesa) -->
+        <div>
+          <label class="text-on-surface-variant uppercase tracking-wider block mb-2 font-semibold text-[10.5px]">
+            Acomodo de Invitados en Mesas Circulares (Salón)
+          </label>
+          <div class="grid grid-cols-3 gap-2.5" id="capacitySelectorGroup">
+            
+            <button type="button" class="btn-capacity-card active p-3 rounded-xl border border-primary bg-primary/10 text-center flex flex-col items-center gap-1 transition-all" data-capacity="8">
+              <span class="font-['Cinzel'] text-primary text-lg font-bold">8</span>
+              <span class="text-[9.5px] uppercase tracking-wider text-on-secondary-container font-semibold">Por Mesa</span>
+              <span class="text-[9.5px] text-primary font-mono font-bold" id="tablesNeeded8">14 mesas</span>
+            </button>
+
+            <button type="button" class="btn-capacity-card p-3 rounded-xl border border-outline-variant bg-surface-container text-center flex flex-col items-center gap-1 hover:border-primary transition-all" data-capacity="10">
+              <span class="font-['Cinzel'] text-primary text-lg font-bold">10</span>
+              <span class="text-[9.5px] uppercase tracking-wider text-on-secondary-container font-semibold">Por Mesa</span>
+              <span class="text-[9.5px] text-on-secondary-container font-mono font-bold" id="tablesNeeded10">11 mesas</span>
+            </button>
+
+            <button type="button" class="btn-capacity-card p-3 rounded-xl border border-outline-variant bg-surface-container text-center flex flex-col items-center gap-1 hover:border-primary transition-all" data-capacity="12">
+              <span class="font-['Cinzel'] text-primary text-lg font-bold">12</span>
+              <span class="text-[9.5px] uppercase tracking-wider text-on-secondary-container font-semibold">Por Mesa</span>
+              <span class="text-[9.5px] text-on-secondary-container font-mono font-bold" id="tablesNeeded12">10 mesas</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- 4. Caja Resumen de Distribución Calculada Bilateral -->
+        <div class="p-3.5 rounded-xl bg-amber-50/60 border border-amber-400/40 space-y-2.5">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-amber-900 font-bold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">table_restaurant</span>
+              Cálculo de Distribución del Salón
+            </span>
+            <span class="font-mono text-amber-900 font-bold text-xs" id="calcSummaryBadge">1 Imperial (10) + 14 Circulares (8) = 122 asientos</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center text-[10.5px] font-mono">
+            <div class="p-2 rounded-lg bg-white border border-outline-variant">
+              <span class="text-on-secondary-container block text-[9.5px]">Mesas Circulares</span>
+              <span class="text-primary font-bold text-xs" id="calcRequiredTables">14 (7 Izq / 7 Der)</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white border border-outline-variant">
+              <span class="text-on-secondary-container block text-[9.5px]">Capacidad Total</span>
+              <span class="text-primary font-bold text-sm" id="calcTotalCapacity">122</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white border border-outline-variant">
+              <span class="text-on-secondary-container block text-[9.5px]">Asientos Libres</span>
+              <span class="text-emerald-700 font-bold text-sm" id="calcFreeSeats">2</span>
+            </div>
+          </div>
+
+          <button type="button" id="btnAutoDistributeModal" class="w-full py-2.5 px-4 rounded-xl bg-primary text-white text-xs tracking-wider uppercase hover:bg-charcoal transition-all shadow-md flex items-center justify-center gap-2 font-semibold">
+            <span class="material-symbols-outlined text-base text-amber-300">magic_button</span>
+            <span>✦ Configurar Salón y Auto-Distribuir ✦</span>
+          </button>
+        </div>
+
+        <!-- Exportación y Reseteo -->
+        <div class="pt-2 border-t border-outline-variant flex gap-2">
+          <button type="button" id="btnExportSeatingJson" class="flex-1 py-2 px-3 rounded-xl bg-surface-container border border-outline-variant hover:border-charcoal text-primary font-medium flex items-center justify-center gap-1.5 transition-colors text-xs">
+            <span class="material-symbols-outlined text-sm">download</span> Exportar JSON
+          </button>
+          <button type="button" id="btnResetAllTables" class="py-2 px-3 rounded-xl bg-rose-50 border border-rose-400/40 text-rose-700 hover:bg-rose-100 font-medium flex items-center justify-center gap-1.5 transition-colors text-xs">
+            <span class="material-symbols-outlined text-sm">restart_alt</span> Reiniciar Mesas
+          </button>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-outline-variant">
+        <button type="button" class="btn-close-modal px-5 py-2 rounded-xl bg-primary text-white text-xs tracking-wider uppercase hover:bg-charcoal transition-colors">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: CENTRO DE ENVÍOS & MONITOR RSVP EN VIVO ==================== -->
+  <div id="modalDispatch" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-6 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-3xl shadow-2xl p-6 flex flex-col gap-4 animate-fadeIn max-h-[90vh]">
+      
+      <div class="flex items-center justify-between border-b border-outline-variant pb-3">
+        <div class="flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-base">send</span>
+          </span>
+          <div>
+            <h3 class="font-['Cinzel'] text-primary text-lg font-bold">Centro de Envíos & Monitor RSVP en Vivo</h3>
+            <span class="text-on-surface-variant text-[10.5px]">Invitaciones Personalizadas (?guest=id) y Recordatorios</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal text-on-surface-variant hover:text-primary text-2xl font-light">&times;</button>
+      </div>
+
+      <!-- KPIs en Vivo -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+        <div class="p-3 rounded-xl bg-surface border border-outline-variant text-center">
+          <span class="text-on-surface-variant block text-[10px] uppercase">Enviadas</span>
+          <span class="text-primary font-bold text-base" id="modalKpiSent">5 / 6</span>
+        </div>
+        <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-center">
+          <span class="text-emerald-800 block text-[10px] uppercase">Confirmados</span>
+          <span class="text-emerald-700 font-bold text-base" id="modalKpiConfirmed">10 pases</span>
+        </div>
+        <div class="p-3 rounded-xl bg-rose-50 border border-rose-300 text-center">
+          <span class="text-rose-800 block text-[10px] uppercase">Declinados</span>
+          <span class="text-rose-700 font-bold text-base" id="modalKpiDeclined">0 pases</span>
+        </div>
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-300 text-center">
+          <span class="text-amber-800 block text-[10px] uppercase">Pendientes</span>
+          <span class="text-amber-700 font-bold text-base" id="modalKpiPending">4 pases</span>
+        </div>
+      </div>
+
+      <!-- Lista Scrollable de Invitados con Botones de Envío -->
+      <div class="flex-1 overflow-y-auto divide-y divide-outline-variant/60 pr-1 max-h-[380px] custom-scrollbar" id="modalDispatchList">
+        <!-- Render dinámico -->
+      </div>
+
+      <div class="flex justify-between items-center pt-3 border-t border-outline-variant text-xs">
+        <button type="button" id="btnSendAllReminders" class="px-4 py-2 rounded-xl bg-amber-50 border border-amber-400 text-amber-900 font-medium hover:bg-amber-100 flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">notification_important</span>
+          <span>Recordatorio a Pendientes</span>
+        </button>
+        <button type="button" class="btn-close-modal px-5 py-2 rounded-xl bg-primary text-white font-semibold uppercase tracking-wider hover:bg-charcoal transition-colors">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: CRONOGRAMA / ITINERARIO ==================== -->
+  <div id="modalTimeline" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-6 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-lg shadow-2xl p-6 flex flex-col gap-4 animate-fadeIn">
+      <div class="flex items-center justify-between border-b border-outline-variant pb-3">
+        <div class="flex items-center gap-3">
+          <span class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-400/40 text-amber-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">calendar_today</span>
+          </span>
+          <div>
+            <h3 class="font-['Cinzel'] text-primary text-lg font-bold">Cronograma del Evento</h3>
+            <span class="text-on-surface-variant text-[10.5px]">Programa sincronizado desde la Invitación Digital (Catalina & Julián)</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal text-on-surface-variant hover:text-primary text-2xl font-light">&times;</button>
+      </div>
+
+      <!-- Contenedor Dinámico del Itinerario -->
+      <div class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar text-xs" id="timelineListContainer">
+        
+        <!-- 1. 18:00 HRS · Ceremonia Religiosa -->
+        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-lg">church</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-primary text-xs">Ceremonia Religiosa</h4>
+              <span class="font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded text-[11px]">18:00 HRS</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Parroquia San Rafael · Av. de las Rosas 123</p>
+          </div>
+        </div>
+
+        <!-- 2. 19:00 HRS · Boda Civil -->
+        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-lg">favorite</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-primary text-xs">Boda Civil</h4>
+              <span class="font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded text-[11px]">19:00 HRS</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Firma de Actas & Brindis de Honor</p>
+          </div>
+        </div>
+
+        <!-- 3. 20:00 HRS · Recepción -->
+        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-lg">celebration</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-primary text-xs">Recepción</h4>
+              <span class="font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded text-[11px]">20:00 HRS</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Jardín Las Magnolias · Cóctel de Bienvenida</p>
+          </div>
+        </div>
+
+        <!-- 4. 20:30 HRS · Cena -->
+        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-lg">restaurant_menu</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-primary text-xs">Cena / Banquete Nupcial</h4>
+              <span class="font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded text-[11px]">20:30 HRS</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Salón Principal · Protocolo Táctico de Catering</p>
+          </div>
+        </div>
+
+        <!-- 5. 21:30 HRS · Todo mundo a bailar -->
+        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-lg">nightlife</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-primary text-xs">Todo mundo a bailar</h4>
+              <span class="font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded text-[11px]">21:30 HRS</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Vals de los Novios, Apertura de Pista & Fiesta</p>
+          </div>
+        </div>
+
+        <!-- 6. 02:00 HRS · Fin del evento -->
+        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-colors">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-lg">directions_car</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-primary text-xs">Fin del Evento</h4>
+              <span class="font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded text-[11px]">02:00 HRS</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Cierre de Celebración & Agradecimientos</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie del Modal con Enlace a la Invitación -->
+      <div class="flex items-center justify-between pt-3 border-t border-outline-variant">
+        <a href="invitacion-estudio.html" target="_blank" rel="noopener noreferrer" class="text-xs text-amber-800 hover:text-amber-950 font-semibold flex items-center gap-1 transition-colors" title="Editar Itinerario en el Estudio de Invitación">
+          <span class="material-symbols-outlined text-sm text-amber-700">edit_calendar</span>
+          <span>Editar Programa en Invitación ↗</span>
+        </a>
+        <button type="button" class="btn-close-modal px-5 py-2 rounded-xl bg-primary text-white text-xs tracking-wider uppercase hover:bg-charcoal transition-colors font-medium">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 5: COMPARTIR ACCESOS CON EL EQUIPO (NOVIOS MASTER) ==================== -->
+  <div id="modalShareAccess" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4 sm:p-6 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-2xl shadow-2xl p-6 flex flex-col gap-4 animate-fadeIn max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-outline-variant pb-3">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/40 text-amber-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">share</span>
+          </span>
+          <div>
+            <h3 class="font-['Cinzel'] text-primary text-lg font-bold">Compartir Accesos con tu Equipo</h3>
+            <span class="text-on-surface-variant text-[11px]">Envía enlaces segmentados a cada proveedor protegiendo tu información privada</span>
+          </div>
+        </div>
+        <button type="button" class="btn-close-access-modal text-on-surface-variant hover:text-primary text-2xl font-light">&times;</button>
+      </div>
+
+      <!-- Cuadrícula de Enlaces por Rol -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5" id="delegationLinksGrid">
+        
+        <!-- 1. Enlace Organizador / Planner -->
+        <div class="p-4 rounded-xl bg-surface border border-outline-variant hover:border-blue-400/50 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-xs text-primary flex items-center gap-1.5">
+                <span>📋</span> Wedding Planner
+              </span>
+              <span class="text-[9.5px] px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-800 border border-blue-400/30 font-bold font-mono">OPERATIVO</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant leading-relaxed mb-3">
+              Mesas, cronograma, semáforo y catering. Oculta fotos, música y datos íntimos de los novios.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/60">
+            <button type="button" onclick="copyRoleLink('planner')" class="btn-copy-planner py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              <span>Copiar Enlace</span>
+            </button>
+            <a id="btnWaPlanner" href="#" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+              <span>📲 WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. Enlace Hostess (Puerta) -->
+        <div class="p-4 rounded-xl bg-surface border border-outline-variant hover:border-emerald-400/50 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-xs text-primary flex items-center gap-1.5">
+                <span>🚪</span> Hostess (Puerta)
+              </span>
+              <span class="text-[9.5px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 border border-emerald-400/30 font-bold font-mono">100% OFFLINE</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant leading-relaxed mb-3">
+              Lector QR por cámara, buscador rápido de mesas, ingreso parcial de pases y feedback auditivo.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/60">
+            <button type="button" onclick="copyRoleLink('hostess')" class="btn-copy-hostess py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              <span>Copiar Enlace</span>
+            </button>
+            <a id="btnWaHostess" href="#" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+              <span>📲 WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Enlace Pase de Emergencia -->
+        <div class="p-4 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-xs text-primary flex items-center gap-1.5">
+                <span>⚡</span> Pases Express
+              </span>
+              <span class="text-[9.5px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-800 border border-amber-400/30 font-bold font-mono">MÓVIL</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant leading-relaxed mb-3">
+              Generador táctil para emitir pases en 20 seg desde el celular con QR y auto check-in.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/60">
+            <button type="button" onclick="copyRoleLink('emergency')" class="btn-copy-emergency py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              <span>Copiar Enlace</span>
+            </button>
+            <a id="btnWaEmergency" href="#" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+              <span>📲 WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Enlace Catering & Banquete -->
+        <div class="p-4 rounded-xl bg-surface border border-outline-variant hover:border-rose-400/50 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-xs text-primary flex items-center gap-1.5">
+                <span>🍽️</span> Catering / Cocina
+              </span>
+              <span class="text-[9.5px] px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-800 border border-rose-400/30 font-bold font-mono">SERVICIO</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant leading-relaxed mb-3">
+              Tabla táctica WeasyPrint con comensales por mesa, menús infantiles, dietas y alergias.
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/60">
+            <button type="button" onclick="copyRoleLink('catering')" class="btn-copy-catering py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              <span>Copiar Enlace</span>
+            </button>
+            <a id="btnWaCatering" href="#" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+              <span>📲 WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 5. Enlace Diseñador de Invitación (Creativo Aislado) -->
+        <div class="p-4 rounded-xl bg-surface border border-outline-variant hover:border-amber-400/50 transition-all flex flex-col justify-between md:col-span-2">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-xs text-primary flex items-center gap-1.5">
+                <span>🎨</span> Diseñador Gráfico de Invitación
+              </span>
+              <span class="text-[9.5px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-800 border border-amber-400/30 font-bold font-mono">DISEÑO CREATIVO</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant leading-relaxed mb-3">
+              Acceso exclusivo al Estudio de Invitación para personalizar fotos, tipografías, música, historia, cronograma y temas. <strong>Bloquea el plano de mesas, teléfonos privados y configuración destructiva.</strong>
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/60">
+            <button type="button" onclick="copyRoleLink('designer')" class="btn-copy-designer py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">content_copy</span>
+              <span>Copiar Enlace</span>
+            </button>
+            <a id="btnWaDesigner" href="#" target="_blank" class="py-1.5 px-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold flex items-center justify-center gap-1 transition-colors">
+              <span>📲 WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Configuración del PIN Maestro de Seguridad -->
+      <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-400/40 mt-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <strong class="text-xs font-bold text-primary flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base text-amber-700">pin</span>
+            PIN Maestro de Seguridad (Novios)
+          </strong>
+          <p class="text-[11px] text-on-surface-variant">Protege el reseteo de la base de datos y la edición privada de la boda.</p>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <input id="inputMasterPin" type="text" maxlength="6" value="2027" 
+                 class="w-20 text-center font-mono font-bold text-sm bg-surface border border-outline-variant rounded-lg py-1.5 px-2 text-primary focus:border-amber-500 outline-none">
+          <button type="button" id="btnGenerateMasterPin" class="px-2.5 py-1.5 rounded-lg bg-surface-container border border-amber-400/50 hover:bg-amber-500/20 text-amber-800 text-xs font-bold transition-colors flex items-center gap-1" title="Generar PIN aleatorio de 4 dígitos">
+            <span>🎲 Generar</span>
+          </button>
+          <button type="button" id="btnSaveMasterPin" class="px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold hover:bg-charcoal transition-colors">
+            Guardar
+          </button>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-outline-variant">
+        <button type="button" class="btn-close-access-modal px-5 py-2 rounded-xl bg-primary text-white text-xs tracking-wider uppercase hover:bg-charcoal transition-colors font-medium">
+          Listo
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 6: DESBLOQUEAR MODO MASTER ADMIN CON PIN ==================== -->
+  <div id="modalUnlockAdmin" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-lowest border border-amber-400/50 rounded-2xl w-full max-w-sm shadow-2xl p-6 flex flex-col items-center text-center gap-4 animate-fadeIn">
+      
+      <div class="w-12 h-12 rounded-full bg-amber-500/15 border border-amber-400/50 text-amber-800 flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">lock</span>
+      </div>
+
+      <div>
+        <h3 class="font-['Cinzel'] text-primary text-lg font-bold">Desbloquear Modo Novios</h3>
+        <p class="text-xs text-on-surface-variant mt-1">Ingresa el PIN Maestro de 4 dígitos para acceder al control total.</p>
+      </div>
+
+      <input id="inputUnlockPin" type="password" maxlength="6" placeholder="• • • •" 
+             class="w-36 text-center tracking-[0.4em] font-mono text-2xl bg-surface border-2 border-amber-400/60 rounded-xl py-2 px-3 text-primary outline-none focus:ring-2 focus:ring-amber-400">
+
+      <p id="unlockErrorMsg" class="text-xs text-rose-600 hidden font-semibold">PIN incorrecto. Intenta nuevamente.</p>
+
+      <div class="grid grid-cols-2 gap-2 w-full mt-2">
+        <button type="button" id="btnCancelUnlock" class="py-2.5 px-4 rounded-xl bg-surface border border-outline-variant text-on-surface-variant hover:text-primary text-xs font-semibold">
+          Cancelar
+        </button>
+        <button type="button" id="btnSubmitUnlockPin" class="py-2.5 px-4 rounded-xl bg-primary hover:bg-charcoal text-white text-xs font-bold uppercase tracking-wider transition-colors">
+          Desbloquear
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPTS DE MOTOR: SEATING PLANNER & GUEST MANAGER -->
+  <script src="seating-module/seating-planner.js"></script>
+  <script src="guest-manager.js"></script>
+
+  <script>
+    // 1. Inicializar SeatingPlanner y GuestManager
+    const planner = new SeatingPlanner({
+      unassignedListSelector: '#unassignedList',
+      tablesContainerSelector: '#tablesContainer',
+      statsAssignedCountSelector: '#statAssignedCount',
+      statsTotalCountSelector: '#statTotalCount',
+      statsUnassignedSelector: '#statUnassignedCount',
+      statsProgressBarSelector: '#statProgressBar',
+      statsPercentSelector: '#statPercent',
+      statsOvercapacityBadgeSelector: '#statOvercapacityBadge',
+      searchInputSelector: '#searchGuestsInput'
+    });
+
+    const gm = new GuestManager();
+
+    // Sincronizar footer y métricas de semáforo de acceso en tiempo real
+    function updateAccessTrafficLightStats() {
+      const metrics = gm.getAccessMetrics();
+      const inSalonEl = document.getElementById('statInSalonPax');
+      const inTransitEl = document.getElementById('statInTransitPax');
+      const pendingEl = document.getElementById('statPendingPax');
+      const emergEl = document.getElementById('statEmergencyPax');
+      if (inSalonEl) inSalonEl.textContent = metrics.inSalon.passes;
+      if (inTransitEl) inTransitEl.textContent = metrics.inTransit.passes;
+      if (pendingEl) pendingEl.textContent = metrics.pending.passes;
+      if (emergEl) emergEl.textContent = metrics.emergency.passes;
+    }
+
+    function updateFooterStats() {
+      const totalCapacity = planner.state.tables.reduce((sum, t) => sum + t.capacity, 0);
+      const footerLabel = document.getElementById('footerCapacityLabel');
+      if (footerLabel) footerLabel.textContent = `Capacidad Instalada: ${totalCapacity} Asientos (${planner.state.tables.length} Mesas)`;
+      updateAccessTrafficLightStats();
+    }
+    updateFooterStats();
+
+    // Sincronización reactiva entre pestañas (Escáner de Puerta, Generador de Emergencia y Salón)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'invitta_2_guest_db' || e.key === 'invitta_2_seating_state') {
+        planner.state = planner.loadPersistedState();
+        gm.state = gm.loadState();
+        planner.render();
+        updateFooterStats();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      planner.state = planner.loadPersistedState();
+      gm.state = gm.loadState();
+      planner.render();
+      updateFooterStats();
+    });
+
+    // 2. Conectar Buscador Superior con el Lateral
+    const searchTopInput = document.getElementById('searchTopInput');
+    const searchGuestsInput = document.getElementById('searchGuestsInput');
+    if (searchTopInput && searchGuestsInput) {
+      searchTopInput.addEventListener('input', (e) => {
+        searchGuestsInput.value = e.target.value;
+        planner.searchQuery = e.target.value;
+        planner.renderUnassignedList();
+      });
+    }
+
+    // 3. Botón Nueva Mesa
+    document.getElementById('btnAddNewTable').addEventListener('click', () => {
+      const type = planner.state.tables.length % 2 === 0 ? 'circular' : 'imperial';
+      planner.addTable('Mesa', type, currentSelectedCapacity);
+      updateFooterStats();
+    });
+
+    // 4. Conectar Dropzone Izquierda para Desasignar
+    const dropzoneLeft = document.getElementById('dropzoneUnassignLeft');
+    if (dropzoneLeft) {
+      dropzoneLeft.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzoneLeft.classList.add('border-rose-500', 'bg-rose-50');
+      });
+      dropzoneLeft.addEventListener('dragleave', () => {
+        dropzoneLeft.classList.remove('border-rose-500', 'bg-rose-50');
+      });
+      dropzoneLeft.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzoneLeft.classList.remove('border-rose-500', 'bg-rose-50');
+        if (planner.state.draggedItem) {
+          if (planner.state.draggedItem.type === 'single') {
+            planner.unassignGuest(planner.state.draggedItem.guestId);
+          } else if (planner.state.draggedItem.type === 'family') {
+            planner.state.draggedItem.familyIds.forEach(id => planner.unassignGuest(id));
+          }
+          planner.updateStateAndDOM();
+        }
+      });
+    }
+
+    // 5. MODALES Y CONTROLADORES
+    const modalTimeline = document.getElementById('modalTimeline');
+    const modalSettings = document.getElementById('modalSettings');
+    const modalDispatch = document.getElementById('modalDispatch');
+    const modalGuestForm = document.getElementById('modalGuestForm');
+
+    // Apertura de Modales
+    document.getElementById('btnOpenTimeline').addEventListener('click', () => modalTimeline.classList.remove('hidden'));
+    
+    document.getElementById('btnOpenSettings').addEventListener('click', () => {
+      recalculateTablesPlan();
+      modalSettings.classList.remove('hidden');
+    });
+
+    document.getElementById('btnTopOpenSettings').addEventListener('click', () => {
+      recalculateTablesPlan();
+      modalSettings.classList.remove('hidden');
+    });
+
+    document.getElementById('btnTopAutoDistribute').addEventListener('click', () => {
+      planner.autoDistributeGuests({ capacity: currentSelectedCapacity });
+      updateFooterStats();
+      alert('✨ ¡Salón distribuido automáticamente respetando familias y corte!');
+    });
+
+    document.getElementById('btnOpenDispatchCenter').addEventListener('click', () => {
+      renderModalDispatch();
+      modalDispatch.classList.remove('hidden');
+    });
+
+    document.getElementById('btnTopDispatch').addEventListener('click', () => {
+      renderModalDispatch();
+      modalDispatch.classList.remove('hidden');
+    });
+
+    // Cerrar Modales
+    document.querySelectorAll('.btn-close-modal').forEach(btn => {
+      btn.addEventListener('click', () => {
+        modalTimeline.classList.add('hidden');
+        modalSettings.classList.add('hidden');
+        modalDispatch.classList.add('hidden');
+      });
+    });
+
+    document.querySelectorAll('.btn-close-guest-modal').forEach(btn => {
+      btn.addEventListener('click', () => modalGuestForm.classList.add('hidden'));
+    });
+
+    // 6. GESTIÓN & EDICIÓN DE INVITADOS
+    function populateGuestTableSelect(selectedTableId = '') {
+      const select = document.getElementById('inputGuestTable');
+      if (!select) return;
+      select.innerHTML = '<option value="">Sin Asignar (En lista)</option>' +
+        planner.state.tables.map(t => `<option value="${t.id}" ${t.id === selectedTableId ? 'selected' : ''}>${t.name} (${t.capacity} asientos)</option>`).join('');
+    }
+
+    function openModalGuestCreate() {
+      document.getElementById('formGuest').reset();
+      document.getElementById('inputGuestId').value = '';
+      populateGuestTableSelect('');
+      document.getElementById('modalGuestTitleText').textContent = 'Registrar Invitado o Familia';
+      document.getElementById('modalGuestIcon').textContent = 'person_add';
+      document.getElementById('btnSubmitGuest').textContent = 'Guardar Invitado';
+      modalGuestForm.classList.remove('hidden');
+    }
+
+    function openModalGuestEdit(guestId) {
+      const g = planner.state.guests.find(x => x.id === guestId);
+      if (!g) return;
+
+      document.getElementById('inputGuestId').value = g.id;
+      document.getElementById('inputGuestName').value = g.name || '';
+      document.getElementById('inputGuestPasses').value = g.pases || g.passes || 1;
+      document.getElementById('inputGuestRole').value = g.court ? 'court' : g.vip ? 'vip' : 'general';
+      document.getElementById('inputGuestPhone').value = g.phone || '';
+      document.getElementById('inputGuestEmail').value = g.email || '';
+      document.getElementById('inputGuestStatus').value = g.status || 'DRAFT';
+      document.getElementById('inputGuestNotes').value = g.tag || g.notes || '';
+
+      populateGuestTableSelect(g.tableId || '');
+
+      document.getElementById('modalGuestTitleText').textContent = 'Editar Invitado / Familia';
+      document.getElementById('modalGuestIcon').textContent = 'edit';
+      document.getElementById('btnSubmitGuest').textContent = 'Actualizar Datos';
+      modalGuestForm.classList.remove('hidden');
+    }
+
+    window.openModalGuestEdit = openModalGuestEdit;
+
+    document.getElementById('btnOpenGuestDirectory').addEventListener('click', openModalGuestCreate);
+    document.getElementById('btnQuickAddGuest').addEventListener('click', openModalGuestCreate);
+
+    document.getElementById('formGuest').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('inputGuestId').value;
+      const role = document.getElementById('inputGuestRole').value;
+      const name = document.getElementById('inputGuestName').value.trim();
+      const passes = parseInt(document.getElementById('inputGuestPasses').value, 10) || 1;
+      const tableId = document.getElementById('inputGuestTable').value || null;
+      const phone = document.getElementById('inputGuestPhone').value.trim();
+      const email = document.getElementById('inputGuestEmail').value.trim();
+      const status = document.getElementById('inputGuestStatus').value || 'DRAFT';
+      const notes = document.getElementById('inputGuestNotes').value.trim();
+
+      if (editId) {
+        const target = planner.state.guests.find(x => x.id === editId);
+        if (target) {
+          target.name = name;
+          target.pases = passes;
+          target.passes = passes;
+          target.court = role === 'court';
+          target.vip = role === 'vip' || role === 'court';
+          target.tableId = tableId;
+          target.phone = phone;
+          target.email = email;
+          target.status = status;
+          target.tag = notes;
+        }
+      } else {
+        const newId = 'g_' + (planner.state.guests.length + 1);
+        planner.state.guests.push({
+          id: newId,
+          name: name,
+          familyKey: name.startsWith('Familia') ? name.toLowerCase() : '',
+          familyTitle: name.startsWith('Familia') ? name : '',
+          pases: passes,
+          passes: passes,
+          court: role === 'court',
+          vip: role === 'vip' || role === 'court',
+          tableId: tableId,
+          phone: phone,
+          email: email,
+          status: status,
+          tag: notes,
+          diet: 'none'
+        });
+      }
+
+      modalGuestForm.classList.add('hidden');
+      planner.updateStateAndDOM();
+      updateFooterStats();
+    });
+
+    // 7. CALCULADORA DE MESAS Y CONFIGURACIÓN (Mesa Imperial + Circulares 8, 10, 12)
+    const inputContemplated = document.getElementById('inputContemplatedGuests');
+    const inputImperial = document.getElementById('inputImperialGuests');
+    const badgeQuickRatio = document.getElementById('badgeQuickRatio');
+    const badgeImperialRatio = document.getElementById('badgeImperialRatio');
+    const labelRemainingGuests = document.getElementById('labelRemainingGuests');
+    const tablesNeeded8 = document.getElementById('tablesNeeded8');
+    const tablesNeeded10 = document.getElementById('tablesNeeded10');
+    const tablesNeeded12 = document.getElementById('tablesNeeded12');
+    const calcRequiredTables = document.getElementById('calcRequiredTables');
+    const calcTotalCapacity = document.getElementById('calcTotalCapacity');
+    const calcFreeSeats = document.getElementById('calcFreeSeats');
+    const calcSummaryBadge = document.getElementById('calcSummaryBadge');
+
+    let currentSelectedCapacity = 8;
+
+    function recalculateTablesPlan() {
+      const totalGuests = Math.max(1, parseInt(inputContemplated?.value || '120', 10) || 120);
+      const imperialGuests = Math.max(2, parseInt(inputImperial?.value || '10', 10) || 10);
+      
+      const remainingForSalon = Math.max(0, totalGuests - imperialGuests);
+      if (labelRemainingGuests) labelRemainingGuests.textContent = `${remainingForSalon} comensales`;
+      if (badgeImperialRatio) badgeImperialRatio.textContent = `Novios & Corte (${imperialGuests} pases)`;
+
+      const n8 = Math.ceil(remainingForSalon / 8) || 1;
+      const n10 = Math.ceil(remainingForSalon / 10) || 1;
+      const n12 = Math.ceil(remainingForSalon / 12) || 1;
+
+      if (tablesNeeded8) tablesNeeded8.textContent = `${n8} mesas (${Math.ceil(n8/2)} Izq / ${Math.floor(n8/2)} Der)`;
+      if (tablesNeeded10) tablesNeeded10.textContent = `${n10} mesas (${Math.ceil(n10/2)} Izq / ${Math.floor(n10/2)} Der)`;
+      if (tablesNeeded12) tablesNeeded12.textContent = `${n12} mesas (${Math.ceil(n12/2)} Izq / ${Math.floor(n12/2)} Der)`;
+
+      const activeCircularNeeded = Math.ceil(remainingForSalon / currentSelectedCapacity) || 1;
+      const totalCap = imperialGuests + (activeCircularNeeded * currentSelectedCapacity);
+      const freeSeats = totalCap - totalGuests;
+
+      const leftWingCount = Math.ceil(activeCircularNeeded / 2);
+      const rightWingCount = Math.floor(activeCircularNeeded / 2);
+
+      if (calcRequiredTables) calcRequiredTables.textContent = `${activeCircularNeeded} (${leftWingCount} Izq / ${rightWingCount} Der)`;
+      if (calcTotalCapacity) calcTotalCapacity.textContent = totalCap;
+      if (calcFreeSeats) calcFreeSeats.textContent = freeSeats;
+      if (badgeQuickRatio) badgeQuickRatio.textContent = `${activeCircularNeeded + 1} Mesas en total`;
+      if (calcSummaryBadge) calcSummaryBadge.textContent = `1 Imperial (${imperialGuests}) + ${activeCircularNeeded} Circulares (${currentSelectedCapacity}) = ${totalCap} asientos`;
+    }
+
+    if (inputContemplated) {
+      inputContemplated.addEventListener('input', recalculateTablesPlan);
+    }
+
+    if (inputImperial) {
+      inputImperial.addEventListener('input', recalculateTablesPlan);
+    }
+
+    document.querySelectorAll('.btn-quick-guests').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (inputContemplated) {
+          inputContemplated.value = btn.dataset.val;
+          recalculateTablesPlan();
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-quick-imperial').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (inputImperial) {
+          inputImperial.value = btn.dataset.val;
+          recalculateTablesPlan();
+        }
+      });
+    });
+
+    document.querySelectorAll('.btn-capacity-card').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-capacity-card').forEach(b => {
+          b.classList.remove('active', 'border-primary', 'bg-primary/10');
+          b.classList.add('border-outline-variant', 'bg-surface-container');
+        });
+        btn.classList.add('active', 'border-primary', 'bg-primary/10');
+        btn.classList.remove('border-outline-variant', 'bg-surface-container');
+
+        currentSelectedCapacity = parseInt(btn.dataset.capacity, 10) || 8;
+        recalculateTablesPlan();
+      });
+    });
+
+    document.getElementById('btnAutoDistributeModal').addEventListener('click', () => {
+      const totalGuests = Math.max(1, parseInt(inputContemplated?.value || '120', 10) || 120);
+      const imperialGuests = Math.max(2, parseInt(inputImperial?.value || '10', 10) || 10);
+
+      const summary = planner.configureSalonAndDistribute({
+        totalGuests: totalGuests,
+        imperialCapacity: imperialGuests,
+        circularCapacity: currentSelectedCapacity
+      });
+
+      updateFooterStats();
+      modalSettings.classList.add('hidden');
+      alert(`✨ ¡Salón Configurado y Distribuido!\n\n• Total de comensales: ${totalGuests}\n• Mesa Imperial (Presidencia): ${imperialGuests} asientos\n• Mesas Circulares: ${summary.circularTablesCount} mesas (${summary.leftWingCount} Ala Izquierda · ${summary.rightWingCount} Ala Derecha)\n• Capacidad total instalada: ${summary.totalCapacity} asientos (${summary.freeSeats} asientos libres).`);
+    });
+
+    // 8. RENDER DEL CENTRO DE ENVÍOS & RSVP
+    function renderModalDispatch() {
+      const guests = planner.state.guests;
+      const total = guests.length;
+      const sent = guests.filter(g => g.status === 'SENT' || g.status === 'CONFIRMED' || g.status === 'DECLINED').length;
+      const confirmed = guests.filter(g => g.status === 'CONFIRMED');
+      const confirmedPasses = confirmed.reduce((s, g) => s + (g.pases || g.passes || 1), 0);
+      const declined = guests.filter(g => g.status === 'DECLINED');
+      const declinedPasses = declined.reduce((s, g) => s + (g.pases || g.passes || 1), 0);
+      const pending = guests.filter(g => g.status !== 'CONFIRMED' && g.status !== 'DECLINED');
+      const pendingPasses = pending.reduce((s, g) => s + (g.pases || g.passes || 1), 0);
+
+      document.getElementById('modalKpiSent').textContent = `${sent} / ${total}`;
+      document.getElementById('modalKpiConfirmed').textContent = `${confirmedPasses} pases`;
+      document.getElementById('modalKpiDeclined').textContent = `${declinedPasses} pases`;
+      document.getElementById('modalKpiPending').textContent = `${pendingPasses} pases`;
+
+      const list = document.getElementById('modalDispatchList');
+      const baseUrl = window.location.href.split('index.html')[0].replace(/\/+$/, '');
+
+      list.innerHTML = guests.map(g => {
+        const passes = g.pases || g.passes || 1;
+        const cleanId = g.id.replace(/^g_/, '');
+        const inviteUrl = `${baseUrl}/scroll-rsvp-module/index.html?guest=${cleanId}`;
+        
+        const message = `✨ *Invitación Especial de Boda — Catalina & Julián* ✨\n\n` +
+          `Estimad@ *${g.name}*:\n` +
+          `Nos llena de alegría invitarte a celebrar nuestra boda este *20 de Marzo, 2027*.\n\n` +
+          `🎟️ Hemos reservado *${passes} ${passes === 1 ? 'pase' : 'pases'}* para ti.\n\n` +
+          `📲 Confirma tu asistencia en tu pase digital interactivo:\n${inviteUrl}\n\n` +
+          `¡Esperamos contar con tu valiosa presencia!`;
+
+        const waUrl = (g.phone) 
+          ? `https://wa.me/${g.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`
+          : `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+
+        let statusTag = '<span class="px-2 py-0.5 rounded bg-neutral-100 text-neutral-600 text-[10px] font-mono">Sin Enviar</span>';
+        if (g.status === 'CONFIRMED') statusTag = '<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold">✓ Confirmado</span>';
+        else if (g.status === 'DECLINED') statusTag = '<span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-mono font-bold">✕ Declinado</span>';
+        else if (g.status === 'SENT') statusTag = '<span class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px] font-mono">Enviado</span>';
+
+        return `
+          <div class="py-3 flex items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-primary text-xs">${g.name}</span>
+                ${statusTag}
+              </div>
+              <span class="text-[11px] text-on-surface-variant font-mono block">
+                ${passes} pases · Tel: ${g.phone || 'Sin número'} · ${g.tag || 'Sin notas'}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <a href="${waUrl}" target="_blank" onclick="g.status='SENT'; renderModalDispatch();"
+                class="px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-semibold flex items-center gap-1 hover:bg-emerald-700 transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-sm">chat</span>
+                <span>WhatsApp</span>
+              </a>
+
+              <button type="button" class="btn-copy-rsvp-link px-2 py-1.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] flex items-center gap-1 transition-colors" data-url="${inviteUrl}">
+                <span class="material-symbols-outlined text-sm">link</span>
+                <span>Link</span>
+              </button>
+
+              <button type="button" class="btn-modal-edit-guest p-1.5 rounded-lg bg-surface-container hover:bg-surface-variant text-primary text-xs" title="Editar datos" data-id="${g.id}">
+                <span class="material-symbols-outlined text-sm">edit</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      list.querySelectorAll('.btn-copy-rsvp-link').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigator.clipboard.writeText(btn.dataset.url).then(() => alert('📋 Enlace copiado:\n' + btn.dataset.url));
+        });
+      });
+
+      list.querySelectorAll('.btn-modal-edit-guest').forEach(btn => {
+        btn.addEventListener('click', () => {
+          modalDispatch.classList.add('hidden');
+          openModalGuestEdit(btn.dataset.id);
+        });
+      });
+    }
+
+    document.getElementById('btnSendAllReminders').addEventListener('click', () => {
+      alert('🔔 Se ha generado la lista de recordatorios. Puedes enviar mensaje con 1 clic a cada invitado pendiente.');
+    });
+
+    // 9. Exportar JSON
+    document.getElementById('btnExportSeatingJson').addEventListener('click', () => {
+      const jsonStr = JSON.stringify(planner.state, null, 2);
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        alert('✅ Distribución del salón y asignación de mesas copiada al portapapeles en formato JSON.');
+      });
+    });
+
+    // 10. Resetear Asignaciones (Protegido si no es Admin)
+    document.getElementById('btnResetAllTables').addEventListener('click', () => {
+      if (currentRole !== 'admin') {
+        alert('🔒 Esta acción destructiva requiere permisos de Administrador Master.');
+        return;
+      }
+      if (confirm('¿Deseas desasignar a todos los comensales para reiniciar el plano?')) {
+        planner.state.guests.forEach(g => g.tableId = null);
+        planner.updateStateAndDOM();
+        updateFooterStats();
+        modalSettings.classList.add('hidden');
+      }
+    });
+
+    // =========================================================================
+    // 11. SISTEMA DE CONTROL DE ROLES & DELEGACIÓN DE ACCESOS
+    // =========================================================================
+    const modalShareAccess = document.getElementById('modalShareAccess');
+    const modalUnlockAdmin = document.getElementById('modalUnlockAdmin');
+    const badgeRoleAdmin = document.getElementById('badgeRoleAdmin');
+    const badgeRolePlanner = document.getElementById('badgeRolePlanner');
+    const sidebarPrivateBrideLinks = document.getElementById('sidebarPrivateBrideLinks');
+    const btnOpenDispatchCenter = document.getElementById('btnOpenDispatchCenter');
+    const sidebarLogoLink = document.getElementById('sidebarLogoLink');
+
+    let currentRole = gm.getCurrentRole();
+
+    function applyRoleInterface(role) {
+      currentRole = role;
+      if (role === 'planner') {
+        badgeRoleAdmin.classList.add('hidden');
+        badgeRolePlanner.classList.remove('hidden');
+        if (sidebarPrivateBrideLinks) sidebarPrivateBrideLinks.classList.add('hidden');
+        if (btnOpenDispatchCenter) btnOpenDispatchCenter.classList.add('hidden');
+        if (sidebarLogoLink) {
+          sidebarLogoLink.removeAttribute('href');
+          sidebarLogoLink.style.cursor = 'default';
+        }
+      } else {
+        badgeRoleAdmin.classList.remove('hidden');
+        badgeRolePlanner.classList.add('hidden');
+        if (sidebarPrivateBrideLinks) sidebarPrivateBrideLinks.classList.remove('hidden');
+        if (btnOpenDispatchCenter) btnOpenDispatchCenter.classList.remove('hidden');
+        if (sidebarLogoLink) {
+          sidebarLogoLink.setAttribute('href', 'portal.html');
+          sidebarLogoLink.style.cursor = 'pointer';
+        }
+      }
+    }
+
+    applyRoleInterface(currentRole);
+
+    // Abrir Modal Compartir Accesos
+    const btnOpenShareAccessModal = document.getElementById('btnOpenShareAccessModal');
+    if (btnOpenShareAccessModal) {
+      btnOpenShareAccessModal.addEventListener('click', () => {
+        populateDelegationLinksUI();
+        modalShareAccess.classList.remove('hidden');
+      });
+    }
+
+    function populateDelegationLinksUI() {
+      const links = gm.getDelegationLinks();
+      const couple = gm.options.eventDetails.coupleName;
+
+      // WhatsApp Enlaces
+      const waPlanner = document.getElementById('btnWaPlanner');
+      const waHostess = document.getElementById('btnWaHostess');
+      const waEmergency = document.getElementById('btnWaEmergency');
+      const waCatering = document.getElementById('btnWaCatering');
+      const waDesigner = document.getElementById('btnWaDesigner');
+
+      const msgPlanner = encodeURIComponent(`Hola, te comparto tu acceso de Wedding Planner para la boda de ${couple}:\n\n📋 Panel Operativo de Mesas & Cronograma:\n${links.planner.url}`);
+      const msgHostess = encodeURIComponent(`Hola, te comparto el acceso al Escáner QR de Puerta para la boda de ${couple}:\n\n🚪 Escáner de Acceso (100% Offline):\n${links.hostess.url}`);
+      const msgEmergency = encodeURIComponent(`Hola, te comparto el enlace para emitir Pases de Emergencia desde el celular:\n\n⚡ Generador Express:\n${links.emergency.url}`);
+      const msgCatering = encodeURIComponent(`Hola equipo de Catering, les comparto la Tabla Táctica de Menús y Dietas por Mesa:\n\n🍽️ Hoja de Catering:\n${links.catering.url}`);
+      const msgDesigner = encodeURIComponent(`Hola, te comparto tu acceso exclusivo al Estudio de Invitación para la boda de ${couple}:\n\n🎨 Estudio de Diseño de Invitación:\n${links.designer.url}`);
+
+      if (waPlanner) waPlanner.href = `https://api.whatsapp.com/send?text=${msgPlanner}`;
+      if (waHostess) waHostess.href = `https://api.whatsapp.com/send?text=${msgHostess}`;
+      if (waEmergency) waEmergency.href = `https://api.whatsapp.com/send?text=${msgEmergency}`;
+      if (waCatering) waCatering.href = `https://api.whatsapp.com/send?text=${msgCatering}`;
+      if (waDesigner) waDesigner.href = `https://api.whatsapp.com/send?text=${msgDesigner}`;
+
+      const pinInput = document.getElementById('inputMasterPin');
+      if (pinInput) pinInput.value = gm.getMasterPin();
+    }
+
+    window.copyRoleLink = function(roleKey) {
+      const links = gm.getDelegationLinks();
+      const target = links[roleKey];
+      if (target && target.url) {
+        navigator.clipboard.writeText(target.url).then(() => {
+          alert(`📋 ¡Enlace copiado para ${target.title}!\n\n${target.url}`);
+        });
+      }
+    };
+
+    // Guardar PIN Maestro
+    const btnSaveMasterPin = document.getElementById('btnSaveMasterPin');
+    if (btnSaveMasterPin) {
+      btnSaveMasterPin.addEventListener('click', () => {
+        const val = document.getElementById('inputMasterPin').value.trim();
+        if (val.length < 4) {
+          alert('El PIN debe tener al menos 4 dígitos.');
+          return;
+        }
+        gm.setMasterPin(val);
+        alert('🔐 ¡PIN Maestro guardado con éxito!');
+      });
+    }
+
+    // Generar PIN Maestro Aleatorio
+    const btnGenerateMasterPin = document.getElementById('btnGenerateMasterPin');
+    if (btnGenerateMasterPin) {
+      btnGenerateMasterPin.addEventListener('click', () => {
+        const newPin = gm.generateRandomMasterPin();
+        document.getElementById('inputMasterPin').value = newPin;
+        navigator.clipboard.writeText(newPin).catch(() => {});
+        alert(`🎲 ¡Nuevo PIN Maestro generado y guardado!\n\nPIN: ${newPin}\n(Copiado al portapapeles)`);
+      });
+    }
+
+    // Modal Desbloquear Modo Master Admin
+    const btnUnlockAdminModal = document.getElementById('btnUnlockAdminModal');
+    if (btnUnlockAdminModal) {
+      btnUnlockAdminModal.addEventListener('click', () => {
+        document.getElementById('inputUnlockPin').value = '';
+        document.getElementById('unlockErrorMsg').classList.add('hidden');
+        modalUnlockAdmin.classList.remove('hidden');
+      });
+    }
+
+    const btnSubmitUnlockPin = document.getElementById('btnSubmitUnlockPin');
+    if (btnSubmitUnlockPin) {
+      btnSubmitUnlockPin.addEventListener('click', () => {
+        const enteredPin = document.getElementById('inputUnlockPin').value.trim();
+        if (gm.verifyMasterPin(enteredPin)) {
+          gm.setActiveRole('admin');
+          applyRoleInterface('admin');
+          modalUnlockAdmin.classList.add('hidden');
+          if (window.history && window.history.replaceState) {
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+          }
+          alert('👑 ¡Modo Novios (Master) desbloqueado con éxito!');
+        } else {
+          document.getElementById('unlockErrorMsg').classList.remove('hidden');
+        }
+      });
+    }
+
+    const btnCancelUnlock = document.getElementById('btnCancelUnlock');
+    if (btnCancelUnlock) {
+      btnCancelUnlock.addEventListener('click', () => modalUnlockAdmin.classList.add('hidden'));
+    }
+
+    document.querySelectorAll('.btn-close-access-modal').forEach(btn => {
+      btn.addEventListener('click', () => modalShareAccess.classList.add('hidden'));
+    });
+  </script>
+</body>
+</html>

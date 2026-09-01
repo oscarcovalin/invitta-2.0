@@ -1,269 +1,223 @@
 -- ============================================================================
--- INVITTA 2.0 — ESQUEMA DE BASE DE DATOS DE PRODUCCIÓN (PostgreSQL / Supabase)
--- Modelo: Cuenta (multi-tenant) -> Eventos -> Invitados + Entitlements por plan
+-- INVITTA 2.0 BETA — CLOUD POSTGRESQL / SUPABASE PRODUCTION SCHEMA
+-- Multi-Event Tenancy, Access Control, RSVP & Collaborative Photo Capsule
 -- ============================================================================
 
--- Habilitar extensión para UUIDs criptográficos
+-- Habilitar extensiones necesarias
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ----------------------------------------------------------------------------
--- 1. PLANES DISPONIBLES (catálogo comercial)
+-- 1. TABLA: EVENTS (Raíz de Inquilino / Eventos de Gala)
 -- ----------------------------------------------------------------------------
-CREATE TABLE plans (
-    id                      SERIAL PRIMARY KEY,
-    key                     TEXT UNIQUE NOT NULL,        -- 'invitacion_simple' | 'invitacion_gestion' | 'planner' | 'salon'
-    name                    TEXT NOT NULL,
-    price_type              TEXT NOT NULL CHECK (price_type IN ('one_time', 'subscription')),
-    price_mxn               NUMERIC(10,2) NOT NULL,
-    billing_period          TEXT CHECK (billing_period IN ('monthly', 'yearly', NULL)),
-    max_events              INTEGER,                     -- NULL = ilimitado
-    max_guests_per_event    INTEGER,                     -- NULL = ilimitado
-    created_at              TIMESTAMPTZ DEFAULT now()
+CREATE TABLE IF NOT EXISTS public.events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slug TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    event_type TEXT NOT NULL DEFAULT 'boda' CHECK (event_type IN ('boda', 'xv', 'corporativo', 'bautizo', 'gala')),
+    hosts TEXT NOT NULL,
+    event_date TIMESTAMPTZ,
+    venue TEXT,
+    master_pin_hash TEXT,
+    config JSONB NOT NULL DEFAULT '{}'::jsonb,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE INDEX IF NOT EXISTS idx_events_slug ON public.events(slug);
+CREATE INDEX IF NOT EXISTS idx_events_date ON public.events(event_date);
+
 -- ----------------------------------------------------------------------------
--- 2. CUENTAS (el cliente que paga: persona, planner o salón)
+-- 2. TABLA: TABLES (Distribución y Plano de Mesas)
 -- ----------------------------------------------------------------------------
-CREATE TABLE accounts (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    account_type    TEXT NOT NULL CHECK (account_type IN ('persona', 'planner', 'salon')),
-    business_name   TEXT,                                -- solo relevante para planner/salon
-    billing_email   TEXT NOT NULL,
-    phone           TEXT,
-    plan_id         INTEGER REFERENCES plans(id),
-    plan_status     TEXT DEFAULT 'active' CHECK (plan_status IN ('active', 'trial', 'past_due', 'canceled')),
-    created_at      TIMESTAMPTZ DEFAULT now(),
-    updated_at      TIMESTAMPTZ DEFAULT now()
+CREATE TABLE IF NOT EXISTS public.tables (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL DEFAULT 'circular' CHECK (type IN ('imperial', 'circular', 'rectangular', 'cocktail', 'vip')),
+    capacity INTEGER NOT NULL CHECK (capacity > 0),
+    order_index INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE INDEX IF NOT EXISTS idx_tables_event_id ON public.tables(event_id);
+
 -- ----------------------------------------------------------------------------
--- 3. ENTITLEMENTS (features habilitadas por cuenta — capa de permisos por plan)
---    Esta tabla es la fuente de verdad de "qué puede ver/hacer" cada cuenta.
+-- 3. TABLA: GUESTS (Gestión de Invitados, Pases y Folios de Gala)
 -- ----------------------------------------------------------------------------
-CREATE TABLE entitlements (
-    id              SERIAL PRIMARY KEY,
-    account_id      UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-    feature_key     TEXT NOT NULL,                       -- 'guest_list' | 'rsvp' | 'seating' | 'multi_event' | 'white_label' | 'checkin' | 'catering_module'
-    enabled         BOOLEAN DEFAULT true,
-    limit_value     INTEGER,                             -- ej. max_events del add-on, si aplica
-    UNIQUE(account_id, feature_key)
+CREATE TABLE IF NOT EXISTS public.guests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    table_id UUID REFERENCES public.tables(id) ON DELETE SET NULL,
+    name TEXT NOT NULL,
+    contact_name TEXT,
+    family_key TEXT,
+    passes INTEGER NOT NULL DEFAULT 2 CHECK (passes > 0),
+    confirmed_passes INTEGER NOT NULL DEFAULT 0 CHECK (confirmed_passes >= 0),
+    admitted_passes INTEGER NOT NULL DEFAULT 0 CHECK (admitted_passes >= 0),
+    folio TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'DRAFT' CHECK (status IN ('DRAFT', 'SENT', 'CONFIRMED', 'DECLINED', 'CHECKED_IN', 'EMERGENCY')),
+    phone TEXT,
+    email TEXT,
+    diet TEXT DEFAULT 'none',
+    notes TEXT,
+    is_court BOOLEAN NOT NULL DEFAULT false,
+    is_vip BOOLEAN NOT NULL DEFAULT false,
+    is_emergency BOOLEAN NOT NULL DEFAULT false,
+    sent_at TIMESTAMPTZ,
+    responded_at TIMESTAMPTZ,
+    checked_in_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE INDEX IF NOT EXISTS idx_guests_event_id ON public.guests(event_id);
+CREATE INDEX IF NOT EXISTS idx_guests_folio ON public.guests(folio);
+CREATE INDEX IF NOT EXISTS idx_guests_event_folio ON public.guests(event_id, folio);
+CREATE INDEX IF NOT EXISTS idx_guests_status ON public.guests(status);
+
 -- ----------------------------------------------------------------------------
--- 4. USUARIOS (personas que hacen login dentro de una cuenta)
+-- 4. TABLA: CHECKIN_LOGS (Auditoría de Acceso en Puerta / Hostess)
 -- ----------------------------------------------------------------------------
-CREATE TABLE users (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    account_id      UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-    email           TEXT UNIQUE NOT NULL,
-    full_name       TEXT,
-    is_owner        BOOLEAN DEFAULT false,               -- dueño de la cuenta (admin/novios/dueño del salón)
-    created_at      TIMESTAMPTZ DEFAULT now()
+CREATE TABLE IF NOT EXISTS public.checkin_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    guest_id UUID NOT NULL REFERENCES public.guests(id) ON DELETE CASCADE,
+    folio TEXT NOT NULL,
+    admitted_passes INTEGER NOT NULL CHECK (admitted_passes > 0),
+    is_emergency BOOLEAN NOT NULL DEFAULT false,
+    scanned_by TEXT DEFAULT 'Hostess Puerta Principal',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE INDEX IF NOT EXISTS idx_checkin_logs_event ON public.checkin_logs(event_id);
+CREATE INDEX IF NOT EXISTS idx_checkin_logs_created ON public.checkin_logs(created_at);
+
 -- ----------------------------------------------------------------------------
--- 5. EVENTOS (una cuenta puede tener 1 o varios, según su plan)
+-- 5. TABLA: ALBUM_PHOTOS (Cápsula de Recuerdos Colaborativa)
 -- ----------------------------------------------------------------------------
-CREATE TABLE events (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    account_id      UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-    title           TEXT NOT NULL,
-    event_type      TEXT CHECK (event_type IN ('boda', 'xv', 'cumpleanos', 'otro')),
-    event_date      TIMESTAMPTZ,
-    venue           TEXT,
-    city            TEXT,
-    theme           TEXT DEFAULT 'vino',
-    status          TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'active', 'delivered', 'archived')),
-    master_pin_hash TEXT,                                 -- hash del PIN, ya NO en texto plano
-    created_at      TIMESTAMPTZ DEFAULT now(),
-    updated_at      TIMESTAMPTZ DEFAULT now()
+CREATE TABLE IF NOT EXISTS public.album_photos (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id UUID NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+    guest_id UUID REFERENCES public.guests(id) ON DELETE SET NULL,
+    author_name TEXT NOT NULL DEFAULT 'Invitado Especial',
+    photo_url TEXT NOT NULL,
+    storage_path TEXT,
+    dedication TEXT,
+    is_approved BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ----------------------------------------------------------------------------
--- 6. CONFIGURACIÓN DE INVITACIÓN (mapea el config.json que genera TemplateEngine)
--- ----------------------------------------------------------------------------
-CREATE TABLE invitation_configs (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id        UUID UNIQUE NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    config_json     JSONB NOT NULL,                       -- todo lo que vive en ProjectsVault.config
-    updated_at      TIMESTAMPTZ DEFAULT now()
-);
+CREATE INDEX IF NOT EXISTS idx_album_photos_event ON public.album_photos(event_id);
 
 -- ----------------------------------------------------------------------------
--- 7. COLABORADORES DEL EVENTO (roles operativos: designer, planner, hostess, catering)
+-- PROCEDIMIENTOS ALMACENADOS / ATOMIC RPCs
 -- ----------------------------------------------------------------------------
-CREATE TABLE event_collaborators (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id        UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    email           TEXT,                                 -- puede no tener cuenta de usuario, solo link delegado
-    role            TEXT NOT NULL CHECK (role IN ('admin', 'designer', 'planner', 'hostess', 'catering')),
-    access_token    TEXT UNIQUE NOT NULL,                 -- token seguro para enlaces delegados
-    invited_at      TIMESTAMPTZ DEFAULT now(),
-    revoked_at      TIMESTAMPTZ
-);
 
--- ----------------------------------------------------------------------------
--- 8. MESAS / SEATING (creado antes de guests para integridad referencial FK)
--- ----------------------------------------------------------------------------
-CREATE TABLE event_tables (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id        UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    name            TEXT NOT NULL,
-    capacity        INTEGER NOT NULL DEFAULT 10,
-    position_x      NUMERIC,
-    position_y      NUMERIC,
-    created_at      TIMESTAMPTZ DEFAULT now()
-);
-
--- ----------------------------------------------------------------------------
--- 9. INVITADOS
--- ----------------------------------------------------------------------------
-CREATE TABLE guests (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id        UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    full_name       TEXT NOT NULL,
-    phone           TEXT,
-    email           TEXT,
-    group_name      TEXT,                                 -- ej. "Familia Pérez"
-    table_id        UUID REFERENCES event_tables(id) ON DELETE SET NULL,
-    rsvp_status     TEXT DEFAULT 'pending' CHECK (rsvp_status IN ('pending', 'confirmed', 'declined')),
-    plus_ones       INTEGER DEFAULT 0,
-    dietary_notes   TEXT,
-    created_at      TIMESTAMPTZ DEFAULT now(),
-    updated_at      TIMESTAMPTZ DEFAULT now()
-);
-
--- ----------------------------------------------------------------------------
--- 10. CHECK-IN (feature exclusiva de plan Salón / add-on)
--- ----------------------------------------------------------------------------
-CREATE TABLE checkin_logs (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id        UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    guest_id        UUID REFERENCES guests(id) ON DELETE SET NULL,
-    scanned_at      TIMESTAMPTZ DEFAULT now(),
-    scanned_by      TEXT                                  -- email o nombre del hostess que escaneó
-);
-
--- ----------------------------------------------------------------------------
--- 11. PAGOS Y SUSCRIPCIONES (integración Stripe / pasarela de pagos)
--- ----------------------------------------------------------------------------
-CREATE TABLE subscriptions (
-    id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    account_id              UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-    plan_id                 INTEGER NOT NULL REFERENCES plans(id),
-    status                  TEXT DEFAULT 'active' CHECK (status IN ('active', 'past_due', 'canceled')),
-    current_period_start    TIMESTAMPTZ,
-    current_period_end      TIMESTAMPTZ,
-    external_ref            TEXT,                         -- id de suscripción en Stripe
-    created_at              TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE TABLE payments (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    account_id      UUID NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-    amount_mxn      NUMERIC(10,2) NOT NULL,
-    status          TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'failed', 'refunded')),
-    external_ref    TEXT,
-    created_at      TIMESTAMPTZ DEFAULT now()
-);
-
--- ----------------------------------------------------------------------------
--- ÍNDICES DE RENDIMIENTO (Performance Tuning)
--- ----------------------------------------------------------------------------
-CREATE INDEX idx_events_account ON events(account_id);
-CREATE INDEX idx_events_status ON events(status);
-CREATE INDEX idx_guests_event ON guests(event_id);
-CREATE INDEX idx_guests_table ON guests(table_id);
-CREATE INDEX idx_guests_rsvp ON guests(rsvp_status);
-CREATE INDEX idx_tables_event ON event_tables(event_id);
-CREATE INDEX idx_collaborators_token ON event_collaborators(access_token);
-CREATE INDEX idx_collaborators_event ON event_collaborators(event_id);
-CREATE INDEX idx_entitlements_account ON entitlements(account_id);
-
--- ----------------------------------------------------------------------------
--- TRIGGER PARA ACTUALIZACIÓN AUTOMÁTICA DE updated_at
--- ----------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
+-- Actualización atómica de RSVP
+CREATE OR REPLACE FUNCTION public.submit_guest_rsvp(
+    p_guest_id UUID,
+    p_confirmed BOOLEAN,
+    p_confirmed_passes INTEGER,
+    p_diet TEXT,
+    p_notes TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+    v_guest public.guests%ROWTYPE;
+    v_valid_passes INTEGER;
 BEGIN
-    NEW.updated_at = now();
-    RETURN NEW;
+    SELECT * INTO v_guest FROM public.guests WHERE id = p_guest_id;
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object('success', false, 'error', 'Invitado no encontrado');
+    END IF;
+
+    IF p_confirmed THEN
+        v_valid_passes := LEAST(v_guest.passes, GREATEST(0, COALESCE(p_confirmed_passes, v_guest.passes)));
+    ELSE
+        v_valid_passes := 0;
+    END IF;
+
+    UPDATE public.guests
+    SET status = CASE WHEN p_confirmed THEN 'CONFIRMED' ELSE 'DECLINED' END,
+        confirmed_passes = v_valid_passes,
+        diet = COALESCE(p_diet, 'none'),
+        notes = COALESCE(p_notes, ''),
+        responded_at = now(),
+        updated_at = now()
+    WHERE id = p_guest_id
+    RETURNING * INTO v_guest;
+
+    RETURN jsonb_build_object('success', true, 'guest', to_jsonb(v_guest));
 END;
-$$ language 'plpgsql';
+$$;
 
-CREATE TRIGGER trg_accounts_updated_at BEFORE UPDATE ON accounts FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-CREATE TRIGGER trg_events_updated_at BEFORE UPDATE ON events FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-CREATE TRIGGER trg_invitation_configs_updated_at BEFORE UPDATE ON invitation_configs FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-CREATE TRIGGER trg_guests_updated_at BEFORE UPDATE ON guests FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+-- Check-in atómico en puerta (Hostess)
+CREATE OR REPLACE FUNCTION public.process_door_checkin(
+    p_event_id UUID,
+    p_query_or_folio TEXT,
+    p_admitted_passes INTEGER,
+    p_scanned_by TEXT DEFAULT 'Hostess Puerta'
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+    v_guest public.guests%ROWTYPE;
+    v_final_passes INTEGER;
+    v_clean_query TEXT;
+BEGIN
+    v_clean_query := TRIM(LOWER(p_query_or_folio));
+    IF v_clean_query = '' THEN
+        RETURN jsonb_build_object('success', false, 'error', 'Query o Folio requerido');
+    END IF;
 
--- ----------------------------------------------------------------------------
--- 12. ROW LEVEL SECURITY (RLS — AISLAMIENTO TOTAL MULTI-TENANT EN SUPABASE)
--- ----------------------------------------------------------------------------
-ALTER TABLE accounts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE entitlements ENABLE ROW LEVEL SECURITY;
-ALTER TABLE events ENABLE ROW LEVEL SECURITY;
-ALTER TABLE invitation_configs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_tables ENABLE ROW LEVEL SECURITY;
-ALTER TABLE guests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_collaborators ENABLE ROW LEVEL SECURITY;
-ALTER TABLE checkin_logs ENABLE ROW LEVEL SECURITY;
-ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+    -- Búsqueda por ID, folio exacto o folio sin guiones
+    SELECT * INTO v_guest 
+    FROM public.guests 
+    WHERE event_id = p_event_id 
+      AND (
+        id::text = v_clean_query OR 
+        LOWER(folio) = v_clean_query OR 
+        REPLACE(LOWER(folio), '-', '') = REPLACE(v_clean_query, '-', '')
+      )
+    LIMIT 1;
 
--- Políticas de Seguridad para Eventos
-CREATE POLICY "Dueño y miembros ven eventos de su propia cuenta"
-ON events FOR ALL
-USING (
-    account_id IN (
-        SELECT account_id FROM users WHERE users.id = auth.uid()
-    )
-);
+    -- Si no se encontró y la consulta tiene al menos 2 caracteres alfanuméricos, búsqueda difusa
+    IF NOT FOUND AND length(regexp_replace(v_clean_query, '[^a-z0-9]', '', 'g')) >= 2 THEN
+        SELECT * INTO v_guest
+        FROM public.guests
+        WHERE event_id = p_event_id
+          AND (
+            LOWER(name) LIKE '%' || v_clean_query || '%' OR
+            LOWER(contact_name) LIKE '%' || v_clean_query || '%'
+          )
+        LIMIT 1;
+    END IF;
 
--- Políticas para Configuraciones de Invitación
-CREATE POLICY "Dueño y miembros gestionan la configuración de invitaciones de su cuenta"
-ON invitation_configs FOR ALL
-USING (
-    event_id IN (
-        SELECT e.id FROM events e
-        JOIN users u ON u.account_id = e.account_id
-        WHERE u.id = auth.uid()
-    )
-);
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object('success', false, 'error', 'Invitado no encontrado en este evento');
+    END IF;
 
--- Políticas para Invitados y Mesas
-CREATE POLICY "Gestión de invitados por cuenta"
-ON guests FOR ALL
-USING (
-    event_id IN (
-        SELECT e.id FROM events e
-        JOIN users u ON u.account_id = e.account_id
-        WHERE u.id = auth.uid()
-    )
-);
+    v_final_passes := LEAST(v_guest.passes, GREATEST(1, COALESCE(p_admitted_passes, v_guest.confirmed_passes, v_guest.passes)));
 
-CREATE POLICY "Gestión de mesas por cuenta"
-ON event_tables FOR ALL
-USING (
-    event_id IN (
-        SELECT e.id FROM events e
-        JOIN users u ON u.account_id = e.account_id
-        WHERE u.id = auth.uid()
-    )
-);
+    UPDATE public.guests
+    SET status = 'CHECKED_IN',
+        admitted_passes = v_final_passes,
+        checked_in_at = now(),
+        updated_at = now()
+    WHERE id = v_guest.id
+    RETURNING * INTO v_guest;
 
--- ----------------------------------------------------------------------------
--- 13. DATOS INICIALES DE PLANES (CATÁLOGO OFICIAL DE PRICING)
--- ----------------------------------------------------------------------------
-INSERT INTO plans (key, name, price_type, price_mxn, billing_period, max_events, max_guests_per_event) VALUES
-('invitacion_simple',   'Invitación Simple',       'one_time',     449.00, NULL,      1,    NULL),
-('invitacion_gestion',  'Invitación + Gestión',    'one_time',    1199.00, NULL,      1,    300),
-('planner',             'Planner',                 'subscription', 899.00, 'monthly', 10,   NULL),
-('salon',               'Salón de Fiestas',        'subscription',1799.00, 'monthly', NULL, NULL)
-ON CONFLICT (key) DO UPDATE SET
-    name = EXCLUDED.name,
-    price_type = EXCLUDED.price_type,
-    price_mxn = EXCLUDED.price_mxn,
-    billing_period = EXCLUDED.billing_period,
-    max_events = EXCLUDED.max_events,
-    max_guests_per_event = EXCLUDED.max_guests_per_event;
+    INSERT INTO public.checkin_logs(event_id, guest_id, folio, admitted_passes, is_emergency, scanned_by)
+    VALUES (p_event_id, v_guest.id, v_guest.folio, v_final_passes, v_guest.is_emergency, p_scanned_by);
+
+    RETURN jsonb_build_object('success', true, 'guest', to_jsonb(v_guest));
+END;
+$$;

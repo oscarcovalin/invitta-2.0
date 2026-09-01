@@ -280,6 +280,10 @@ class GuestManager {
       reminderSentAt: null
     }, guestData);
 
+    if (!newGuest.folio) {
+      newGuest.folio = this.generateFolio(newGuest);
+    }
+
     this.state.guests.push(newGuest);
     this.saveState();
     return newGuest;

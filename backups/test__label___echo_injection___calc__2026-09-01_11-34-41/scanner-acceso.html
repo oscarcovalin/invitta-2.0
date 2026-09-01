@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-neutral-950">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Invitta Access · Escáner Hostess & Puerta (Offline)</title>
+  
+  <!-- Tipografías de Lujo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- jsQR Library for 100% Offline Camera Decoding -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      touch-action: manipulation;
+    }
+    .font-cinzel { font-family: 'Cinzel', serif; }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+
+    /* Laser Scanner Animation */
+    @keyframes scanLaser {
+      0% { top: 6%; opacity: 0.8; }
+      50% { top: 90%; opacity: 1; }
+      100% { top: 6%; opacity: 0.8; }
+    }
+    .scan-laser {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(212,175,55,0) 0%, #D4AF37 50%, rgba(212,175,55,0) 100%);
+      box-shadow: 0 0 15px 3px rgba(212,175,55,0.75);
+      animation: scanLaser 2.2s ease-in-out infinite;
+      border-radius: 9999px;
+    }
+
+    /* Glass Effect */
+    .glass-dark {
+      background: rgba(18, 22, 28, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(163, 128, 71, 0.28);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col justify-between text-neutral-100 selection:bg-amber-500/30 overflow-hidden">
+
+  <!-- CABECERA DE CONTROL -->
+  <header class="glass-dark px-4 py-3 border-b border-amber-500/20 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center gap-2.5">
+      <a href="index.html" class="w-8 h-8 rounded-lg bg-neutral-900 border border-amber-500/40 text-amber-300 flex items-center justify-center hover:bg-neutral-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </a>
+      <div>
+        <h1 class="font-cinzel text-sm sm:text-base font-bold text-amber-200 tracking-wider flex items-center gap-1.5">
+          <span>⚜️ INVITTA ACCESS</span>
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono-code">OFFLINE</span>
+        </h1>
+        <p class="text-[10px] text-neutral-400">Control de Recepción & Puerta</p>
+      </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="flex items-center gap-2">
+      <button id="btnTorch" class="p-2 rounded-lg bg-neutral-900/80 border border-white/10 text-neutral-300 hover:text-amber-300 transition-colors" title="Linterna">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </button>
+      <button id="btnSwitchCam" class="p-2 rounded-lg bg-neutral-900/80 border border-white/10 text-neutral-300 hover:text-amber-300 transition-colors" title="Cambiar Cámara">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+      <a href="generador-emergencia.html" class="px-2.5 py-1.5 rounded-lg bg-blue-600/30 border border-blue-400/50 text-blue-200 text-xs font-bold flex items-center gap-1 hover:bg-blue-600/50 transition-colors">
+        <span>⚡ Emergencia</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MÉTRICAS EN VIVO EN PUERTA -->
+  <div class="bg-neutral-900/90 border-b border-neutral-800 px-4 py-2 flex items-center justify-between text-xs z-20 shrink-0">
+    <div class="flex items-center gap-3 font-mono-code text-[11px]">
+      <span class="flex items-center gap-1.5 text-emerald-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <strong id="metricInSalon">0</strong> en Salón
+      </span>
+      <span class="text-neutral-600">|</span>
+      <span class="flex items-center gap-1.5 text-amber-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        <strong id="metricInTransit">0</strong> en Camino
+      </span>
+    </div>
+    <div id="metricOccupancyBadge" class="font-mono-code text-[10px] px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-300 border border-neutral-700">
+      Ocupación: 0%
+    </div>
+  </div>
+
+  <!-- VISOR DE CÁMARA & ESCÁNER -->
+  <main class="relative flex-1 bg-black flex flex-col items-center justify-center overflow-hidden">
+    
+    <!-- Video Stream Real -->
+    <video id="cameraVideo" playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+    <canvas id="scanCanvas" class="hidden"></canvas>
+
+    <!-- Overlay de Enfoque con Ribetes Dorados -->
+    <div class="relative z-10 w-64 h-64 sm:w-72 sm:h-72 rounded-3xl border-2 border-amber-400/50 shadow-2xl flex flex-col items-center justify-between p-3 pointer-events-none transition-all" id="scanFrame">
+      
+      <!-- Esquinas ornamentales -->
+      <div class="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-amber-300 rounded-tl-xl"></div>
+      <div class="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-amber-300 rounded-tr-xl"></div>
+      <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-amber-300 rounded-bl-xl"></div>
+      <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-amber-300 rounded-br-xl"></div>
+
+      <!-- Rayo Láser Animado -->
+      <div class="scan-laser"></div>
+
+      <span class="text-[10px] uppercase font-mono-code text-amber-200/90 tracking-widest bg-black/60 px-2 py-0.5 rounded-full border border-amber-500/30">
+        Enfoca el Pase QR
+      </span>
+
+      <span id="scanStatusIndicator" class="text-[10px] text-neutral-300 bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
+        Buscando código...
+      </span>
+    </div>
+
+    <!-- Fallback / Botón de simulación si no hay cámara activa -->
+    <div id="cameraPrompt" class="absolute inset-0 bg-neutral-950/90 z-20 flex flex-col items-center justify-center p-6 text-center hidden">
+      <div class="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-400/40 text-amber-300 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </div>
+      <h2 class="font-cinzel text-lg text-white font-bold mb-2">Activar Cámara de Puerta</h2>
+      <p class="text-xs text-neutral-400 max-w-xs mb-5">Permite el acceso a la cámara para escanear pases QR en tiempo real.</p>
+      <button id="btnStartCamera" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 active:scale-95 transition-transform">
+        Iniciar Escáner
+      </button>
+    </div>
+  </main>
+
+  <!-- BÚSQUEDA MANUAL RÁPIDA & LISTA DE ACCESOS -->
+  <section class="glass-dark p-3 border-t border-amber-500/20 z-30 shrink-0 max-h-56 overflow-y-auto">
+    
+    <!-- Barra de Búsqueda de Respaldo -->
+    <div class="relative mb-2">
+      <input id="inputManualSearch" type="text" placeholder="Buscar por Folio (ej. M03) o Apellido..." 
+             class="w-full bg-neutral-900/90 border border-neutral-700 focus:border-amber-400 rounded-xl px-3.5 py-2 pl-9 text-xs text-white placeholder-neutral-500 outline-none transition-colors">
+      <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <button id="btnClearSearch" class="hidden absolute right-2.5 top-2 text-neutral-400 hover:text-white text-xs">✕</button>
+    </div>
+
+    <!-- Resultados de Búsqueda Manual -->
+    <div id="searchResultsList" class="hidden space-y-1.5 mb-2"></div>
+
+    <!-- Historial de Accesos Recientes -->
+    <div class="flex items-center justify-between text-[11px] text-neutral-400 font-mono-code mb-1 px-1">
+      <span>ÚLTIMOS INGRESOS:</span>
+      <span id="logCountBadge">0 registrados</span>
+    </div>
+    <div id="checkinHistoryList" class="space-y-1.5 text-xs">
+      <p class="text-[11px] text-neutral-500 text-center py-2 italic">Aún no hay ingresos escaneados en esta sesión.</p>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL DE CHECK-IN Y VALIDACIÓN CON SELECTOR DE PASES PARCIALES -->
+  <!-- ========================================================================= -->
+  <div id="checkinModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+    <div class="w-full sm:max-w-md bg-neutral-900 border-t sm:border border-amber-500/40 rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl text-center transform transition-transform">
+      
+      <!-- Insignia de Estado -->
+      <div id="modalStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-code font-bold uppercase tracking-wider mb-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>PASE OFICIAL VALIDADO</span>
+      </div>
+
+      <!-- Nombre del Titular -->
+      <h2 id="modalGuestName" class="font-cinzel text-xl sm:text-2xl font-bold text-white mb-1">Familia Martínez Valdés</h2>
+      <p id="modalGuestFolio" class="font-mono-code text-xs text-amber-300 tracking-wider mb-4">FOLIO: M03-MARTINEZ-4P</p>
+
+      <!-- Tarjeta de Mesa Asignada -->
+      <div class="bg-neutral-950 border border-amber-500/30 rounded-2xl p-4 mb-5 flex items-center justify-around">
+        <div class="text-left">
+          <p class="text-[10px] text-neutral-400 uppercase font-mono-code">Mesa Asignada</p>
+          <p id="modalTableNumber" class="text-lg font-bold text-amber-200">Mesa 3</p>
+        </div>
+        <div class="w-px h-8 bg-neutral-800"></div>
+        <div class="text-right">
+          <p class="text-[10px] text-neutral-400 uppercase font-mono-code">Pases Autorizados</p>
+          <p id="modalTotalPasses" class="text-lg font-bold text-white">4 Personas</p>
+        </div>
+      </div>
+
+      <!-- SELECTOR TÁCTIL DE INGRESO PARCIAL -->
+      <div class="bg-neutral-800/60 rounded-2xl p-4 mb-6 border border-white/5">
+        <label class="block text-xs text-neutral-300 font-medium mb-3">
+          ¿Cuántas personas ingresan físicamente ahora?
+        </label>
+        
+        <div class="flex items-center justify-center gap-4">
+          <button id="btnModalPassMinus" class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-700 text-amber-300 text-xl font-bold active:scale-95 transition-transform flex items-center justify-center">
+            -
+          </button>
+          <div class="w-24 text-center">
+            <span id="modalAdmittedCount" class="text-3xl font-bold text-white font-mono-code">4</span>
+            <span id="modalAdmittedMaxHint" class="block text-[10px] text-neutral-400">de 4 pases</span>
+          </div>
+          <button id="btnModalPassPlus" class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-700 text-amber-300 text-xl font-bold active:scale-95 transition-transform flex items-center justify-center">
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="grid grid-cols-2 gap-3">
+        <button id="btnCancelCheckin" class="py-3.5 px-4 rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-300 text-xs font-semibold hover:bg-neutral-700 active:scale-95 transition-all">
+          Cancelar
+        </button>
+        <button id="btnConfirmCheckin" class="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+          <span>✓ REGISTRAR</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTROLADOR PRINCIPAL SCANNER JS -->
+  <script src="guest-manager.js"></script>
+  <script>
+    // Inicializar Motor
+    const guestManager = new GuestManager();
+    let currentScannedGuest = null;
+    let admittedPassesCount = 1;
+    let maxAuthorizedPasses = 1;
+    let isScanningActive = true;
+    let currentCameraFacing = 'environment';
+    let currentStream = null;
+
+    // Helper de sanitización XSS
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Elementos DOM
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('scanCanvas');
+    const ctx = canvas.getContext('2d');
+    const scanStatus = document.getElementById('scanStatusIndicator');
+    const cameraPrompt = document.getElementById('cameraPrompt');
+    const btnStartCamera = document.getElementById('btnStartCamera');
+    const btnTorch = document.getElementById('btnTorch');
+    const btnSwitchCam = document.getElementById('btnSwitchCam');
+    
+    const checkinModal = document.getElementById('checkinModal');
+    const modalGuestName = document.getElementById('modalGuestName');
+    const modalGuestFolio = document.getElementById('modalGuestFolio');
+    const modalTableNumber = document.getElementById('modalTableNumber');
+    const modalTotalPasses = document.getElementById('modalTotalPasses');
+    const modalAdmittedCount = document.getElementById('modalAdmittedCount');
+    const modalAdmittedMaxHint = document.getElementById('modalAdmittedMaxHint');
+    const btnModalPassMinus = document.getElementById('btnModalPassMinus');
+    const btnModalPassPlus = document.getElementById('btnModalPassPlus');
+    const btnConfirmCheckin = document.getElementById('btnConfirmCheckin');
+    const btnCancelCheckin = document.getElementById('btnCancelCheckin');
+
+    const inputManualSearch = document.getElementById('inputManualSearch');
+    const searchResultsList = document.getElementById('searchResultsList');
+    const btnClearSearch = document.getElementById('btnClearSearch');
+    const checkinHistoryList = document.getElementById('checkinHistoryList');
+
+    // 1. SINTETIZADOR WEB AUDIO API PARA FEEDBACK EN PUERTA
+    let audioCtx = null;
+    function playBeep(type = 'success') {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'success') {
+          // Tono dual agradable tipo escáner de alta gama (880Hz -> 1320Hz)
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.2);
+        } else {
+          // Tono de advertencia
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.3);
+        }
+      } catch (e) {}
+
+      // Vibración háptica en móvil
+      if (navigator.vibrate) {
+        if (type === 'success') navigator.vibrate([100, 50, 100]);
+        else navigator.vibrate([250]);
+      }
+    }
+
+    // 2. INICIAR CÁMARA
+    async function startCamera(facingMode = 'environment') {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+      }
+      try {
+        currentStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+        video.srcObject = currentStream;
+        video.setAttribute('playsinline', true);
+        await video.play();
+        cameraPrompt.classList.add('hidden');
+        requestAnimationFrame(tick);
+      } catch (err) {
+        console.warn('Cámara no accesible automáticamente:', err);
+        cameraPrompt.classList.remove('hidden');
+      }
+    }
+
+    // 3. CICLO DE ESCANEO DE FRAMES
+    function tick() {
+      if (video.readyState === video.HAVE_ENOUGH_DATA && isScanningActive) {
+        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (typeof jsQR !== 'undefined') {
+          const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert",
+          });
+
+          if (code && code.data) {
+            handleDecodedCode(code.data);
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // 4. PROCESAR CÓDIGO QR DETECTADO
+    function handleDecodedCode(rawData) {
+      if (!isScanningActive) return;
+      
+      let parsed = null;
+      try {
+        parsed = JSON.parse(rawData);
+      } catch (e) {
+        // Puede ser un Folio directo en texto plano (ej. M03-MARTINEZ-4P) o URL
+        if (rawData.includes('guest=') || rawData.includes('-')) {
+          parsed = { folio: rawData };
+        }
+      }
+
+      if (parsed) {
+        isScanningActive = false;
+        playBeep('success');
+        openCheckinModal(parsed);
+      }
+    }
+
+    // 5. ABRIR MODAL DE VALIDACIÓN Y CHECK-IN
+    function openCheckinModal(payload) {
+      let query = payload.folio || payload.titular || payload.guest || '';
+      if (query.includes('guest=')) {
+        const match = query.match(/guest=([^&]+)/);
+        if (match) query = decodeURIComponent(match[1]);
+      }
+
+      // Buscar en Base de Datos de Invitados
+      let foundGuest = guestManager.state.guests.find(g => {
+        if (payload.folio && guestManager.generateFolio(g).toLowerCase() === payload.folio.toLowerCase()) return true;
+        if (g.name && query && g.name.toLowerCase().includes(query.toLowerCase())) return true;
+        return false;
+      });
+
+      // Si no existe (ej. QR generado de forma externa u offline puro), crear registro al vuelo
+      if (!foundGuest) {
+        const guestName = payload.titular || payload.nombre || query || 'Invitado de Honor';
+        const passes = parseInt(payload.pases || 2, 10);
+        const res = guestManager.createEmergencyGuest({
+          name: guestName,
+          passes: passes,
+          tableId: payload.mesa ? `tbl_${payload.mesa.replace(/[^0-9]/g, '')}` : 'tbl_1',
+          autoCheckIn: false
+        });
+        foundGuest = res.guest;
+      }
+
+      currentScannedGuest = foundGuest;
+      maxAuthorizedPasses = foundGuest.passes || 1;
+      admittedPassesCount = foundGuest.confirmedPasses || maxAuthorizedPasses;
+
+      // Actualizar UI Modal
+      modalGuestName.textContent = foundGuest.name;
+      const folio = guestManager.generateFolio(foundGuest, maxAuthorizedPasses);
+      modalGuestFolio.textContent = 'FOLIO: ' + folio;
+
+      const tableObj = guestManager.state.tables.find(t => t.id === foundGuest.tableId);
+      modalTableNumber.textContent = tableObj ? tableObj.name : (foundGuest.tableId || 'Mesa 1');
+      modalTotalPasses.textContent = `${maxAuthorizedPasses} ${maxAuthorizedPasses === 1 ? 'Pase' : 'Pases'}`;
+
+      modalAdmittedCount.textContent = admittedPassesCount;
+      modalAdmittedMaxHint.textContent = `de ${maxAuthorizedPasses} pases autorizados`;
+
+      checkinModal.classList.remove('hidden');
+    }
+
+    // 6. CONTROLES DEL STEPPER DE PASES PARCIALES
+    btnModalPassMinus.addEventListener('click', () => {
+      if (admittedPassesCount > 1) {
+        admittedPassesCount--;
+        modalAdmittedCount.textContent = admittedPassesCount;
+      }
+    });
+
+    btnModalPassPlus.addEventListener('click', () => {
+      if (admittedPassesCount < maxAuthorizedPasses) {
+        admittedPassesCount++;
+        modalAdmittedCount.textContent = admittedPassesCount;
+      }
+    });
+
+    // 7. CONFIRMAR CHECK-IN
+    btnConfirmCheckin.addEventListener('click', () => {
+      if (!currentScannedGuest) return;
+
+      const result = guestManager.checkInGuest(currentScannedGuest.id, admittedPassesCount);
+      playBeep('success');
+      
+      checkinModal.classList.add('hidden');
+      updateMetricsUI();
+      renderCheckinHistory();
+
+      // Reanudar escáner tras breve pausa
+      setTimeout(() => {
+        isScanningActive = true;
+        currentScannedGuest = null;
+      }, 1200);
+    });
+
+    btnCancelCheckin.addEventListener('click', () => {
+      checkinModal.classList.add('hidden');
+      setTimeout(() => {
+        isScanningActive = true;
+        currentScannedGuest = null;
+      }, 500);
+    });
+
+    // 8. BÚSQUEDA MANUAL
+    inputManualSearch.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) {
+        searchResultsList.classList.add('hidden');
+        searchResultsList.innerHTML = '';
+        btnClearSearch.classList.add('hidden');
+        return;
+      }
+
+      btnClearSearch.classList.remove('hidden');
+      const matches = guestManager.state.guests.filter(g => {
+        const folio = guestManager.generateFolio(g).toLowerCase();
+        return g.name.toLowerCase().includes(q) || folio.includes(q);
+      });
+
+      if (matches.length === 0) {
+        searchResultsList.innerHTML = '<p class="text-xs text-neutral-500 py-1 px-2">Sin resultados</p>';
+      } else {
+        searchResultsList.innerHTML = matches.map(g => {
+          const isChecked = g.status === 'CHECKED_IN';
+          const folio = guestManager.generateFolio(g);
+          const safeName = escapeHTML(g.name);
+          const safeFolio = escapeHTML(folio);
+          const safeId = escapeHTML(g.id);
+          return `
+            <div class="bg-neutral-900 border border-neutral-700/60 rounded-xl p-2.5 flex items-center justify-between">
+              <div>
+                <p class="font-bold text-white text-xs">${safeName}</p>
+                <p class="text-[10px] text-neutral-400 font-mono-code">${safeFolio} · ${parseInt(g.passes, 10) || 1} pases</p>
+              </div>
+              <button onclick="selectManualGuest('${safeId}')" class="px-3 py-1 rounded-lg ${isChecked ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500 text-neutral-950 font-bold'} text-xs active:scale-95 transition-transform">
+                ${isChecked ? '✓ Ingresado' : 'Validar'}
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+      searchResultsList.classList.remove('hidden');
+    });
+
+    window.selectManualGuest = function(id) {
+      const g = guestManager.getGuest(id);
+      if (g) {
+        openCheckinModal({ guest: g.name, folio: guestManager.generateFolio(g) });
+      }
+    };
+
+    btnClearSearch.addEventListener('click', () => {
+      inputManualSearch.value = '';
+      searchResultsList.classList.add('hidden');
+      btnClearSearch.classList.add('hidden');
+    });
+
+    // 9. MÉTRICAS Y LISTA DE HISTORIAL
+    function updateMetricsUI() {
+      const metrics = guestManager.getAccessMetrics();
+      document.getElementById('metricInSalon').textContent = metrics.inSalon.passes;
+      document.getElementById('metricInTransit').textContent = metrics.inTransit.passes;
+      document.getElementById('metricOccupancyBadge').textContent = `Ocupación: ${metrics.occupancyRate}%`;
+    }
+
+    function renderCheckinHistory() {
+      const logs = guestManager.state.checkinLogs || [];
+      document.getElementById('logCountBadge').textContent = `${logs.length} registrados`;
+
+      if (logs.length === 0) {
+        checkinHistoryList.innerHTML = '<p class="text-[11px] text-neutral-500 text-center py-2 italic">Aún no hay ingresos escaneados en esta sesión.</p>';
+        return;
+      }
+
+      checkinHistoryList.innerHTML = logs.slice(0, 5).map(log => {
+        const timeStr = log.timestamp ? new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Reciente';
+        const safeName = escapeHTML(log.guestName || 'Invitado');
+        const safeFolio = escapeHTML(log.folio || '');
+        const safePasses = parseInt(log.admittedPasses, 10) || 1;
+        return `
+          <div class="bg-neutral-900/60 border border-emerald-500/20 rounded-xl p-2 flex items-center justify-between text-[11px]">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <div>
+                <p class="font-semibold text-white">${safeName} <span class="text-amber-300 font-mono-code">(${safePasses} pax)</span></p>
+                <p class="text-[10px] text-neutral-400 font-mono-code">${safeFolio}</p>
+              </div>
+            </div>
+            <span class="text-[10px] text-neutral-400 font-mono-code">${timeStr}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Eventos de Cámara
+    btnStartCamera.addEventListener('click', () => startCamera());
+    btnSwitchCam.addEventListener('click', () => {
+      currentCameraFacing = currentCameraFacing === 'environment' ? 'user' : 'environment';
+      startCamera(currentCameraFacing);
+    });
+
+    btnTorch.addEventListener('click', async () => {
+      if (currentStream) {
+        const track = currentStream.getVideoTracks()[0];
+        try {
+          const caps = track.getCapabilities();
+          if (caps.torch) {
+            const current = track.getSettings().torch || false;
+            await track.applyConstraints({ advanced: [{ torch: !current }] });
+            btnTorch.classList.toggle('text-amber-300', !current);
+          }
+        } catch (e) {}
+      }
+    });
+
+    // Iniciar al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+      startCamera();
+      updateMetricsUI();
+      renderCheckinHistory();
+    });
+  </script>
+</body>
+</html>
