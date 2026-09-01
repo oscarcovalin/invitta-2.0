@@ -227,38 +227,57 @@
     <!-- HEADER SUPERIOR -->
     <header class="h-16 bg-surface-container-lowest/95 backdrop-blur-md z-40 px-8 flex items-center justify-between border-b border-outline-variant flex-shrink-0">
       
-      <div class="flex items-center bg-surface-container px-3.5 py-2 rounded-xl border border-outline-variant w-80">
-        <span class="material-symbols-outlined text-on-surface-variant font-light text-[18px] mr-2.5">search</span>
-        <input id="searchTopInput" class="bg-transparent border-none focus:ring-0 text-xs text-on-surface placeholder-on-surface-variant w-full outline-none" placeholder="Buscar invitado, familia o mesa..." type="text">
+      <div class="flex items-center gap-4">
+        <!-- Buscador Inteligente Rápido -->
+        <div class="flex items-center bg-surface-container px-3.5 py-2 rounded-xl border border-outline-variant w-72 focus-within:border-amber-500 transition-colors">
+          <span class="material-symbols-outlined text-on-surface-variant font-light text-[18px] mr-2">search</span>
+          <input id="searchTopInput" class="bg-transparent border-none focus:ring-0 text-xs text-on-surface placeholder-on-surface-variant w-full outline-none" placeholder="Buscar invitado o mesa..." type="text">
+        </div>
+
+        <!-- SELECTOR DE VISTA: TARJETAS VS PLANO 2D -->
+        <div class="flex items-center bg-surface-container rounded-xl p-1 border border-outline-variant text-xs">
+          <button type="button" id="btnViewCards" class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-xs transition-all flex items-center gap-1.5" title="Vista estándar de tarjetas de mesa">
+            <span class="material-symbols-outlined text-[16px]">grid_view</span>
+            <span>Tarjetas</span>
+          </button>
+          <button type="button" id="btnViewFloorPlan" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-primary transition-all flex items-center gap-1.5 font-medium" title="Vista interactiva del plano espacial del salón">
+            <span class="material-symbols-outlined text-[16px]">map</span>
+            <span>Plano 2D</span>
+          </button>
+        </div>
       </div>
       
       <!-- Botones de Acción Superior -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2">
         
-        <a href="scanner-acceso.html" target="_blank" class="flex items-center gap-1.5 px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition-all shadow-sm text-xs font-bold tracking-wide">
-          <span class="material-symbols-outlined text-base">qr_code_scanner</span>
-          <span>Escáner Puerta ↗</span>
-        </a>
-
-        <a href="generador-emergencia.html" target="_blank" class="flex items-center gap-1.5 px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl transition-all shadow-sm text-xs font-bold tracking-wide">
-          <span class="material-symbols-outlined text-base">bolt</span>
-          <span>Pase Emergencia ↗</span>
-        </a>
-
-        <button type="button" id="btnTopAutoDistribute" class="flex items-center gap-1.5 px-3.5 py-2 bg-primary text-white rounded-xl hover:bg-charcoal transition-all shadow-sm text-xs font-semibold tracking-wider uppercase">
-          <span class="material-symbols-outlined text-amber-300 text-base">magic_button</span>
-          <span>Auto-Distribuir</span>
+        <!-- 📄 Imprimir Hoja para Meseros y Cocina -->
+        <button type="button" id="btnPrintWaiterSheet" class="flex items-center gap-1.5 px-3 py-2 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-amber-950 rounded-xl transition-all text-xs font-semibold" title="Imprimir hoja organizada para el Capitán de Meseros y Cocina">
+          <span class="material-symbols-outlined text-base text-amber-800">print</span>
+          <span>Hoja Meseros</span>
         </button>
 
-        <button type="button" id="btnTopOpenSettings" class="flex items-center gap-1.5 px-3 py-2 bg-surface-container border border-outline-variant hover:border-primary text-primary rounded-xl transition-all text-xs font-medium">
+        <!-- 🪄 Auto-Distribuir con 1 Clic -->
+        <button type="button" id="btnTopAutoDistribute" class="flex items-center gap-1.5 px-3.5 py-2 bg-primary text-white rounded-xl hover:bg-charcoal transition-all shadow-sm text-xs font-semibold tracking-wider uppercase" title="Acomodar automáticamente respetando núcleos familiares">
+          <span class="material-symbols-outlined text-amber-300 text-base">magic_button</span>
+          <span>Auto-Acomodar</span>
+        </button>
+
+        <!-- ⚙️ Configuración / Acomodo -->
+        <button type="button" id="btnTopOpenSettings" class="flex items-center gap-1.5 px-3 py-2 bg-surface-container border border-outline-variant hover:border-primary text-primary rounded-xl transition-all text-xs font-medium" title="Ajustes de Capacidad">
           <span class="material-symbols-outlined text-base">settings</span>
           <span>Acomodo</span>
         </button>
 
-        <button type="button" id="btnTopDispatch" class="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 border border-emerald-600/30 hover:bg-emerald-100 text-emerald-800 rounded-xl transition-all text-xs font-semibold">
+        <!-- 💬 Envíos WhatsApp -->
+        <button type="button" id="btnTopDispatch" class="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 border border-emerald-600/30 hover:bg-emerald-100 text-emerald-800 rounded-xl transition-all text-xs font-semibold" title="Despachar mensajes de WhatsApp">
           <span class="material-symbols-outlined text-base text-emerald-700">send</span>
           <span>Envíos</span>
         </button>
+
+        <a href="scanner-acceso.html" target="_blank" class="flex items-center gap-1.5 px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition-all shadow-sm text-xs font-bold tracking-wide" title="Abrir Escáner de Puerta">
+          <span class="material-symbols-outlined text-base">qr_code_scanner</span>
+          <span>Escáner ↗</span>
+        </a>
 
       </div>
     </header>
@@ -1028,6 +1047,41 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL 7: HOJA IMPRIMIBLE PARA MESEROS Y COCINA ==================== -->
+  <div id="modalWaiterSheet" class="fixed inset-0 modal-backdrop z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl w-full max-w-3xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden animate-fadeIn">
+      <div class="p-5 border-b border-outline-variant flex items-center justify-between bg-surface-container-lowest">
+        <div class="flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-amber-800 text-2xl">restaurant_menu</span>
+          <div>
+            <h3 class="font-['Cinzel'] text-primary text-base font-bold">Hoja Táctica para Meseros y Cocina</h3>
+            <p class="text-[11px] text-on-surface-variant font-mono">Resumen de comensales, folios de acceso y dietas especiales por mesa</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnTriggerPrintWaiterSheet" class="px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-charcoal transition-all flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-sm">print</span>
+            <span>Imprimir / PDF</span>
+          </button>
+          <button type="button" class="btn-close-waiter-modal p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="waiterSheetContent" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-white">
+        <!-- Renderizado dinámico de mesas -->
+      </div>
+
+      <div class="p-4 border-t border-outline-variant bg-surface-container flex items-center justify-between text-xs text-on-surface-variant">
+        <span id="waiterSheetStats">Cargando datos...</span>
+        <button type="button" class="btn-close-waiter-modal px-4 py-2 rounded-xl bg-surface border border-outline-variant text-primary font-medium hover:bg-surface-variant">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS DE MOTOR: SEATING PLANNER & GUEST MANAGER -->
   <script src="seating-module/seating-planner.js"></script>
   <script src="guest-manager.js"></script>
@@ -1133,6 +1187,7 @@
     const modalSettings = document.getElementById('modalSettings');
     const modalDispatch = document.getElementById('modalDispatch');
     const modalGuestForm = document.getElementById('modalGuestForm');
+    const modalWaiterSheet = document.getElementById('modalWaiterSheet');
 
     // Apertura de Modales
     document.getElementById('btnOpenTimeline').addEventListener('click', () => modalTimeline.classList.remove('hidden'));
@@ -1148,10 +1203,169 @@
     });
 
     document.getElementById('btnTopAutoDistribute').addEventListener('click', () => {
-      planner.autoDistributeGuests({ capacity: currentSelectedCapacity });
-      updateFooterStats();
-      alert('✨ ¡Salón distribuido automáticamente respetando familias y corte!');
+      if (confirm('✨ ¿Deseas acomodar automáticamente a los comensales respetando sus núcleos familiares y corte de honor?')) {
+        const res = gm.autoDistributeGuests();
+        planner.state.guests = gm.state.guests;
+        planner.state.tables = gm.state.tables;
+        planner.updateStateAndDOM();
+        updateFooterStats();
+        alert(`✨ ¡Salón distribuido con éxito!\n• Total asignados: ${res.assignedPasses} pases\n• Mesas ocupadas: ${res.totalTables}`);
+      }
     });
+
+    // 📄 HOJA TÁCTICA PARA MESEROS Y COCINA
+    function renderWaiterSheet() {
+      const sheet = gm.getWaiterSheetData();
+      const container = document.getElementById('waiterSheetContent');
+      const stats = document.getElementById('waiterSheetStats');
+      if (!container) return;
+
+      stats.textContent = `Total: ${sheet.tables.length} mesas · ${sheet.totalPax} comensales en lista`;
+
+      container.innerHTML = sheet.tables.map(tbl => {
+        const dietBadges = tbl.specialDiets.map(d => `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">🌱 ${d}</span>`).join(' ');
+        const guestRows = tbl.guests.map(g => `
+          <tr class="border-b border-neutral-100 text-xs hover:bg-neutral-50">
+            <td class="py-2 px-3 font-medium text-neutral-900">${g.name}</td>
+            <td class="py-2 px-3 text-center font-mono font-bold">${g.passes}</td>
+            <td class="py-2 px-3 font-mono text-neutral-500 text-[11px]">${g.folio}</td>
+            <td class="py-2 px-3 text-neutral-700">${g.diet && g.diet !== 'none' ? `<span class="text-emerald-800 font-bold">🌱 ${g.diet}</span>` : '<span class="text-neutral-400">Estándar</span>'}</td>
+          </tr>
+        `).join('');
+
+        return `
+          <div class="p-4 rounded-xl border border-neutral-200 bg-white shadow-xs">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-neutral-200">
+              <div class="flex items-center gap-2">
+                <span class="font-['Cinzel'] font-bold text-sm text-neutral-900">${tbl.name}</span>
+                <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-neutral-100 border border-neutral-200 text-neutral-700 font-bold">${tbl.type}</span>
+                ${dietBadges}
+              </div>
+              <div class="font-mono text-xs font-bold text-neutral-700">
+                ${tbl.totalPax} / ${tbl.capacity} pax ${tbl.availableSeats > 0 ? `<span class="text-emerald-700 font-normal">(${tbl.availableSeats} libres)</span>` : '<span class="text-amber-700 font-normal">(Llena)</span>'}
+              </div>
+            </div>
+            <table class="w-full text-left">
+              <thead>
+                <tr class="text-[10px] font-mono text-neutral-500 uppercase border-b border-neutral-200">
+                  <th class="py-1 px-3">Invitado / Familia</th>
+                  <th class="py-1 px-3 text-center">Pases</th>
+                  <th class="py-1 px-3">Folio Pase</th>
+                  <th class="py-1 px-3">Menú / Dieta</th>
+                </tr>
+              </thead>
+              <tbody>${guestRows || '<tr><td colspan="4" class="py-3 text-center text-neutral-400 text-xs italic">Mesa sin comensales asignados</td></tr>'}</tbody>
+            </table>
+          </div>
+        `;
+      }).join('');
+    }
+
+    const btnPrintWaiterSheet = document.getElementById('btnPrintWaiterSheet');
+    if (btnPrintWaiterSheet && modalWaiterSheet) {
+      btnPrintWaiterSheet.addEventListener('click', () => {
+        renderWaiterSheet();
+        modalWaiterSheet.classList.remove('hidden');
+      });
+    }
+
+    document.querySelectorAll('.btn-close-waiter-modal').forEach(btn => {
+      btn.addEventListener('click', () => modalWaiterSheet?.classList.add('hidden'));
+    });
+
+    document.getElementById('btnTriggerPrintWaiterSheet')?.addEventListener('click', () => {
+      window.print();
+    });
+
+    // 🗺️ SELECTOR DE VISTAS (TARJETAS VS PLANO 2D)
+    const btnViewCards = document.getElementById('btnViewCards');
+    const btnViewFloorPlan = document.getElementById('btnViewFloorPlan');
+
+    if (btnViewCards && btnViewFloorPlan) {
+      btnViewCards.addEventListener('click', () => {
+        btnViewCards.classList.add('bg-surface-container-lowest', 'text-primary', 'font-bold', 'shadow-xs');
+        btnViewCards.classList.remove('text-on-surface-variant');
+        btnViewFloorPlan.classList.remove('bg-surface-container-lowest', 'text-primary', 'font-bold', 'shadow-xs');
+        btnViewFloorPlan.classList.add('text-on-surface-variant');
+        planner.render();
+      });
+
+      btnViewFloorPlan.addEventListener('click', () => {
+        btnViewFloorPlan.classList.add('bg-surface-container-lowest', 'text-primary', 'font-bold', 'shadow-xs');
+        btnViewFloorPlan.classList.remove('text-on-surface-variant');
+        btnViewCards.classList.remove('bg-surface-container-lowest', 'text-primary', 'font-bold', 'shadow-xs');
+        btnViewCards.classList.add('text-on-surface-variant');
+        
+        // Efecto de plano espacial 2D
+        const canvas = document.getElementById('floorPlanCanvas');
+        if (canvas) {
+          const totalTables = planner.state.tables.length;
+          canvas.innerHTML = `
+            <div class="max-w-4xl mx-auto space-y-6">
+              <div class="text-center p-4 bg-white/80 backdrop-blur rounded-2xl border border-amber-400/50 shadow-sm">
+                <span class="text-[10px] uppercase font-mono tracking-widest text-amber-800 font-bold block mb-1">👑 Cabecera Principal de Honor</span>
+                <h3 class="font-['Cinzel'] text-primary text-base font-bold">Mesa Imperial (Novios & Corte)</h3>
+                <p class="text-xs text-on-surface-variant font-mono mt-1">Capacidad: 16 lugares al frente de la pista</p>
+              </div>
+
+              <div class="p-8 border-2 border-dashed border-amber-400/40 rounded-3xl bg-amber-500/5 text-center flex flex-col items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-4xl text-amber-700/60">nightlife</span>
+                <span class="font-['Cinzel'] text-sm uppercase tracking-widest text-amber-900 font-bold">✨ Pista de Baile Central ✨</span>
+                <span class="text-[10px] font-mono text-amber-800">Zona de Vals y Celebración</span>
+              </div>
+
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                ${planner.state.tables.filter(t => t.type !== 'imperial').map((t, idx) => {
+                  const assigned = planner.state.guests.filter(g => g.tableId === t.id).reduce((s, g) => s + (g.passes || g.pases || 1), 0);
+                  const isFull = assigned >= t.capacity;
+                  return `
+                    <div class="p-4 rounded-2xl bg-white border ${isFull ? 'border-emerald-500 shadow-emerald-500/10' : 'border-outline-variant'} shadow-sm flex flex-col items-center text-center gap-2">
+                      <div class="w-12 h-12 rounded-full ${isFull ? 'bg-emerald-100 text-emerald-800' : 'bg-surface-container text-primary'} flex items-center justify-center font-['Cinzel'] font-bold text-sm">
+                        ${idx + 2}
+                      </div>
+                      <div>
+                        <strong class="text-xs text-primary block">${t.name}</strong>
+                        <span class="text-[11px] font-mono ${isFull ? 'text-emerald-700 font-bold' : 'text-on-surface-variant'}">${assigned} / ${t.capacity} lugares</span>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `;
+        }
+      });
+    }
+
+    // 🔍 BUSCADOR REACTIVO CON RESALTE DORADO
+    if (searchTopInput) {
+      searchTopInput.addEventListener('input', (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        if (searchGuestsInput) searchGuestsInput.value = e.target.value;
+        planner.searchQuery = e.target.value;
+        planner.renderUnassignedList();
+
+        document.querySelectorAll('.table-card').forEach(card => {
+          if (!q) {
+            card.style.outline = 'none';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+            return;
+          }
+          const text = card.textContent.toLowerCase();
+          if (text.includes(q)) {
+            card.style.outline = '3px solid #d97706';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1.02)';
+            card.style.transition = 'all 0.2s ease';
+          } else {
+            card.style.outline = 'none';
+            card.style.opacity = '0.35';
+            card.style.transform = 'scale(0.98)';
+          }
+        });
+      });
+    }
 
     document.getElementById('btnOpenDispatchCenter').addEventListener('click', () => {
       renderModalDispatch();

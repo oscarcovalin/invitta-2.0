@@ -312,56 +312,160 @@ class GuestManager {
   // PASO 3: AUTO-DISTRIBUCIÓN DE MESAS
   // ==========================================
   autoDistributeGuests() {
-    const capacity = this.state.config.capacityPerTable || 8;
+    const capacity = this.state.config?.capacityPerTable || 8;
     
     // Limpiar mesas
     this.state.guests.forEach(g => g.tableId = null);
 
     // 1. Asignar VIPs y Corte a Mesa 1 (Imperial)
-    const imperialTable = this.state.tables[0];
-    const courtVips = this.state.guests.filter(g => g.court || g.vip);
+    const imperialTable = this.state.tables.find(t => t.type === 'imperial' || t.id === 'tbl_imperial' || t.id === 'tbl_1') || this.state.tables[0];
+    const courtVips = this.state.guests.filter(g => g.court || g.vip || g.isCourt || g.isVip);
     
     if (imperialTable) {
       let currentCount = 0;
       courtVips.forEach(g => {
-        if (currentCount + g.passes <= imperialTable.capacity) {
+        const p = g.passes || 1;
+        if (currentCount + p <= imperialTable.capacity) {
           g.tableId = imperialTable.id;
-          currentCount += g.passes;
+          currentCount += p;
         }
       });
     }
 
-    // 2. Asignar Familias y Grupos
+    // 2. Agrupar por familias / afinidad (mismo apellido o familyKey)
     const unassigned = this.state.guests.filter(g => !g.tableId);
     
+    const families = {};
     unassigned.forEach(g => {
-      // Buscar mesa con cupo
+      let key = g.familyKey;
+      if (!key) {
+        const cleanTokens = (g.name || '')
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-zA-Z0-9\s]/g, '')
+          .trim()
+          .split(/\s+/)
+          .filter(w => !['FAMILIA', 'FAM', 'SR', 'SRA', 'DR', 'DRA', 'ING', 'LIC', 'DON', 'DONA', 'DE', 'DEL', 'LA', 'LAS', 'LOS', 'Y'].includes(w.toUpperCase()));
+        key = cleanTokens.length > 0 ? cleanTokens[cleanTokens.length - 1].toLowerCase() : g.id;
+      }
+      if (!families[key]) families[key] = [];
+      families[key].push(g);
+    });
+
+    Object.values(families).forEach(famGuests => {
+      const famPasses = famGuests.reduce((sum, g) => sum + (g.passes || 1), 0);
+      
       let table = this.state.tables.find(tbl => {
+        if (tbl.id === imperialTable?.id && tbl.type === 'imperial') return false;
         const assignedInTable = this.state.guests
           .filter(x => x.tableId === tbl.id)
-          .reduce((sum, x) => sum + x.passes, 0);
-        return (assignedInTable + g.passes) <= tbl.capacity;
+          .reduce((sum, x) => sum + (x.passes || 1), 0);
+        return (assignedInTable + famPasses) <= tbl.capacity;
       });
 
       if (!table) {
-        // Si no hay mesa suficiente, crear nueva
-        const newNum = this.state.tables.length + 1;
-        table = {
-          id: `tbl_${newNum}`,
-          number: String(newNum),
-          name: `Mesa ${newNum}`,
-          subtitle: 'Banquete',
-          type: 'circular',
-          capacity: capacity
-        };
-        this.state.tables.push(table);
-      }
+        famGuests.forEach(g => {
+          let indTable = this.state.tables.find(tbl => {
+            const assignedInTable = this.state.guests
+              .filter(x => x.tableId === tbl.id)
+              .reduce((sum, x) => sum + (x.passes || 1), 0);
+            return (assignedInTable + (g.passes || 1)) <= tbl.capacity;
+          });
 
-      g.tableId = table.id;
+          if (!indTable) {
+            const newNum = this.state.tables.length + 1;
+            indTable = {
+              id: `tbl_${newNum}`,
+              number: String(newNum),
+              name: `Mesa ${newNum.toString().padStart(2, '0')}`,
+              subtitle: 'Banquete',
+              type: 'circular',
+              capacity: capacity
+            };
+            this.state.tables.push(indTable);
+          }
+          g.tableId = indTable.id;
+        });
+      } else {
+        famGuests.forEach(g => g.tableId = table.id);
+      }
     });
 
     this.saveState();
-    return this.getDistributionSummary();
+    const summary = this.getDistributionSummary();
+    summary.success = true;
+    summary.unassignedCount = this.state.guests.filter(g => !g.tableId).length;
+    return summary;
+  }
+
+  getWaiterSheetData() {
+    const tableData = this.state.tables.map(tbl => {
+      const guests = this.state.guests.filter(g => g.tableId === tbl.id);
+      const totalPax = guests.reduce((sum, g) => sum + (g.passes || 1), 0);
+      const confirmedPax = guests.filter(g => g.status === 'CONFIRMED' || g.status === 'CHECKED_IN').reduce((sum, g) => sum + (g.confirmedPasses || g.passes || 1), 0);
+      
+      const specialDiets = [];
+      guests.forEach(g => {
+        if (g.diet && g.diet !== 'none') {
+          specialDiets.push(g.diet);
+        }
+      });
+
+      return {
+        id: tbl.id,
+        name: tbl.name,
+        type: tbl.type,
+        capacity: tbl.capacity,
+        totalPax,
+        confirmedPax,
+        availableSeats: Math.max(0, tbl.capacity - totalPax),
+        guests: guests.map(g => ({
+          name: g.name,
+          passes: g.passes,
+          confirmedPasses: g.confirmedPasses,
+          status: g.status,
+          diet: g.diet,
+          folio: g.folio || this.generateFolio(g)
+        })),
+        specialDiets
+      };
+    });
+
+    return {
+      eventName: this.options?.eventDetails?.title || 'Invitación de Gala',
+      eventDate: this.options?.eventDetails?.date || '',
+      totalGuests: this.state.guests.length,
+      totalPax: this.state.guests.reduce((sum, g) => sum + (g.passes || 1), 0),
+      tables: tableData
+    };
+  }
+
+  searchGuestsAndTables(query) {
+    if (!query) return [];
+    const q = String(query).trim().toLowerCase();
+    if (!q) return [];
+
+    const results = [];
+    this.state.guests.forEach(g => {
+      const gName = (g.name || '').toLowerCase();
+      const cName = (g.contactName || '').toLowerCase();
+      const folio = (g.folio || '').toLowerCase();
+      const table = this.state.tables.find(t => t.id === g.tableId);
+      const tName = (table?.name || '').toLowerCase();
+
+      if (gName.includes(q) || cName.includes(q) || folio.includes(q) || tName.includes(q)) {
+        results.push({
+          guestId: g.id,
+          name: g.name,
+          passes: g.passes,
+          status: g.status,
+          tableId: g.tableId,
+          tableName: table?.name || 'Sin Asignar',
+          folio: g.folio || this.generateFolio(g)
+        });
+      }
+    });
+
+    return results;
   }
 
   getDistributionSummary() {

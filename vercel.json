@@ -51,14 +51,30 @@
     },
     {
       "source": "/mesas",
+      "destination": "/organizador-mesas"
+    },
+    {
+      "source": "/organizador",
+      "destination": "/organizador-mesas"
+    },
+    {
+      "source": "/organizador-mesas",
       "destination": "/organizador-mesas.html"
     },
     {
       "source": "/scanner",
+      "destination": "/scanner-acceso"
+    },
+    {
+      "source": "/scanner-acceso",
       "destination": "/scanner-acceso.html"
     },
     {
       "source": "/express",
+      "destination": "/generador-emergencia"
+    },
+    {
+      "source": "/generador-emergencia",
       "destination": "/generador-emergencia.html"
     },
     {
