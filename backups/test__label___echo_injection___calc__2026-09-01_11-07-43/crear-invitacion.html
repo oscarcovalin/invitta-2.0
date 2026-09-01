@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creador de Invitación Digital — Invitta 2.0 Beta</title>
+
+  <!-- Tailwind CSS & Tipografías Oficiales -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'invitta-green': '#163C2B',
+            'invitta-gold': '#A38047',
+            'invitta-champagne': '#C7B299',
+            'invitta-burgundy': '#4A1521',
+            'surface': '#FAF8F5',
+            'surface-card': '#FFFFFF',
+            'charcoal': '#1A1A1A'
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'serif'],
+            cormorant: ['Cormorant Garamond', 'serif'],
+            playfair: ['Playfair Display', 'serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F4F1EA;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #C7B299;
+      border-radius: 4px;
+    }
+    .gold-glow {
+      box-shadow: 0 0 20px rgba(163, 128, 71, 0.25);
+    }
+    .tab-btn.active {
+      background: #163C2B;
+      color: #FFFFFF;
+      border-color: #163C2B;
+    }
+  </style>
+</head>
+<body class="bg-surface text-charcoal font-inter h-screen flex flex-col overflow-hidden select-none">
+
+  <!-- ==================== HEADER SUPERIOR ==================== -->
+  <header class="h-16 bg-surface-card border-b border-[#E8E5E0] px-6 flex items-center justify-between shrink-0 z-20 shadow-sm">
+    <div class="flex items-center gap-4">
+      <a href="portal.html" class="p-2 rounded-lg hover:bg-neutral-100 text-neutral-600 transition-colors" title="Volver al Portal">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-invitta-green border border-invitta-gold text-invitta-champagne flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-lg">auto_fix_high</span>
+        </div>
+        <div>
+          <h1 class="font-cinzel text-base font-bold text-invitta-green flex items-center gap-2">
+            <span>Creador de Invitación Digital</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-900 font-mono font-bold">Invitta 2.0</span>
+          </h1>
+          <p class="text-[11px] text-neutral-500">Diseña, personaliza y guarda la invitación para envíos desde el organizador</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de Acción Superior -->
+    <div class="flex items-center gap-3">
+      <button type="button" id="btnSaveConfig" class="px-4 py-2 rounded-xl bg-invitta-green text-white text-xs font-semibold flex items-center gap-2 hover:bg-emerald-950 transition-all shadow-md">
+        <span class="material-symbols-outlined text-base text-amber-300">save</span>
+        <span>Guardar Invitación</span>
+      </button>
+
+      <a href="scroll-rsvp-module/index.html" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300/80 text-amber-900 text-xs font-semibold flex items-center gap-1.5 hover:bg-amber-100 transition-colors" title="Ver Invitación Pergamino Completa">
+        <span class="material-symbols-outlined text-base text-amber-700">visibility</span>
+        <span>Ver Invitación Real ↗</span>
+      </a>
+
+      <a href="index.html" class="px-3.5 py-2 rounded-xl bg-neutral-900 text-white text-xs font-semibold flex items-center gap-1.5 hover:bg-black transition-colors" title="Ir al Panel de Mesas y Envíos">
+        <span class="material-symbols-outlined text-base">table_restaurant</span>
+        <span>Organizador & Envíos ➔</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== CUERPO PRINCIPAL (2 COLUMNAS: EDITOR + PREVIEW) ==================== -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- COLUMNA IZQUIERDA: FORMULARIO CONFIGURADOR (Scrollable) -->
+    <div class="w-[520px] bg-surface-card border-r border-[#E8E5E0] flex flex-col h-full shrink-0">
+      
+      <!-- Pestañas de Secciones -->
+      <div class="flex items-center border-b border-[#E8E5E0] bg-[#FAF8F5] p-2 gap-1 overflow-x-auto custom-scrollbar">
+        <button type="button" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 border border-transparent whitespace-nowrap transition-all" data-tab="tabNovios">
+          💑 Pareja & Boda
+        </button>
+        <button type="button" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 border border-transparent whitespace-nowrap transition-all" data-tab="tabLugares">
+          📍 Lugares & Horas
+        </button>
+        <button type="button" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 border border-transparent whitespace-nowrap transition-all" data-tab="tabCorte">
+          👑 Padres & Corte
+        </button>
+        <button type="button" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 border border-transparent whitespace-nowrap transition-all" data-tab="tabRegalos">
+          🎁 Regalos & RSVP
+        </button>
+      </div>
+
+      <!-- Contenedor Scrollable de Formularios -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar" id="tabContentContainer">
+        
+        <!-- ==================== PESTAÑA 1: PAREJA & BODA ==================== -->
+        <div id="tabNovios" class="tab-pane space-y-4">
+          <div>
+            <h2 class="font-cinzel text-base font-bold text-invitta-green mb-1">Datos Principales de los Novios</h2>
+            <p class="text-xs text-neutral-500">Estos nombres encabezarán la invitación pergamino y los mensajes de WhatsApp.</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Nombre Novia / Pareja 1</label>
+              <input type="text" id="inputBrideName" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm focus:border-invitta-gold focus:ring-1 focus:ring-invitta-gold outline-none" value="Catalina">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Nombre Novio / Pareja 2</label>
+              <input type="text" id="inputGroomName" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm focus:border-invitta-gold focus:ring-1 focus:ring-invitta-gold outline-none" value="Julián">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Monograma / Iniciales</label>
+              <input type="text" id="inputMonogram" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm font-cinzel font-bold focus:border-invitta-gold outline-none" value="C & J">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Fecha de la Boda</label>
+              <input type="text" id="inputEventDate" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm focus:border-invitta-gold outline-none" value="20 de Marzo, 2027">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Frase o Mensaje de Bienvenida</label>
+            <textarea id="inputWelcomeQuote" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs font-cormorant italic text-neutral-800 text-sm focus:border-invitta-gold outline-none">"Nuestra historia comenzó con una mirada y hoy decidimos caminar juntos para siempre. Nos llena de alegría compartir este gran día contigo."</textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Música de Fondo (Título o Enlace)</label>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-neutral-400 text-lg">music_note</span>
+              <input type="text" id="inputMusicTitle" class="w-full px-3.5 py-2 rounded-xl border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="Canon in D Major · Johann Pachelbel">
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PESTAÑA 2: LUGARES & HORAS ==================== -->
+        <div id="tabLugares" class="tab-pane hidden space-y-4">
+          <div>
+            <h2 class="font-cinzel text-base font-bold text-invitta-green mb-1">Sedes, Horarios & Código de Vestimenta</h2>
+            <p class="text-xs text-neutral-500">Configura dónde y a qué hora se celebrará cada momento.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3">
+            <h3 class="font-semibold text-xs text-invitta-green uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">church</span>
+              <span>1. Ceremonia Religiosa / Civil</span>
+            </h3>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="col-span-2">
+                <label class="block text-[11px] text-neutral-600 mb-1 font-medium">Lugar / Parroquia</label>
+                <input type="text" id="inputCeremonyPlace" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="Parroquia de Santa María de Guadalupe">
+              </div>
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1 font-medium">Hora</label>
+                <input type="text" id="inputCeremonyTime" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="18:00 hrs">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-neutral-600 mb-1 font-medium">Dirección Completa</label>
+              <input type="text" id="inputCeremonyAddress" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="Av. San Jerónimo 450, Jardines del Pedregal, CDMX">
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3">
+            <h3 class="font-semibold text-xs text-invitta-green uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">celebration</span>
+              <span>2. Recepción & Banquete</span>
+            </h3>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="col-span-2">
+                <label class="block text-[11px] text-neutral-600 mb-1 font-medium">Salón / Jardín</label>
+                <input type="text" id="inputReceptionPlace" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="Jardín Las Magnolias">
+              </div>
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1 font-medium">Hora</label>
+                <input type="text" id="inputReceptionTime" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="19:30 hrs">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-neutral-600 mb-1 font-medium">Dirección del Salón</label>
+              <input type="text" id="inputReceptionAddress" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs focus:border-invitta-gold outline-none" value="Camino Real a las Flores 120, Cuernavaca, Mor.">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Código de Vestimenta</label>
+              <select id="inputDressCode" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs focus:border-invitta-gold outline-none bg-white">
+                <option value="Rigurosa Etiqueta / Black Tie">Rigurosa Etiqueta / Black Tie</option>
+                <option value="Formal Elegante" selected>Formal Elegante</option>
+                <option value="Cocktail">Cocktail</option>
+                <option value="Guayabera Formal">Guayabera Formal</option>
+                <option value="Playa Chic">Playa Chic</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Protocolo de Niños</label>
+              <select id="inputKidsPolicy" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs focus:border-invitta-gold outline-none bg-white">
+                <option value="Evento Exclusivo para Adultos" selected>Evento Exclusivo para Adultos</option>
+                <option value="Niños Bienvenidos (Menú Infantil)">Niños Bienvenidos (Menú Infantil)</option>
+                <option value="Solo Niños de Corte de Honor">Solo Niños de Corte de Honor</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PESTAÑA 3: PADRES & CORTE ==================== -->
+        <div id="tabCorte" class="tab-pane hidden space-y-4">
+          <div>
+            <h2 class="font-cinzel text-base font-bold text-invitta-green mb-1">Padres de los Novios & Corte de Honor</h2>
+            <p class="text-xs text-neutral-500">Mención de honor en la invitación y asignación de prioridad en mesas y catering.</p>
+          </div>
+
+          <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3">
+            <h3 class="font-semibold text-xs text-invitta-gold uppercase tracking-wider">Padres de la Novia</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Papá de la Novia</label>
+                <input type="text" id="inputBrideFather" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="Dr. Carlos Valenzuela">
+              </div>
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Mamá de la Novia</label>
+                <input type="text" id="inputBrideMother" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="Sra. Sofía de Valenzuela">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3">
+            <h3 class="font-semibold text-xs text-invitta-gold uppercase tracking-wider">Padres del Novio</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Papá del Novio</label>
+                <input type="text" id="inputGroomFather" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="Sr. Fernando Silva">
+              </div>
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Mamá del Novio</label>
+                <input type="text" id="inputGroomMother" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="Sra. Carmen de Silva">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Padrinos de Velación</label>
+            <input type="text" id="inputGodparents" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs outline-none" value="Sr. Fernando Silva & Sra. Carmen de Silva">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Damas de Honor / Best Men</label>
+            <input type="text" id="inputCourtMembers" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-xs outline-none" value="Camila Ortiz, Renata Vega, Diego Fuentes">
+          </div>
+        </div>
+
+        <!-- ==================== PESTAÑA 4: REGALOS & RSVP ==================== -->
+        <div id="tabRegalos" class="tab-pane hidden space-y-4">
+          <div>
+            <h2 class="font-cinzel text-base font-bold text-invitta-green mb-1">Mesa de Regalos & Confirmación RSVP</h2>
+            <p class="text-xs text-neutral-500">Facilita las opciones de obsequio y la fecha límite para confirmar.</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">Fecha Límite de Confirmación (RSVP Deadline)</label>
+            <input type="text" id="inputRsvpDeadline" class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 text-sm focus:border-invitta-gold outline-none" value="15 de Febrero, 2027">
+          </div>
+
+          <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3">
+            <h3 class="font-semibold text-xs text-neutral-700 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">card_giftcard</span>
+              <span>Tiendas Departamentales</span>
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Liverpool (No. Evento)</label>
+                <input type="text" id="inputLiverpool" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="51248902">
+              </div>
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Amazon Wedding (Código / Link)</label>
+                <input type="text" id="inputAmazon" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="amazon.com.mx/baby-reg/catalina-julian">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-neutral-50 border border-neutral-200 space-y-3">
+            <h3 class="font-semibold text-xs text-neutral-700 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-base">account_balance</span>
+              <span>Lluvia de Sobres / Transferencia Bancaria</span>
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">Banco</label>
+                <input type="text" id="inputBankName" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="BBVA México">
+              </div>
+              <div>
+                <label class="block text-[11px] text-neutral-600 mb-1">CLABE Interbancaria</label>
+                <input type="text" id="inputClabe" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs font-mono outline-none" value="012 180 0154897623 41">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-neutral-600 mb-1">Titular de la Cuenta</label>
+              <input type="text" id="inputAccountHolder" class="w-full px-3 py-2 rounded-lg border border-neutral-300 text-xs outline-none" value="Catalina Valenzuela / Julián Silva">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer del Editor con Notificación de Estado -->
+      <div class="p-4 border-t border-[#E8E5E0] bg-[#FAF8F5] flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs text-neutral-500" id="saveStatusIndicator">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Configuración sincronizada con el Ecosistema</span>
+        </div>
+        <button type="button" id="btnQuickSaveBottom" class="px-4 py-1.5 rounded-lg bg-invitta-gold text-white text-xs font-semibold hover:bg-amber-700 transition-colors">
+          Guardar Cambios
+        </button>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: LIVE PREVIEW INTERACTIVO EN TIEMPO REAL -->
+    <div class="flex-1 bg-[#1A1A1E] relative overflow-y-auto p-8 flex flex-col items-center custom-scrollbar">
+      
+      <!-- Barra Superior de la Vista Previa -->
+      <div class="w-full max-w-lg mb-4 flex items-center justify-between text-neutral-400 text-xs">
+        <span class="flex items-center gap-1.5 font-mono text-[11px]">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>VISTA PREVIA EN VIVO (PERGAMINO DIGITAL)</span>
+        </span>
+        <span class="text-neutral-500">Actualización reactiva al escribir</span>
+      </div>
+
+      <!-- CONTENEDOR TIPO PERGAMINO LUXURY -->
+      <div class="w-full max-w-lg bg-white rounded-2xl border-2 border-invitta-gold p-8 shadow-2xl relative overflow-hidden transition-all duration-300" id="previewScrollCard">
+        
+        <!-- Adorno Superior -->
+        <div class="flex items-center justify-center gap-3 mb-6 text-invitta-gold">
+          <div class="w-12 h-px bg-invitta-gold opacity-60"></div>
+          <span class="material-symbols-outlined text-sm">diamond</span>
+          <div class="w-12 h-px bg-invitta-gold opacity-60"></div>
+        </div>
+
+        <!-- Monograma -->
+        <div class="w-14 h-14 rounded-2xl bg-invitta-green border border-invitta-gold text-invitta-champagne flex items-center justify-center mx-auto mb-4 shadow-md">
+          <span class="font-cinzel text-xl font-bold" id="previewMonogram">C & J</span>
+        </div>
+
+        <!-- Encabezado & Nombres de Pareja -->
+        <div class="text-center mb-6">
+          <p class="font-cormorant italic text-invitta-gold text-base mb-1">Nuestra Boda</p>
+          <h2 class="font-cinzel text-3xl font-bold text-invitta-green tracking-wider uppercase mb-2" id="previewCoupleNames">
+            Catalina & Julián
+          </h2>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-900 font-mono text-xs font-semibold" id="previewEventDate">
+            20 de Marzo, 2027
+          </div>
+        </div>
+
+        <!-- Mensaje / Frase -->
+        <div class="text-center mb-6 px-4">
+          <p class="font-cormorant italic text-neutral-700 text-base leading-relaxed" id="previewQuote">
+            "Nuestra historia comenzó con una mirada y hoy decidimos caminar juntos para siempre. Nos llena de alegría compartir este gran día contigo."
+          </p>
+        </div>
+
+        <!-- Separador Dorado -->
+        <div class="w-24 h-px bg-invitta-gold/40 mx-auto mb-6"></div>
+
+        <!-- Sección de Sedes -->
+        <div class="space-y-4 mb-6">
+          
+          <!-- Ceremonia -->
+          <div class="p-4 rounded-xl bg-[#FAF8F5] border border-[#E8E5E0] text-center">
+            <span class="material-symbols-outlined text-invitta-green text-xl mb-1">church</span>
+            <h4 class="font-cinzel text-xs font-bold text-invitta-green uppercase tracking-wider mb-1">Ceremonia</h4>
+            <p class="font-medium text-xs text-neutral-800" id="previewCeremonyPlace">Parroquia de Santa María de Guadalupe</p>
+            <p class="text-[11px] text-neutral-500 font-mono mt-0.5" id="previewCeremonyTime">18:00 hrs</p>
+            <p class="text-[11px] text-neutral-400 mt-1" id="previewCeremonyAddress">Av. San Jerónimo 450, Jardines del Pedregal, CDMX</p>
+          </div>
+
+          <!-- Recepción -->
+          <div class="p-4 rounded-xl bg-[#FAF8F5] border border-[#E8E5E0] text-center">
+            <span class="material-symbols-outlined text-invitta-green text-xl mb-1">celebration</span>
+            <h4 class="font-cinzel text-xs font-bold text-invitta-green uppercase tracking-wider mb-1">Recepción & Banquete</h4>
+            <p class="font-medium text-xs text-neutral-800" id="previewReceptionPlace">Jardín Las Magnolias</p>
+            <p class="text-[11px] text-neutral-500 font-mono mt-0.5" id="previewReceptionTime">19:30 hrs</p>
+            <p class="text-[11px] text-neutral-400 mt-1" id="previewReceptionAddress">Camino Real a las Flores 120, Cuernavaca, Mor.</p>
+          </div>
+
+        </div>
+
+        <!-- Código de Vestimenta & Padres -->
+        <div class="grid grid-cols-2 gap-3 mb-6 text-center text-xs">
+          <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200">
+            <span class="block text-[10px] text-neutral-400 uppercase tracking-widest font-semibold mb-0.5">Código de Vestimenta</span>
+            <span class="font-semibold text-neutral-800 text-[11px]" id="previewDressCode">Formal Elegante</span>
+          </div>
+          <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200">
+            <span class="block text-[10px] text-neutral-400 uppercase tracking-widest font-semibold mb-0.5">Confirmar Antes De</span>
+            <span class="font-semibold text-neutral-800 text-[11px]" id="previewRsvpDeadline">15 de Febrero, 2027</span>
+          </div>
+        </div>
+
+        <!-- Muestra del Formulario RSVP Personalizado -->
+        <div class="p-4 rounded-xl bg-emerald-950 text-white text-center space-y-2">
+          <div class="flex items-center justify-center gap-1.5 text-amber-300 font-mono text-[10px] uppercase tracking-wider font-semibold">
+            <span class="material-symbols-outlined text-sm">how_to_reg</span>
+            <span>Módulo RSVP Interactivo Activo</span>
+          </div>
+          <p class="text-xs text-neutral-200">
+            Al enviar esta invitación personalizada desde el organizador, cada invitado verá su nombre y número de pases asignados listos para confirmar con un clic.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ==================== SCRIPT REACTIVO DE GESTIÓN & PERSISTENCIA ==================== -->
+  <script>
+    const STORAGE_KEY = 'invitta_event_invitation_config';
+
+    // Valores por defecto
+    const defaultConfig = {
+      brideName: 'Catalina',
+      groomName: 'Julián',
+      monogram: 'C & J',
+      eventDate: '20 de Marzo, 2027',
+      welcomeQuote: 'Nuestra historia comenzó con una mirada y hoy decidimos caminar juntos para siempre. Nos llena de alegría compartir este gran día contigo.',
+      musicTitle: 'Canon in D Major · Johann Pachelbel',
+      ceremonyPlace: 'Parroquia de Santa María de Guadalupe',
+      ceremonyTime: '18:00 hrs',
+      ceremonyAddress: 'Av. San Jerónimo 450, Jardines del Pedregal, CDMX',
+      receptionPlace: 'Jardín Las Magnolias',
+      receptionTime: '19:30 hrs',
+      receptionAddress: 'Camino Real a las Flores 120, Cuernavaca, Mor.',
+      dressCode: 'Formal Elegante',
+      kidsPolicy: 'Evento Exclusivo para Adultos',
+      brideFather: 'Dr. Carlos Valenzuela',
+      brideMother: 'Sra. Sofía de Valenzuela',
+      groomFather: 'Sr. Fernando Silva',
+      groomMother: 'Sra. Carmen de Silva',
+      godparents: 'Sr. Fernando Silva & Sra. Carmen de Silva',
+      courtMembers: 'Camila Ortiz, Renata Vega, Diego Fuentes',
+      rsvpDeadline: '15 de Febrero, 2027',
+      liverpool: '51248902',
+      amazon: 'amazon.com.mx/baby-reg/catalina-julian',
+      bankName: 'BBVA México',
+      clabe: '012 180 0154897623 41',
+      accountHolder: 'Catalina Valenzuela / Julián Silva'
+    };
+
+    function loadConfig() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return Object.assign({}, defaultConfig, JSON.parse(raw));
+      } catch (err) {
+        console.warn('Error loading config, using default', err);
+      }
+      return Object.assign({}, defaultConfig);
+    }
+
+    function saveConfig(showToast = true) {
+      const config = {
+        brideName: document.getElementById('inputBrideName').value.trim(),
+        groomName: document.getElementById('inputGroomName').value.trim(),
+        monogram: document.getElementById('inputMonogram').value.trim(),
+        eventDate: document.getElementById('inputEventDate').value.trim(),
+        welcomeQuote: document.getElementById('inputWelcomeQuote').value.trim(),
+        musicTitle: document.getElementById('inputMusicTitle').value.trim(),
+        ceremonyPlace: document.getElementById('inputCeremonyPlace').value.trim(),
+        ceremonyTime: document.getElementById('inputCeremonyTime').value.trim(),
+        ceremonyAddress: document.getElementById('inputCeremonyAddress').value.trim(),
+        receptionPlace: document.getElementById('inputReceptionPlace').value.trim(),
+        receptionTime: document.getElementById('inputReceptionTime').value.trim(),
+        receptionAddress: document.getElementById('inputReceptionAddress').value.trim(),
+        dressCode: document.getElementById('inputDressCode').value,
+        kidsPolicy: document.getElementById('inputKidsPolicy').value,
+        brideFather: document.getElementById('inputBrideFather').value.trim(),
+        brideMother: document.getElementById('inputBrideMother').value.trim(),
+        groomFather: document.getElementById('inputGroomFather').value.trim(),
+        groomMother: document.getElementById('inputGroomMother').value.trim(),
+        godparents: document.getElementById('inputGodparents').value.trim(),
+        courtMembers: document.getElementById('inputCourtMembers').value.trim(),
+        rsvpDeadline: document.getElementById('inputRsvpDeadline').value.trim(),
+        liverpool: document.getElementById('inputLiverpool').value.trim(),
+        amazon: document.getElementById('inputAmazon').value.trim(),
+        bankName: document.getElementById('inputBankName').value.trim(),
+        clabe: document.getElementById('inputClabe').value.trim(),
+        accountHolder: document.getElementById('inputAccountHolder').value.trim()
+      };
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+        
+        // Disparar evento para que otros módulos se enteren
+        window.dispatchEvent(new CustomEvent('invitation:updated', { detail: config }));
+
+        if (showToast) {
+          const indicator = document.getElementById('saveStatusIndicator');
+          indicator.innerHTML = `
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-emerald-700 font-semibold">¡Invitación Guardada con Éxito en el Ecosistema!</span>
+          `;
+          setTimeout(() => {
+            indicator.innerHTML = `
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Configuración sincronizada con el Ecosistema</span>
+            `;
+          }, 3000);
+        }
+      } catch (err) {
+        console.error('Error saving config', err);
+      }
+    }
+
+    function populateForm(config) {
+      document.getElementById('inputBrideName').value = config.brideName || '';
+      document.getElementById('inputGroomName').value = config.groomName || '';
+      document.getElementById('inputMonogram').value = config.monogram || '';
+      document.getElementById('inputEventDate').value = config.eventDate || '';
+      document.getElementById('inputWelcomeQuote').value = config.welcomeQuote || '';
+      document.getElementById('inputMusicTitle').value = config.musicTitle || '';
+      document.getElementById('inputCeremonyPlace').value = config.ceremonyPlace || '';
+      document.getElementById('inputCeremonyTime').value = config.ceremonyTime || '';
+      document.getElementById('inputCeremonyAddress').value = config.ceremonyAddress || '';
+      document.getElementById('inputReceptionPlace').value = config.receptionPlace || '';
+      document.getElementById('inputReceptionTime').value = config.receptionTime || '';
+      document.getElementById('inputReceptionAddress').value = config.receptionAddress || '';
+      document.getElementById('inputDressCode').value = config.dressCode || 'Formal Elegante';
+      document.getElementById('inputKidsPolicy').value = config.kidsPolicy || 'Evento Exclusivo para Adultos';
+      document.getElementById('inputBrideFather').value = config.brideFather || '';
+      document.getElementById('inputBrideMother').value = config.brideMother || '';
+      document.getElementById('inputGroomFather').value = config.groomFather || '';
+      document.getElementById('inputGroomMother').value = config.groomMother || '';
+      document.getElementById('inputGodparents').value = config.godparents || '';
+      document.getElementById('inputCourtMembers').value = config.courtMembers || '';
+      document.getElementById('inputRsvpDeadline').value = config.rsvpDeadline || '';
+      document.getElementById('inputLiverpool').value = config.liverpool || '';
+      document.getElementById('inputAmazon').value = config.amazon || '';
+      document.getElementById('inputBankName').value = config.bankName || '';
+      document.getElementById('inputClabe').value = config.clabe || '';
+      document.getElementById('inputAccountHolder').value = config.accountHolder || '';
+
+      updateLivePreview();
+    }
+
+    function updateLivePreview() {
+      const bride = document.getElementById('inputBrideName').value.trim() || 'Novia';
+      const groom = document.getElementById('inputGroomName').value.trim() || 'Novio';
+      const mono = document.getElementById('inputMonogram').value.trim() || `${bride[0]} & ${groom[0]}`;
+      const date = document.getElementById('inputEventDate').value.trim() || 'Fecha del Evento';
+      const quote = document.getElementById('inputWelcomeQuote').value.trim();
+      const ceremonyPlace = document.getElementById('inputCeremonyPlace').value.trim();
+      const ceremonyTime = document.getElementById('inputCeremonyTime').value.trim();
+      const ceremonyAddr = document.getElementById('inputCeremonyAddress').value.trim();
+      const receptionPlace = document.getElementById('inputReceptionPlace').value.trim();
+      const receptionTime = document.getElementById('inputReceptionTime').value.trim();
+      const receptionAddr = document.getElementById('inputReceptionAddress').value.trim();
+      const dress = document.getElementById('inputDressCode').value;
+      const deadline = document.getElementById('inputRsvpDeadline').value.trim();
+
+      document.getElementById('previewCoupleNames').textContent = `${bride} & ${groom}`;
+      document.getElementById('previewMonogram').textContent = mono;
+      document.getElementById('previewEventDate').textContent = date;
+      document.getElementById('previewQuote').textContent = `"${quote}"`;
+      document.getElementById('previewCeremonyPlace').textContent = ceremonyPlace;
+      document.getElementById('previewCeremonyTime').textContent = ceremonyTime;
+      document.getElementById('previewCeremonyAddress').textContent = ceremonyAddr;
+      document.getElementById('previewReceptionPlace').textContent = receptionPlace;
+      document.getElementById('previewReceptionTime').textContent = receptionTime;
+      document.getElementById('previewReceptionAddress').textContent = receptionAddr;
+      document.getElementById('previewDressCode').textContent = dress;
+      document.getElementById('previewRsvpDeadline').textContent = deadline;
+    }
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentConfig = loadConfig();
+      populateForm(currentConfig);
+
+      // Pestañas
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const targetTab = btn.dataset.tab;
+          document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+          document.getElementById(targetTab)?.classList.remove('hidden');
+        });
+      });
+
+      // Escuchar cambios reactivos en inputs
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('input', () => {
+          updateLivePreview();
+          saveConfig(false); // auto guardado silencioso
+        });
+      });
+
+      // Botón Guardar explícito
+      document.getElementById('btnSaveConfig').addEventListener('click', () => saveConfig(true));
+      document.getElementById('btnQuickSaveBottom').addEventListener('click', () => saveConfig(true));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-neutral-950">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Generador de Emergencia · Invitta 2.0 Beta</title>
+  
+  <!-- Tipografías de Lujo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- QRCode.js para generación offline -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-cinzel { font-family: 'Cinzel', serif; }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+
+    .glass-card {
+      background: rgba(18, 22, 28, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(163, 128, 71, 0.35);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col justify-between text-neutral-100 p-4 sm:p-6 selection:bg-amber-500/30">
+
+  <!-- CABECERA -->
+  <header class="max-w-lg mx-auto w-full flex items-center justify-between py-3 mb-4">
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="w-9 h-9 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-300 flex items-center justify-center hover:text-amber-300 hover:border-amber-500/50 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </a>
+      <div>
+        <h1 class="font-cinzel text-base sm:text-lg font-bold text-amber-200 tracking-wide flex items-center gap-2">
+          <span>⚡ PASE EXPRESS</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 font-mono-code font-bold">MÓVIL</span>
+        </h1>
+        <p class="text-[11px] text-neutral-400">Generador de Emergencia en Puerta</p>
+      </div>
+    </div>
+
+    <a href="scanner-acceso.html" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-500/30 transition-colors">
+      <span>📷 Escáner</span>
+    </a>
+  </header>
+
+  <!-- FORMULARIO TÁCTIL EXPRESS (20 SEGUNDOS) -->
+  <main class="max-w-lg mx-auto w-full flex-1 mb-8">
+    <div class="glass-card rounded-3xl p-5 sm:p-7 mb-6">
+      
+      <form id="emergencyForm" class="space-y-4" onsubmit="event.preventDefault(); emitEmergencyPass();">
+        
+        <!-- Campo: Nombre del Invitado / Titular -->
+        <div>
+          <label class="block text-xs font-medium text-amber-200/90 mb-1.5">
+            👤 Nombre Completo o Familia <span class="text-amber-400">*</span>
+          </label>
+          <input id="inputEmergName" type="text" required placeholder="Ej. Dr. Carlos Valenzuela o Familia Ortiz"
+                 class="w-full bg-neutral-900 border border-neutral-700 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors">
+        </div>
+
+        <!-- Campo: WhatsApp / Teléfono -->
+        <div>
+          <label class="block text-xs font-medium text-neutral-300 mb-1.5">
+            📱 WhatsApp / Celular <span class="text-neutral-500 text-[10px]">(Opcional para envío directo)</span>
+          </label>
+          <input id="inputEmergPhone" type="tel" placeholder="Ej. 8112345678"
+                 class="w-full bg-neutral-900 border border-neutral-700 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors">
+        </div>
+
+        <!-- Campo: Selector de Pases (Stepper) -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-neutral-300 mb-1.5">
+              🎟️ Pases Asignados
+            </label>
+            <div class="flex items-center justify-between bg-neutral-900 border border-neutral-700 rounded-xl p-1.5">
+              <button type="button" id="btnPassMinus" class="w-9 h-9 rounded-lg bg-neutral-800 text-amber-300 text-lg font-bold flex items-center justify-center active:scale-95 transition-transform">-</button>
+              <span id="labelPassCount" class="font-mono-code text-base font-bold text-white">2</span>
+              <button type="button" id="btnPassPlus" class="w-9 h-9 rounded-lg bg-neutral-800 text-amber-300 text-lg font-bold flex items-center justify-center active:scale-95 transition-transform">+</button>
+            </div>
+          </div>
+
+          <!-- Campo: Selector de Mesa -->
+          <div>
+            <label class="block text-xs font-medium text-neutral-300 mb-1.5">
+              🪑 Mesa Asignada
+            </label>
+            <select id="selectEmergTable" class="w-full bg-neutral-900 border border-neutral-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-xs text-white outline-none transition-colors">
+              <option value="tbl_1">Mesa Imperial (Presidencial)</option>
+              <option value="tbl_2">Mesa 2 (Familiares)</option>
+              <option value="tbl_3">Mesa 3 (Amigos)</option>
+              <option value="tbl_4">Mesa 4 (Banquete)</option>
+              <option value="tbl_5">Mesa 5 (Banquete)</option>
+              <option value="tbl_6">Mesa 6 (Banquete)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Checkbox: Auto Check-In Inmediato -->
+        <div class="bg-neutral-900/90 border border-emerald-500/30 rounded-2xl p-3.5 flex items-center gap-3">
+          <input type="checkbox" id="checkAutoCheckin" checked 
+                 class="w-5 h-5 rounded text-emerald-500 bg-neutral-950 border-neutral-700 focus:ring-emerald-400 focus:ring-offset-neutral-950 accent-emerald-500 cursor-pointer">
+          <label for="checkAutoCheckin" class="text-xs text-neutral-200 cursor-pointer select-none">
+            <strong class="text-emerald-400 block">🟢 Marcar como Ingresado de Inmediato</strong>
+            <span class="text-[11px] text-neutral-400">Registra el pase con check-in completado ya que la persona está en la puerta.</span>
+          </label>
+        </div>
+
+        <!-- Botón de Emisión -->
+        <button type="submit" id="btnSubmitEmerg" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-neutral-950 font-bold text-xs sm:text-sm uppercase tracking-widest shadow-xl shadow-amber-500/25 active:scale-98 transition-all flex items-center justify-center gap-2">
+          <span>⚡ EMITIR PASE DE EMERGENCIA</span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TARJETA DE RESULTADO INMEDIATO (SE REVELA AL GENERAR) -->
+    <!-- ========================================================================= -->
+    <div id="resultCard" class="glass-card rounded-3xl p-6 border-amber-400/60 hidden text-center animate-fade-in">
+      
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-code font-bold uppercase tracking-wider mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+        <span>✓ PASE EMITIDO E INTEGRADO AL SALÓN</span>
+      </div>
+
+      <h2 id="resultGuestName" class="font-cinzel text-2xl font-bold text-white mb-1">Nombre Invitado</h2>
+      <p id="resultFolio" class="font-mono-code text-sm font-bold text-amber-300 tracking-wider mb-4">FOLIO: M03-APELLIDO-2P</p>
+
+      <!-- Contenedor QR -->
+      <div class="bg-white p-3 rounded-2xl w-44 h-44 mx-auto mb-4 flex items-center justify-center shadow-xl border-2 border-amber-400/50">
+        <div id="resultQrContainer"></div>
+      </div>
+
+      <p class="text-[11px] text-neutral-400 mb-5">
+        Mesa Asignada: <strong id="resultTableName" class="text-amber-200">Mesa 3</strong> · Pases: <strong id="resultPasses" class="text-white">2</strong>
+      </p>
+
+      <!-- Botones de Acción Directa -->
+      <div class="space-y-2.5">
+        <a id="btnShareWhatsApp" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-colors">
+          <span>📲 Enviar por WhatsApp al Invitado</span>
+        </a>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnCopyInviteLink" class="py-2.5 px-3 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-200 text-xs font-medium hover:border-amber-400 transition-colors flex items-center justify-center gap-1.5">
+            <span>📋 Copiar Enlace</span>
+          </button>
+          <a href="index.html" class="py-2.5 px-3 rounded-xl bg-neutral-900 border border-neutral-700 text-amber-300 text-xs font-medium hover:border-amber-400 transition-colors flex items-center justify-center gap-1.5">
+            <span>🪑 Ver en Salón</span>
+          </a>
+        </div>
+
+        <button id="btnCreateAnother" class="w-full py-2.5 text-xs text-neutral-400 hover:text-white transition-colors">
+          + Emitir otro pase de emergencia
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="max-w-lg mx-auto w-full text-center text-xs text-neutral-500 py-3 border-t border-neutral-900">
+    <span>Invitta 2.0 Beta · Módulo Logístico de Puerta</span>
+  </footer>
+
+  <!-- SCRIPT MOTOR -->
+  <script src="guest-manager.js"></script>
+  <script>
+    const guestManager = new GuestManager();
+    let currentPassCount = 2;
+    let generatedGuestUrl = '';
+
+    // Poblar Selector de Mesas dinámicamente desde el salón
+    const selectTables = document.getElementById('selectEmergTable');
+    if (guestManager.state.tables && guestManager.state.tables.length > 0) {
+      selectTables.innerHTML = guestManager.state.tables.map(t => {
+        return `<option value="${t.id}">${t.name} (${t.type === 'imperial' ? 'Presidencial' : 'Circular ' + t.capacity + ' pax'})</option>`;
+      }).join('');
+    }
+
+    // Stepper de Pases
+    const labelPassCount = document.getElementById('labelPassCount');
+    document.getElementById('btnPassMinus').addEventListener('click', () => {
+      if (currentPassCount > 1) {
+        currentPassCount--;
+        labelPassCount.textContent = currentPassCount;
+      }
+    });
+
+    document.getElementById('btnPassPlus').addEventListener('click', () => {
+      if (currentPassCount < 20) {
+        currentPassCount++;
+        labelPassCount.textContent = currentPassCount;
+      }
+    });
+
+    // Emisión de Pase de Emergencia
+    function emitEmergencyPass() {
+      const name = document.getElementById('inputEmergName').value.trim();
+      const phone = document.getElementById('inputEmergPhone').value.trim();
+      const tableId = selectTables.value;
+      const autoCheckin = document.getElementById('checkAutoCheckin').checked;
+
+      if (!name) return;
+
+      const result = guestManager.createEmergencyGuest({
+        name: name,
+        phone: phone,
+        passes: currentPassCount,
+        tableId: tableId,
+        autoCheckIn: autoCheckin
+      });
+
+      if (result.success) {
+        const guest = result.guest;
+        const folio = result.folio;
+
+        // Construir URL Personalizada
+        generatedGuestUrl = guestManager.getPersonalizedUrl(guest);
+
+        // Mostrar Tarjeta de Resultado
+        document.getElementById('resultGuestName').textContent = guest.name;
+        document.getElementById('resultFolio').textContent = 'FOLIO: ' + folio;
+        
+        const tableObj = guestManager.state.tables.find(t => t.id === guest.tableId);
+        document.getElementById('resultTableName').textContent = tableObj ? tableObj.name : guest.tableId;
+        document.getElementById('resultPasses').textContent = guest.passes;
+
+        // Generar Código QR Autónomo
+        const qrContainer = document.getElementById('resultQrContainer');
+        qrContainer.innerHTML = '';
+        const qrPayload = JSON.stringify({
+          folio: folio,
+          titular: guest.name,
+          pases: guest.passes,
+          mesa: tableObj ? tableObj.name : guest.tableId,
+          evento: guestManager.options.eventDetails.coupleName,
+          fecha: guestManager.options.eventDetails.eventDate
+        });
+
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(qrContainer, {
+            text: qrPayload,
+            width: 150,
+            height: 150,
+            colorDark: "#111827",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        }
+
+        // WhatsApp Enlace
+        const waBtn = document.getElementById('btnShareWhatsApp');
+        const couple = guestManager.options.eventDetails.coupleName;
+        const msg = `✨ *Pase Especial de Boda — ${couple}* ✨\n\n` +
+          `Hola *${guest.name}*:\n` +
+          `Te compartimos tu pase digital de acceso oficial para la recepción.\n\n` +
+          `🎟️ *Pases Asignados:* ${guest.passes}\n` +
+          `🪑 *Mesa Asignada:* ${tableObj ? tableObj.name : 'Asignada'}\n` +
+          `🔖 *Folio Logístico:* ${folio}\n\n` +
+          `📲 Puedes ver los mapas, itinerario y tu código QR de acceso aquí:\n${generatedGuestUrl}\n\n` +
+          `¡Bienvenidos a nuestra celebración!`;
+        
+        const encodedMsg = encodeURIComponent(msg);
+        const cleanPhone = phone.replace(/[^0-9]/g, '');
+        waBtn.href = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodedMsg}` : `https://api.whatsapp.com/send?text=${encodedMsg}`;
+
+        document.getElementById('emergencyForm').parentElement.classList.add('hidden');
+        document.getElementById('resultCard').classList.remove('hidden');
+      }
+    }
+
+    // Copiar Enlace
+    document.getElementById('btnCopyInviteLink').addEventListener('click', async () => {
+      if (generatedGuestUrl) {
+        try {
+          await navigator.clipboard.writeText(generatedGuestUrl);
+          const btn = document.getElementById('btnCopyInviteLink');
+          btn.innerHTML = '<span>✓ ¡Copiado!</span>';
+          setTimeout(() => {
+            btn.innerHTML = '<span>📋 Copiar Enlace</span>';
+          }, 2000);
+        } catch (e) {}
+      }
+    });
+
+    // Emitir otro pase
+    document.getElementById('btnCreateAnother').addEventListener('click', () => {
+      document.getElementById('emergencyForm').reset();
+      currentPassCount = 2;
+      labelPassCount.textContent = 2;
+      document.getElementById('checkAutoCheckin').checked = true;
+      document.getElementById('emergencyForm').parentElement.classList.remove('hidden');
+      document.getElementById('resultCard').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

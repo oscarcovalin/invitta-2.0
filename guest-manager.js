@@ -473,9 +473,19 @@ class GuestManager {
   }
 
   recordRsvpResponse(id, { confirmed, confirmedPasses, diet, notes }) {
+    const currentGuest = this.getGuest(id);
+    const maxPasses = currentGuest?.passes || 1;
+    let validPasses = 0;
+    if (confirmed) {
+      if (confirmedPasses !== undefined && confirmedPasses !== null && !isNaN(parseInt(confirmedPasses, 10))) {
+        validPasses = Math.min(maxPasses, Math.max(0, parseInt(confirmedPasses, 10)));
+      } else {
+        validPasses = maxPasses;
+      }
+    }
     const g = this.updateGuest(id, {
       status: confirmed ? 'CONFIRMED' : 'DECLINED',
-      confirmedPasses: confirmed ? Math.min(this.getGuest(id)?.passes || 1, confirmedPasses) : 0,
+      confirmedPasses: validPasses,
       diet: diet || 'none',
       notes: notes || '',
       respondedAt: new Date().toISOString()
@@ -494,7 +504,7 @@ class GuestManager {
     const sent = this.state.guests.filter(g => g.status === 'SENT' || g.status === 'CONFIRMED' || g.status === 'DECLINED').length;
     const confirmedList = this.state.guests.filter(g => g.status === 'CONFIRMED');
     const confirmedCount = confirmedList.length;
-    const confirmedPasses = confirmedList.reduce((s, g) => s + (g.confirmedPasses || g.passes), 0);
+    const confirmedPasses = confirmedList.reduce((s, g) => s + (g.confirmedPasses !== undefined ? g.confirmedPasses : g.passes), 0);
     
     const declinedList = this.state.guests.filter(g => g.status === 'DECLINED');
     const declinedCount = declinedList.length;
@@ -549,23 +559,27 @@ class GuestManager {
   checkInGuest(queryOrFolio, admittedPasses) {
     if (!queryOrFolio) return { success: false, error: 'Query o Folio requerido' };
     const q = String(queryOrFolio).trim().toLowerCase();
+    if (!q) return { success: false, error: 'Query o Folio requerido' };
     
-    // Find by ID, exact Folio match, or name matching
+    // Find by ID, exact stored Folio, or generated Folio match
     let guest = this.state.guests.find(g => {
       if (g.id && g.id.toLowerCase() === q) return true;
+      if (g.folio && (g.folio.toLowerCase() === q || g.folio.toLowerCase().replace(/-/g, '') === q.replace(/-/g, ''))) return true;
       const f = this.generateFolio(g).toLowerCase();
       if (f === q || f.replace(/-/g, '') === q.replace(/-/g, '')) return true;
       return false;
     });
 
     if (!guest) {
-      // Fuzzy search by name or contact name
+      // Fuzzy search by name or contact name only if query has meaningful alphanumeric content
       const cleanQ = q.replace(/[^a-z0-9]/g, '');
-      guest = this.state.guests.find(g => {
-        const n = (g.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-        const c = (g.contactName || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-        return (n && (n.includes(cleanQ) || cleanQ.includes(n))) || (c && (c.includes(cleanQ) || cleanQ.includes(c)));
-      });
+      if (cleanQ.length >= 2) {
+        guest = this.state.guests.find(g => {
+          const n = (g.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const c = (g.contactName || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          return (n && (n.includes(cleanQ) || cleanQ.includes(n))) || (c && (c.includes(cleanQ) || cleanQ.includes(c)));
+        });
+      }
     }
 
     if (!guest) {
@@ -838,8 +852,13 @@ class GuestManager {
   importDataJson(jsonStr) {
     try {
       const parsed = JSON.parse(jsonStr);
-      if (parsed.guests && parsed.tables) {
-        this.state = parsed;
+      if (parsed && Array.isArray(parsed.guests) && Array.isArray(parsed.tables)) {
+        this.state = {
+          config: parsed.config || this.getInitialState().config,
+          tables: parsed.tables,
+          guests: parsed.guests,
+          checkinLogs: Array.isArray(parsed.checkinLogs) ? parsed.checkinLogs : []
+        };
         this.saveState();
         return true;
       }

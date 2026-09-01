@@ -5,20 +5,29 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 const PROJECT_DIR = __dirname;
 const BACKUPS_DIR = path.join(PROJECT_DIR, 'backups');
 
 const CORE_FILES = [
+  'guest-manager.js',
   'template-engine.js',
+  'projects-vault.js',
   'index.html',
   'portal.html',
   'organizador-mesas.html',
+  'invitacion.html',
   'invitacion-estudio.html',
+  'invitacion-boda.html',
+  'invitacion-xv.html',
+  'crear-invitacion.html',
+  'scanner-acceso.html',
+  'generador-emergencia.html',
   'app.js',
   'style.css',
-  'decor-assets.js'
+  'decor-assets.js',
+  'cinematic-bg-transition.js'
 ];
 
 function ensureDir(dir) {
@@ -45,14 +54,14 @@ function getTimestamp() {
 function createSnapshot(label = 'manual') {
   ensureDir(BACKUPS_DIR);
   const timestamp = getTimestamp();
-  const safeLabel = label.replace(/[^a-zA-Z0-9_.-]/g, '_');
+  const safeLabel = String(label).replace(/[^a-zA-Z0-9_.-]/g, '_');
   const snapshotName = `${safeLabel}_${timestamp}`;
   const targetDir = path.join(BACKUPS_DIR, snapshotName);
 
   fs.mkdirSync(targetDir, { recursive: true });
 
   const manifest = {
-    label,
+    label: String(label),
     timestamp: new Date().toISOString(),
     files: []
   };
@@ -70,11 +79,11 @@ function createSnapshot(label = 'manual') {
   // Guardar metadata
   fs.writeFileSync(path.join(targetDir, 'manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
 
-  // Crear también un commit en Git si está disponible
+  // Crear también un commit y tag en Git si está disponible de forma segura (sin interpolar en shell)
   try {
-    execSync('git add .', { cwd: PROJECT_DIR, stdio: 'ignore' });
-    execSync(`git commit -m "Snapshot [${label}]: ${timestamp}"`, { cwd: PROJECT_DIR, stdio: 'ignore' });
-    execSync(`git tag -a "snapshot_${safeLabel}_${Date.now()}" -m "${label}"`, { cwd: PROJECT_DIR, stdio: 'ignore' });
+    execFileSync('git', ['add', '.'], { cwd: PROJECT_DIR, stdio: 'ignore' });
+    execFileSync('git', ['commit', '-m', `Snapshot [${safeLabel}]: ${timestamp}`], { cwd: PROJECT_DIR, stdio: 'ignore' });
+    execFileSync('git', ['tag', '-a', `snapshot_${safeLabel}_${Date.now()}`, '-m', safeLabel], { cwd: PROJECT_DIR, stdio: 'ignore' });
   } catch (e) {
     // Si no hay cambios en git, continuar
   }
@@ -82,7 +91,7 @@ function createSnapshot(label = 'manual') {
   console.log(`✅ Punto de restauración creado con éxito:`);
   console.log(`   📁 backups/${snapshotName}`);
   console.log(`   📝 Archivos respaldados: ${manifest.files.length}`);
-  return snapshotName;
+  return { id: snapshotName, name: snapshotName, manifest };
 }
 
 /**
@@ -152,7 +161,7 @@ function restoreSnapshot(target) {
 
   // Crear un respaldo de seguridad del estado actual antes de sobreescribir
   const safetySnapshot = createSnapshot('pre-restore-safety');
-  console.log(`🛡️ Respaldo de seguridad previo creado: ${safetySnapshot}`);
+  console.log(`🛡️ Respaldo de seguridad previo creado: ${safetySnapshot.name || safetySnapshot}`);
 
   // Restaurar archivos
   let restoredCount = 0;
@@ -170,27 +179,51 @@ function restoreSnapshot(target) {
   return true;
 }
 
-// CLI Runner
-const args = process.argv.slice(2);
-const command = args[0] || 'create';
-
-if (command === 'create' || command === 'save') {
-  const label = args[1] || 'v5.6_estable';
-  createSnapshot(label);
-} else if (command === 'list') {
-  listSnapshots();
-} else if (command === 'restore') {
-  const target = args[1];
-  if (!target) {
-    console.error('❌ Especifica el nombre o número del punto a restaurar:');
-    console.log('   node backup-manager.js restore <nombre_o_numero>');
-    listSnapshots();
-  } else {
-    restoreSnapshot(target);
+class BackupManager {
+  constructor() {
+    this.coreFiles = CORE_FILES;
   }
-} else {
-  console.log(`Uso del Administrador de Respaldos:`);
-  console.log(`  node backup-manager.js create [etiqueta]   -> Guarda un punto de restauración`);
-  console.log(`  node backup-manager.js list              -> Lista todos los puntos guardados`);
-  console.log(`  node backup-manager.js restore <nombre>  -> Restaura el proyecto al punto indicado`);
+  createSnapshot(label) {
+    return createSnapshot(label);
+  }
+  listSnapshots() {
+    return listSnapshots();
+  }
+  restoreSnapshot(target) {
+    return restoreSnapshot(target);
+  }
 }
+
+// CLI Runner
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const command = args[0] || 'create';
+
+  if (command === 'create' || command === 'save') {
+    const label = args[1] || 'v5.6_estable';
+    createSnapshot(label);
+  } else if (command === 'list') {
+    listSnapshots();
+  } else if (command === 'restore') {
+    const target = args[1];
+    if (!target) {
+      console.error('❌ Especifica el nombre o número del punto a restaurar:');
+      console.log('   node backup-manager.js restore <nombre_o_numero>');
+      listSnapshots();
+    } else {
+      restoreSnapshot(target);
+    }
+  } else {
+    console.log(`Uso del Administrador de Respaldos:`);
+    console.log(`  node backup-manager.js create [etiqueta]   -> Guarda un punto de restauración`);
+    console.log(`  node backup-manager.js list              -> Lista todos los puntos guardados`);
+    console.log(`  node backup-manager.js restore <nombre>  -> Restaura el proyecto al punto indicado`);
+  }
+}
+
+module.exports = BackupManager;
+module.exports.BackupManager = BackupManager;
+module.exports.createSnapshot = createSnapshot;
+module.exports.listSnapshots = listSnapshots;
+module.exports.restoreSnapshot = restoreSnapshot;
+module.exports.CORE_FILES = CORE_FILES;

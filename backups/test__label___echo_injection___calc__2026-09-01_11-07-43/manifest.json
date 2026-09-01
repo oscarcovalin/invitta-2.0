@@ -1,0 +1,74 @@
+{
+  "label": "test \"label\"; echo injection $(calc)",
+  "timestamp": "2026-09-01T17:07:43.403Z",
+  "files": [
+    {
+      "filename": "guest-manager.js",
+      "size": 30279
+    },
+    {
+      "filename": "template-engine.js",
+      "size": 2750056
+    },
+    {
+      "filename": "projects-vault.js",
+      "size": 16920358
+    },
+    {
+      "filename": "index.html",
+      "size": 33643
+    },
+    {
+      "filename": "portal.html",
+      "size": 32312
+    },
+    {
+      "filename": "organizador-mesas.html",
+      "size": 96190
+    },
+    {
+      "filename": "invitacion.html",
+      "size": 21367720
+    },
+    {
+      "filename": "invitacion-estudio.html",
+      "size": 127211
+    },
+    {
+      "filename": "invitacion-boda.html",
+      "size": 21367720
+    },
+    {
+      "filename": "invitacion-xv.html",
+      "size": 12807233
+    },
+    {
+      "filename": "crear-invitacion.html",
+      "size": 37649
+    },
+    {
+      "filename": "scanner-acceso.html",
+      "size": 27546
+    },
+    {
+      "filename": "generador-emergencia.html",
+      "size": 15205
+    },
+    {
+      "filename": "app.js",
+      "size": 127913
+    },
+    {
+      "filename": "style.css",
+      "size": 22702
+    },
+    {
+      "filename": "decor-assets.js",
+      "size": 1085684
+    },
+    {
+      "filename": "cinematic-bg-transition.js",
+      "size": 7344
+    }
+  ]
+}
