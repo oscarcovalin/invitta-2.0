@@ -3,12 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Invitta 2.0 Beta — Portal Central de Módulos</title>
+  <title>Invitta 2.0 — Portal Central de Módulos &amp; Eventos</title>
+  <meta name="description" content="Accede a tu evento en Invitta 2.0 con tu código y PIN o gestiona tus salones y eventos desde el portal master.">
 
-  <!-- Tipografías de Lujo -->
+  <!-- OPEN GRAPH / FACEBOOK / WHATSAPP / LINKEDIN -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://invitta-v2-production.vercel.app/">
+  <meta property="og:title" content="Invitta 2.0 — Portal Central de Eventos y Salones">
+  <meta property="og:description" content="Accede a tu evento con tu código y PIN o gestiona tus salones y eventos desde el portal master.">
+  <meta property="og:image" content="https://invitta-v2-production.vercel.app/assets/hero-phone-invitation-mexico.png">
+  <meta property="og:image:alt" content="Invitta 2.0 Portal Central">
+
+  <!-- Tipografías Invitta 1.0 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Iconos Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
@@ -16,30 +25,31 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Invitta 1.0 Design System -->
+  <link rel="stylesheet" href="theme.css">
+
   <style>
     body {
-      background-color: #0b0d11;
-      color: #e5e7eb;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #2E2E2E;
+      font-family: 'Jost', sans-serif;
     }
 
     .glass-portal-card {
-      background: rgba(255, 255, 255, 0.035);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: #FFFFFF;
+      border: 1px solid #E8DDD0;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 4px 16px rgba(46, 46, 46, 0.06);
     }
     .glass-portal-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(212, 175, 55, 0.7);
-      background: rgba(255, 255, 255, 0.065);
-      box-shadow: 0 16px 40px rgba(212, 175, 55, 0.18);
+      border-color: #E8B4AD;
+      background: #FAF7F2;
+      box-shadow: 0 16px 40px rgba(201, 135, 125, 0.14);
     }
 
     .badge-pill {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Jost', sans-serif;
       font-size: 9.5px;
       font-weight: 700;
       padding: 3px 9px;
@@ -48,68 +58,214 @@
       letter-spacing: 0.05em;
     }
   </style>
+
 </head>
-<body class="min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 selection:bg-amber-500/30">
+<body class="min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-[#FAF7F2] text-[#2E2E2E] selection:bg-[#F5E6E3]">
 
-  <!-- ==================== ENCABEZADO PRINCIPAL ==================== -->
-  <header class="max-w-6xl mx-auto w-full text-center pt-4 pb-10">
-    
-    <!-- Imagotipo Oficial Invitta -->
-    <div class="flex justify-center mb-5">
-      <img src="invitta-logo-light.png" alt="Invitta Logo" class="h-16 sm:h-20 w-auto object-contain drop-shadow-[0_4px_25px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform">
+
+  <!-- ==================== GATEWAY DE AUTENTICACIÓN PÚBLICA & BLINDAJE ==================== -->
+  <div id="publicAuthGate" class="max-w-xl mx-auto w-full my-auto py-10 px-4">
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-4">
+        <span style="font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-style:italic; color:#C9877D;">In</span><span style="font-family:'Cormorant Garamond',serif; font-size:2.2rem; color:#2E2E2E;">vitta</span> <span style="font-family:'Jost',sans-serif; font-size:0.85rem; color:#6B6560; letter-spacing:0.15em; font-weight:400">2.0</span>
+      </div>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] text-xs font-semibold mb-2">
+        <span class="w-2 h-2 rounded-full bg-[#C9877D] animate-pulse"></span>
+        <span>PORTAL DE ACCESO PRIVADO</span>
+      </div>
+      <h1 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl font-semibold text-[#2E2E2E] tracking-wide">
+        Acceso a Tu Espacio Exclusivo
+      </h1>
+      <p class="text-xs text-[#6B6560] mt-2 font-light">
+        Ingresa con tu Código y PIN de anfitrión o con tu cuenta profesional de Planner / Administrador.
+      </p>
     </div>
 
-    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-300 text-xs font-mono mb-3">
-      <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-      <span>PORTAL CENTRAL · SUITE 2.0 BETA</span>
+
+    <!-- Pestañas de Acceso -->
+    <div class="rounded-3xl bg-white border border-[#E8DDD0] shadow-[0_20px_60px_rgba(46,46,46,0.08)] p-8">
+      <div class="grid grid-cols-2 gap-2 p-1 bg-[#F2EDE4] rounded-2xl border border-[#E8DDD0] mb-6" id="authTabs">
+        <button type="button" id="tabBtnHost" class="py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-[#C9877D] text-white shadow-md flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[15px]">favorite</span>
+          <span>Anfitrión / Evento</span>
+        </button>
+        <button type="button" id="tabBtnPro" class="py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all text-[#6B6560] hover:text-[#2E2E2E] flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[15px]">business_center</span>
+          <span>Profesional / B2B</span>
+        </button>
+      </div>
+
+
+      <!-- Formulario 1: Anfitrión con Código + PIN -->
+      <form id="formAuthHost" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Código de tu Evento</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">tag</span>
+            <input type="text" id="inputAuthHostCode" placeholder="Ej. CATALINA-JULIAN o VALENTINA" required
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] uppercase tracking-wider font-mono placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">PIN Secreto (4 Dígitos)</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">lock</span>
+            <input type="password" id="inputAuthHostPin" maxlength="6" placeholder="••••" required
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] tracking-widest font-mono text-center placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors text-lg">
+          </div>
+          <p class="text-[11px] text-[#A09A94] mt-1">El PIN fue provisto por tu coordinador o en tu confirmación de servicio.</p>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-[#C9877D] hover:bg-[#A86860] text-white font-bold text-xs uppercase tracking-widest shadow-lg shadow-[#C9877D]/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 mt-2">
+          <span>Ingresar a Mi Evento</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </button>
+        <div id="feedbackAuthHost" class="text-xs mt-2 hidden"></div>
+      </form>
+
+
+      <!-- Formulario 2: Profesional / Superadmin / Planner -->
+      <form id="formAuthPro" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Usuario o Correo Electrónico</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">person</span>
+            <input type="text" id="inputAuthProUser" placeholder="admin@invitta.mx o tu usuario" required
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Contraseña</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">key</span>
+            <input type="password" id="inputAuthProPass" placeholder="••••••••" required
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-[#C9877D] hover:bg-[#A86860] text-white font-bold text-xs uppercase tracking-widest shadow-lg shadow-[#C9877D]/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 mt-2">
+          <span>Iniciar Sesión Profesional</span>
+          <span class="material-symbols-outlined text-base">login</span>
+        </button>
+        <div id="feedbackAuthPro" class="text-xs mt-2 hidden"></div>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== CONTENEDOR PRINCIPAL DEL SUPERADMINISTRADOR (BLINDADO) ==================== -->
+  <div id="adminVaultDashboard" class="hidden w-full">
+
+    <!-- Barra de Sesión de Administrador -->
+    <div class="max-w-6xl mx-auto w-full flex items-center justify-between mb-4 pb-3 border-b border-[#E8DDD0]">
+      <div class="inline-flex items-center gap-2 text-xs text-[#6B6560] font-semibold">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Superadmin: <strong class="text-[#C9877D]" id="labelAdminSessionName">admin@invitta.mx</strong></span>
+      </div>
+      <button type="button" id="btnLogoutAdmin" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F2EDE4] hover:bg-[#F5E6E3] text-[#6B6560] hover:text-[#C9877D] border border-[#E8DDD0] hover:border-[#E8B4AD] text-xs font-semibold transition-all">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        <span>Cerrar Sesión</span>
+      </button>
     </div>
 
-    <h1 class="font-['Cinzel'] text-3xl sm:text-4xl font-normal tracking-widest text-white uppercase mb-2">
-      Tablero de Control y Módulos Activos
-    </h1>
-    <p class="text-xs sm:text-sm text-neutral-400 max-w-2xl mx-auto font-light leading-relaxed">
-      Acceso centralizado a las herramientas oficiales de diseño, logística de mesas, recepción de accesos y visualización de invitaciones.
-    </p>
-    <!-- Botón de Acceso Rápido a Guía Paso a Paso -->
-    <div class="mt-5 flex justify-center">
-      <a href="como-funciona.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border border-amber-400/50 hover:border-amber-300 text-amber-200 hover:text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-amber-500/10 hover:scale-105 transition-all text-decoration-none">
-        <span class="material-symbols-outlined text-base text-amber-400">help_outline</span>
-        <span>¿Nuevo en la plataforma? Mira la Guía Paso a Paso ➔</span>
-      </a>
-    </div>
-  </header>
 
-  <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
-  <main class="max-w-6xl mx-auto w-full space-y-10 mb-16">
+    <!-- ==================== ENCABEZADO PRINCIPAL ==================== -->
+    <header class="max-w-6xl mx-auto w-full text-center pt-2 pb-10">
+      
+      <!-- Logo Invitta 1.0 -->
+      <div class="flex justify-center items-baseline gap-1 mb-5">
+        <span style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-style:italic; color:#C9877D; line-height:1;">In</span><span style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#2E2E2E; line-height:1;">vitta</span> <span style="font-family:'Jost',sans-serif; font-size:0.9rem; color:#6B6560; letter-spacing:0.15em; font-weight:400">2.0</span>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] text-xs font-semibold mb-3">
+        <span class="w-2 h-2 rounded-full bg-[#C9877D] animate-pulse"></span>
+        <span>PORTAL CENTRAL · SUITE 2.0 BETA</span>
+      </div>
+
+      <h1 style="font-family:'Cormorant Garamond',serif;" class="text-3xl sm:text-4xl font-normal tracking-wide text-[#2E2E2E] mb-2">
+        Tablero de Control y Módulos Activos
+      </h1>
+      <p class="text-xs sm:text-sm text-[#6B6560] max-w-2xl mx-auto font-light leading-relaxed">
+        Acceso centralizado a las herramientas oficiales de diseño, logística de mesas, recepción de accesos y visualización de invitaciones.
+      </p>
+      <!-- Botón de Acceso Rápido a Guía Paso a Paso -->
+      <div class="mt-5 flex justify-center">
+        <a href="como-funciona.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#F5E6E3] border border-[#E8B4AD] hover:border-[#C9877D] text-[#C9877D] hover:text-[#A86860] text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-all text-decoration-none">
+          <span class="material-symbols-outlined text-base text-[#C9877D]">help_outline</span>
+          <span>¿Nuevo en la plataforma? Mira la Guía Paso a Paso ➔</span>
+        </a>
+      </div>
+    </header>
+
+
+    <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
+    <main class="max-w-6xl mx-auto w-full space-y-10 mb-16">
+
+    <!-- ==================== PORTAL DE ACCESO RÁPIDO A MI EVENTO (CLIENTES & PLANNERS) ==================== -->
+    <section class="rounded-3xl p-6 sm:p-7 bg-[#F2EDE4] border border-[#E8DDD0] shadow-[0_8px_30px_rgba(46,46,46,0.07)] relative overflow-hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-1 max-w-xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] text-[11px] font-semibold">
+            <span class="material-symbols-outlined text-sm text-[#C9877D]">lock</span>
+            <span>ACCESO EXCLUSIVO DE ANFITRIONES & CLIENTES</span>
+          </div>
+          <h2 style="font-family:'Cormorant Garamond',serif;" class="text-xl sm:text-2xl font-semibold text-[#2E2E2E] tracking-wide">
+            ¿Eres Anfitrión o Planner? Ingresa a tu Evento Privado
+          </h2>
+          <p class="text-xs text-[#6B6560] font-light leading-relaxed">
+            Ingresa el código o enlace de tu evento (ej. <span class="font-mono font-bold text-[#C9877D]">CATALINA-JULIAN</span> o <span class="font-mono font-bold text-[#C9877D]">VALENTINA</span>) para acceder directamente a tus mesas y logística en modo 100% privado e independiente.
+          </p>
+        </div>
+
+        <div class="w-full md:w-96">
+          <form id="formEventCodeAccess" class="space-y-2">
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#C9877D] text-lg pointer-events-none">key</span>
+              <input type="text" id="inputClientEventCode" placeholder="Escribe tu código o pega tu enlace..." required
+                     class="w-full pl-11 pr-4 py-3 rounded-xl bg-white border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] uppercase tracking-wider font-mono focus:outline-none focus:border-[#C9877D] focus:ring-1 focus:ring-[#C9877D] transition-all">
+            </div>
+            <button type="submit" class="w-full py-3 px-5 rounded-xl bg-[#C9877D] hover:bg-[#A86860] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#C9877D]/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+              <span>Ingresar a Mi Evento</span>
+              <span class="material-symbols-outlined text-base">login</span>
+            </button>
+          </form>
+          <div id="clientAccessFeedback" class="text-xs mt-2 hidden"></div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- ==================== SECCIÓN 0: BÓVEDA DE INVITACIONES PRODUCIDAS ==================== -->
-    <section id="boveda-proyectos" class="rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#161a22]/90 to-[#0d1015]/95 border border-amber-500/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative overflow-hidden">
+    <section id="boveda-proyectos" class="rounded-3xl p-6 sm:p-8 bg-white border border-[#E8DDD0] shadow-[0_8px_30px_rgba(46,46,46,0.06)] relative overflow-hidden">
       <!-- Decoración de Fondo -->
-      <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#F5E6E3]/40 blur-3xl pointer-events-none"></div>
       
       <!-- Cabecera de la Sección -->
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-amber-500/20 relative z-10">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-[#E8DDD0] relative z-10">
         <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[11px] font-mono mb-2">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] text-[11px] font-semibold mb-2">
+            <span class="w-2 h-2 rounded-full bg-[#C9877D] animate-pulse"></span>
             <span>BÓVEDA DE INVITACIONES & PROYECTOS</span>
           </div>
-          <h2 class="font-['Cinzel'] text-2xl sm:text-3xl font-bold text-white tracking-wide">
+          <h2 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl font-semibold text-[#2E2E2E] tracking-wide">
             Invitaciones Producidas & Eventos
           </h2>
-          <p class="text-xs sm:text-sm text-neutral-400 mt-1 max-w-xl font-light">
+          <p class="text-xs sm:text-sm text-[#6B6560] mt-1 max-w-xl font-light">
             Gestiona, visualiza, edita o descarga tus invitaciones creadas con 1 solo clic.
           </p>
         </div>
 
         <!-- Botones de Acción Global -->
         <div class="flex flex-wrap items-center gap-3">
-          <button id="btnNewProjectModal" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+          <button id="btnNewProjectModal" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#C9877D] hover:bg-[#A86860] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#C9877D]/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
             <span class="material-symbols-outlined text-lg">add_circle</span>
             <span>+ Nueva Invitación</span>
           </button>
           
-          <label class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-amber-400/30 text-amber-300 font-semibold text-xs uppercase tracking-wider cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
+          <label class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F2EDE4] hover:bg-[#F5E6E3] border border-[#E8DDD0] hover:border-[#E8B4AD] text-[#C9877D] font-semibold text-xs uppercase tracking-wider cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
             <input type="file" id="inputImportVaultFile" accept=".json" class="hidden">
             <span class="material-symbols-outlined text-lg">upload_file</span>
             <span>Importar JSON</span>
@@ -121,21 +277,21 @@
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 my-6 relative z-10">
         <!-- Filtros por tipo -->
         <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0" id="vaultFilterGroup">
-          <button type="button" data-filter="all" class="vault-filter-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-amber-500 text-neutral-950 shadow-md">
+          <button type="button" data-filter="all" class="vault-filter-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-[#C9877D] text-white shadow-md">
             Todos (<span id="countFilterAll">0</span>)
           </button>
-          <button type="button" data-filter="boda" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10">
-            💍 Bodas (<span id="countFilterBoda">0</span>)
+          <button type="button" data-filter="boda" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-[#F2EDE4] hover:bg-[#F5E6E3] text-[#6B6560] border border-[#E8DDD0]">
+            <span class="material-symbols-outlined text-[13px] text-primary align-middle mr-0.5">favorite</span> Bodas (<span id="countFilterBoda">0</span>)
           </button>
-          <button type="button" data-filter="xv" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-white/5 hover:bg-white/10 text-neutral-300 border border-white/10">
-            👑 XV Años (<span id="countFilterXv">0</span>)
+          <button type="button" data-filter="xv" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-[#F2EDE4] hover:bg-[#F5E6E3] text-[#6B6560] border border-[#E8DDD0]">
+            <span class="material-symbols-outlined text-[13px] text-primary align-middle mr-0.5">star</span> XV Años (<span id="countFilterXv">0</span>)
           </button>
         </div>
 
         <!-- Buscador -->
         <div class="relative w-full sm:w-72">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-sm pointer-events-none">search</span>
-          <input type="text" id="vaultSearchInput" placeholder="Buscar por anfitrión o lugar..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A09A94] text-sm pointer-events-none">search</span>
+          <input type="text" id="vaultSearchInput" placeholder="Buscar por anfitrión o lugar..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-xs text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
         </div>
       </div>
 
@@ -145,12 +301,13 @@
       </div>
     </section>
 
+
     
     <!-- SECCIÓN 1: GENERADOR & INVITACIÓN DIGITAL -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="material-symbols-outlined text-amber-400 text-xl">auto_fix_high</span>
-        <h2 class="font-['Cinzel'] text-lg sm:text-xl font-bold text-white tracking-wider uppercase">
+        <span class="material-symbols-outlined text-[#C9877D] text-xl">auto_fix_high</span>
+        <h2 style="font-family:'Cormorant Garamond',serif;" class="text-lg sm:text-xl font-semibold text-[#2E2E2E] tracking-wider uppercase">
           1. Diseño & Generador de Invitaciones
         </h2>
       </div>
@@ -158,66 +315,66 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <!-- Invitta Estudio (Generador Completo) -->
-        <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/50 bg-amber-950/20">
+        <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 flex items-center justify-center shadow-md">
+              <div class="w-12 h-12 rounded-xl bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] flex items-center justify-center shadow-md">
                 <span class="material-symbols-outlined text-2xl">palette</span>
               </div>
-              <span class="badge-pill bg-amber-500/20 text-amber-300 border border-amber-500/40">★ Estudio Master</span>
+              <span class="badge-pill bg-[#F5E6E3] text-[#C9877D] border border-[#E8B4AD]">★ Estudio Master</span>
             </div>
-            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-xl font-semibold text-[#2E2E2E] group-hover:text-[#C9877D] transition-colors mb-2">
               Invitta Estudio
             </h3>
-            <p class="text-xs text-neutral-300 leading-relaxed">
+            <p class="text-xs text-[#6B6560] leading-relaxed">
               Panel interactivo para crear y personalizar invitaciones: paletas de color, fotos, música, Sello 3D, cuenta regresiva, ubicaciones y exportación a HTML.
             </p>
           </div>
-          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+          <div class="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center justify-between text-xs text-[#C9877D] font-bold uppercase tracking-wider">
             <span>Abrir Estudio ➔</span>
             <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
           </div>
         </a>
 
         <!-- Muestra 1: Mis XV Años Catalina -->
-        <a href="invitacion-xv.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/50 bg-amber-950/20">
+        <a href="invitacion-xv.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 flex items-center justify-center shadow-md">
+              <div class="w-12 h-12 rounded-xl bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] flex items-center justify-center shadow-md">
                 <span class="material-symbols-outlined text-2xl">star</span>
               </div>
-              <span class="badge-pill bg-amber-500/20 text-amber-300 border border-amber-500/40">👑 Muestra XV Años ↗</span>
+              <span class="badge-pill bg-[#F5E6E3] text-[#C9877D] border border-[#E8B4AD]">👑 Muestra XV Años ↗</span>
             </div>
-            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-xl font-semibold text-[#2E2E2E] group-hover:text-[#C9877D] transition-colors mb-2">
               Mis XV Años · Catalina
             </h3>
-            <p class="text-xs text-neutral-300 leading-relaxed">
+            <p class="text-xs text-[#6B6560] leading-relaxed">
               Demostración en vivo de XV Años con fotos reales, tema Medianoche & Oro, canción acústica, Sello heráldico 3D y confirmación RSVP.
             </p>
           </div>
-          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+          <div class="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center justify-between text-xs text-[#C9877D] font-bold uppercase tracking-wider">
             <span>Ver Demo XV en Vivo ↗</span>
             <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
           </div>
         </a>
 
         <!-- Muestra 2: Nuestra Boda Catalina & Julián -->
-        <a href="invitacion-boda.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-emerald-400/50 bg-emerald-950/20">
+        <a href="invitacion-boda.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 flex items-center justify-center shadow-md">
+              <div class="w-12 h-12 rounded-xl bg-[#E8F3E5] border border-[#C4D4BA] text-[#8A9E7B] flex items-center justify-center shadow-md">
                 <span class="material-symbols-outlined text-2xl">favorite</span>
               </div>
-              <span class="badge-pill bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">💍 Muestra Boda ↗</span>
+              <span class="badge-pill bg-[#E8F3E5] text-[#8A9E7B] border border-[#C4D4BA]">💍 Muestra Boda ↗</span>
             </div>
-            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-xl font-semibold text-[#2E2E2E] group-hover:text-[#8A9E7B] transition-colors mb-2">
               Nuestra Boda · Catalina & Julián
             </h3>
-            <p class="text-xs text-neutral-300 leading-relaxed">
+            <p class="text-xs text-[#6B6560] leading-relaxed">
               Demostración oficial de Boda con tema Vino & Oro, bendición de padres de ambos novios, recepción en Cantabria, vals y pase digital.
             </p>
           </div>
-          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-emerald-300 font-bold uppercase tracking-wider">
+          <div class="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center justify-between text-xs text-[#8A9E7B] font-bold uppercase tracking-wider">
             <span>Ver Demo Boda en Vivo ↗</span>
             <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
           </div>
@@ -226,11 +383,12 @@
       </div>
     </section>
 
+
     <!-- SECCIÓN 2: LOGÍSTICA DE SALÓN, COMENSALES & ENVIOS -->
     <section>
       <div class="flex items-center gap-3 mb-4">
-        <span class="material-symbols-outlined text-amber-400 text-xl">table_restaurant</span>
-        <h2 class="font-['Cinzel'] text-lg sm:text-xl font-bold text-white tracking-wider uppercase">
+        <span class="material-symbols-outlined text-[#C9877D] text-xl">table_restaurant</span>
+        <h2 style="font-family:'Cormorant Garamond',serif;" class="text-lg sm:text-xl font-semibold text-[#2E2E2E] tracking-wider uppercase">
           2. Logística de Salón, Comensales & Envíos
         </h2>
       </div>
@@ -238,44 +396,44 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <!-- Organizador de Mesas & Floor Plan Drag & Drop Studio -->
-        <a href="organizador-mesas.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/50 bg-amber-500/10">
+        <a href="organizador-mesas.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/25 border border-amber-400 text-amber-300 flex items-center justify-center shadow-lg">
+              <div class="w-12 h-12 rounded-xl bg-[#F5E6E3] border border-[#C9877D] text-[#C9877D] flex items-center justify-center shadow-lg">
                 <span class="material-symbols-outlined text-2xl">drag_indicator</span>
               </div>
-              <span class="badge-pill bg-amber-400/20 text-amber-300 border border-amber-400/50 font-bold">Floor Plan & RSVP</span>
+              <span class="badge-pill bg-[#F5E6E3] text-[#C9877D] border border-[#E8B4AD] font-bold">Floor Plan & RSVP</span>
             </div>
-            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-xl font-semibold text-[#2E2E2E] group-hover:text-[#C9877D] transition-colors mb-2">
               Organizador de Mesas & Centro de Control
             </h3>
-            <p class="text-xs text-neutral-300 leading-relaxed">
+            <p class="text-xs text-[#6B6560] leading-relaxed">
               Plano táctil del salón con asignación de comensales, calculadora de mesas (8, 10 y 12), auto-distribución balanceada y centro de envíos WhatsApp con monitor de confirmaciones RSVP en tiempo real.
             </p>
           </div>
-          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+          <div class="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center justify-between text-xs text-[#C9877D] font-bold uppercase tracking-wider">
             <span>Abrir Organizador de Mesas</span>
             <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
           </div>
         </a>
 
         <!-- Catering Táctico (Hoja de Ruta de Banquetes) -->
-        <a href="catering-module/catering-tactical-sheet.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group border-amber-400/30 bg-white/[0.02]">
+        <a href="catering-module/catering-tactical-sheet.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
-              <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 flex items-center justify-center shadow-md">
+              <div class="w-12 h-12 rounded-xl bg-[#E8F3E5] border border-[#C4D4BA] text-[#8A9E7B] flex items-center justify-center shadow-md">
                 <span class="material-symbols-outlined text-2xl">restaurant_menu</span>
               </div>
-              <span class="badge-pill bg-blue-500/20 text-blue-300 border border-blue-400/40">Imprimible PDF</span>
+              <span class="badge-pill bg-[#EAF0F8] text-[#5B7FA6] border border-[#B8CCE4]">Imprimible PDF</span>
             </div>
-            <h3 class="font-['Cinzel'] text-xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-xl font-semibold text-[#2E2E2E] group-hover:text-[#C9877D] transition-colors mb-2">
               Hoja Táctica de Catering & Banquetes
             </h3>
-            <p class="text-xs text-neutral-300 leading-relaxed">
+            <p class="text-xs text-[#6B6560] leading-relaxed">
               Mapa de ruta y reporte optimizado para imprimir en cocina y capitanes de meseros con desglose estricto de dietas, intolerancias, menús infantiles y ubicación de mesas VIP.
             </p>
           </div>
-          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-amber-300 font-bold uppercase tracking-wider">
+          <div class="mt-6 pt-4 border-t border-[#E8DDD0] flex items-center justify-between text-xs text-[#C9877D] font-bold uppercase tracking-wider">
             <span>Ver Hoja de Catering ↗</span>
             <span class="material-symbols-outlined text-base group-hover:translate-x-1.5 transition-transform">arrow_forward</span>
           </div>
@@ -283,6 +441,7 @@
 
       </div>
     </section>
+
 
     <!-- SECCIÓN 3: OPERACIÓN EL DÍA DEL EVENTO & ACCESOS POR ROL -->
     <section>
@@ -388,6 +547,122 @@
 
   </main>
 
+  <!-- ==================== MODAL: ALTA DE NUEVO EVENTO / CLIENTE ==================== -->
+  <div id="modalCreateEvent" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#12151c] border border-amber-500/40 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative animate-fadeIn max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-400/40 text-amber-300 flex items-center justify-center font-bold text-lg">
+            ➕
+          </div>
+          <div>
+            <h3 class="font-['Cinzel'] text-xl font-bold text-white">Dar de Alta Nuevo Cliente</h3>
+            <p class="text-xs text-neutral-400">Crea un espacio aislado e independiente para tu evento</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeCreateEventModal()" class="text-neutral-400 hover:text-white text-2xl font-light">&times;</button>
+      </div>
+
+      <form id="formCreateClientEvent" onsubmit="handleCreateEventSubmit(event)" class="space-y-4">
+        
+        <!-- Nombre del Evento / Anfitriones -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Nombre del Evento / Pareja</label>
+          <input type="text" id="inputNewEventName" required placeholder="Ej. Boda Sofía & Mateo o Mis XV Camila" 
+                 class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 transition-colors">
+        </div>
+
+        <!-- Tipo de Evento & Paquete Comercial -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Tipo de Evento</label>
+            <select id="selectNewEventType" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+              <option value="boda">💍 Boda</option>
+              <option value="xv">👑 Mis XV Años</option>
+              <option value="social">🎉 Evento Social</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Paquete Vendido</label>
+            <select id="selectNewEventPackage" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+              <option value="host_premium">💎 Premium (Mesas + RSVP)</option>
+              <option value="host_basic">💌 Esencial (Solo RSVP)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fecha & Capacidad -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Fecha del Evento</label>
+            <input type="date" id="inputNewEventDate" required
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Capacidad Estimada (Pax)</label>
+            <input type="number" id="inputNewEventCapacity" value="150" min="10" max="1000"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+          </div>
+        </div>
+
+        <!-- Salón / Lugar -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Lugar / Salón de Recepción</label>
+          <input type="text" id="inputNewEventVenue" placeholder="Ej. Hacienda San José o Jardín Bellavista" 
+                 class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 transition-colors">
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeCreateEventModal()" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-neutral-300 transition-colors">
+            Cancelar
+          </button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all">
+            ✨ Dar de Alta & Generar Accesos
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: ACCESOS DEL CLIENTE CREADO ==================== -->
+  <div id="modalClientAccessReady" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-[#12151c] border border-emerald-500/40 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative animate-fadeIn text-center space-y-4">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 flex items-center justify-center mx-auto text-3xl">
+        🎉
+      </div>
+      <div>
+        <h3 class="font-['Cinzel'] text-2xl font-bold text-white mb-1">¡Evento Registrado Exitosamente!</h3>
+        <p id="labelCreatedEventTitle" class="text-sm text-emerald-400 font-semibold"></p>
+        <p class="text-xs text-neutral-400 mt-1">El espacio privado ha sido aislado y los Magic Links están listos para entregarse.</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-black/60 border border-white/10 text-left space-y-2">
+        <label class="block text-[11px] font-bold uppercase tracking-wider text-neutral-400">Enlace Privado del Anfitrión:</label>
+        <div class="flex items-center gap-2">
+          <input type="text" id="inputCreatedMagicLink" readonly class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white font-mono outline-none">
+          <button type="button" onclick="copyCreatedLink()" class="px-3 py-2 rounded-lg bg-amber-500 text-neutral-950 font-bold text-xs hover:bg-amber-400 transition-colors flex-shrink-0">
+            Copiar
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a id="btnWhatsAppCreatedClient" href="#" target="_blank" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+          <span>📲 Enviar Enlace por WhatsApp</span>
+        </a>
+        <button type="button" onclick="closeCreatedAccessModal()" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-neutral-300 text-xs font-semibold transition-colors">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  </div> <!-- ==================== FIN ADMIN VAULT DASHBOARD ==================== -->
+
   <!-- ==================== PIE DE PÁGINA ==================== -->
   <footer class="max-w-6xl mx-auto w-full text-center border-t border-white/10 pt-6 pb-2 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-400 gap-4">
     <div class="flex items-center gap-2">
@@ -397,15 +672,179 @@
     <span class="font-mono text-neutral-500">invitta-2.0-beta</span>
   </footer>
 
-
-  <!-- Scripts de la Bóveda de Proyectos -->
+  <!-- Scripts de la Bóveda de Proyectos & EventVaultManager -->
+  <script src="event-vault-manager.js"></script>
+  <script src="auth-manager.js"></script>
+  <script src="role-manager.js"></script>
   <script src="projects-vault.js"></script>
   <script src="template-engine.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    const evm = window.EventVaultManager ? window.EventVaultManager.create() : null;
+    const auth = window.AuthManager ? window.AuthManager.create({ evm }) : null;
+
+    function openCreateEventModal() {
+      const modal = document.getElementById('modalCreateEvent');
+      if (modal) {
+        document.getElementById('inputNewEventDate').value = '2027-03-20';
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closeCreateEventModal() {
+      const modal = document.getElementById('modalCreateEvent');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function closeCreatedAccessModal() {
+      const modal = document.getElementById('modalClientAccessReady');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleCreateEventSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('inputNewEventName').value;
+      const type = document.getElementById('selectNewEventType').value;
+      const packageType = document.getElementById('selectNewEventPackage').value;
+      const date = document.getElementById('inputNewEventDate').value;
+      const capacity = document.getElementById('inputNewEventCapacity').value;
+      const venue = document.getElementById('inputNewEventVenue').value;
+
+      if (!evm) return;
+
+      const dateObj = new Date(date + 'T18:00:00');
+      const dateLabel = dateObj.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      const newEv = evm.createEvent({
+        name: name.trim(),
+        type: type,
+        packageType: packageType,
+        dateISO: date + 'T18:00',
+        dateLabel: dateLabel,
+        capacity: parseInt(capacity, 10) || 150,
+        venue: venue.trim() || 'Salón Principal'
+      });
+
+      closeCreateEventModal();
       renderVaultProjects();
 
-      // Buscador
+      // Mostrar modal de accesos generados
+      const readyModal = document.getElementById('modalClientAccessReady');
+      const labelTitle = document.getElementById('labelCreatedEventTitle');
+      const inputLink = document.getElementById('inputCreatedMagicLink');
+      const btnWa = document.getElementById('btnWhatsAppCreatedClient');
+
+      if (readyModal && labelTitle && inputLink && btnWa) {
+        labelTitle.textContent = `${newEv.type === 'boda' ? '💍' : '👑'} ${newEv.name} · ${newEv.dateLabel} (PIN: ${newEv.pin})`;
+        const magicLink = evm.generateEventMagicLink(newEv.packageType, newEv.slug, 'mesas');
+        inputLink.value = magicLink;
+        btnWa.href = evm.generateEventWhatsAppUrl(newEv.packageType, newEv.slug, '', 'mesas');
+        readyModal.classList.remove('hidden');
+      }
+    }
+
+    function copyCreatedLink() {
+      const inputLink = document.getElementById('inputCreatedMagicLink');
+      if (inputLink) {
+        navigator.clipboard.writeText(inputLink.value).then(() => {
+          alert('¡Enlace del anfitrión copiado al portapapeles!');
+        }).catch(() => {
+          prompt('Copia el enlace de acceso:', inputLink.value);
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Verificar Estado de Autenticación
+      updateAuthGateUI();
+
+      // 2. Control de Pestañas de Acceso (Host vs Pro)
+      const tabHost = document.getElementById('tabBtnHost');
+      const tabPro = document.getElementById('tabBtnPro');
+      const formHost = document.getElementById('formAuthHost');
+      const formPro = document.getElementById('formAuthPro');
+
+      if (tabHost && tabPro && formHost && formPro) {
+        tabHost.addEventListener('click', () => {
+          tabHost.className = 'py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-amber-500 text-neutral-950 shadow-md flex items-center justify-center gap-1.5';
+          tabPro.className = 'py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all text-neutral-400 hover:text-white flex items-center justify-center gap-1.5';
+          formHost.classList.remove('hidden');
+          formPro.classList.add('hidden');
+        });
+
+        tabPro.addEventListener('click', () => {
+          tabPro.className = 'py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-amber-500 text-neutral-950 shadow-md flex items-center justify-center gap-1.5';
+          tabHost.className = 'py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all text-neutral-400 hover:text-white flex items-center justify-center gap-1.5';
+          formPro.classList.remove('hidden');
+          formHost.classList.add('hidden');
+        });
+      }
+
+      // 3. Formulario Anfitrión (Código + PIN)
+      if (formHost && auth) {
+        formHost.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const code = document.getElementById('inputAuthHostCode').value.trim();
+          const pin = document.getElementById('inputAuthHostPin').value.trim();
+          const feedback = document.getElementById('feedbackAuthHost');
+
+          const res = auth.loginHostByPin(code, pin);
+          if (res.success) {
+            if (feedback) {
+              feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-semibold block animate-pulse';
+              feedback.textContent = `✨ ¡Bienvenido/a a ${res.event.name}! Accediendo a tu espacio privado...`;
+            }
+            setTimeout(() => {
+              window.location.href = res.redirectUrl;
+            }, 300);
+          } else {
+            if (feedback) {
+              feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-300 font-semibold block';
+              feedback.textContent = `❌ ${res.error}`;
+            }
+          }
+        });
+      }
+
+      // 4. Formulario Profesional (Superadmin / Planner B2B)
+      if (formPro && auth) {
+        formPro.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const user = document.getElementById('inputAuthProUser').value.trim();
+          const pass = document.getElementById('inputAuthProPass').value.trim();
+          const feedback = document.getElementById('feedbackAuthPro');
+
+          const res = await auth.loginProfessional(user, pass);
+          if (res.success) {
+            if (feedback) {
+              feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-semibold block animate-pulse';
+              feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.name}! Redirigiendo...`;
+            }
+            setTimeout(() => {
+              if (res.session.role === 'superadmin') {
+                updateAuthGateUI();
+              } else {
+                window.location.href = res.redirectUrl;
+              }
+            }, 300);
+          } else {
+            if (feedback) {
+              feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-300 font-semibold block';
+              feedback.textContent = `❌ ${res.error}`;
+            }
+          }
+        });
+      }
+
+      // 5. Botón Cerrar Sesión Superadmin
+      const btnLogout = document.getElementById('btnLogoutAdmin');
+      if (btnLogout && auth) {
+        btnLogout.addEventListener('click', () => {
+          auth.logout();
+          updateAuthGateUI();
+        });
+      }
+
+      // 6. Buscador del Vault
       const searchInput = document.getElementById('vaultSearchInput');
       if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -413,7 +852,7 @@
         });
       }
 
-      // Filtros
+      // 7. Filtros del Vault
       let currentFilter = 'all';
       const filterBtns = document.querySelectorAll('.vault-filter-btn');
       filterBtns.forEach(btn => {
@@ -429,77 +868,55 @@
         });
       });
 
-      // Importar archivo JSON
-      const importInput = document.getElementById('inputImportVaultFile');
-      if (importInput) {
-        importInput.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (re) => {
-              const res = ProjectsVault.importJSON(re.target.result);
-              if (res) {
-                alert('¡Proyecto "' + res.title + '" importado exitosamente a la Bóveda!');
-                renderVaultProjects();
-              } else {
-                alert('Error al importar el archivo JSON. Verifica el formato.');
-              }
-            };
-            reader.readAsText(file);
-          }
-        });
-      }
-
-      // Modal Nueva Invitación
+      // 8. Botón Dar de Alta Nuevo Evento
       const btnNew = document.getElementById('btnNewProjectModal');
       if (btnNew) {
-        btnNew.addEventListener('click', () => {
-          const type = confirm('¿Deseas crear una invitación de BODA?\n\n[Aceptar] = Boda\n[Cancelar] = Mis XV Años') ? 'boda' : 'xv';
-          const name = prompt(type === 'boda' ? 'Nombres de los Novios (ej. Sofia & Mateo):' : 'Nombre de la Quinceañera (ej. Camila):');
-          if (name && name.trim()) {
-            const defaultCfg = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
-            defaultCfg.eventType = type;
-            if (type === 'boda') {
-              const parts = name.split('&');
-              defaultCfg.brideName = (parts[0] || 'Novia').trim();
-              defaultCfg.groomName = (parts[1] || 'Novio').trim();
-            } else {
-              defaultCfg.name = name.trim();
-            }
-            const newProj = ProjectsVault.save({
-              title: type === 'boda' ? 'Boda ' + name.trim() : 'XV Años ' + name.trim(),
-              config: defaultCfg
-            });
-            window.location.href = 'invitacion-estudio.html?project=' + newProj.id;
-          }
-        });
+        btnNew.addEventListener('click', openCreateEventModal);
       }
     });
 
+    function updateAuthGateUI() {
+      const publicGate = document.getElementById('publicAuthGate');
+      const adminDash = document.getElementById('adminVaultDashboard');
+      const labelAdminName = document.getElementById('labelAdminSessionName');
+
+      const isSuper = auth && auth.isSuperadmin();
+      if (isSuper) {
+        if (publicGate) publicGate.classList.add('hidden');
+        if (adminDash) adminDash.classList.remove('hidden');
+        const session = auth.getCurrentSession();
+        if (labelAdminName && session) labelAdminName.textContent = session.username || 'admin@invitta.mx';
+        renderVaultProjects();
+      } else {
+        if (publicGate) publicGate.classList.remove('hidden');
+        if (adminDash) adminDash.classList.add('hidden');
+      }
+    }
+
     function renderVaultProjects(query = '', filter = 'all') {
       const grid = document.getElementById('vaultProjectsGrid');
-      if (!grid) return;
+      if (!grid || !evm) return;
 
-      const projects = ProjectsVault.getAll();
+      const events = evm.getAllEvents();
       
       // Actualizar contadores
       const cAll = document.getElementById('countFilterAll');
       const cBoda = document.getElementById('countFilterBoda');
       const cXv = document.getElementById('countFilterXv');
-      if (cAll) cAll.textContent = projects.length;
-      if (cBoda) cBoda.textContent = projects.filter(p => p.eventType === 'boda').length;
-      if (cXv) cXv.textContent = projects.filter(p => p.eventType === 'xv').length;
+      if (cAll) cAll.textContent = events.length;
+      if (cBoda) cBoda.textContent = events.filter(e => e.type === 'boda').length;
+      if (cXv) cXv.textContent = events.filter(e => e.type === 'xv').length;
 
-      let filtered = projects;
+      let filtered = events;
       if (filter !== 'all') {
-        filtered = filtered.filter(p => p.eventType === filter);
+        filtered = filtered.filter(e => e.type === filter);
       }
       if (query && query.trim()) {
         const q = query.toLowerCase().trim();
-        filtered = filtered.filter(p => 
-          (p.title && p.title.toLowerCase().includes(q)) ||
-          (p.hosts && p.hosts.toLowerCase().includes(q)) ||
-          (p.venue && p.venue.toLowerCase().includes(q))
+        filtered = filtered.filter(e => 
+          (e.name && e.name.toLowerCase().includes(q)) ||
+          (e.venue && e.venue.toLowerCase().includes(q)) ||
+          (e.slug && e.slug.toLowerCase().includes(q))
         );
       }
 
@@ -507,78 +924,89 @@
         grid.innerHTML = `
           <div class="col-span-full py-12 text-center text-neutral-400 bg-white/[0.02] border border-white/10 rounded-2xl">
             <span class="material-symbols-outlined text-4xl text-neutral-500 mb-2">folder_open</span>
-            <p class="text-sm font-medium">No se encontraron invitaciones guardadas con ese criterio.</p>
-            <p class="text-xs text-neutral-500 mt-1">Crea una nueva o importa un archivo JSON para comenzar.</p>
+            <p class="text-sm font-medium">No se encontraron clientes guardados con ese criterio.</p>
+            <p class="text-xs text-neutral-500 mt-1">Haz clic en "+ Nueva Invitación" para dar de alta a tu primer cliente.</p>
           </div>
         `;
         return;
       }
 
-      grid.innerHTML = filtered.map(p => {
-        const isBoda = p.eventType === 'boda';
-        const dateStr = p.date ? new Date(p.date + 'T00:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Fecha por definir';
-        const themeColor = p.theme === 'rosa' ? '#f472b6' : (p.theme === 'esmeralda' ? '#34d399' : (p.theme === 'medianoche' ? '#60a5fa' : '#fbbf24'));
+      grid.innerHTML = filtered.map(e => {
+        const isBoda = e.type === 'boda';
+        const isPremium = e.packageType === 'host_premium';
+        const dateStr = e.dateLabel || 'Fecha por definir';
+        const readableCode = e.slug.replace(/^(boda-|xv-)/, '').toUpperCase();
+        const pinCode = e.pin || '4821';
+        const hostLink = evm.generateEventMagicLink(e.packageType || 'host_premium', e.slug, 'mesas');
+        const plannerLink = `mesas?event=${e.slug}&role=planner`;
+        const studioLink = `invitacion-estudio.html?event=${e.slug}&role=designer`;
+        const previewLink = isBoda ? `invitacion-boda.html?event=${e.slug}` : `invitacion-xv.html?event=${e.slug}`;
+        const waShareLink = evm.generateEventWhatsAppUrl(e.packageType || 'host_premium', e.slug, '', 'mesas');
 
         return `
           <div class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between border border-amber-500/25 bg-black/40 hover:border-amber-400 transition-all group">
-            <!-- Header Tarjeta -->
             <div>
               <div class="flex items-center justify-between mb-3">
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${isBoda ? 'bg-amber-500/15 border border-amber-400/40 text-amber-300' : 'bg-pink-500/15 border border-pink-400/40 text-pink-300'}">
                   <span>${isBoda ? '💍 Boda' : '👑 Mis XV'}</span>
                 </span>
                 
-                <span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 font-semibold">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  <span>Activa</span>
+                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${isPremium ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30' : 'bg-blue-500/20 text-blue-300 border border-blue-400/30'}">
+                  <span>${isPremium ? '💎 Premium' : '💌 Esencial'}</span>
                 </span>
               </div>
 
-              <!-- Título / Nombres -->
-              <h3 class="font-['Cinzel'] text-lg font-bold text-white group-hover:text-amber-300 transition-colors mb-1 truncate" title="${p.title}">
-                ${p.hosts || p.title}
+              <h3 class="font-['Cinzel'] text-lg font-bold text-white group-hover:text-amber-300 transition-colors mb-1 truncate" title="${e.name}">
+                ${e.name}
               </h3>
 
-              <!-- Detalles de Fecha y Salón -->
-              <div class="space-y-1 text-xs text-neutral-400 font-light mb-4">
+              <div class="space-y-1 text-xs text-neutral-400 font-light mb-3">
                 <p class="flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-[15px] text-amber-400/80">calendar_today</span>
                   <span>${dateStr}</span>
                 </p>
-                <p class="flex items-center gap-1.5 truncate" title="${p.venue || 'Salón por definir'}">
+                <p class="flex items-center gap-1.5 truncate" title="${e.venue || 'Salón Principal'}">
                   <span class="material-symbols-outlined text-[15px] text-amber-400/80">location_on</span>
-                  <span class="truncate">${p.venue || 'Salón por definir'}</span>
+                  <span class="truncate">${e.venue || 'Salón Principal'} (${e.capacity || 100} pax)</span>
                 </p>
+              </div>
+
+              <!-- Código de Acceso & PIN del Cliente -->
+              <div class="mb-4 px-2.5 py-2 rounded-lg bg-amber-500/10 border border-amber-400/20 flex items-center justify-between text-[11px] font-mono">
+                <span class="text-neutral-400 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[13px] text-amber-400">key</span> Código:
+                  <strong class="text-amber-300 font-bold tracking-wider">${readableCode}</strong>
+                </span>
+                <span class="text-neutral-400 flex items-center gap-1 border-l border-white/10 pl-2">
+                  <span class="material-symbols-outlined text-[13px] text-emerald-400">lock</span> PIN:
+                  <strong class="text-emerald-400 font-bold tracking-wider">${pinCode}</strong>
+                </span>
               </div>
             </div>
 
             <!-- Suite de Acciones Rápidas -->
             <div class="pt-4 border-t border-white/10 space-y-2">
               <div class="grid grid-cols-2 gap-2">
-                <a href="${isBoda ? 'invitacion-boda.html' : 'invitacion-xv.html'}?project=${p.id}" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-xs font-semibold tracking-wider transition-all">
-                  <span class="material-symbols-outlined text-sm">visibility</span>
-                  <span>Ver en Vivo ↗</span>
+                <a href="${plannerLink}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 text-xs font-bold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">table_restaurant</span>
+                  <span>Mesas Master</span>
                 </a>
                 
-                <a href="invitacion-estudio.html?project=${p.id}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 text-xs font-semibold tracking-wider transition-all">
-                  <span class="material-symbols-outlined text-sm">edit</span>
-                  <span>Editar</span>
+                <a href="${waShareLink}" target="_blank" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-600/80 hover:bg-emerald-500 text-white text-xs font-bold tracking-wider transition-all">
+                  <span>📲 WhatsApp</span>
                 </a>
               </div>
 
               <!-- Menú de Acciones Secundarias -->
               <div class="flex items-center justify-between pt-1 text-[11px] text-neutral-400">
-                <a href="organizador-mesas.html?project=${p.id}" class="hover:text-amber-300 transition-colors inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">table_restaurant</span> Mesas
+                <a href="${studioLink}" class="hover:text-amber-300 transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">palette</span> Diseño
                 </a>
-                <button type="button" onclick="ProjectsVault.duplicate('${p.id}'); renderVaultProjects();" class="hover:text-white transition-colors inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">content_copy</span> Duplicar
-                </button>
-                <button type="button" onclick="ProjectsVault.exportJSON('${p.id}')" class="hover:text-white transition-colors inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">download</span> JSON
-                </button>
-                <button type="button" onclick="if(confirm('¿Eliminar la invitación \'${p.hosts}\' de la bóveda?')){ ProjectsVault.delete('${p.id}'); renderVaultProjects(); }" class="hover:text-rose-400 transition-colors inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">delete</span>
+                <a href="${previewLink}" target="_blank" class="hover:text-emerald-300 transition-colors inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">visibility</span> Invitación ↗
+                </a>
+                <button type="button" onclick="navigator.clipboard.writeText('${hostLink}').then(()=>alert('Enlace del anfitrión copiado al portapapeles: ${hostLink}'));" class="hover:text-amber-300 transition-colors inline-flex items-center gap-1" title="Copiar enlace del cliente">
+                  <span class="material-symbols-outlined text-xs">link</span> Magic Link
                 </button>
               </div>
             </div>
@@ -588,6 +1016,5 @@
       }).join('');
     }
   </script>
-
 </body>
 </html>

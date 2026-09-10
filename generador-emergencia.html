@@ -1,55 +1,57 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-neutral-950">
+<html lang="es" class="h-full" style="background:#FAF7F2">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Generador de Emergencia · Invitta 2.0 Beta</title>
   
-  <!-- Tipografías de Lujo -->
+  <!-- Tipografías Invitta 1.0 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Invitta 1.0 Design Tokens -->
+  <link rel="stylesheet" href="theme.css">
   
   <!-- QRCode.js para generación offline -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
+      background: #FAF7F2;
+      color: #2E2E2E;
     }
-    .font-cinzel { font-family: 'Cinzel', serif; }
-    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+    .font-cinzel { font-family: 'Cormorant Garamond', serif; }
+    .font-mono-code { font-family: 'Jost', monospace; letter-spacing: 0.04em; }
 
     .glass-card {
-      background: rgba(18, 22, 28, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(163, 128, 71, 0.35);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      background: #FAF7F2;
+      border: 1px solid #E8DDD0;
+      box-shadow: 0 4px 16px rgba(46, 46, 46, 0.06);
     }
   </style>
 </head>
-<body class="min-h-full flex flex-col justify-between text-neutral-100 p-4 sm:p-6 selection:bg-amber-500/30">
+<body class="min-h-full flex flex-col justify-between text-[#2E2E2E] p-4 sm:p-6 selection:bg-[#C9877D]/30" style="background:#FAF7F2">
 
   <!-- CABECERA -->
   <header class="max-w-lg mx-auto w-full flex items-center justify-between py-3 mb-4">
     <div class="flex items-center gap-3">
-      <a href="index.html" class="w-9 h-9 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-300 flex items-center justify-center hover:text-amber-300 hover:border-amber-500/50 transition-colors">
+      <a href="index.html" class="w-9 h-9 rounded-xl border border-[#E8DDD0] text-[#6B6560] flex items-center justify-center hover:text-[#C9877D] hover:border-[#E8B4AD] transition-colors" style="background:#FAF7F2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </a>
       <div>
-        <h1 class="font-cinzel text-base sm:text-lg font-bold text-amber-200 tracking-wide flex items-center gap-2">
+        <h1 class="font-cinzel text-base sm:text-lg font-bold text-[#C9877D] tracking-wide flex items-center gap-2">
           <span>⚡ PASE EXPRESS</span>
-          <span class="text-[9px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 font-mono-code font-bold">MÓVIL</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full bg-[#F5E6E3] text-[#C9877D] border border-[#E8B4AD] font-mono-code font-bold">MÓVIL</span>
         </h1>
-        <p class="text-[11px] text-neutral-400">Generador de Emergencia en Puerta</p>
+        <p class="text-[11px] text-[#6B6560]">Generador de Emergencia en Puerta</p>
       </div>
     </div>
 
-    <a href="scanner-acceso.html" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-500/30 transition-colors">
+    <a href="scanner-acceso.html" class="px-3 py-1.5 rounded-xl bg-[#8A9E7B]/20 border border-[#8A9E7B]/40 text-[#8A9E7B] text-xs font-bold flex items-center gap-1.5 hover:bg-[#8A9E7B]/30 transition-colors">
       <span>📷 Escáner</span>
     </a>
   </header>
@@ -62,41 +64,41 @@
         
         <!-- Campo: Nombre del Invitado / Titular -->
         <div>
-          <label class="block text-xs font-medium text-amber-200/90 mb-1.5">
-            👤 Nombre Completo o Familia <span class="text-amber-400">*</span>
+          <label class="block text-xs font-medium text-[#2E2E2E] mb-1.5">
+            👤 Nombre Completo o Familia <span class="text-[#C9877D]">*</span>
           </label>
           <input id="inputEmergName" type="text" required placeholder="Ej. Dr. Carlos Valenzuela o Familia Ortiz"
-                 class="w-full bg-neutral-900 border border-neutral-700 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors">
+                 class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-4 py-3 text-sm text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
         </div>
 
         <!-- Campo: WhatsApp / Teléfono -->
         <div>
-          <label class="block text-xs font-medium text-neutral-300 mb-1.5">
-            📱 WhatsApp / Celular <span class="text-neutral-500 text-[10px]">(Opcional para envío directo)</span>
+          <label class="block text-xs font-medium text-[#6B6560] mb-1.5">
+            📱 WhatsApp / Celular <span class="text-[#A09A94] text-[10px]">(Opcional para envío directo)</span>
           </label>
           <input id="inputEmergPhone" type="tel" placeholder="Ej. 8112345678"
-                 class="w-full bg-neutral-900 border border-neutral-700 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors">
+                 class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-4 py-3 text-sm text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
         </div>
 
         <!-- Campo: Selector de Pases (Stepper) -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-neutral-300 mb-1.5">
+            <label class="block text-xs font-medium text-[#6B6560] mb-1.5">
               🎟️ Pases Asignados
             </label>
-            <div class="flex items-center justify-between bg-neutral-900 border border-neutral-700 rounded-xl p-1.5">
-              <button type="button" id="btnPassMinus" class="w-9 h-9 rounded-lg bg-neutral-800 text-amber-300 text-lg font-bold flex items-center justify-center active:scale-95 transition-transform">-</button>
-              <span id="labelPassCount" class="font-mono-code text-base font-bold text-white">2</span>
-              <button type="button" id="btnPassPlus" class="w-9 h-9 rounded-lg bg-neutral-800 text-amber-300 text-lg font-bold flex items-center justify-center active:scale-95 transition-transform">+</button>
+            <div class="flex items-center justify-between border border-[#E8DDD0] rounded-xl p-1.5" style="background:#F2EDE4">
+              <button type="button" id="btnPassMinus" class="w-9 h-9 rounded-lg border border-[#E8DDD0] text-[#C9877D] text-lg font-bold flex items-center justify-center active:scale-95 transition-transform" style="background:#FAF7F2">-</button>
+              <span id="labelPassCount" class="font-mono-code text-base font-bold text-[#2E2E2E]">2</span>
+              <button type="button" id="btnPassPlus" class="w-9 h-9 rounded-lg border border-[#E8DDD0] text-[#C9877D] text-lg font-bold flex items-center justify-center active:scale-95 transition-transform" style="background:#FAF7F2">+</button>
             </div>
           </div>
 
           <!-- Campo: Selector de Mesa -->
           <div>
-            <label class="block text-xs font-medium text-neutral-300 mb-1.5">
+            <label class="block text-xs font-medium text-[#6B6560] mb-1.5">
               🪑 Mesa Asignada
             </label>
-            <select id="selectEmergTable" class="w-full bg-neutral-900 border border-neutral-700 focus:border-amber-400 rounded-xl px-3 py-2.5 text-xs text-white outline-none transition-colors">
+            <select id="selectEmergTable" class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-3 py-2.5 text-xs text-[#2E2E2E] outline-none transition-colors" style="background:#F2EDE4">
               <option value="tbl_1">Mesa Imperial (Presidencial)</option>
               <option value="tbl_2">Mesa 2 (Familiares)</option>
               <option value="tbl_3">Mesa 3 (Amigos)</option>
@@ -108,17 +110,17 @@
         </div>
 
         <!-- Checkbox: Auto Check-In Inmediato -->
-        <div class="bg-neutral-900/90 border border-emerald-500/30 rounded-2xl p-3.5 flex items-center gap-3">
+        <div class="border border-[#8A9E7B]/30 rounded-2xl p-3.5 flex items-center gap-3" style="background:#F2EDE4">
           <input type="checkbox" id="checkAutoCheckin" checked 
-                 class="w-5 h-5 rounded text-emerald-500 bg-neutral-950 border-neutral-700 focus:ring-emerald-400 focus:ring-offset-neutral-950 accent-emerald-500 cursor-pointer">
-          <label for="checkAutoCheckin" class="text-xs text-neutral-200 cursor-pointer select-none">
-            <strong class="text-emerald-400 block">🟢 Marcar como Ingresado de Inmediato</strong>
-            <span class="text-[11px] text-neutral-400">Registra el pase con check-in completado ya que la persona está en la puerta.</span>
+                 class="w-5 h-5 rounded border-[#E8DDD0] focus:ring-[#8A9E7B] accent-[#8A9E7B] cursor-pointer">
+          <label for="checkAutoCheckin" class="text-xs text-[#2E2E2E] cursor-pointer select-none">
+            <strong class="text-[#8A9E7B] block">🟢 Marcar como Ingresado de Inmediato</strong>
+            <span class="text-[11px] text-[#6B6560]">Registra el pase con check-in completado ya que la persona está en la puerta.</span>
           </label>
         </div>
 
         <!-- Botón de Emisión -->
-        <button type="submit" id="btnSubmitEmerg" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-neutral-950 font-bold text-xs sm:text-sm uppercase tracking-widest shadow-xl shadow-amber-500/25 active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button type="submit" id="btnSubmitEmerg" class="w-full py-4 rounded-2xl text-white font-bold text-xs sm:text-sm uppercase tracking-widest shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2" style="background:#C9877D">
           <span>⚡ EMITIR PASE DE EMERGENCIA</span>
         </button>
 
@@ -128,22 +130,22 @@
     <!-- ========================================================================= -->
     <!-- TARJETA DE RESULTADO INMEDIATO (SE REVELA AL GENERAR) -->
     <!-- ========================================================================= -->
-    <div id="resultCard" class="glass-card rounded-3xl p-6 border-amber-400/60 hidden text-center animate-fade-in">
+    <div id="resultCard" class="glass-card rounded-3xl p-6 border-[#E8B4AD] hidden text-center animate-fade-in">
       
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-code font-bold uppercase tracking-wider mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-code font-bold uppercase tracking-wider mb-3 bg-[#8A9E7B]/20 text-[#8A9E7B] border border-[#8A9E7B]/40">
         <span>✓ PASE EMITIDO E INTEGRADO AL SALÓN</span>
       </div>
 
-      <h2 id="resultGuestName" class="font-cinzel text-2xl font-bold text-white mb-1">Nombre Invitado</h2>
-      <p id="resultFolio" class="font-mono-code text-sm font-bold text-amber-300 tracking-wider mb-4">FOLIO: M03-APELLIDO-2P</p>
+      <h2 id="resultGuestName" class="font-cinzel text-2xl font-bold text-[#2E2E2E] mb-1">Nombre Invitado</h2>
+      <p id="resultFolio" class="font-mono-code text-sm font-bold text-[#C9877D] tracking-wider mb-4">FOLIO: M03-APELLIDO-2P</p>
 
       <!-- Contenedor QR -->
-      <div class="bg-white p-3 rounded-2xl w-44 h-44 mx-auto mb-4 flex items-center justify-center shadow-xl border-2 border-amber-400/50">
+      <div class="bg-white p-3 rounded-2xl w-44 h-44 mx-auto mb-4 flex items-center justify-center shadow-xl border-2 border-[#E8DDD0]">
         <div id="resultQrContainer"></div>
       </div>
 
-      <p class="text-[11px] text-neutral-400 mb-5">
-        Mesa Asignada: <strong id="resultTableName" class="text-amber-200">Mesa 3</strong> · Pases: <strong id="resultPasses" class="text-white">2</strong>
+      <p class="text-[11px] text-[#6B6560] mb-5">
+        Mesa Asignada: <strong id="resultTableName" class="text-[#C9877D]">Mesa 3</strong> · Pases: <strong id="resultPasses" class="text-[#2E2E2E]">2</strong>
       </p>
 
       <!-- Botones de Acción Directa -->
@@ -153,15 +155,15 @@
         </a>
 
         <div class="grid grid-cols-2 gap-2">
-          <button id="btnCopyInviteLink" class="py-2.5 px-3 rounded-xl bg-neutral-900 border border-neutral-700 text-neutral-200 text-xs font-medium hover:border-amber-400 transition-colors flex items-center justify-center gap-1.5">
+          <button id="btnCopyInviteLink" class="py-2.5 px-3 rounded-xl border border-[#E8DDD0] text-[#6B6560] text-xs font-medium hover:border-[#E8B4AD] hover:text-[#C9877D] transition-colors flex items-center justify-center gap-1.5" style="background:#FAF7F2">
             <span>📋 Copiar Enlace</span>
           </button>
-          <a href="index.html" class="py-2.5 px-3 rounded-xl bg-neutral-900 border border-neutral-700 text-amber-300 text-xs font-medium hover:border-amber-400 transition-colors flex items-center justify-center gap-1.5">
+          <a href="index.html" class="py-2.5 px-3 rounded-xl border border-[#E8DDD0] text-[#C9877D] text-xs font-medium hover:border-[#E8B4AD] transition-colors flex items-center justify-center gap-1.5" style="background:#FAF7F2">
             <span>🪑 Ver en Salón</span>
           </a>
         </div>
 
-        <button id="btnCreateAnother" class="w-full py-2.5 text-xs text-neutral-400 hover:text-white transition-colors">
+        <button id="btnCreateAnother" class="w-full py-2.5 text-xs text-[#A09A94] hover:text-[#C9877D] transition-colors">
           + Emitir otro pase de emergencia
         </button>
       </div>
@@ -170,7 +172,7 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="max-w-lg mx-auto w-full text-center text-xs text-neutral-500 py-3 border-t border-neutral-900">
+  <footer class="max-w-lg mx-auto w-full text-center text-xs text-[#A09A94] py-3 border-t border-[#E8DDD0]">
     <span>Invitta 2.0 Beta · Módulo Logístico de Puerta</span>
   </footer>
 
@@ -184,9 +186,13 @@
     // Poblar Selector de Mesas dinámicamente desde el salón
     const selectTables = document.getElementById('selectEmergTable');
     if (guestManager.state.tables && guestManager.state.tables.length > 0) {
-      selectTables.innerHTML = guestManager.state.tables.map(t => {
-        return `<option value="${t.id}">${t.name} (${t.type === 'imperial' ? 'Presidencial' : 'Circular ' + t.capacity + ' pax'})</option>`;
-      }).join('');
+      selectTables.innerHTML = '';
+      guestManager.state.tables.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t.id;
+        option.textContent = `${t.name} (${t.type === 'imperial' ? 'Presidencial' : 'Circular ' + t.capacity + ' pax'})`;
+        selectTables.appendChild(option);
+      });
     }
 
     // Stepper de Pases

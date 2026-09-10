@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDynamicLists();
   setupFamilyStyleControls();
   setupWaxSealControls();
+  setupVendorCardLogoControls();
   setupFileUploads();
   setupHeaderActions();
   setupInputListeners();
@@ -153,6 +154,17 @@ function setupEventTypeSwitcher() {
 
     schedulePreviewUpdate();
   });
+
+  // Soporte de enlace directo por URL: ?type=boda o ?type=xv
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedType = urlParams.get('type') || urlParams.get('eventType');
+  if (requestedType === 'boda') {
+    selectType.value = 'boda';
+    selectType.dispatchEvent(new Event('change'));
+  } else if (requestedType === 'xv') {
+    selectType.value = 'xv';
+    selectType.dispatchEvent(new Event('change'));
+  }
 }
 
 // ==================== DEVICE SWITCHER ====================
@@ -1495,6 +1507,31 @@ function populateForm() {
   if (inVcBtn) inVcBtn.value = vc.buttonText || '';
   const inVcAgency = document.getElementById('inputVendorCardAgency');
   if (inVcAgency) inVcAgency.value = vc.agencyName || '';
+
+  // Custom Logo Vendor Card
+  const checkVcShowLogo = document.getElementById('checkVendorCardShowLogo');
+  if (checkVcShowLogo) checkVcShowLogo.checked = vc.showLogo !== false;
+  const inVcLogo = document.getElementById('inputVendorCardLogo');
+  if (inVcLogo) inVcLogo.value = vc.logo || '';
+  const btnClrVcLogo = document.getElementById('btnClearVendorLogo');
+  const imgVcLogoPreview = document.getElementById('vendorLogoPreviewImg');
+  const badgeVcLogoType = document.getElementById('vendorLogoTypeBadge');
+  const wrapVcLogoPreview = document.getElementById('vendorLogoPreviewWrap');
+  const isCustomLogo = !!(vc.logo && vc.logo.trim());
+  if (imgVcLogoPreview) {
+    imgVcLogoPreview.src = isCustomLogo ? vc.logo : 'invitta-logo-light.png';
+  }
+  if (btnClrVcLogo) {
+    btnClrVcLogo.style.display = isCustomLogo ? 'inline-flex' : 'none';
+  }
+  if (badgeVcLogoType) {
+    badgeVcLogoType.textContent = isCustomLogo ? 'Personalizado' : 'Invitta (Predeterminado)';
+    badgeVcLogoType.style.background = isCustomLogo ? 'rgba(74,222,128,0.15)' : 'rgba(212,175,55,0.15)';
+    badgeVcLogoType.style.color = isCustomLogo ? '#4ade80' : '#D4AF37';
+  }
+  if (wrapVcLogoPreview && checkVcShowLogo) {
+    wrapVcLogoPreview.style.opacity = checkVcShowLogo.checked ? '1' : '0.4';
+  }
 }
 
 function setupInputListeners() {
@@ -1620,6 +1657,7 @@ function setupInputListeners() {
     { id: 'inputVendorCardMsg', path: 'vendorCard.whatsappMessage' },
     { id: 'inputVendorCardBtnText', path: 'vendorCard.buttonText' },
     { id: 'inputVendorCardAgency', path: 'vendorCard.agencyName' },
+    { id: 'inputVendorCardLogo', path: 'vendorCard.logo' },
     { id: 'inputItineraryTitle', path: 'itineraryTitle' }
   ];
 
@@ -2815,3 +2853,79 @@ function setupWaxSealControls() {
     });
   }
 }
+
+// ==================== VENDOR CARD LOGO CONTROLS ====================
+function setupVendorCardLogoControls() {
+  const fileInput = document.getElementById('fileVendorCardLogo');
+  const urlInput = document.getElementById('inputVendorCardLogo');
+  const btnClear = document.getElementById('btnClearVendorLogo');
+  const checkShow = document.getElementById('checkVendorCardShowLogo');
+  const imgPreview = document.getElementById('vendorLogoPreviewImg');
+  const badgeType = document.getElementById('vendorLogoTypeBadge');
+  const wrapPreview = document.getElementById('vendorLogoPreviewWrap');
+
+  const ensureVendorCard = () => {
+    if (!currentConfig.vendorCard) {
+      currentConfig.vendorCard = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig.vendorCard || {}));
+    }
+  };
+
+  const updateLogoUI = (logoSrc) => {
+    const isCustom = !!(logoSrc && logoSrc.trim());
+    if (urlInput) urlInput.value = logoSrc || '';
+    if (imgPreview) imgPreview.src = isCustom ? logoSrc : 'invitta-logo-light.png';
+    if (btnClear) btnClear.style.display = isCustom ? 'inline-flex' : 'none';
+    if (badgeType) {
+      badgeType.textContent = isCustom ? 'Personalizado' : 'Invitta (Predeterminado)';
+      badgeType.style.background = isCustom ? 'rgba(74,222,128,0.15)' : 'rgba(212,175,55,0.15)';
+      badgeType.style.color = isCustom ? '#4ade80' : '#D4AF37';
+    }
+  };
+
+  if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          ensureVendorCard();
+          currentConfig.vendorCard.logo = re.target.result;
+          updateLogoUI(re.target.result);
+          schedulePreviewUpdate();
+          showToast('Logotipo de contratación cargado exitosamente');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (urlInput) {
+    urlInput.addEventListener('input', (e) => {
+      ensureVendorCard();
+      currentConfig.vendorCard.logo = e.target.value;
+      updateLogoUI(e.target.value);
+      schedulePreviewUpdate();
+    });
+  }
+
+  if (btnClear) {
+    btnClear.addEventListener('click', () => {
+      ensureVendorCard();
+      if (fileInput) fileInput.value = '';
+      currentConfig.vendorCard.logo = '';
+      updateLogoUI('');
+      schedulePreviewUpdate();
+      showToast('Logotipo predeterminado (Invitta) restaurado');
+    });
+  }
+
+  if (checkShow) {
+    checkShow.addEventListener('change', (e) => {
+      ensureVendorCard();
+      currentConfig.vendorCard.showLogo = e.target.checked;
+      if (wrapPreview) wrapPreview.style.opacity = e.target.checked ? '1' : '0.4';
+      schedulePreviewUpdate();
+    });
+  }
+}
+

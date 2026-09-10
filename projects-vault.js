@@ -370,6 +370,8 @@ const ProjectsVault = {
     },
     "vendorCard": {
         "enabled": true,
+        "logo": "invitta-logo-light.png",
+        "showLogo": true,
         "badge": "¿Deseas una invitación como esta?",
         "title": "Invitaciones Digitales de Lujo",
         "description": "Diseño interactivo exclusivo para Bodas, XV Años y Eventos Especiales.",
@@ -735,6 +737,8 @@ const ProjectsVault = {
     },
     "vendorCard": {
         "enabled": true,
+        "logo": "invitta-logo-light.png",
+        "showLogo": true,
         "badge": "¿Deseas una invitación como esta?",
         "title": "Invitaciones Digitales de Lujo",
         "description": "Diseño interactivo exclusivo para Bodas, XV Años y Eventos Especiales.",

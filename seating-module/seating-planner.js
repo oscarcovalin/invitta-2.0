@@ -1015,6 +1015,77 @@ class SeatingPlanner {
   }
 
   /**
+   * Configura la estructura del salón (Mesa Imperial + Mesas Circulares)
+   * preservando asignaciones existentes siempre que sea posible.
+   */
+  configureSalonStructure(options = {}) {
+    const total = Math.max(1, Number(options.totalGuests) || 120);
+    const impCap = Math.max(2, Number(options.imperialCapacity) || 10);
+    const circCap = [8, 10, 12].includes(Number(options.circularCapacity)) ? Number(options.circularCapacity) : 8;
+
+    const remainingGuests = Math.max(0, total - impCap);
+    const neededCircular = Math.ceil(remainingGuests / circCap) || 1;
+
+    let impTable = this.state.tables.find(t => t.type === 'imperial');
+    if (!impTable) {
+      impTable = {
+        id: 'tbl_imperial',
+        number: 'I',
+        name: 'Mesa Imperial',
+        subtitle: 'Novios & Corte de Honor',
+        type: 'imperial',
+        capacity: impCap,
+        posX: '50%',
+        posY: '40px'
+      };
+    } else {
+      impTable.capacity = impCap;
+    }
+
+    const newTables = [impTable];
+
+    for (let i = 1; i <= neededCircular; i++) {
+      const existing = this.state.tables.find(t => t.id === `tbl_${i}`);
+      if (existing) {
+        existing.capacity = circCap;
+        existing.type = 'circular';
+        newTables.push(existing);
+      } else {
+        newTables.push({
+          id: `tbl_${i}`,
+          number: String(i),
+          name: `Mesa ${i}`,
+          subtitle: 'Invitados',
+          type: 'circular',
+          capacity: circCap
+        });
+      }
+    }
+
+    const validTableIds = new Set(newTables.map(t => t.id));
+    this.state.guests.forEach(g => {
+      if (g.tableId && !validTableIds.has(g.tableId)) {
+        g.tableId = null;
+      }
+    });
+
+    this.state.tables = newTables;
+    this.updateStateAndDOM();
+
+    const totalCapacity = impCap + (neededCircular * circCap);
+    return {
+      totalGuests: total,
+      imperialCapacity: impCap,
+      circularCapacity: circCap,
+      circularTablesCount: neededCircular,
+      leftWingCount: Math.ceil(neededCircular / 2),
+      rightWingCount: Math.floor(neededCircular / 2),
+      totalCapacity: totalCapacity,
+      freeSeats: totalCapacity - total
+    };
+  }
+
+  /**
    * Distribución Automática Inteligente de Invitaciones
    * Respeta cortes de honor / VIPs y capacidad por mesa (8, 10 o 12)
    */

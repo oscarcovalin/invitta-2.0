@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Interactivo B2B — Invitta 2.0 Sandbox para Salones & Planners</title>
+  <meta name="description" content="Prueba el software de Invitta 2.0 con un evento real precargado: mesas 2D, escáner de puerta y sobre digital con música.">
+
+  <!-- OPEN GRAPH / FACEBOOK / WHATSAPP / LINKEDIN -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://invitta-v2-production.vercel.app/demo.html">
+  <meta property="og:title" content="Demo Interactivo B2B — Invitta 2.0 | Software para Eventos">
+  <meta property="og:description" content="Prueba el software de Invitta 2.0 con 120 invitados precargados: organizador de mesas 2D, pases QR en puerta y sobre digital con música.">
+  <meta property="og:image" content="https://invitta-v2-production.vercel.app/assets/hero-phone-invitation-mexico.png">
+  <meta property="og:image:alt" content="Invitta 2.0 Software de Lujo para Eventos">
+
+  <!-- TWITTER CARDS -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Demo Interactivo B2B — Invitta 2.0">
+  <meta name="twitter:description" content="Organizador de mesas 2D interactivo, invitaciones de diseño exclusivo y recepción con QR.">
+  <meta name="twitter:image" content="https://invitta-v2-production.vercel.app/assets/hero-phone-invitation-mexico.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="theme.css">
+
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --cream-dark: #F2EDE4;
+      --sand: #E8DDD0;
+      --rose: #C9877D;
+      --rose-light: #E8B4AD;
+      --rose-pale: #F5E6E3;
+      --rose-deep: #A86860;
+      --sage: #8A9E7B;
+      --charcoal: #2E2E2E;
+      --warm-grey: #6B6560;
+      --light-grey: #A09A94;
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Jost', sans-serif;
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--cream); color: var(--charcoal); line-height: 1.6; }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* BANNER SANDBOX SUPERIOR */
+    .sandbox-top-bar {
+      background: var(--charcoal);
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .sandbox-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(201,135,125,0.25);
+      border: 1px solid var(--rose);
+      color: var(--rose-light);
+      padding: 3px 10px;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .sandbox-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-sand-sm {
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
+    }
+    .btn-sand-feedback { background: var(--rose); color: #fff; }
+    .btn-sand-feedback:hover { background: var(--rose-deep); }
+    .btn-sand-b2b { background: #25D366; color: #fff; }
+    .btn-sand-b2b:hover { background: #1eb956; }
+    .btn-sand-reset { background: rgba(255,255,255,0.15); color: #fff; }
+    .btn-sand-reset:hover { background: rgba(255,255,255,0.25); }
+
+    /* HEADER */
+    header.demo-header {
+      background: rgba(250, 247, 242, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+      padding: 14px 0;
+    }
+    .nav-wrap { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--charcoal); text-decoration: none; }
+    .logo em { font-style: italic; color: var(--rose); }
+
+    /* HERO */
+    .demo-hero { padding: 40px 0 25px; text-align: center; }
+    .demo-title { font-family: var(--serif); font-size: clamp(2.2rem, 4.5vw, 3.2rem); font-weight: 400; color: var(--charcoal); line-height: 1.15; margin-bottom: 12px; }
+    .demo-title em { font-style: italic; color: var(--rose); }
+    .demo-desc { font-size: 1rem; color: var(--warm-grey); max-width: 680px; margin: 0 auto 26px; font-weight: 300; }
+
+    /* GRID DE MÓDULOS DE PRUEBA */
+    .demo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 50px; }
+    .demo-card {
+      background: #fff;
+      border: 1.5px solid var(--sand);
+      border-radius: 22px;
+      padding: 28px 24px;
+      box-shadow: 0 10px 30px rgba(46,46,46,0.05);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .demo-card:hover { transform: translateY(-4px); border-color: var(--rose-light); box-shadow: 0 16px 40px rgba(46,46,46,0.08); }
+    .demo-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .demo-icon-lg {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: var(--rose-pale);
+      border: 1px solid var(--rose-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--rose);
+      flex-shrink: 0;
+    }
+    .demo-card-head h3 { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--charcoal); }
+    .demo-card-head span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--rose-deep); font-weight: 700; display: block; }
+    .demo-card p { font-size: 0.85rem; color: var(--warm-grey); line-height: 1.6; margin-bottom: 16px; }
+    .demo-card-meta { background: var(--cream-dark); border: 1px solid var(--sand); border-radius: 12px; padding: 10px 14px; font-size: 0.78rem; color: var(--charcoal); margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* BOLETO QR DE PRUEBA */
+    .qr-sample-box {
+      background: #fff;
+      border: 2px dashed var(--rose-light);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    /* MODAL DE LEAD MAGNET */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(46,46,46,0.6);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.hidden { display: none; }
+    .lead-card {
+      background: #fff;
+      border: 1.5px solid var(--sand);
+      border-radius: 26px;
+      max-width: 480px;
+      width: 100%;
+      padding: 34px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      text-align: center;
+      animation: modalPop 0.3s ease;
+    }
+    @keyframes modalPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    .lead-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--cream);
+      border: 1px solid var(--sand);
+      border-radius: 12px;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .lead-input:focus { border-color: var(--rose); background: #fff; }
+
+    /* FEEDBACK MODAL */
+    .fb-stars { display: flex; justify-content: center; gap: 8px; margin: 16px 0; font-size: 1.8rem; color: #E8DDD0; cursor: pointer; }
+    .fb-stars i.active { color: #F59E0B; }
+
+    @media (max-width: 768px) {
+      .demo-grid { grid-template-columns: 1fr; }
+      .sandbox-top-bar { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- BARRA SUPERIOR FIJA DEL SANDBOX DEMO B2B -->
+  <div class="sandbox-top-bar">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="sandbox-badge"><i class="fa-solid fa-flask"></i> Sandbox Demo B2B</span>
+      <span id="labelLeadStatus" style="opacity:0.9;">Boda Demo: <strong>Sofía &amp; Mateo (Hacienda Las Flores)</strong></span>
+    </div>
+
+    <div class="sandbox-actions">
+      <button type="button" onclick="openFeedbackModal()" class="btn-sand-sm btn-sand-feedback">
+        <i class="fa-solid fa-comment-dots"></i> Dejar Opinión
+      </button>
+      <a href="https://wa.me/525566790073?text=Hola%20Invitta,%20probé%20el%20Demo%20B2B%20y%20deseo%20una%20alianza%20para%20mi%20salón" target="_blank" class="btn-sand-sm btn-sand-b2b">
+        <i class="fa-brands fa-whatsapp"></i> Alianza Salones
+      </a>
+      <button type="button" onclick="resetDemoData()" class="btn-sand-sm btn-sand-reset" title="Reiniciar datos a valores iniciales">
+        <i class="fa-solid fa-rotate-left"></i> Reiniciar
+      </button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="demo-header">
+    <div class="container nav-wrap">
+      <a href="landing.html" class="logo">Inv<em>itta</em> <sup>2.0 Demo</sup></a>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a href="landing.html" class="btn-outline" style="padding: 6px 14px; font-size: 0.8rem;">
+          <i class="fa-solid fa-house"></i> Landing Page
+        </a>
+        <a href="tutorial.html" class="btn-demo-hero" style="padding: 6px 14px; font-size: 0.8rem;">
+          <i class="fa-solid fa-book-open"></i> Guía Paso a Paso
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO DEMO -->
+    <section class="demo-hero">
+      <div class="hero-pill">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Entorno de Prueba para Profesionales
+      </div>
+      <h1 class="demo-title">
+        Explora las herramientas de <em>Invitta 2.0 en Vivo</em>
+      </h1>
+      <p class="demo-desc">
+        Interactúa libremente con los 4 módulos del ecosistema usando datos reales precargados. Cualquier cambio que hagas en el organizador o en el escáner se guardará solo en tu navegador de prueba.
+      </p>
+    </section>
+
+    <!-- GRID DE 4 MÓDULOS DE PRUEBA -->
+    <div class="demo-grid">
+      
+      <!-- 1. Organizador de Mesas 2D -->
+      <div class="demo-card">
+        <div>
+          <div class="demo-card-head">
+            <div class="demo-icon-lg"><i class="fa-solid fa-chair"></i></div>
+            <div>
+              <span>Módulo 01 · Logística &amp; Layout</span>
+              <h3>Organizador de Mesas 2D</h3>
+            </div>
+          </div>
+          <p>
+            Mueve invitados con Drag &amp; Drop, prueba la Mesa Imperial (Presidencia), dimensiona mesas circulares (8, 10, 12 pax) y ejecuta el Auto-Acomodo de familias con 1 clic.
+          </p>
+          <div class="demo-card-meta">
+            <span><strong>Datos precargados:</strong> 120 invitados · 12 mesas</span>
+            <span style="color:var(--sage); font-weight:700;">🟢 En vivo</span>
+          </div>
+        </div>
+        <a href="organizador-mesas.html?event=boda-catalina-julian&role=host_premium" target="_blank" class="btn-wa-hero" style="text-align:center; justify-content:center;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Organizador de Mesas ➔
+        </a>
+      </div>
+
+      <!-- 2. Escáner de Acceso QR Offline -->
+      <div class="demo-card">
+        <div>
+          <div class="demo-card-head">
+            <div class="demo-icon-lg"><i class="fa-solid fa-qrcode"></i></div>
+            <div>
+              <span>Módulo 02 · Recepción en Puerta</span>
+              <h3>Escáner de Acceso QR (Hostess)</h3>
+            </div>
+          </div>
+          <p>
+            Prueba cómo las hostess validan boletos desde la cámara de su celular. Funciona 100% offline sin internet y reproduce sonido de confirmación al validar.
+          </p>
+          <div class="demo-card-meta">
+            <span><strong>Modo:</strong> Cámara Móvil / Offline PWA</span>
+            <span style="color:var(--sage); font-weight:700;">🟢 Offline Ready</span>
+          </div>
+        </div>
+        <a href="scanner-acceso.html?event=boda-catalina-julian&role=hostess" target="_blank" class="btn-wa-hero" style="text-align:center; justify-content:center; background:var(--sage);">
+          <i class="fa-solid fa-camera"></i> Abrir Escáner de Puerta ➔
+        </a>
+      </div>
+
+      <!-- 3. Invitación Digital VIP con Sobre Animado -->
+      <div class="demo-card">
+        <div>
+          <div class="demo-card-head">
+            <div class="demo-icon-lg"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <div>
+              <span>Módulo 03 · Diseño Exclusivo</span>
+              <h3>Invitación VIP con Sobre &amp; Música</h3>
+            </div>
+          </div>
+          <p>
+            Vive la experiencia que recibirán los invitados: sobre animado con sello de lacre interactivo, música de fondo, fotos de iglesia/salón y cuenta regresiva.
+          </p>
+          <div class="demo-card-meta">
+            <span><strong>Efecto:</strong> Sello de Cera + Música MP3</span>
+            <span style="color:var(--rose-deep); font-weight:700;"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Efecto WOW</span>
+          </div>
+        </div>
+        <a href="invitacion-vip.html" target="_blank" class="btn-demo-hero" style="text-align:center; justify-content:center;">
+          <i class="fa-solid fa-play"></i> Probar Invitación VIP con Sobre ➔
+        </a>
+        <div style="display:flex; justify-content:center; gap:12px; margin-top:8px; font-size:12px;">
+          <a href="invitacion-esencial.html" target="_blank" style="color:var(--warm-grey); text-decoration:none; font-weight:600;"><i class="fa-solid fa-leaf text-xs"></i> Ver Esencial ($399)</a>
+          <span style="color:var(--sand);">•</span>
+          <a href="invitacion-premium.html" target="_blank" style="color:var(--rose-deep); text-decoration:none; font-weight:600;"><i class="fa-solid fa-gem text-xs"></i> Ver Premium ($699)</a>
+        </div>
+      </div>
+
+      <!-- 4. Pases Express de Emergencia -->
+      <div class="demo-card">
+        <div>
+          <div class="demo-card-head">
+            <div class="demo-icon-lg"><i class="fa-solid fa-bolt"></i></div>
+            <div>
+              <span>Módulo 04 · Contingencias</span>
+              <h3>Generador de Pases Express</h3>
+            </div>
+          </div>
+          <p>
+            Genera un pase de emergencia en menos de 10 segundos para invitados sorpresa que lleguen a la puerta y envíalo al instante por WhatsApp.
+          </p>
+          <div class="demo-card-meta">
+            <span><strong>Tiempo de emisión:</strong> ~10 segundos</span>
+            <span style="color:#2563EB; font-weight:700;"><i class="fa-solid fa-bolt text-xs"></i> En Puerta</span>
+          </div>
+        </div>
+        <a href="generador-emergencia.html" target="_blank" class="btn-demo-hero" style="text-align:center; justify-content:center;">
+          <i class="fa-solid fa-bolt"></i> Probar Pase Express ➔
+        </a>
+      </div>
+
+    </div>
+
+    <!-- BOLETO QR DE PRUEBA INTERACTIVO PARA ESCANEAR -->
+    <div class="qr-sample-box">
+      <span style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--rose-deep); font-weight:700; display:block; margin-bottom:8px;">
+        <i class="fa-solid fa-qrcode text-rose mr-1"></i> Boleto de Prueba Interactivo
+      </span>
+      <h3 style="font-family:var(--serif); font-size:1.5rem; margin-bottom:6px;">
+        Escanea este código QR con el Escáner de Puerta
+      </h3>
+      <p style="font-size:0.85rem; color:var(--warm-grey); max-width:540px; margin:0 auto 16px;">
+        Abre el Escáner en tu celular o en otra pestaña y apunta a este código QR para ver cómo se realiza el check-in y se asigna la <strong>Mesa 2 (Familia Gómez)</strong>.
+      </p>
+
+      <div style="display:inline-block; padding:16px; background:#fff; border:1px solid var(--sand); border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,0.06);">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Finvitta-v2-production.vercel.app%2Fscroll-rsvp-module%2Findex.html%3Fguest%3Dg_fam_gomez_4p%26event%3Dboda-catalina-julian" alt="Boleto QR de prueba" style="width:160px; height:160px; display:block; margin:0 auto;">
+        <span style="display:block; font-family:monospace; font-size:0.75rem; color:var(--charcoal); font-weight:bold; margin-top:8px;">
+          M2-FAMILIA-GOMEZ-4P
+        </span>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL 1: PUERTA DE REGISTRO B2B (LEAD MAGNET) -->
+  <div id="modalLeadCapture" class="modal-overlay">
+    <div class="lead-card">
+      <div style="width:50px; height:50px; border-radius:16px; background:var(--rose-pale); border:1px solid var(--rose-light); color:var(--rose); display:flex; align-items:center; justify-content:center; font-size:1.4rem; margin:0 auto 14px;">
+        <i class="fa-solid fa-building-user"></i>
+      </div>
+      <h3 style="font-family:var(--serif); font-size:1.6rem; color:var(--charcoal); margin-bottom:6px;">
+        Pase VIP al Sandbox Demo B2B
+      </h3>
+      <p style="font-size:0.85rem; color:var(--warm-grey); margin-bottom:20px; line-height:1.5;">
+        Ingresa los datos de tu empresa o salón para habilitar el entorno de prueba interactivo con 120 invitados precargados.
+      </p>
+
+      <form id="leadCaptureForm" onsubmit="handleLeadSubmit(event)">
+        <input type="text" id="leadName" class="lead-input" placeholder="Tu Nombre Completo" required>
+        <input type="text" id="leadCompany" class="lead-input" placeholder="Nombre de tu Salón / Agencia Wedding Planner" required>
+        <input type="tel" id="leadPhone" class="lead-input" placeholder="Tu WhatsApp (ej. 55 1234 5678)" required>
+
+        <select id="leadRole" class="lead-input" style="cursor:pointer;" required>
+          <option value="Wedding Planner">Wedding Planner Profesional</option>
+          <option value="Salón de Eventos / Hacienda">Administrador de Salón / Hacienda</option>
+          <option value="Coordinador de Banquetes">Coordinador de Banquetes / Catering</option>
+          <option value="Novios / Anfitrión">Novio / Novia / Anfitrión</option>
+        </select>
+
+        <button type="submit" class="btn-wa-hero" style="width:100%; justify-content:center; padding:13px; font-size:0.9rem; margin-top:6px;">
+          <i class="fa-solid fa-unlock"></i> Desbloquear Sandbox Demo
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: RETROALIMENTACIÓN (FEEDBACK) -->
+  <div id="modalFeedback" class="modal-overlay hidden">
+    <div class="lead-card">
+      <div style="display:flex; justify-content:flex-end;">
+        <button type="button" onclick="closeFeedbackModal()" style="background:none; border:none; color:var(--warm-grey); font-size:1.2rem; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <h3 style="font-family:var(--serif); font-size:1.6rem; color:var(--charcoal); margin-bottom:4px;">
+        ¿Qué te pareció el Demo?
+      </h3>
+      <p style="font-size:0.82rem; color:var(--warm-grey); margin-bottom:12px;">
+        Tu opinión nos ayuda a mejorar el software para salones y planners en México.
+      </p>
+
+      <div class="fb-stars" id="fbStarsContainer">
+        <i class="fa-solid fa-star active" data-val="1" onclick="setRating(1)"></i>
+        <i class="fa-solid fa-star active" data-val="2" onclick="setRating(2)"></i>
+        <i class="fa-solid fa-star active" data-val="3" onclick="setRating(3)"></i>
+        <i class="fa-solid fa-star active" data-val="4" onclick="setRating(4)"></i>
+        <i class="fa-solid fa-star active" data-val="5" onclick="setRating(5)"></i>
+      </div>
+
+      <textarea id="fbComment" class="lead-input" rows="3" placeholder="¿Qué función te gustó más o qué otra herramienta necesita tu salón?" style="resize:none;"></textarea>
+
+      <button type="button" onclick="sendFeedbackWhatsApp()" class="btn-wa-hero" style="width:100%; justify-content:center; padding:12px; background:#25D366;">
+        <i class="fa-brands fa-whatsapp"></i> Enviar Opinión por WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentRating = 5;
+
+    function checkExistingLead() {
+      const savedLead = localStorage.getItem('invitta_demo_lead');
+      if (savedLead) {
+        try {
+          const lead = JSON.parse(savedLead);
+          document.getElementById('modalLeadCapture')?.classList.add('hidden');
+          const status = document.getElementById('labelLeadStatus');
+          if (status) status.textContent = `Pase VIP: ${lead.company || lead.name}`;
+        } catch(e) {}
+      }
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      const lead = {
+        name: document.getElementById('leadName').value.trim(),
+        company: document.getElementById('leadCompany').value.trim(),
+        phone: document.getElementById('leadPhone').value.trim(),
+        role: document.getElementById('leadRole').value,
+        timestamp: new Date().toISOString(),
+        dateFormatted: new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })
+      };
+
+      // 1. Guardar en memoria local del navegador
+      localStorage.setItem('invitta_demo_lead', JSON.stringify(lead));
+      
+      // Guardar también en el histórico de leads de la plataforma
+      try {
+        const history = JSON.parse(localStorage.getItem('invitta_demo_leads_history') || '[]');
+        history.push(lead);
+        localStorage.setItem('invitta_demo_leads_history', JSON.stringify(history));
+      } catch(err) {}
+
+      // 2. Envío a Google Sheets / Webhook en la nube (Endpoint HTTP / Apps Script del Usuario)
+      const webhookUrl = localStorage.getItem('invitta_google_sheets_webhook') || 'https://script.google.com/macros/s/AKfycbwUJSoWdz_v2iwUOXRkOLiQJZhRzZkAdn7THhmXfE1KWspY8a0m9ozsLwjhca_z1u1UTg/exec';
+      try {
+        fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(lead)
+        }).catch(() => {});
+      } catch (err) {}
+
+      // 3. Ocultar modal y actualizar estado en pantalla
+      document.getElementById('modalLeadCapture').classList.add('hidden');
+      const status = document.getElementById('labelLeadStatus');
+      if (status) status.textContent = `Pase VIP: ${lead.company} (${lead.role})`;
+
+      // 4. Notificación automática por WhatsApp a ventas (+52 55 6679 0073)
+      const waMessage = `🚀 *Nuevo Registro en Demo B2B Invitta 2.0* 🚀\n\n` +
+        `👤 *Nombre:* ${lead.name}\n` +
+        `🏢 *Salón / Agencia:* ${lead.company}\n` +
+        `📱 *WhatsApp:* ${lead.phone}\n` +
+        `📋 *Perfil:* ${lead.role}\n` +
+        `📅 *Fecha:* ${lead.dateFormatted}\n\n` +
+        `_Prospecto listo para seguimiento comercial y alianza B2B._`;
+
+      const waUrl = `https://wa.me/525566790073?text=${encodeURIComponent(waMessage)}`;
+      
+      // Abrir WhatsApp en segundo plano o nueva pestaña para registrar el lead
+      window.open(waUrl, '_blank');
+    }
+
+    function openFeedbackModal() {
+      document.getElementById('modalFeedback')?.classList.remove('hidden');
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('modalFeedback')?.classList.add('hidden');
+    }
+
+    function setRating(val) {
+      currentRating = val;
+      const stars = document.querySelectorAll('#fbStarsContainer i');
+      stars.forEach((s, idx) => {
+        if (idx < val) s.classList.add('active');
+        else s.classList.remove('active');
+      });
+    }
+
+    function sendFeedbackWhatsApp() {
+      const comment = document.getElementById('fbComment').value.trim() || 'Excelente demostración.';
+      const savedLead = localStorage.getItem('invitta_demo_lead');
+      let author = 'Wedding Planner / Salón';
+      if (savedLead) {
+        try {
+          const l = JSON.parse(savedLead);
+          author = `${l.name} (${l.company} - ${l.role})`;
+        } catch(e) {}
+      }
+
+      const msg = `⭐ *Retroalimentación Demo Invitta 2.0* ⭐\n\n` +
+        `👤 *De:* ${author}\n` +
+        `🌟 *Calificación:* ${currentRating}/5 estrellas\n` +
+        `💬 *Comentario:* ${comment}`;
+
+      window.open(`https://wa.me/525566790073?text=${encodeURIComponent(msg)}`, '_blank');
+      closeFeedbackModal();
+    }
+
+    function resetDemoData() {
+      if (confirm('¿Deseas reiniciar los datos del Sandbox al estado original de 120 invitados?')) {
+        localStorage.removeItem('invitta_guest_manager_state_boda-catalina-julian');
+        alert('✨ Datos del Sandbox reiniciados exitosamente.');
+        window.location.reload();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkExistingLead);
+  </script>
+</body>
+</html>

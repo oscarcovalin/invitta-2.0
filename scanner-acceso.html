@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-neutral-950">
+<html lang="es" class="h-full" style="background:#FAF7F2">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Invitta Access · Escáner Hostess & Puerta (Offline)</title>
   
-  <!-- Tipografías de Lujo -->
+  <!-- Tipografías Invitta 1.0 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Invitta 1.0 Design Tokens -->
+  <link rel="stylesheet" href="theme.css">
   
   <!-- jsQR Library for 100% Offline Camera Decoding -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Jost', sans-serif;
       touch-action: manipulation;
+      background: #FAF7F2;
+      color: #2E2E2E;
     }
-    .font-cinzel { font-family: 'Cinzel', serif; }
-    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+    .font-cinzel { font-family: 'Cormorant Garamond', serif; }
+    .font-mono-code { font-family: 'Jost', monospace; letter-spacing: 0.04em; }
 
     /* Laser Scanner Animation */
     @keyframes scanLaser {
@@ -35,66 +39,64 @@
       left: 6%;
       right: 6%;
       height: 3px;
-      background: linear-gradient(90deg, rgba(212,175,55,0) 0%, #D4AF37 50%, rgba(212,175,55,0) 100%);
-      box-shadow: 0 0 15px 3px rgba(212,175,55,0.75);
+      background: linear-gradient(90deg, rgba(201,135,125,0) 0%, #C9877D 50%, rgba(201,135,125,0) 100%);
+      box-shadow: 0 0 15px 3px rgba(201,135,125,0.75);
       animation: scanLaser 2.2s ease-in-out infinite;
       border-radius: 9999px;
     }
 
-    /* Glass Effect */
+    /* Light Card Effect */
     .glass-dark {
-      background: rgba(18, 22, 28, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(163, 128, 71, 0.28);
+      background: #FAF7F2;
+      border: 1px solid #E8DDD0;
     }
   </style>
 </head>
-<body class="h-full flex flex-col justify-between text-neutral-100 selection:bg-amber-500/30 overflow-hidden">
+<body class="h-full flex flex-col justify-between text-[#2E2E2E] selection:bg-[#C9877D]/30 overflow-hidden" style="background:#FAF7F2">
 
   <!-- CABECERA DE CONTROL -->
-  <header class="glass-dark px-4 py-3 border-b border-amber-500/20 flex items-center justify-between z-30 shrink-0">
+  <header class="glass-dark px-4 py-3 border-b border-[#E8DDD0] flex items-center justify-between z-30 shrink-0" style="background:#FAF7F2">
     <div class="flex items-center gap-2.5">
-      <a href="index.html" class="w-8 h-8 rounded-lg bg-neutral-900 border border-amber-500/40 text-amber-300 flex items-center justify-center hover:bg-neutral-800 transition-colors">
+      <a href="index.html" class="w-8 h-8 rounded-lg border border-[#E8DDD0] text-[#C9877D] flex items-center justify-center hover:bg-[#F5E6E3] transition-colors" style="background:#FAF7F2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </a>
       <div>
-        <h1 class="font-cinzel text-sm sm:text-base font-bold text-amber-200 tracking-wider flex items-center gap-1.5">
-          <span>⚜️ INVITTA ACCESS</span>
-          <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-mono-code">OFFLINE</span>
+        <h1 class="font-cinzel text-sm sm:text-base font-bold text-[#C9877D] tracking-wider flex items-center gap-1.5">
+          <span>⚜️ <span class="invitta-logo"><em>In</em>vitta <span style="font-size:0.7em; font-weight:400; font-family:var(--sans); letter-spacing:0.15em; color:var(--warm-grey)">2.0</span></span> ACCESS</span>
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-[#8A9E7B]/20 text-[#8A9E7B] border border-[#8A9E7B]/40 font-mono-code">OFFLINE</span>
         </h1>
-        <p class="text-[10px] text-neutral-400">Control de Recepción & Puerta</p>
+        <p class="text-[10px] text-[#6B6560]">Control de Recepción & Puerta</p>
       </div>
     </div>
 
     <!-- Acciones Rápidas -->
     <div class="flex items-center gap-2">
-      <button id="btnTorch" class="p-2 rounded-lg bg-neutral-900/80 border border-white/10 text-neutral-300 hover:text-amber-300 transition-colors" title="Linterna">
+      <button id="btnTorch" class="p-2 rounded-lg border border-[#E8DDD0] text-[#6B6560] hover:text-[#C9877D] hover:border-[#E8B4AD] transition-colors" style="background:#FAF7F2" title="Linterna">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
       </button>
-      <button id="btnSwitchCam" class="p-2 rounded-lg bg-neutral-900/80 border border-white/10 text-neutral-300 hover:text-amber-300 transition-colors" title="Cambiar Cámara">
+      <button id="btnSwitchCam" class="p-2 rounded-lg border border-[#E8DDD0] text-[#6B6560] hover:text-[#C9877D] hover:border-[#E8B4AD] transition-colors" style="background:#FAF7F2" title="Cambiar Cámara">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
       </button>
-      <a href="generador-emergencia.html" class="px-2.5 py-1.5 rounded-lg bg-blue-600/30 border border-blue-400/50 text-blue-200 text-xs font-bold flex items-center gap-1 hover:bg-blue-600/50 transition-colors">
+      <a href="generador-emergencia.html" class="px-2.5 py-1.5 rounded-lg bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] text-xs font-bold flex items-center gap-1 hover:bg-[#E8B4AD]/30 transition-colors">
         <span>⚡ Emergencia</span>
       </a>
     </div>
   </header>
 
   <!-- MÉTRICAS EN VIVO EN PUERTA -->
-  <div class="bg-neutral-900/90 border-b border-neutral-800 px-4 py-2 flex items-center justify-between text-xs z-20 shrink-0">
+  <div class="border-b border-[#E8DDD0] px-4 py-2 flex items-center justify-between text-xs z-20 shrink-0" style="background:#F2EDE4">
     <div class="flex items-center gap-3 font-mono-code text-[11px]">
-      <span class="flex items-center gap-1.5 text-emerald-400">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="flex items-center gap-1.5 text-[#8A9E7B]">
+        <span class="w-2 h-2 rounded-full bg-[#8A9E7B] animate-pulse"></span>
         <strong id="metricInSalon">0</strong> en Salón
       </span>
-      <span class="text-neutral-600">|</span>
-      <span class="flex items-center gap-1.5 text-amber-300">
-        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+      <span class="text-[#A09A94]">|</span>
+      <span class="flex items-center gap-1.5 text-[#C9877D]">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#C9877D]"></span>
         <strong id="metricInTransit">0</strong> en Camino
       </span>
     </div>
-    <div id="metricOccupancyBadge" class="font-mono-code text-[10px] px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-300 border border-neutral-700">
+    <div id="metricOccupancyBadge" class="font-mono-code text-[10px] px-2 py-0.5 rounded-full text-[#6B6560] border border-[#E8DDD0]" style="background:#FAF7F2">
       Ocupación: 0%
     </div>
   </div>
@@ -106,108 +108,108 @@
     <video id="cameraVideo" playsinline class="absolute inset-0 w-full h-full object-cover"></video>
     <canvas id="scanCanvas" class="hidden"></canvas>
 
-    <!-- Overlay de Enfoque con Ribetes Dorados -->
-    <div class="relative z-10 w-64 h-64 sm:w-72 sm:h-72 rounded-3xl border-2 border-amber-400/50 shadow-2xl flex flex-col items-center justify-between p-3 pointer-events-none transition-all" id="scanFrame">
+    <!-- Overlay de Enfoque con Ribetes Rosa -->
+    <div class="relative z-10 w-64 h-64 sm:w-72 sm:h-72 rounded-3xl border-2 border-[#C9877D]/60 shadow-2xl flex flex-col items-center justify-between p-3 pointer-events-none transition-all" id="scanFrame">
       
       <!-- Esquinas ornamentales -->
-      <div class="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-amber-300 rounded-tl-xl"></div>
-      <div class="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-amber-300 rounded-tr-xl"></div>
-      <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-amber-300 rounded-bl-xl"></div>
-      <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-amber-300 rounded-br-xl"></div>
+      <div class="absolute -top-1 -left-1 w-6 h-6 border-t-4 border-l-4 border-[#C9877D] rounded-tl-xl"></div>
+      <div class="absolute -top-1 -right-1 w-6 h-6 border-t-4 border-r-4 border-[#C9877D] rounded-tr-xl"></div>
+      <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-4 border-l-4 border-[#C9877D] rounded-bl-xl"></div>
+      <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-4 border-r-4 border-[#C9877D] rounded-br-xl"></div>
 
       <!-- Rayo Láser Animado -->
       <div class="scan-laser"></div>
 
-      <span class="text-[10px] uppercase font-mono-code text-amber-200/90 tracking-widest bg-black/60 px-2 py-0.5 rounded-full border border-amber-500/30">
+      <span class="text-[10px] uppercase font-mono-code text-white/90 tracking-widest bg-black/60 px-2 py-0.5 rounded-full border border-white/20">
         Enfoca el Pase QR
       </span>
 
-      <span id="scanStatusIndicator" class="text-[10px] text-neutral-300 bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
+      <span id="scanStatusIndicator" class="text-[10px] text-white/80 bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
         Buscando código...
       </span>
     </div>
 
     <!-- Fallback / Botón de simulación si no hay cámara activa -->
-    <div id="cameraPrompt" class="absolute inset-0 bg-neutral-950/90 z-20 flex flex-col items-center justify-center p-6 text-center hidden">
-      <div class="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-400/40 text-amber-300 flex items-center justify-center mb-4">
+    <div id="cameraPrompt" class="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center hidden" style="background:#FAF7F2">
+      <div class="w-16 h-16 rounded-full bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] flex items-center justify-center mb-4">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
       </div>
-      <h2 class="font-cinzel text-lg text-white font-bold mb-2">Activar Cámara de Puerta</h2>
-      <p class="text-xs text-neutral-400 max-w-xs mb-5">Permite el acceso a la cámara para escanear pases QR en tiempo real.</p>
-      <button id="btnStartCamera" class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 active:scale-95 transition-transform">
+      <h2 class="font-cinzel text-lg text-[#2E2E2E] font-bold mb-2">Activar Cámara de Puerta</h2>
+      <p class="text-xs text-[#6B6560] max-w-xs mb-5">Permite el acceso a la cámara para escanear pases QR en tiempo real.</p>
+      <button id="btnStartCamera" class="px-6 py-3 rounded-xl text-white font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-transform" style="background:#C9877D">
         Iniciar Escáner
       </button>
     </div>
   </main>
 
   <!-- BÚSQUEDA MANUAL RÁPIDA & LISTA DE ACCESOS -->
-  <section class="glass-dark p-3 border-t border-amber-500/20 z-30 shrink-0 max-h-56 overflow-y-auto">
+  <section class="glass-dark p-3 border-t border-[#E8DDD0] z-30 shrink-0 max-h-56 overflow-y-auto" style="background:#FAF7F2">
     
     <!-- Barra de Búsqueda de Respaldo -->
     <div class="relative mb-2">
       <input id="inputManualSearch" type="text" placeholder="Buscar por Folio (ej. M03) o Apellido..." 
-             class="w-full bg-neutral-900/90 border border-neutral-700 focus:border-amber-400 rounded-xl px-3.5 py-2 pl-9 text-xs text-white placeholder-neutral-500 outline-none transition-colors">
-      <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-      <button id="btnClearSearch" class="hidden absolute right-2.5 top-2 text-neutral-400 hover:text-white text-xs">✕</button>
+             class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-3.5 py-2 pl-9 text-xs text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
+      <svg class="w-4 h-4 text-[#A09A94] absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <button id="btnClearSearch" class="hidden absolute right-2.5 top-2 text-[#A09A94] hover:text-[#2E2E2E] text-xs">✕</button>
     </div>
 
     <!-- Resultados de Búsqueda Manual -->
     <div id="searchResultsList" class="hidden space-y-1.5 mb-2"></div>
 
     <!-- Historial de Accesos Recientes -->
-    <div class="flex items-center justify-between text-[11px] text-neutral-400 font-mono-code mb-1 px-1">
+    <div class="flex items-center justify-between text-[11px] text-[#6B6560] font-mono-code mb-1 px-1">
       <span>ÚLTIMOS INGRESOS:</span>
       <span id="logCountBadge">0 registrados</span>
     </div>
     <div id="checkinHistoryList" class="space-y-1.5 text-xs">
-      <p class="text-[11px] text-neutral-500 text-center py-2 italic">Aún no hay ingresos escaneados en esta sesión.</p>
+      <p class="text-[11px] text-[#A09A94] text-center py-2 italic">Aún no hay ingresos escaneados en esta sesión.</p>
     </div>
   </section>
 
   <!-- ========================================================================= -->
   <!-- MODAL DE CHECK-IN Y VALIDACIÓN CON SELECTOR DE PASES PARCIALES -->
   <!-- ========================================================================= -->
-  <div id="checkinModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-    <div class="w-full sm:max-w-md bg-neutral-900 border-t sm:border border-amber-500/40 rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl text-center transform transition-transform">
+  <div id="checkinModal" class="fixed inset-0 z-50 bg-[#2E2E2E]/60 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+    <div class="w-full sm:max-w-md border-t sm:border border-[#E8DDD0] rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl text-center transform transition-transform" style="background:#FAF7F2">
       
       <!-- Insignia de Estado -->
-      <div id="modalStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-code font-bold uppercase tracking-wider mb-4 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <div id="modalStatusBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono-code font-bold uppercase tracking-wider mb-4 bg-[#8A9E7B]/20 text-[#8A9E7B] border border-[#8A9E7B]/40">
+        <span class="w-2 h-2 rounded-full bg-[#8A9E7B]"></span>
         <span>PASE OFICIAL VALIDADO</span>
       </div>
 
       <!-- Nombre del Titular -->
-      <h2 id="modalGuestName" class="font-cinzel text-xl sm:text-2xl font-bold text-white mb-1">Familia Martínez Valdés</h2>
-      <p id="modalGuestFolio" class="font-mono-code text-xs text-amber-300 tracking-wider mb-4">FOLIO: M03-MARTINEZ-4P</p>
+      <h2 id="modalGuestName" class="font-cinzel text-xl sm:text-2xl font-bold text-[#2E2E2E] mb-1">Familia Martínez Valdés</h2>
+      <p id="modalGuestFolio" class="font-mono-code text-xs text-[#C9877D] tracking-wider mb-4">FOLIO: M03-MARTINEZ-4P</p>
 
       <!-- Tarjeta de Mesa Asignada -->
-      <div class="bg-neutral-950 border border-amber-500/30 rounded-2xl p-4 mb-5 flex items-center justify-around">
+      <div class="border border-[#E8DDD0] rounded-2xl p-4 mb-5 flex items-center justify-around" style="background:#F2EDE4">
         <div class="text-left">
-          <p class="text-[10px] text-neutral-400 uppercase font-mono-code">Mesa Asignada</p>
-          <p id="modalTableNumber" class="text-lg font-bold text-amber-200">Mesa 3</p>
+          <p class="text-[10px] text-[#6B6560] uppercase font-mono-code">Mesa Asignada</p>
+          <p id="modalTableNumber" class="text-lg font-bold text-[#C9877D]">Mesa 3</p>
         </div>
-        <div class="w-px h-8 bg-neutral-800"></div>
+        <div class="w-px h-8 bg-[#E8DDD0]"></div>
         <div class="text-right">
-          <p class="text-[10px] text-neutral-400 uppercase font-mono-code">Pases Autorizados</p>
-          <p id="modalTotalPasses" class="text-lg font-bold text-white">4 Personas</p>
+          <p class="text-[10px] text-[#6B6560] uppercase font-mono-code">Pases Autorizados</p>
+          <p id="modalTotalPasses" class="text-lg font-bold text-[#2E2E2E]">4 Personas</p>
         </div>
       </div>
 
       <!-- SELECTOR TÁCTIL DE INGRESO PARCIAL -->
-      <div class="bg-neutral-800/60 rounded-2xl p-4 mb-6 border border-white/5">
-        <label class="block text-xs text-neutral-300 font-medium mb-3">
+      <div class="rounded-2xl p-4 mb-6 border border-[#E8DDD0]" style="background:#F2EDE4">
+        <label class="block text-xs text-[#2E2E2E] font-medium mb-3">
           ¿Cuántas personas ingresan físicamente ahora?
         </label>
         
         <div class="flex items-center justify-center gap-4">
-          <button id="btnModalPassMinus" class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-700 text-amber-300 text-xl font-bold active:scale-95 transition-transform flex items-center justify-center">
+          <button id="btnModalPassMinus" class="w-12 h-12 rounded-xl border border-[#E8DDD0] text-[#C9877D] text-xl font-bold active:scale-95 transition-transform flex items-center justify-center" style="background:#FAF7F2">
             -
           </button>
           <div class="w-24 text-center">
-            <span id="modalAdmittedCount" class="text-3xl font-bold text-white font-mono-code">4</span>
-            <span id="modalAdmittedMaxHint" class="block text-[10px] text-neutral-400">de 4 pases</span>
+            <span id="modalAdmittedCount" class="text-3xl font-bold text-[#2E2E2E] font-mono-code">4</span>
+            <span id="modalAdmittedMaxHint" class="block text-[10px] text-[#6B6560]">de 4 pases</span>
           </div>
-          <button id="btnModalPassPlus" class="w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-700 text-amber-300 text-xl font-bold active:scale-95 transition-transform flex items-center justify-center">
+          <button id="btnModalPassPlus" class="w-12 h-12 rounded-xl border border-[#E8DDD0] text-[#C9877D] text-xl font-bold active:scale-95 transition-transform flex items-center justify-center" style="background:#FAF7F2">
             +
           </button>
         </div>
@@ -215,10 +217,10 @@
 
       <!-- Botones de Acción -->
       <div class="grid grid-cols-2 gap-3">
-        <button id="btnCancelCheckin" class="py-3.5 px-4 rounded-xl bg-neutral-800 border border-neutral-700 text-neutral-300 text-xs font-semibold hover:bg-neutral-700 active:scale-95 transition-all">
+        <button id="btnCancelCheckin" class="py-3.5 px-4 rounded-xl border border-[#E8DDD0] text-[#6B6560] text-xs font-semibold hover:bg-[#F2EDE4] active:scale-95 transition-all" style="background:#FAF7F2">
           Cancelar
         </button>
-        <button id="btnConfirmCheckin" class="py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-neutral-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/25 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+        <button id="btnConfirmCheckin" class="py-3.5 px-4 rounded-xl text-white font-bold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all flex items-center justify-center gap-1.5" style="background:#C9877D">
           <span>✓ REGISTRAR</span>
         </button>
       </div>
@@ -482,7 +484,7 @@
       });
 
       if (matches.length === 0) {
-        searchResultsList.innerHTML = '<p class="text-xs text-neutral-500 py-1 px-2">Sin resultados</p>';
+        searchResultsList.innerHTML = '<p class="text-xs text-[#A09A94] py-1 px-2">Sin resultados</p>';
       } else {
         searchResultsList.innerHTML = matches.map(g => {
           const isChecked = g.status === 'CHECKED_IN';
@@ -491,12 +493,12 @@
           const safeFolio = escapeHTML(folio);
           const safeId = escapeHTML(g.id);
           return `
-            <div class="bg-neutral-900 border border-neutral-700/60 rounded-xl p-2.5 flex items-center justify-between">
+            <div class="border border-[#E8DDD0] rounded-xl p-2.5 flex items-center justify-between" style="background:#FAF7F2">
               <div>
-                <p class="font-bold text-white text-xs">${safeName}</p>
-                <p class="text-[10px] text-neutral-400 font-mono-code">${safeFolio} · ${parseInt(g.passes, 10) || 1} pases</p>
+                <p class="font-bold text-[#2E2E2E] text-xs">${safeName}</p>
+                <p class="text-[10px] text-[#6B6560] font-mono-code">${safeFolio} · ${parseInt(g.passes, 10) || 1} pases</p>
               </div>
-              <button onclick="selectManualGuest('${safeId}')" class="px-3 py-1 rounded-lg ${isChecked ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500 text-neutral-950 font-bold'} text-xs active:scale-95 transition-transform">
+              <button onclick="selectManualGuest('${safeId}')" class="px-3 py-1 rounded-lg ${isChecked ? 'bg-[#8A9E7B]/20 text-[#8A9E7B] border border-[#8A9E7B]/40' : 'text-white font-bold'} text-xs active:scale-95 transition-transform" ${isChecked ? '' : 'style="background:#C9877D"'}>
                 ${isChecked ? '✓ Ingresado' : 'Validar'}
               </button>
             </div>
@@ -532,7 +534,7 @@
       document.getElementById('logCountBadge').textContent = `${logs.length} registrados`;
 
       if (logs.length === 0) {
-        checkinHistoryList.innerHTML = '<p class="text-[11px] text-neutral-500 text-center py-2 italic">Aún no hay ingresos escaneados en esta sesión.</p>';
+        checkinHistoryList.innerHTML = '<p class="text-[11px] text-[#A09A94] text-center py-2 italic">Aún no hay ingresos escaneados en esta sesión.</p>';
         return;
       }
 
@@ -542,15 +544,15 @@
         const safeFolio = escapeHTML(log.folio || '');
         const safePasses = parseInt(log.admittedPasses, 10) || 1;
         return `
-          <div class="bg-neutral-900/60 border border-emerald-500/20 rounded-xl p-2 flex items-center justify-between text-[11px]">
+          <div class="border border-[#8A9E7B]/30 rounded-xl p-2 flex items-center justify-between text-[11px]" style="background:#FAF7F2">
             <div class="flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span class="w-2 h-2 rounded-full bg-[#8A9E7B]"></span>
               <div>
-                <p class="font-semibold text-white">${safeName} <span class="text-amber-300 font-mono-code">(${safePasses} pax)</span></p>
-                <p class="text-[10px] text-neutral-400 font-mono-code">${safeFolio}</p>
+                <p class="font-semibold text-[#2E2E2E]">${safeName} <span class="text-[#C9877D] font-mono-code">(${safePasses} pax)</span></p>
+                <p class="text-[10px] text-[#6B6560] font-mono-code">${safeFolio}</p>
               </div>
             </div>
-            <span class="text-[10px] text-neutral-400 font-mono-code">${timeStr}</span>
+            <span class="text-[10px] text-[#A09A94] font-mono-code">${timeStr}</span>
           </div>
         `;
       }).join('');

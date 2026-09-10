@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía Paso a Paso — Cómo Usar Invitta 2.0</title>
+  <meta name="description" content="Aprende a usar Invitta 2.0 en 4 sencillos pasos: ingreso con PIN, organizador de mesas, envío por WhatsApp y escaneo QR en puerta.">
+
+  <!-- OPEN GRAPH / FACEBOOK / WHATSAPP / LINKEDIN -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://invitta-v2-production.vercel.app/tutorial.html">
+  <meta property="og:title" content="Guía Paso a Paso — Cómo Usar Invitta 2.0">
+  <meta property="og:description" content="Aprende a usar Invitta 2.0 en 4 sencillos pasos: ingreso con PIN, organizador de mesas, envío por WhatsApp y escaneo QR en puerta.">
+  <meta property="og:image" content="https://invitta-v2-production.vercel.app/assets/hero-phone-invitation-mexico.png">
+  <meta property="og:image:alt" content="Tutorial Invitta 2.0">
+
+  <!-- TWITTER CARDS -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Guía Paso a Paso — Invitta 2.0">
+  <meta name="twitter:description" content="Aprende a usar Invitta 2.0 en 4 sencillos pasos.">
+  <meta name="twitter:image" content="https://invitta-v2-production.vercel.app/assets/hero-phone-invitation-mexico.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="theme.css">
+
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --cream-dark: #F2EDE4;
+      --sand: #E8DDD0;
+      --rose: #C9877D;
+      --rose-light: #E8B4AD;
+      --rose-pale: #F5E6E3;
+      --rose-deep: #A86860;
+      --sage: #8A9E7B;
+      --charcoal: #2E2E2E;
+      --warm-grey: #6B6560;
+      --light-grey: #A09A94;
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Jost', sans-serif;
+      --transition: all 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--cream); color: var(--charcoal); line-height: 1.6; }
+
+    .container { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+    /* HEADER */
+    header.tut-header {
+      background: rgba(250, 247, 242, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--sand);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 0;
+    }
+    .nav-wrap { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--charcoal); text-decoration: none; }
+    .logo em { font-style: italic; color: var(--rose); }
+
+    /* HERO */
+    .tut-hero { padding: 50px 0 35px; text-align: center; }
+    .tut-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; background: var(--rose-pale); border: 1px solid var(--rose-light); border-radius: 99px; font-size: 0.72rem; font-weight: 700; color: var(--rose-deep); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; }
+    .tut-title { font-family: var(--serif); font-size: clamp(2.2rem, 4.5vw, 3.4rem); font-weight: 400; color: var(--charcoal); line-height: 1.15; margin-bottom: 14px; }
+    .tut-title em { font-style: italic; color: var(--rose); }
+    .tut-desc { font-size: 1rem; color: var(--warm-grey); max-width: 600px; margin: 0 auto 30px; font-weight: 300; }
+
+    /* PROGRESS TABS */
+    .step-tabs-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      background: var(--cream-dark);
+      padding: 8px;
+      border-radius: 20px;
+      border: 1px solid var(--sand);
+      margin-bottom: 35px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--warm-grey);
+      transition: var(--transition);
+      text-align: left;
+    }
+    .tab-btn .t-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--sand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      flex-shrink: 0;
+      font-family: var(--serif);
+      font-weight: 700;
+    }
+    .tab-btn:hover { background: #fff; color: var(--rose); }
+    .tab-btn.active {
+      background: var(--rose);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(201,135,125,0.3);
+    }
+    .tab-btn.active .t-num {
+      background: #fff;
+      color: var(--rose-deep);
+      border-color: #fff;
+    }
+
+    /* STEP PANELS */
+    .step-panel {
+      display: none;
+      animation: fadeIn 0.35s ease forwards;
+    }
+    .step-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .step-card {
+      background: #fff;
+      border: 1.5px solid var(--sand);
+      border-radius: 24px;
+      padding: 36px 32px;
+      box-shadow: 0 12px 36px rgba(46,46,46,0.06);
+      margin-bottom: 30px;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--sand);
+    }
+    .step-icon-lg {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: var(--rose-pale);
+      border: 1px solid var(--rose-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--rose);
+      flex-shrink: 0;
+    }
+    .step-header h3 {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.2;
+    }
+    .step-header span {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--rose);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .step-grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .action-steps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .action-steps-list li {
+      display: flex;
+      gap: 12px;
+      font-size: 0.92rem;
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+    .action-steps-list li i.check {
+      color: var(--sage);
+      font-size: 1rem;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .action-steps-list strong { color: var(--charcoal); }
+
+    .step-preview-box {
+      background: var(--cream-dark);
+      border: 1px solid var(--sand);
+      border-radius: 18px;
+      padding: 22px;
+    }
+    .preview-chip-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--rose-deep);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* TIPS BOX */
+    .tip-box {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--rose-pale);
+      border: 1px solid var(--rose-light);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--charcoal);
+    }
+    .tip-box i { color: var(--rose); font-size: 1.1rem; margin-top: 2px; }
+
+    /* ROLES SECTION */
+    .roles-section {
+      background: var(--cream-dark);
+      border-top: 1px solid var(--sand);
+      border-bottom: 1px solid var(--sand);
+      padding: 60px 0;
+      margin: 50px 0;
+    }
+    .roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 30px; }
+    .role-card {
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: 18px;
+      padding: 26px 22px;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .role-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(46,46,46,0.08); border-color: var(--rose-light); }
+    .role-icon-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: var(--rose-pale);
+      border: 1px solid var(--rose-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      color: var(--rose-deep);
+      margin: 0 auto 16px;
+      transition: var(--transition);
+    }
+    .role-card:hover .role-icon-badge {
+      background: var(--rose);
+      color: #fff;
+      border-color: var(--rose);
+      transform: scale(1.06);
+    }
+    .role-card h4 { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; color: var(--charcoal); margin-bottom: 6px; }
+    .role-card p { font-size: 0.82rem; color: var(--warm-grey); line-height: 1.6; }
+
+    /* FAQ */
+    .faq-section { padding: 40px 0 60px; }
+    .faq-item {
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+    }
+    .faq-q { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--charcoal); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .faq-q i { color: var(--rose); font-size: 0.9rem; }
+    .faq-a { font-size: 0.88rem; color: var(--warm-grey); line-height: 1.7; }
+
+    /* BOTTOM CTA */
+    .tut-cta {
+      text-align: center;
+      padding: 40px 24px 70px;
+    }
+    .btn-lg-rose {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 36px;
+      background: var(--rose);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 99px;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 8px 24px rgba(201,135,125,0.35);
+    }
+    .btn-lg-rose:hover { background: var(--rose-deep); transform: translateY(-2px); }
+
+    /* RESPONSIVE */
+    @media (max-width: 850px) {
+      .step-tabs-nav { grid-template-columns: 1fr 1fr; }
+      .step-grid-2 { grid-template-columns: 1fr; }
+      .roles-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 550px) {
+      .step-tabs-nav { grid-template-columns: 1fr; }
+      .tab-btn { padding: 10px; }
+      .step-card { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="tut-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo">Inv<em>itta</em> 2.0</a>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a href="landing.html" class="btn-outline" style="padding: 6px 14px; font-size: 0.8rem;">
+          <i class="fa-solid fa-house"></i> Inicio
+        </a>
+        <a href="index.html" class="btn-primary" style="padding: 6px 16px; font-size: 0.8rem;">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Ir a Mi Evento
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="tut-hero">
+      <div class="tut-badge">
+        <i class="fa-solid fa-book-open"></i> Centro de Ayuda &amp; Manual Oficial
+      </div>
+      <h1 class="tut-title">
+        Cómo usar <em>Invitta 2.0</em> en 4 pasos
+      </h1>
+      <p class="tut-desc">
+        Guía interactiva paso a paso para anfitriones, wedding planners y coordinadores de evento. Aprende a dominar tu plataforma en menos de 3 minutos.
+      </p>
+
+      <!-- NAVEGADOR DE PESTAÑAS DE PASOS -->
+      <div class="step-tabs-nav" id="stepTabsNav">
+        <button type="button" class="tab-btn active" onclick="showStep(1)">
+          <span class="t-num">1</span>
+          <div>
+            <span style="display:block; font-size:0.65rem; text-transform:uppercase; opacity:0.8;">Paso 1</span>
+            <strong>Ingreso con PIN</strong>
+          </div>
+        </button>
+
+        <button type="button" class="tab-btn" onclick="showStep(2)">
+          <span class="t-num">2</span>
+          <div>
+            <span style="display:block; font-size:0.65rem; text-transform:uppercase; opacity:0.8;">Paso 2</span>
+            <strong>Organizar Mesas</strong>
+          </div>
+        </button>
+
+        <button type="button" class="tab-btn" onclick="showStep(3)">
+          <span class="t-num">3</span>
+          <div>
+            <span style="display:block; font-size:0.65rem; text-transform:uppercase; opacity:0.8;">Paso 3</span>
+            <strong>Envíos WhatsApp</strong>
+          </div>
+        </button>
+
+        <button type="button" class="tab-btn" onclick="showStep(4)">
+          <span class="t-num">4</span>
+          <div>
+            <span style="display:block; font-size:0.65rem; text-transform:uppercase; opacity:0.8;">Paso 4</span>
+            <strong>Recepción QR</strong>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- PASO 1: INGRESO SEGURO CON PIN -->
+    <div id="step-panel-1" class="step-panel active">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-icon-lg"><i class="fa-solid fa-key"></i></div>
+          <div>
+            <span>Paso 01 · Acceso Seguro &amp; Privacidad</span>
+            <h3>Ingresa con tu Código de Evento y PIN Secreto</h3>
+          </div>
+        </div>
+
+        <div class="step-grid-2">
+          <div>
+            <ul class="action-steps-list">
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Tu Código de Evento:</strong> Es el identificador único de tu boda o evento (por ejemplo, <code>CATALINA-JULIAN</code> o <code>VALENTINA</code>).
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Tu PIN de 4 Dígitos:</strong> Cada anfitrión recibe un PIN secreto exclusivo (ej. <code>4821</code>). Solo quienes tengan este PIN pueden editar o ver la información.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Aislamiento 100% Privado:</strong> Ningún otro cliente ni anfitrión puede ver tus listas de invitados o tus mesas.
+                </div>
+              </li>
+            </ul>
+
+            <div class="tip-box">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <strong>Tip del Coordinador:</strong> Puedes ingresar directamente pegando tu enlace de invitación o escribiendo el código en el Portal Central.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-preview-box">
+            <div class="preview-chip-title"><i class="fa-solid fa-shield"></i> Formulario de Acceso</div>
+            <div style="background:#fff; border:1px solid var(--sand); border-radius:14px; padding:14px; margin-bottom:10px;">
+              <span style="font-size:0.65rem; color:var(--rose-deep); text-transform:uppercase; font-weight:700; display:block; margin-bottom:4px;">Código de Evento</span>
+              <div style="font-family:monospace; font-size:0.85rem; font-weight:bold; color:var(--charcoal); background:var(--cream); padding:6px 10px; border-radius:8px; border:1px solid var(--sand);">CATALINA-JULIAN</div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--sand); border-radius:14px; padding:14px;">
+              <span style="font-size:0.65rem; color:var(--rose-deep); text-transform:uppercase; font-weight:700; display:block; margin-bottom:4px;">PIN Secreto</span>
+              <div style="font-family:monospace; font-size:1.1rem; letter-spacing:4px; font-weight:bold; color:var(--charcoal); background:var(--cream); padding:6px 10px; border-radius:8px; border:1px solid var(--sand); text-align:center;">••••</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2: ORGANIZADOR DE MESAS -->
+    <div id="step-panel-2" class="step-panel">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-icon-lg"><i class="fa-solid fa-chair"></i></div>
+          <div>
+            <span>Paso 02 · Acomodo Inteligente</span>
+            <h3>Configura tu Salón y Acomoda tus Invitados</h3>
+          </div>
+        </div>
+
+        <div class="step-grid-2">
+          <div>
+            <ul class="action-steps-list">
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Mesa Imperial &amp; Presidencia:</strong> Define la capacidad de tu mesa de honor (de 2 a 16 asientos para novios y corte).
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Mesas Circulares (8, 10 o 12 Pax):</strong> La calculadora calcula automáticamente cuántas mesas necesitas y las divide en Ala Izquierda y Ala Derecha.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Drag &amp; Drop / Auto-Acomodar:</strong> Arrastra invitados con el ratón a la mesa que desees o presiona <code>🪄 Auto-Acomodar</code> para agrupar familias en 1 segundo.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Vista de Plano 2D:</strong> Alterna entre la vista de tarjetas y el mapa interactivo del salón.
+                </div>
+              </li>
+            </ul>
+
+            <div class="tip-box">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <strong>Carga Masiva:</strong> Puedes subir toda tu lista de invitados desde un archivo de Excel con nombres, pases y teléfonos en 1 solo clic.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-preview-box">
+            <div class="preview-chip-title"><i class="fa-solid fa-border-all"></i> Vistas Disponibles</div>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+              <div style="flex:1; background:#fff; border:1px solid var(--sand); border-radius:12px; padding:10px; text-align:center;">
+                <strong style="font-size:0.8rem; color:var(--rose-deep); display:block;"><i class="fa-solid fa-table-cells"></i> Vista Tarjetas</strong>
+                <span style="font-size:0.68rem; color:var(--warm-grey);">Arrastrar y soltar</span>
+              </div>
+              <div style="flex:1; background:#fff; border:1px solid var(--sand); border-radius:12px; padding:10px; text-align:center;">
+                <strong style="font-size:0.8rem; color:var(--charcoal); display:block;"><i class="fa-solid fa-map-location-dot"></i> Plano 2D</strong>
+                <span style="font-size:0.68rem; color:var(--warm-grey);">Mapa espacial</span>
+              </div>
+            </div>
+            <div style="background:var(--rose-pale); border:1px solid var(--rose-light); border-radius:12px; padding:10px; text-align:center; font-size:0.75rem; color:var(--rose-deep); font-weight:600;">
+              <i class="fa-solid fa-crown" style="font-size:0.8rem;"></i> Presidencia: Mesa Imperial (2 a 16 Pax)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 3: ENVÍOS WHATSAPP Y RSVP -->
+    <div id="step-panel-3" class="step-panel">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-icon-lg"><i class="fa-brands fa-whatsapp"></i></div>
+          <div>
+            <span>Paso 03 · Despacho y Monitoreo</span>
+            <h3>Envía Invitaciones Digitales con Pase QR Personalizado</h3>
+          </div>
+        </div>
+
+        <div class="step-grid-2">
+          <div>
+            <ul class="action-steps-list">
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Sobre Animado con Música:</strong> Tu invitado abre un sobre digital con lacre de cera, música romántica y la cuenta regresiva del evento.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Pase QR Único &amp; Asignación de Mesa:</strong> Cada pase incluye su mesa asignada y un código QR de alta seguridad.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Centro de Envíos WhatsApp:</strong> Envía mensajes personalizados a cada invitado con 1 solo clic desde tu navegador.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Monitor RSVP en Vivo:</strong> Conoce al instante el estado de tus invitados (Confirmados, Pendientes y Declinados).
+                </div>
+              </li>
+            </ul>
+
+            <div class="tip-box">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <strong>Recordatorios Automáticos:</strong> Puedes enviar recordatorios masivos a todos los invitados que aún no hayan confirmado su asistencia.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-preview-box">
+            <div class="preview-chip-title"><i class="fa-solid fa-bell"></i> Monitor de Respuestas</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div style="background:#fff; border:1px solid var(--sand); border-radius:10px; padding:10px; text-align:center;">
+                <span style="font-family:var(--serif); font-size:1.3rem; color:var(--rose-deep); font-weight:bold;">84</span>
+                <span style="display:block; font-size:0.62rem; color:var(--warm-grey); text-transform:uppercase;">Confirmados</span>
+              </div>
+              <div style="background:#fff; border:1px solid var(--sand); border-radius:10px; padding:10px; text-align:center;">
+                <span style="font-family:var(--serif); font-size:1.3rem; color:var(--charcoal); font-weight:bold;">28</span>
+                <span style="display:block; font-size:0.62rem; color:var(--warm-grey); text-transform:uppercase;">Pendientes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 4: RECEPCIÓN QR EN PUERTA -->
+    <div id="step-panel-4" class="step-panel">
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-icon-lg"><i class="fa-solid fa-qrcode"></i></div>
+          <div>
+            <span>Paso 04 · El Día del Evento</span>
+            <h3>Control de Acceso en Puerta y Pases de Emergencia</h3>
+          </div>
+        </div>
+
+        <div class="step-grid-2">
+          <div>
+            <ul class="action-steps-list">
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Escáner QR 100% Offline:</strong> Las hostess escanean los boletos desde la cámara de su celular. Funciona aunque el salón no tenga señal ni internet.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Ubicación de Mesa Instantánea:</strong> Al escanear, la pantalla muestra en grande el nombre del invitado y su mesa correspondiente.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Pases de Emergencia Express:</strong> Si llega un invitado inesperado o acompañante extra, emite un boleto digital con mesa en 10 segundos.
+                </div>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check check"></i>
+                <div>
+                  <strong>Hoja Táctica para Meseros:</strong> Imprime la lista de mesas ordenada por número con requerimientos dietéticos y alérgenos.
+                </div>
+              </li>
+            </ul>
+
+            <div class="tip-box">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <strong>Cero Filas:</strong> El check-in toma menos de 2 segundos por invitado con confirmación sonora de acceso.
+              </div>
+            </div>
+          </div>
+
+          <div class="step-preview-box">
+            <div class="preview-chip-title"><i class="fa-solid fa-mobile-screen"></i> Modo Hostess en Puerta</div>
+            <div style="background:#fff; border:1px solid var(--sand); border-radius:14px; padding:14px; text-align:center;">
+              <i class="fa-solid fa-qrcode" style="font-size:2.4rem; color:var(--rose); margin-bottom:8px; display:block;"></i>
+              <strong style="font-size:0.85rem; color:var(--charcoal); display:block;">Escaneo Instantáneo</strong>
+              <span style="font-size:0.72rem; color:var(--sage); font-weight:bold;">🟢 Check-in Válido · Mesa 3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DE PERFILES & ROLES -->
+    <section class="roles-section">
+      <div style="text-align:center; max-width:600px; margin:0 auto 10px;">
+        <span class="section-label">Perfiles de Acceso</span>
+        <h2 class="section-title">¿Quién usa <em>cada módulo?</em></h2>
+        <div class="divider-floral"><span>✦</span></div>
+      </div>
+
+      <div class="roles-grid">
+        <div class="role-card">
+          <div class="role-icon-badge">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <h4>Anfitrión / Novios</h4>
+          <p>Acceso con Código + PIN. Administra invitados, acomoda mesas, envía pases y monitorea confirmaciones en vivo.</p>
+        </div>
+
+        <div class="role-card">
+          <div class="role-icon-badge">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <h4>Wedding Planner</h4>
+          <p>Panel multi-evento. Coordina logística, supervisa el plano del salón e imprime la hoja de servicio para cocina.</p>
+        </div>
+
+        <div class="role-card">
+          <div class="role-icon-badge">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <h4>Hostess / Puerta</h4>
+          <p>Acceso rápido al Escáner QR y Pases Express. Privacidad total: no ve teléfonos ni notas privadas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREGUNTAS FRECUENTES -->
+    <section class="faq-section">
+      <div style="text-align:center; margin-bottom:30px;">
+        <span class="section-label">Dudas Rápidas</span>
+        <h2 class="section-title">Preguntas <em>Frecuentes</em></h2>
+        <div class="divider-floral"><span>✦</span></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><i class="fa-solid fa-circle-question"></i> ¿Los invitados necesitan descargar alguna aplicación?</div>
+        <div class="faq-a">No. Los invitados abren su invitación digital directamente desde su navegador web (Safari, Chrome) con solo tocar el enlace que les envíes por WhatsApp.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><i class="fa-solid fa-circle-question"></i> ¿Qué pasa si en el salón no hay internet el día del evento?</div>
+        <div class="faq-a">El Escáner de Acceso QR está programado con tecnología offline (PWA), por lo que lee y valida boletos sin conexión a internet.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><i class="fa-solid fa-circle-question"></i> ¿Puedo cambiar la distribución de mesas a última hora?</div>
+        <div class="faq-a">Sí, cualquier cambio de mesa que hagas se actualiza al instante en la plataforma.</div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <div class="tut-cta">
+      <h2 style="font-family:var(--serif); font-size:2rem; margin-bottom:12px; color:var(--charcoal);">
+        ¿Listo para organizar <em>tu evento?</em>
+      </h2>
+      <p style="color:var(--warm-grey); margin-bottom:24px; font-size:0.95rem;">
+        Ingresa con tu Código de Evento o pide una demo guiada por WhatsApp.
+      </p>
+      <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+        <a href="index.html" class="btn-lg-rose">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar a Mi Evento
+        </a>
+        <a href="https://wa.me/525566790073?text=Hola,%20tengo%20una%20duda%20sobre%20el%20funcionamiento%20de%20Invitta%202.0" target="_blank" class="btn-outline" style="padding:14px 28px; font-size:0.95rem;">
+          <i class="fa-brands fa-whatsapp"></i> Hablar con Soporte
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function showStep(stepNum) {
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+      const activePanel = document.getElementById('step-panel-' + stepNum);
+      if (activePanel) activePanel.classList.add('active');
+
+      const activeBtn = document.querySelectorAll('.tab-btn')[stepNum - 1];
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

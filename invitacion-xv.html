@@ -1048,6 +1048,8 @@ tailwind.config = {
         </div>
         <h3 class="font-display-lg text-[21px] sm:text-[23px] font-normal text-deep-onyx mb-2 mt-4 gsap-title tracking-wide">Ceremonia Religiosa</h3>
         
+        
+
         <!-- Horario Destacado con Insignia Dorada -->
         <div class="my-3 flex items-center justify-center ">
           <span class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-antique-gold/[0.09] border border-antique-gold/40 shadow-[0_2px_8px_rgba(165,110,14,0.06)]">
@@ -1103,6 +1105,8 @@ tailwind.config = {
         </div>
         <h3 class="font-display-lg text-[21px] sm:text-[23px] font-normal text-deep-onyx mb-2 mt-4 gsap-title tracking-wide">Recepción</h3>
         
+        
+
         <!-- Horario Destacado con Insignia Dorada -->
         <div class="my-3 flex items-center justify-center ">
           <span class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-antique-gold/[0.09] border border-antique-gold/40 shadow-[0_2px_8px_rgba(165,110,14,0.06)]">
@@ -2154,9 +2158,10 @@ tailwind.config = {
 
   <!-- ==================== TARJETA DISCRETA DE CONTRATACIÓN (WHATSAPP) ==================== -->
   <div id="vendorCard" class="mt-8 pt-6 border-t border-antique-gold/20 max-w-xs mx-auto gsap-fade-up ">
-    <!-- Logotipo Oficial Invitta -->
-    <div class="flex justify-center mb-3.5">
-      <img src="invitta-logo-light.png" alt="Invitta" class="h-10 w-auto object-contain transition-transform hover:scale-105 drop-shadow-[0_3px_12px_rgba(212,175,55,0.35)]" />
+    <!-- Logotipo Oficial o Personalizado del Proveedor / Salón -->
+    
+    <div class="flex justify-center mb-3.5" id="vendorCardLogoContainer">
+      <img id="vendorCardLogoImg" src="invitta-logo-light.png" alt="Invitta Studio · Invitaciones Digitales de Lujo" class="h-10 max-w-[180px] w-auto object-contain transition-transform hover:scale-105 drop-shadow-[0_3px_12px_rgba(212,175,55,0.35)]" />
     </div>
     <p class="font-label-caps text-[9.5px] sm:text-[10px] text-antique-gold/90 tracking-[0.2em] mb-1 font-medium" id="vendorCardBadge">
       ¿Deseas una invitación como esta?
@@ -2731,6 +2736,8 @@ const CONFIG = {
   },
   "vendorCard": {
     "enabled": true,
+    "logo": "invitta-logo-light.png",
+    "showLogo": true,
     "badge": "¿Deseas una invitación como esta?",
     "title": "Invitaciones Digitales de Lujo",
     "description": "Diseño interactivo exclusivo para Bodas, XV Años y Eventos Especiales.",

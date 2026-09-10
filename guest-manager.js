@@ -5,6 +5,12 @@
  * ============================================================================
  */
 
+function sanitizeText(value, maxLen = 200) {
+  if (value === null || value === undefined) return '';
+  if (typeof value !== 'string') value = String(value);
+  return value.replace(/[<>"'`;&\\]/g, '').trim().slice(0, maxLen);
+}
+
 class GuestManager {
   constructor(options = {}) {
     this.storageKey = options.storageKey || 'invitta_2_guest_db';
@@ -258,6 +264,16 @@ class GuestManager {
   // PASO 2: GESTIÓN DE INVITADOS
   // ==========================================
   addGuest(guestData) {
+    if (guestData) {
+      if (guestData.name !== undefined) guestData.name = sanitizeText(guestData.name, 100);
+      if (guestData.contactName !== undefined) guestData.contactName = sanitizeText(guestData.contactName, 100);
+      if (guestData.familyKey !== undefined) guestData.familyKey = sanitizeText(guestData.familyKey, 50);
+      if (guestData.phone !== undefined) guestData.phone = sanitizeText(guestData.phone, 20);
+      if (guestData.email !== undefined) guestData.email = sanitizeText(guestData.email, 100);
+      if (guestData.notes !== undefined) guestData.notes = sanitizeText(guestData.notes, 500);
+      if (guestData.diet !== undefined) guestData.diet = sanitizeText(guestData.diet, 50);
+    }
+
     const newGuest = Object.assign({
       id: 'g_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
       name: 'Invitado Nuevo',
@@ -292,6 +308,16 @@ class GuestManager {
   updateGuest(id, updateData) {
     const guest = this.state.guests.find(g => g.id === id);
     if (!guest) return null;
+
+    if (updateData) {
+      if (updateData.name !== undefined) updateData.name = sanitizeText(updateData.name, 100);
+      if (updateData.contactName !== undefined) updateData.contactName = sanitizeText(updateData.contactName, 100);
+      if (updateData.familyKey !== undefined) updateData.familyKey = sanitizeText(updateData.familyKey, 50);
+      if (updateData.phone !== undefined) updateData.phone = sanitizeText(updateData.phone, 20);
+      if (updateData.email !== undefined) updateData.email = sanitizeText(updateData.email, 100);
+      if (updateData.notes !== undefined) updateData.notes = sanitizeText(updateData.notes, 500);
+      if (updateData.diet !== undefined) updateData.diet = sanitizeText(updateData.diet, 50);
+    }
 
     Object.assign(guest, updateData);
     this.saveState();
@@ -729,6 +755,10 @@ class GuestManager {
   createEmergencyGuest({ name, phone = '', passes = 2, tableId = 'tbl_1', autoCheckIn = true, notes = '' }) {
     if (!name || !name.trim()) return { success: false, error: 'El nombre es obligatorio' };
     
+    name = sanitizeText(name, 100);
+    phone = sanitizeText(phone, 20);
+    notes = sanitizeText(notes, 500);
+
     const count = parseInt(passes, 10) || 2;
     const id = `g_emerg_${Date.now()}`;
     
@@ -780,6 +810,170 @@ class GuestManager {
       success: true,
       guest: newGuest,
       folio: folio
+    };
+  }
+
+  // ==========================================================================
+  // IMPORTADOR MASIVO DE LISTAS DE EMPLEADOS / INVITADOS (EXCEL, CSV, TEXTO)
+  // ==========================================================================
+  getCsvTemplate() {
+    return 'Nombre,Pases,Telefono,Email,Mesa,Dieta,Rol\n' +
+      'Lic. Roberto Garza,2,+528112345678,roberto@empresa.com,Mesa Imperial,none,vip\n' +
+      'Ing. Sofia Valdés,1,+525598765432,sofia@empresa.com,Mesa 02,Vegetariano,general\n' +
+      'Dr. Fernando Ruiz,3,+528187654321,fernando@empresa.com,Mesa 02,Sin Gluten,general\n';
+  }
+
+  parseBulkText(rawText) {
+    if (!rawText || typeof rawText !== 'string') return [];
+    const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+    if (lines.length === 0) return [];
+
+    const firstLine = lines[0];
+    let delimiter = ',';
+    if (firstLine.includes('\t')) delimiter = '\t';
+    else if (firstLine.includes(';') && !firstLine.includes(',')) delimiter = ';';
+    else if (firstLine.includes('|')) delimiter = '|';
+
+    const headerTokens = firstLine.split(delimiter).map(t => t.trim().toLowerCase());
+    const hasHeader = headerTokens.some(t => ['nombre', 'name', 'empleado', 'invitado', 'pases', 'passes', 'telefono', 'phone', 'mesa', 'table', 'dieta', 'diet', 'email', 'correo', 'rol', 'role'].includes(t));
+
+    const startIndex = hasHeader ? 1 : 0;
+    const colMap = { name: 0, passes: -1, phone: -1, email: -1, table: -1, diet: -1, role: -1 };
+
+    if (hasHeader) {
+      headerTokens.forEach((tok, idx) => {
+        if (['nombre', 'name', 'empleado', 'invitado', 'contacto'].includes(tok)) colMap.name = idx;
+        else if (['pases', 'passes', 'lugares', 'cupo', 'pax'].includes(tok)) colMap.passes = idx;
+        else if (['telefono', 'teléfono', 'phone', 'whatsapp', 'celular'].includes(tok)) colMap.phone = idx;
+        else if (['email', 'correo'].includes(tok)) colMap.email = idx;
+        else if (['mesa', 'table', 'area', 'departamento'].includes(tok)) colMap.table = idx;
+        else if (['dieta', 'diet', 'menu', 'menú', 'alergia'].includes(tok)) colMap.diet = idx;
+        else if (['rol', 'role', 'tipo', 'vip'].includes(tok)) colMap.role = idx;
+      });
+    }
+
+    const results = [];
+    for (let i = startIndex; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line) continue;
+
+      let parts;
+      if (line.includes(delimiter)) {
+        parts = line.split(delimiter).map(p => p.trim());
+      } else {
+        parts = [line];
+      }
+
+      let name = '';
+      let passes = 1;
+      let phone = '';
+      let email = '';
+      let table = '';
+      let diet = 'none';
+      let role = 'general';
+
+      if (hasHeader) {
+        name = parts[colMap.name] || parts[0] || '';
+        if (colMap.passes >= 0 && parts[colMap.passes]) passes = parseInt(parts[colMap.passes], 10) || 1;
+        if (colMap.phone >= 0 && parts[colMap.phone]) phone = parts[colMap.phone];
+        if (colMap.email >= 0 && parts[colMap.email]) email = parts[colMap.email];
+        if (colMap.table >= 0 && parts[colMap.table]) table = parts[colMap.table];
+        if (colMap.diet >= 0 && parts[colMap.diet]) diet = parts[colMap.diet];
+        if (colMap.role >= 0 && parts[colMap.role]) role = parts[colMap.role];
+      } else {
+        name = parts[0] || '';
+        if (parts.length > 1) {
+          const p1 = parts[1];
+          if (/^\d+$/.test(p1)) {
+            passes = parseInt(p1, 10) || 1;
+          } else if (/^\+?\d[\d\s-]{6,}$/.test(p1)) {
+            phone = p1;
+          } else {
+            table = p1;
+          }
+        }
+        if (parts.length > 2) {
+          const p2 = parts[2];
+          if (/^\+?\d[\d\s-]{6,}$/.test(p2)) phone = p2;
+          else if (/^\d+$/.test(p2)) passes = parseInt(p2, 10) || 1;
+          else table = p2;
+        }
+        if (parts.length > 3) {
+          const p3 = parts[3];
+          if (!table) table = p3;
+          else if (!diet || diet === 'none') diet = p3;
+        }
+      }
+
+      if (name.length > 0) {
+        results.push({
+          name,
+          passes: Math.max(1, passes),
+          phone: phone || '',
+          email: email || '',
+          table: table || '',
+          diet: diet || 'none',
+          isVip: /vip|directivo|corte|honor/i.test(role)
+        });
+      }
+    }
+
+    return results;
+  }
+
+  importBulkGuests(rawText, options = { mode: 'append' }) {
+    const parsed = this.parseBulkText(rawText);
+    if (parsed.length === 0) {
+      return { success: false, error: 'No se encontraron registros válidos para importar', importedCount: 0 };
+    }
+
+    if (options && options.mode === 'replace') {
+      this.state.guests = [];
+    }
+
+    let count = 0;
+    parsed.forEach(item => {
+      let tableId = null;
+      if (item.table) {
+        const foundTable = this.state.tables.find(t => 
+          t.id.toLowerCase() === item.table.toLowerCase() || 
+          t.name.toLowerCase().includes(item.table.toLowerCase())
+        );
+        if (foundTable) tableId = foundTable.id;
+      }
+
+      const newId = 'g_' + (this.state.guests.length + 1) + '_' + Math.random().toString(36).substring(2, 6);
+      const guestObj = {
+        id: newId,
+        name: item.name,
+        contactName: item.name,
+        familyKey: item.name.toLowerCase().startsWith('familia') ? item.name.toLowerCase() : '',
+        passes: item.passes,
+        pases: item.passes,
+        confirmedPasses: 0,
+        admittedPasses: 0,
+        phone: item.phone,
+        email: item.email,
+        tableId: tableId,
+        status: 'DRAFT',
+        diet: item.diet,
+        vip: item.isVip,
+        isVip: item.isVip,
+        court: item.isVip,
+        isCourt: item.isVip,
+        notes: ''
+      };
+
+      guestObj.folio = this.generateFolio(guestObj);
+      this.state.guests.push(guestObj);
+      count++;
+    });
+
+    this.saveState();
+    return {
+      success: true,
+      importedCount: count,
+      totalGuests: this.state.guests.length
     };
   }
 

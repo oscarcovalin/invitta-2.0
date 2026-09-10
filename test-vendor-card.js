@@ -48,3 +48,25 @@ console.log('RSVP before Footer:', idxRsvp < idxFooter);
 console.log('Footer starts before Vendor Card:', idxFooter < idxVendor);
 console.log('Footer Names before Vendor Card:', idxFooterNames < idxVendor);
 console.log('Vendor Card is inside Footer (before </footer>):', idxVendor < idxFooterEnd);
+
+console.log('\n--- TEST 5: CUSTOM VENDOR LOGO ---');
+const configCustomLogo = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
+configCustomLogo.vendorCard = {
+  enabled: true,
+  logo: 'https://ejemplo.com/salon-eventos-logo.png',
+  showLogo: true,
+  agencyName: 'Hacienda San José'
+};
+const htmlCustomLogo = templateEngine.generateHTML(configCustomLogo, 'vino');
+console.log('Contains custom logo URL:', htmlCustomLogo.includes('src="https://ejemplo.com/salon-eventos-logo.png"'));
+console.log('Contains agency name in alt:', htmlCustomLogo.includes('alt="Hacienda San José"'));
+
+console.log('\n--- TEST 6: HIDE VENDOR LOGO ---');
+const configNoLogo = JSON.parse(JSON.stringify(templateEngine.defaultConfig));
+configNoLogo.vendorCard = {
+  enabled: true,
+  showLogo: false
+};
+const htmlNoLogo = templateEngine.generateHTML(configNoLogo, 'vino');
+console.log('Logo container not present when showLogo is false:', !htmlNoLogo.includes('id="vendorCardLogoContainer"'));
+

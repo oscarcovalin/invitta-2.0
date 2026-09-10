@@ -274,14 +274,16 @@ const TemplateEngine = {
         "address": "Av. de las Rosas 123, Col. Centro",
         "time": "4:00 PM",
         "mapsUrl": "https://maps.google.com/?q=Parroquia+San+Rafael",
-        "wazeUrl": "https://waze.com/ul?q=Parroquia+San+Rafael"
+        "wazeUrl": "https://waze.com/ul?q=Parroquia+San+Rafael",
+        "image": ""
     },
     "reception": {
         "venue": "Jardín Las Magnolias",
         "address": "Camino Real 456, Valle Alto",
         "time": "6:30 PM",
         "mapsUrl": "https://maps.google.com/?q=Jardín+Las+Magnolias",
-        "wazeUrl": "https://waze.com/ul?q=Jardín+Las+Magnolias"
+        "wazeUrl": "https://waze.com/ul?q=Jardín+Las+Magnolias",
+        "image": ""
     },
     "stardust": {
         "enabled": true,
@@ -472,6 +474,8 @@ const TemplateEngine = {
     },
     "vendorCard": {
         "enabled": true,
+        "logo": "invitta-logo-light.png",
+        "showLogo": true,
         "badge": "¿Deseas una invitación como esta?",
         "title": "Invitaciones Digitales de Lujo",
         "description": "Diseño interactivo exclusivo para Bodas, XV Años y Eventos Especiales.",
@@ -1129,6 +1133,8 @@ const TemplateEngine = {
     // Vendor / Lead Generation Card
     const vendorCard = Object.assign({
       enabled: true,
+      logo: 'invitta-logo-light.png',
+      showLogo: true,
       badge: '¿Deseas una invitación como esta?',
       title: 'Invitaciones Digitales de Lujo',
       description: 'Diseño interactivo exclusivo para Bodas, XV Años y Eventos Especiales.',
@@ -2430,6 +2436,13 @@ tailwind.config = {
         </div>
         <h3 class="font-display-lg text-[21px] sm:text-[23px] font-normal text-deep-onyx mb-2 mt-4 gsap-title tracking-wide">Ceremonia Religiosa</h3>
         
+        ${(config.ceremony && config.ceremony.image && config.ceremony.image.trim()) ? `
+          <div class="my-4 rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(165,110,14,0.12)] border border-antique-gold/40 relative group">
+            <img src="${config.ceremony.image}" alt="Lugar de la Ceremonia" class="w-full h-44 sm:h-52 object-cover object-center transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent pointer-events-none"></div>
+          </div>
+        ` : ''}
+
         <!-- Horario Destacado con Insignia Dorada -->
         <div class="my-3 flex items-center justify-center ${(config.ceremony && config.ceremony.time) ? '' : 'hidden'}">
           <span class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-antique-gold/[0.09] border border-antique-gold/40 shadow-[0_2px_8px_rgba(165,110,14,0.06)]">
@@ -2460,6 +2473,13 @@ tailwind.config = {
         </div>
         <h3 class="font-display-lg text-[21px] sm:text-[23px] font-normal text-deep-onyx mb-2 mt-4 gsap-title tracking-wide">Recepción</h3>
         
+        ${(config.reception && config.reception.image && config.reception.image.trim()) ? `
+          <div class="my-4 rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(165,110,14,0.12)] border border-antique-gold/40 relative group">
+            <img src="${config.reception.image}" alt="Lugar de la Recepción" class="w-full h-44 sm:h-52 object-cover object-center transition-transform duration-700 group-hover:scale-105" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent pointer-events-none"></div>
+          </div>
+        ` : ''}
+
         <!-- Horario Destacado con Insignia Dorada -->
         <div class="my-3 flex items-center justify-center ${(config.reception && config.reception.time) ? '' : 'hidden'}">
           <span class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-antique-gold/[0.09] border border-antique-gold/40 shadow-[0_2px_8px_rgba(165,110,14,0.06)]">
@@ -3120,10 +3140,11 @@ tailwind.config = {
 
   <!-- ==================== TARJETA DISCRETA DE CONTRATACIÓN (WHATSAPP) ==================== -->
   <div id="vendorCard" class="mt-8 pt-6 border-t border-antique-gold/20 max-w-xs mx-auto gsap-fade-up ${(vendorCard.enabled !== false) ? '' : 'hidden'}">
-    <!-- Logotipo Oficial Invitta -->
-    <div class="flex justify-center mb-3.5">
-      <img src="invitta-logo-light.png" alt="Invitta" class="h-10 w-auto object-contain transition-transform hover:scale-105 drop-shadow-[0_3px_12px_rgba(212,175,55,0.35)]" />
-    </div>
+    <!-- Logotipo Oficial o Personalizado del Proveedor / Salón -->
+    ${(vendorCard.showLogo !== false) ? `
+    <div class="flex justify-center mb-3.5" id="vendorCardLogoContainer">
+      <img id="vendorCardLogoImg" src="${(vendorCard.logo && vendorCard.logo.trim()) ? vendorCard.logo : 'invitta-logo-light.png'}" alt="${vendorCard.agencyName || 'Logo'}" class="h-10 max-w-[180px] w-auto object-contain transition-transform hover:scale-105 drop-shadow-[0_3px_12px_rgba(212,175,55,0.35)]" />
+    </div>` : ''}
     <p class="font-label-caps text-[9.5px] sm:text-[10px] text-antique-gold/90 tracking-[0.2em] mb-1 font-medium" id="vendorCardBadge">
       ${vendorCard.badge || '¿Deseas una invitación como esta?'}
     </p>

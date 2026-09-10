@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Pago Confirmado! | Invitta 2.0 — Plataforma de Eventos de Lujo</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    :root {
+      --cream: #FAF7F2;
+      --cream-dark: #F2EDE4;
+      --sand: #E8DDD0;
+      --rose: #C9877D;
+      --rose-light: #E8B4AD;
+      --rose-pale: #F5E6E3;
+      --rose-deep: #A86860;
+      --sage: #8A9E7B;
+      --charcoal: #2E2E2E;
+      --warm-grey: #6B6560;
+      --gold: #D4AF37;
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Jost', sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: var(--sans);
+      background-image: radial-gradient(circle at 50% 15%, rgba(201,135,125,0.08) 0%, transparent 60%);
+    }
+    .card-luxury {
+      width: min(100%, 580px);
+      padding: clamp(32px, 6vw, 48px);
+      border: 1px solid var(--sand);
+      border-radius: 24px;
+      background: #ffffff;
+      text-align: center;
+      box-shadow: 0 25px 70px rgba(46,46,46,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .card-luxury::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--rose-light), var(--gold), var(--rose));
+    }
+    .badge-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(138, 158, 123, 0.15);
+      color: var(--sage);
+      font-size: 1.8rem;
+      border: 1px solid rgba(138, 158, 123, 0.35);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 2.9rem);
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--rose);
+    }
+    p.subtitle {
+      font-size: 1rem;
+      color: var(--warm-grey);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .order-box {
+      background: var(--cream-dark);
+      border: 1px dashed var(--sand);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 0.9rem;
+    }
+    .order-row strong {
+      color: var(--charcoal);
+    }
+    .order-total {
+      border-top: 1px solid var(--sand);
+      margin-top: 8px;
+      padding-top: 10px;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 480px) {
+      .actions-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .btn-primary-luxury {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      background: var(--rose);
+      color: #ffffff;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(201,135,125,0.3);
+    }
+    .btn-primary-luxury:hover {
+      background: var(--rose-deep);
+      transform: translateY(-2px);
+    }
+    .btn-outline-luxury {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      background: transparent;
+      color: var(--charcoal);
+      border: 1px solid var(--sand);
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-outline-luxury:hover {
+      background: var(--cream);
+      border-color: var(--charcoal);
+    }
+    .vip-contact {
+      margin-top: 24px;
+      font-size: 0.85rem;
+      color: var(--warm-grey);
+    }
+    .vip-contact a {
+      color: var(--rose);
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card-luxury">
+    <div class="badge-icon">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <h1>¡Pago <em>Confirmado</em>!</h1>
+    <p class="subtitle">Tu acceso y servicios han sido activados exitosamente en Invitta 2.0.</p>
+
+    <div class="order-box">
+      <div class="order-row">
+        <span>Servicio / Paquete:</span>
+        <strong id="planName">Plan Básico · Invitta 2.0</strong>
+      </div>
+      <div class="order-row">
+        <span>Pasarela de Pago:</span>
+        <strong id="providerName">Mercado Pago</strong>
+      </div>
+      <div class="order-row">
+        <span>Referencia de Transacción:</span>
+        <strong id="refId" style="font-family:monospace; font-size:0.8rem;">INV-77492</strong>
+      </div>
+      <div class="order-row order-total">
+        <span>Total Pagado:</span>
+        <strong id="totalAmount" style="color:var(--rose);">$2,500 MXN</strong>
+      </div>
+    </div>
+
+    <div class="actions-grid">
+      <a href="invitacion-estudio.html" class="btn-primary-luxury">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Ir al Estudio
+      </a>
+      <a href="index.html" class="btn-outline-luxury">
+        <i class="fa-solid fa-compass"></i> Bóveda de Eventos
+      </a>
+    </div>
+
+    <p class="vip-contact">
+      ¿Requieres asistencia personalizada de nuestro Concierge?
+      <br>
+      <a href="https://wa.me/525566790073?text=Hola%20Invitta,%20acabo%20de%20realizar%20mi%20pago%20y%20deseo%20asistencia%20con%20mi%20evento" target="_blank" rel="noopener">
+        <i class="fa-brands fa-whatsapp"></i> Escribir a Soporte VIP
+      </a>
+    </p>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get('plan') || 'basico';
+    const provider = params.get('provider') || 'mercadopago';
+    const sessionId = params.get('session_id') || params.get('payment_id') || params.get('collection_id');
+
+    const planNameEl = document.getElementById('planName');
+    const totalEl = document.getElementById('totalAmount');
+    const providerEl = document.getElementById('providerName');
+    const refIdEl = document.getElementById('refId');
+
+    if (plan === 'premium') {
+      planNameEl.textContent = 'Plan Premium · Invitta 2.0';
+      totalEl.textContent = '$4,800 MXN';
+    } else {
+      planNameEl.textContent = 'Plan Básico · Invitta 2.0';
+      totalEl.textContent = '$2,500 MXN';
+    }
+
+    providerEl.textContent = provider === 'stripe' ? 'Stripe (Tarjeta / Apple Pay)' : 'Mercado Pago (SPEI / Tarjeta)';
+    refIdEl.textContent = sessionId ? sessionId.slice(0, 18) : ('INV-' + Date.now().toString().slice(-6));
+  </script>
+</body>
+</html>

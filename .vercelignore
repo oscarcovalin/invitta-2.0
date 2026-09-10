@@ -1,0 +1,12 @@
+.git/
+.github/
+.vscode/
+node_modules/
+backups/
+*.log
+test-*.js
+test_*.txt
+*.test.js
+*.spec.js
+build_landing.js
+server.js

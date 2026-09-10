@@ -53,7 +53,7 @@
 
       <!-- Enlaces Master / Salón (Ocultos en Modo Diseñador) -->
       <div id="adminNavigationLinks" style="display:inline-flex; align-items:center; gap:8px;">
-                <a href="como-funciona.html" target="_blank" class="btn btn-secondary" style="background:rgba(212,175,55,0.15); border-color:#D4AF37; color:#f3e5ab;" title="Ver guía paso a paso de cómo funciona la plataforma">
+        <a href="como-funciona.html" target="_blank" class="btn btn-secondary" style="background:rgba(212,175,55,0.15); border-color:#D4AF37; color:#f3e5ab;" title="Ver guía paso a paso de cómo funciona la plataforma">
           <span class="material-symbols-outlined">help_outline</span>
           ¿Cómo funciona?
         </a>
@@ -63,7 +63,7 @@
           Portal
         </a>
 
-        <a href="organizador-mesas.html" class="btn btn-secondary" style="background:#163C2B; color:#C7B299; border-color:#A38047;" title="Ir al Organizador de Mesas y Centro de Envíos">
+        <a href="organizador-mesas.html?event=boda-catalina-julian&role=host_premium" class="btn btn-secondary" style="background:#163C2B; color:#C7B299; border-color:#A38047;" title="Ir al Organizador de Mesas y Centro de Envíos">
           <span class="material-symbols-outlined">table_restaurant</span>
           Mesas & Envíos
         </a>
@@ -87,6 +87,11 @@
       <button type="button" class="btn btn-primary" id="btnExportHtml" title="Descargar archivo HTML final para entrega">
         <span class="material-symbols-outlined">download</span>
         Exportar (.html)
+      </button>
+
+      <button type="button" class="btn" id="btnStudioCheckout" onclick="openStudioCheckoutModal()" style="background:linear-gradient(135deg, #C9877D, #A86860); color:#ffffff; font-weight:700; border:none; box-shadow:0 4px 15px rgba(201,135,125,0.4);" title="Contratar y activar invitación oficial">
+        <span class="material-symbols-outlined" style="font-size:17px;">diamond</span>
+        Contratar
       </button>
     </div>
   </header>
@@ -521,6 +526,16 @@
                 <label for="inputCeremonyVenue">Nombre del Recinto / Templo</label>
                 <input type="text" id="inputCeremonyVenue" placeholder="Parroquia San Rafael">
               </div>
+              <div class="form-group">
+                <label for="inputCeremonyImage">Fotografía de la Iglesia / Templo (Opcional)</label>
+                <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                  <input type="text" id="inputCeremonyImage" placeholder="URL o sube foto de la iglesia..." style="flex:1;">
+                  <label class="file-btn" style="cursor:pointer; margin:0;">
+                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileCeremonyImage" accept="image/*" style="display:none;">
+                  </label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnClearCeremonyImage" title="Quitar fotografía" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                </div>
+              </div>
               <div class="form-row">
                 <div class="form-group">
                   <label for="inputCeremonyAddress">Dirección</label>
@@ -548,6 +563,16 @@
               <div class="form-group">
                 <label for="inputReceptionVenue">Nombre del Salón o Jardín</label>
                 <input type="text" id="inputReceptionVenue" placeholder="Jardín Las Magnolias">
+              </div>
+              <div class="form-group">
+                <label for="inputReceptionImage">Fotografía del Salón / Jardín (Opcional)</label>
+                <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
+                  <input type="text" id="inputReceptionImage" placeholder="URL o sube foto del salón..." style="flex:1;">
+                  <label class="file-btn" style="cursor:pointer; margin:0;">
+                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileReceptionImage" accept="image/*" style="display:none;">
+                  </label>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btnClearReceptionImage" title="Quitar fotografía" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
+                </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -1822,7 +1847,6 @@
               <span class="accordion-icon"><span class="material-symbols-outlined">graphic_eq</span></span>
               Música & Audio
             </span>
-            <span class="accordion-arrow">▼</span>
           </button>
           <div class="accordion-content">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
@@ -1867,6 +1891,29 @@
             </div>
 
             <div id="vendorCardFields">
+              <!-- Logotipo Personalizado del Proveedor / Salón / Planner -->
+              <div class="form-group" style="background:rgba(255,255,255,0.025); border:1px solid rgba(212,175,55,0.25); border-radius:10px; padding:12px; margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <label for="inputVendorCardLogo" style="margin:0; font-weight:600; color:#D4AF37;">Logotipo del Proveedor / Salón / Planner</label>
+                  <label style="display:inline-flex; align-items:center; gap:5px; font-size:11px; margin:0; text-transform:none; cursor:pointer; color:#A09A94;">
+                    <input type="checkbox" id="checkVendorCardShowLogo" checked style="width:14px; height:14px;"> Mostrar Logo
+                  </label>
+                </div>
+                <div class="input-file-wrapper" style="margin-bottom:8px;">
+                  <input type="file" id="fileVendorCardLogo" accept="image/png,image/webp,image/jpeg,image/svg+xml" style="display:none;">
+                  <button type="button" class="file-btn" onclick="document.getElementById('fileVendorCardLogo').click()">
+                    <span class="material-symbols-outlined" style="font-size:16px;">upload</span> Subir Logo
+                  </button>
+                  <button type="button" class="btn-icon-danger" id="btnClearVendorLogo" title="Restaurar logo predeterminado (Invitta)" style="display:none;">&times;</button>
+                  <input type="text" id="inputVendorCardLogo" placeholder="O pega URL de imagen (PNG recomendado)" style="flex:1;">
+                </div>
+                <div id="vendorLogoPreviewWrap" style="display:flex; align-items:center; gap:12px; padding:8px 10px; background:rgba(0,0,0,0.35); border-radius:6px; border:1px dashed rgba(212,175,55,0.3);">
+                  <span style="font-size:11px; color:#A09A94;">Vista Previa:</span>
+                  <img id="vendorLogoPreviewImg" src="invitta-logo-light.png" alt="Logo Preview" style="height:28px; max-width:140px; object-fit:contain;" />
+                  <span id="vendorLogoTypeBadge" style="font-size:10px; padding:2px 7px; border-radius:4px; background:rgba(212,175,55,0.15); color:#D4AF37; font-weight:600;">Invitta (Predeterminado)</span>
+                </div>
+              </div>
+
               <div class="form-group">
                 <label for="inputVendorCardBadge">Insignia / Subtítulo</label>
                 <input type="text" id="inputVendorCardBadge" placeholder="¿Deseas una invitación como esta?">
@@ -1956,25 +2003,248 @@
     <span id="toastMessage">Cambios guardados</span>
   </div>
 
-  <!-- Scripts -->
+  <!-- Modal de Protección de Diseño para Anfitriones -->
+  <div id="hostProtectedDesignModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(18,18,20,0.92); backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px); align-items:center; justify-content:center; padding:20px; font-family:'Plus Jakarta Sans', sans-serif;">
+    <div style="background:#1c1c1f; border:1px solid rgba(212,175,55,0.4); border-radius:24px; max-width:480px; width:100%; padding:36px; text-align:center; box-shadow:0 25px 50px -12px rgba(0,0,0,0.7); display:flex; flex-direction:column; align-items:center; gap:16px; position:relative;">
+      <!-- Botón de Cerrar Modal -->
+      <button type="button" onclick="closeHostProtectedModal()" style="position:absolute; top:16px; right:18px; background:none; border:none; color:#a8a8b3; font-size:24px; cursor:pointer; line-height:1; transition:color 0.2s;" title="Cerrar modal">&times;</button>
+
+      <div style="width:64px; height:64px; border-radius:50%; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.4); display:flex; align-items:center; justify-content:center; font-size:30px;">
+        🎨
+      </div>
+      <div>
+        <h2 style="font-family:'Cinzel',serif; color:#f3e5ab; font-size:20px; font-weight:700; margin:0 0 8px 0;">Diseño Protegido por tu Diseñador</h2>
+        <p style="color:#a8a8b3; font-size:13px; line-height:1.6; margin:0;">
+          La maquetación visual, tipografías y efectos de tu invitación están resguardados por el estudio para garantizar la máxima calidad <strong>Haute-Couture</strong>.
+        </p>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:14px; width:100%; text-align:left; font-size:12px; color:#d4cfc7;">
+        <span style="color:#d4af37; font-weight:700; display:block; margin-bottom:4px;">💡 ¿Deseas cambios en tu invitación?</span>
+        Solicita ajustes de fotografías, música o programa directamente con tu asesor o wedding planner.
+      </div>
+      <div style="display:flex; gap:10px; width:100%; margin-top:8px;">
+        <a href="organizador-mesas.html?event=boda-catalina-julian&role=host_premium" style="flex:1; padding:12px 16px; background:#d4af37; color:#121214; border-radius:12px; font-size:12px; font-weight:800; text-decoration:none; text-transform:uppercase; letter-spacing:0.05em; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <span>🍽️</span> Ir a Mis Mesas
+        </a>
+        <a href="invitacion.html" target="_blank" style="padding:12px 16px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; border-radius:12px; font-size:12px; font-weight:600; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:6px;">
+          <span>👁️</span> Ver Invitación
+        </a>
+      </div>
+      <!-- Acciones de desbloqueo para el Diseñador/Admin -->
+      <div style="margin-top:4px; display:flex; flex-direction:column; gap:8px; width:100%;">
+        <button type="button" onclick="unlockDesignerMode()" style="background:rgba(212,175,55,0.12); border:1px dashed rgba(212,175,55,0.5); color:#f3e5ab; border-radius:12px; padding:11px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; transition:all 0.2s;">
+          <span>⚡</span> Soy el Diseñador / Administrador (Desbloquear Estudio)
+        </button>
+        <button type="button" onclick="closeHostProtectedModal()" style="background:none; border:none; color:#71717a; font-size:11px; cursor:pointer; text-decoration:underline;">
+          Omitir y explorar interfaz de edición
+        </button>
+      </div>
+    </div>
+  </div>
+
+   <!-- Scripts -->
+  <script src="event-vault-manager.js"></script>
+  <script src="role-manager.js"></script>
   <script src="decor-assets.js"></script>
   <script src="projects-vault.js"></script>
   <script src="template-engine.js"></script>
   <script src="app.js"></script>
   <script>
-    // =========================================================================
-    // AISLAMIENTO DE ROL: DISEÑADOR CREATIVO (role=designer)
-    // =========================================================================
+    window.closeHostProtectedModal = function() {
+      const protectModal = document.getElementById('hostProtectedDesignModal');
+      if (protectModal) protectModal.style.display = 'none';
+    };
+
+    window.unlockDesignerMode = function() {
+      const rm = window.RoleManager ? window.RoleManager.create() : null;
+      if (rm) {
+        rm.setPersistedRole(rm.ROLES.PLANNER);
+      } else {
+        try { localStorage.setItem('invitta_active_role_v2', 'planner'); } catch(e){}
+      }
+      closeHostProtectedModal();
+      if (typeof showToast === 'function') {
+        showToast('✨ Modo Diseñador / Planner Activado. Estudio desbloqueado.');
+      }
+    };
+
     (function() {
+      // Si la URL especifica explícitamente diseñador o planner, o edit=true, desbloquear de inmediato
       const params = new URLSearchParams(window.location.search);
-      const role = params.get('role');
-      if (role === 'designer') {
+      const urlRole = params.get('role');
+      const isEditMode = params.get('edit') === 'true' || params.get('unlock') === 'true';
+      if (urlRole === 'designer' || urlRole === 'planner' || isEditMode) {
+        try {
+          localStorage.setItem('invitta_active_role_v2', urlRole || 'planner');
+        } catch(e){}
+        return;
+      }
+
+      const rm = window.RoleManager ? window.RoleManager.create() : null;
+      if (!rm) return;
+
+      const role = rm.currentRole;
+      if (role === rm.ROLES.HOST_PREMIUM || role === rm.ROLES.HOST_BASIC) {
+        const protectModal = document.getElementById('hostProtectedDesignModal');
+        if (protectModal) protectModal.style.display = 'flex';
+      }
+
+      if (role === rm.ROLES.DESIGNER) {
         const adminLinks = document.getElementById('adminNavigationLinks');
         const badge = document.getElementById('designerRoleBadge');
         if (adminLinks) adminLinks.style.display = 'none';
         if (badge) badge.style.display = 'inline-flex';
       }
     })();
+  </script>
+
+  <!-- MODAL DE CHECKOUT EN EL ESTUDIO (POWERED BY PAGOKIT) -->
+  <div id="studioCheckoutModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(10,10,12,0.8); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#1e1e24; color:#FAF7F2; width:min(100%, 500px); border-radius:20px; border:1px solid rgba(212,175,55,0.3); box-shadow:0 25px 80px rgba(0,0,0,0.6); padding: clamp(20px, 4vw, 32px); position:relative; max-height:92vh; overflow-y:auto;">
+      <button type="button" onclick="closeStudioCheckoutModal()" style="position:absolute; top:16px; right:18px; background:transparent; border:none; font-size:1.5rem; color:#A09A94; cursor:pointer; line-height:1;">&times;</button>
+      
+      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(212,175,55,0.15); border:1px solid rgba(212,175,55,0.4); color:#D4AF37; padding:3px 10px; border-radius:99px; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">
+        <span class="material-symbols-outlined" style="font-size:13px;">lock</span> Checkout Seguro · PagoKit
+      </div>
+
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:#FAF7F2; margin-bottom:4px;">Contratar Invitación Oficial</h3>
+      <p style="font-size:0.82rem; color:#A09A94; margin-bottom:16px;">Activa tu invitación en la nube con enlace permanente, sin marcas de agua y lista para compartir.</p>
+
+      <form id="studioCheckoutForm" onsubmit="handleStudioCheckoutSubmit(event)">
+        <!-- Selector de Paquete -->
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:0.75rem; font-weight:600; color:#D4AF37; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">Paquete a Contratar</label>
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px;">
+            <label style="display:flex; flex-direction:column; align-items:center; padding:10px 6px; border:1px solid rgba(255,255,255,0.12); border-radius:10px; cursor:pointer; background:rgba(255,255,255,0.02); text-align:center;">
+              <input type="radio" name="studioPlan" value="basica" onchange="updateStudioPrice(399)" style="accent-color:#C9877D;">
+              <strong style="font-size:0.78rem; margin-top:4px;">Básica</strong>
+              <span style="font-size:0.75rem; color:#C9877D; font-weight:700;">$399</span>
+            </label>
+            <label style="display:flex; flex-direction:column; align-items:center; padding:10px 6px; border:1px solid #C9877D; border-radius:10px; cursor:pointer; background:rgba(201,135,125,0.12); text-align:center;">
+              <input type="radio" name="studioPlan" value="premium" checked onchange="updateStudioPrice(699)" style="accent-color:#C9877D;">
+              <strong style="font-size:0.78rem; margin-top:4px;">Premium</strong>
+              <span style="font-size:0.75rem; color:#C9877D; font-weight:700;">$699</span>
+            </label>
+            <label style="display:flex; flex-direction:column; align-items:center; padding:10px 6px; border:1px solid rgba(255,255,255,0.12); border-radius:10px; cursor:pointer; background:rgba(255,255,255,0.02); text-align:center;">
+              <input type="radio" name="studioPlan" value="vip" onchange="updateStudioPrice(999)" style="accent-color:#C9877D;">
+              <strong style="font-size:0.78rem; margin-top:4px;">VIP Sobre</strong>
+              <span style="font-size:0.75rem; color:#C9877D; font-weight:700;">$999</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="display:block; font-size:0.75rem; font-weight:600; color:#A09A94; margin-bottom:4px;">Nombre(s) para la Invitación</label>
+          <input type="text" id="studioCustName" required placeholder="Ej. Catalina & Julián" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.4); font-size:0.85rem; color:#FAF7F2;">
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:10px;">
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:600; color:#A09A94; margin-bottom:4px;">WhatsApp (con lada)</label>
+            <input type="tel" id="studioCustPhone" required placeholder="52 55 1234 5678" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.4); font-size:0.85rem; color:#FAF7F2;">
+          </div>
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:600; color:#A09A94; margin-bottom:4px;">Correo Electrónico</label>
+            <input type="email" id="studioCustEmail" placeholder="cliente@ejemplo.com" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(0,0,0,0.4); font-size:0.85rem; color:#FAF7F2;">
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:0.75rem; font-weight:600; color:#A09A94; margin-bottom:6px;">Método de Pago Seguro</label>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid rgba(255,94,0,0.5); border-radius:12px; background:rgba(255,94,0,0.08);">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <input type="radio" name="studioProvider" value="clip" checked style="accent-color:#FF5E00; width:16px; height:16px; cursor:pointer;">
+              <div>
+                <strong style="font-size:0.85rem; color:#FAF7F2; display:flex; align-items:center; gap:6px;">
+                  <span>🟠</span> Clip México
+                </strong>
+                <span style="font-size:0.74rem; color:#A09A94; display:block; margin-top:1px;">
+                  Tarjetas de Crédito, Débito, AMEX y Meses Sin Intereses (MSI)
+                </span>
+              </div>
+            </div>
+            <span style="font-size:0.65rem; background:#FF5E00; color:#fff; font-weight:800; padding:2px 6px; border-radius:4px; letter-spacing:0.05em;">MSI</span>
+          </div>
+        </div>
+
+        <button type="submit" id="btnStudioSubmit" style="width:100%; padding:12px; border-radius:99px; background:linear-gradient(135deg, #C9877D, #A86860); color:#ffffff; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 6px 20px rgba(201,135,125,0.35);">
+          <span id="btnStudioText">Pagar $<span id="lblStudioAmount">699</span> MXN</span>
+          <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+        </button>
+
+        <p style="text-align:center; font-size:0.72rem; color:#746b65; margin-top:10px;">
+          ¿Prefieres pagar por transferencia directa? <a href="https://wa.me/525566790073?text=Hola,%20deseo%20pagar%20mi%20invitación%20por%20transferencia%20bancaria%20directa" target="_blank" style="color:#D4AF37; text-decoration:none;">Escríbenos por WhatsApp</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openStudioCheckoutModal() {
+      const isWed = currentConfig && currentConfig.eventType === 'boda';
+      const name = isWed 
+        ? `${currentConfig.brideName || ''} & ${currentConfig.groomName || ''}`.trim()
+        : (currentConfig.name || '');
+      
+      const inName = document.getElementById('studioCustName');
+      if (inName && name) inName.value = name;
+
+      document.getElementById('studioCheckoutModal').style.display = 'flex';
+    }
+
+    function closeStudioCheckoutModal() {
+      document.getElementById('studioCheckoutModal').style.display = 'none';
+    }
+
+    function updateStudioPrice(amount) {
+      document.getElementById('lblStudioAmount').textContent = amount;
+    }
+
+    async function handleStudioCheckoutSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnStudioSubmit');
+      const text = document.getElementById('btnStudioText');
+      btn.disabled = true;
+      text.textContent = 'Conectando con pasarela…';
+
+      const planId = document.querySelector('input[name="studioPlan"]:checked')?.value || 'premium';
+      const provider = document.querySelector('input[name="studioProvider"]:checked')?.value || 'mercadopago';
+      const clientName = document.getElementById('studioCustName').value;
+      const clientPhone = document.getElementById('studioCustPhone').value;
+      const clientEmail = document.getElementById('studioCustEmail').value;
+      const eventType = currentConfig.eventType || 'boda';
+
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            planId,
+            provider,
+            clientName,
+            clientPhone,
+            clientEmail,
+            eventType,
+            projectId: currentProjectId
+          })
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error(data.error || 'Fallo de pasarela');
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        const fallbackText = encodeURIComponent(`Hola Invitta, deseo contratar el paquete ${planId} ($${document.getElementById('lblStudioAmount').textContent} MXN) para mi evento.`);
+        window.location.href = `https://wa.me/525566790073?text=${fallbackText}`;
+      } finally {
+        setTimeout(() => {
+          btn.disabled = false;
+          text.textContent = 'Pagar $' + document.getElementById('lblStudioAmount').textContent + ' MXN';
+        }, 3000);
+      }
+    }
   </script>
 </body>
 </html>
