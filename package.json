@@ -1,11 +1,11 @@
 {
   "name": "invitta-2.0-beta",
   "version": "2.0.0",
-  "description": "Plataforma de Invitaciones Digitales de Lujo y Gestión Integral de Eventos",
+  "description": "Plataforma de Invitaciones Digitales de Lujo y GestiÃ³n Integral de Eventos",
   "main": "index.html",
   "scripts": {
-    "start": "node server.js",
-    "test": "node test-vendor-card.js"
+    "start": "node server.cjs",
+    "test": "node test-vendor-card.cjs"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.8",
@@ -16,5 +16,11 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.20",
+    "tailwindcss": "^4.3.3"
+  },
+  "type": "module"
 }
