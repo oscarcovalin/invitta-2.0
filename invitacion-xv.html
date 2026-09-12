@@ -964,13 +964,11 @@
       </div>
 
       <!-- Corte de Honor -->
-      <div id="courtBlock" class="mt-10 gsap-stagger-item  transition-transform duration-300 will-change-transform" style="">
+      <div id="courtBlock" class="mt-10 gsap-stagger-item transition-transform duration-300 will-change-transform" style="">
         <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow" id="lblCourtSection">
-          Mis Chambelanes
+          Corte de Honor
         </p>
-        <div class="flex flex-wrap justify-center items-center gap-x-3 gap-y-1.5 text-[#f7f6ec] max-w-xl mx-auto font-display-lg font-light tracking-wide leading-relaxed transition-all" style="font-size: 17px;">
-          <span class="inline-block whitespace-nowrap">Camila Ortiz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Renata Vega</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Diego Fuentes</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Emiliano Cruz</span><span class="text-antique-gold font-normal px-1 select-none opacity-80">·</span><span class="inline-block whitespace-nowrap">Ximena Paredes</span>
-        </div>
+        <ul id="datos-corte-2" class="flex flex-col items-center gap-3"></ul>
       </div>
         
     </div>
@@ -1029,8 +1027,8 @@
           </span>
         </div>
 
-        <p class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx leading-[1.4] font-light tracking-wide mb-1">Parroquia San Rafael</p>
-        <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide">Av. de las Rosas 123, Col. Centro</p>
+        <p id="datos-parroquia" class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx leading-[1.4] font-light tracking-wide mb-1"></p>
+        <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide" id="datos-parroquia-dir"></p>
         
         <div class="flex flex-wrap justify-center items-center gap-3">
           <a id="ceremonyMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Parroquia+San+Rafael" target="_blank" rel="noopener noreferrer">
@@ -1086,8 +1084,8 @@
           </span>
         </div>
 
-        <p class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx leading-[1.4] font-light tracking-wide mb-1">Jardín Las Magnolias</p>
-        <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide">Camino Real 456, Valle Alto</p>
+        <p id="datos-salon" class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx leading-[1.4] font-light tracking-wide mb-1"></p>
+        <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide" id="datos-salon-dir"></p>
 
         <div class="flex flex-wrap justify-center items-center gap-3">
           <a id="receptionMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
@@ -1406,35 +1404,11 @@
 
       <!-- Datos Bancarios (CLABE) -->
       <div id="bankInfoCard" class="bg-white/70 backdrop-blur-sm border border-antique-gold/50 p-6 rounded-2xl max-w-sm mx-auto text-left shadow-sm ">
-        <div class="flex items-center gap-2.5 mb-3">
-          
-      <svg viewBox="0 0 24 24" class="w-5 h-5 text-antique-gold flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9.5l9-5 9 5v1.5H3V9.5z"/>
-        <path d="M5.5 11v7m4.2-7v7m4.6-7v7m4.2-7v7"/>
-        <path d="M2 18h20v2.5H2V18zm0 2.5h20V22H2v-1.5z"/>
-        <circle cx="12" cy="7.5" r=".75" fill="currentColor"/>
-      </svg>
-    
-          <span class="font-label-caps text-[11px] text-antique-gold uppercase tracking-[0.25em] font-medium">Transferencia Bancaria</span>
+          <div id="datos-regalo" class="text-deep-onyx font-normal">
+            <span class="animate-pulse">Cargando datos de regalo protegidos...</span>
+          </div>
         </div>
-        <p id="giftBankName" class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx font-normal">BBVA</p>
-        <p id="giftBankHolder" class="font-display-lg text-[13.5px] sm:text-[14.5px] text-tertiary mb-3 font-light">Titular: Catalina Martínez Ruiz</p>
-        
-        <div class="flex items-center justify-between gap-2 p-2.5 bg-champagne-cream rounded-full border border-antique-gold/30 px-4">
-          <span id="clabeText" class="font-mono text-xs text-deep-onyx tracking-wider select-all font-normal">0121 8001 2345 6789 01</span>
-          <button type="button" id="btnCopyClabe" class="btn-luxury-primary text-[11px] px-3.5 py-1 uppercase tracking-[0.25em] font-medium inline-flex items-center gap-1.5">
-            
-      <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="5" y="5" width="8.5" height="8.5" rx="1.75"/>
-        <path d="M3.5 11H2.5A1.5 1.5 0 0 1 1 9.5v-7A1.5 1.5 0 0 1 2.5 1h7A1.5 1.5 0 0 1 11 2.5v1"/>
-      </svg>
-    
-            <span>Copiar</span>
-          </button>
-        </div>
-      </div>
-
-      <p id="giftEnvelopeNote" class="font-display-lg text-sm text-tertiary/80 italic mt-6 font-light tracking-wide ">
+        <p id="giftEnvelopeNote" class="font-display-lg text-sm text-tertiary/80 italic mt-6 font-light tracking-wide ">
         Agradecemos de corazón tu muestra de cariño en nuestra tradicional lluvia de sobres.
       </p>
     </div>
@@ -4191,5 +4165,61 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
+  <!-- Script para Autenticacion de Invitados -->
+  <script>
+    (async function cargarInvitacionPrivada() {
+      const params = new URLSearchParams(location.search);
+      const token = params.get('t');
+
+      const contDatosRegalo = document.getElementById('datos-regalo');
+      const contCorte = document.getElementById('datos-corte');
+      const contCorte2 = document.getElementById('datos-corte-2');
+      const contParroquia = document.getElementById('datos-parroquia');
+      const contSalon = document.getElementById('datos-salon');
+
+      if (!token) {
+        if (contDatosRegalo) contDatosRegalo.innerHTML = '<p class="text-xs text-rose-800">Enlace de demostración. Los datos reales son privados.</p>';
+        if (contCorte) contCorte.innerHTML = '<li class="text-xs text-tertiary">Datos ocultos por privacidad.</li>';
+        if (contCorte2) contCorte2.innerHTML = '<li class="text-xs text-[#f7f6ec]">Datos ocultos por privacidad.</li>';
+        if (contParroquia) contParroquia.innerHTML = '<em>Parroquia Privada</em>';
+        if (contSalon) contSalon.innerHTML = '<em>Salón Privado</em>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/invitacion/token?t=${encodeURIComponent(token)}`);
+        if (!res.ok) throw new Error('invalid');
+        const data = await res.json();
+
+        if (contDatosRegalo && data.datosRegalo) {
+          contDatosRegalo.innerHTML = `
+            <div class="mb-3">
+              <p class="font-display-lg text-[18px] sm:text-[20px] text-deep-onyx font-normal">${data.datosRegalo.banco}</p>
+              <p class="font-display-lg text-[13.5px] sm:text-[14.5px] text-tertiary font-light">Titular: ${data.datosRegalo.titular}</p>
+            </div>
+            <div class="flex items-center justify-between gap-2 p-2.5 bg-champagne-cream rounded-full border border-antique-gold/30 px-4">
+              <span class="font-mono text-xs text-deep-onyx tracking-wider select-all font-normal">${data.datosRegalo.cuenta}</span>
+            </div>
+          `;
+        }
+
+        if (contCorte && data.corte) {
+          contCorte.innerHTML = data.corte.padrinos.map((p) => `<li class="font-display-lg text-lg text-[#f7f6ec]">${p}</li>`).join('');
+        }
+        
+        if (contCorte2 && data.corte) {
+          contCorte2.innerHTML = data.corte.padrinos.map((p) => `<li class="font-display-lg text-lg text-[#f7f6ec]">${p}</li>`).join('');
+        }
+
+        if (contParroquia && data.venue) contParroquia.textContent = data.venue.parroquia;
+        if (contSalon && data.venue) contSalon.textContent = data.venue.salon;
+
+      } catch (e) {
+        if (contDatosRegalo) contDatosRegalo.innerHTML = '<p class="text-xs text-rose-800 font-bold">Enlace vencido o inválido. Solicita uno nuevo.</p>';
+      }
+    })();
+  </script>
+
 </body>
 </html>
