@@ -210,6 +210,8 @@ module.exports = async function handler(req, res) {
     businessClipLink = 'https://pago.clip.mx/85a05e71-4ffc-46f7-bff2-ede8f616556d';
   } else if (selectedPlan.id === 'premium') {
     businessClipLink = 'https://pago.clip.mx/ee494ddf-d012-4d6f-ab65-5f1571dbe11f';
+  } else if (selectedPlan.id === 'vip' || selectedPlan.id === 'platinum') {
+    businessClipLink = 'https://pago.clip.mx/12b42e94-8a5d-4b69-9878-9d1b24635736';
   }
 
   if (!clipApiKey) {
