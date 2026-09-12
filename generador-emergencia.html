@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/main.css">
   <!-- Invitta 1.0 Design Tokens -->
   <link rel="stylesheet" href="theme.css">
   
@@ -68,7 +68,7 @@
             👤 Nombre Completo o Familia <span class="text-[#C9877D]">*</span>
           </label>
           <input id="inputEmergName" type="text" required placeholder="Ej. Dr. Carlos Valenzuela o Familia Ortiz"
-                 class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-4 py-3 text-sm text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
+                 class="w-full border border-[#E8DDD0] focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 rounded-xl px-4 py-3 text-sm text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
         </div>
 
         <!-- Campo: WhatsApp / Teléfono -->
@@ -77,7 +77,7 @@
             📱 WhatsApp / Celular <span class="text-[#A09A94] text-[10px]">(Opcional para envío directo)</span>
           </label>
           <input id="inputEmergPhone" type="tel" placeholder="Ej. 8112345678"
-                 class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-4 py-3 text-sm text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
+                 class="w-full border border-[#E8DDD0] focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 rounded-xl px-4 py-3 text-sm text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
         </div>
 
         <!-- Campo: Selector de Pases (Stepper) -->
@@ -98,7 +98,7 @@
             <label class="block text-xs font-medium text-[#6B6560] mb-1.5">
               🪑 Mesa Asignada
             </label>
-            <select id="selectEmergTable" class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-3 py-2.5 text-xs text-[#2E2E2E] outline-none transition-colors" style="background:#F2EDE4">
+            <select id="selectEmergTable" class="w-full border border-[#E8DDD0] focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 rounded-xl px-3 py-2.5 text-xs text-[#2E2E2E] outline-none transition-colors" style="background:#F2EDE4">
               <option value="tbl_1">Mesa Imperial (Presidencial)</option>
               <option value="tbl_2">Mesa 2 (Familiares)</option>
               <option value="tbl_3">Mesa 3 (Amigos)</option>

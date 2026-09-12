@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/main.css">
 
   <!-- Invitta 1.0 Design System -->
   <link rel="stylesheet" href="theme.css">
@@ -99,20 +99,20 @@
       <!-- Formulario 1: Anfitrión con Código + PIN -->
       <form id="formAuthHost" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Código de tu Evento</label>
+          <label for="inputEventCode" class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Código de tu Evento</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">tag</span>
             <input type="text" id="inputAuthHostCode" placeholder="Ej. CATALINA-JULIAN o VALENTINA" required
-                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] uppercase tracking-wider font-mono placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] uppercase tracking-wider font-mono placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 transition-colors">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">PIN Secreto (4 Dígitos)</label>
+          <label for="inputEventPin" class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">PIN Secreto (4 Dígitos)</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">lock</span>
             <input type="password" id="inputAuthHostPin" maxlength="6" placeholder="••••" required
-                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] tracking-widest font-mono text-center placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors text-lg">
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] tracking-widest font-mono text-center placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 transition-colors text-lg">
           </div>
           <p class="text-[11px] text-[#A09A94] mt-1">El PIN fue provisto por tu coordinador o en tu confirmación de servicio.</p>
         </div>
@@ -128,20 +128,20 @@
       <!-- Formulario 2: Profesional / Superadmin / Planner -->
       <form id="formAuthPro" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Usuario o Correo Electrónico</label>
+          <label for="inputAdminUser" class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Usuario o Correo Electrónico</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">person</span>
             <input type="text" id="inputAuthProUser" placeholder="admin@invitta.mx o tu usuario" required
-                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 transition-colors">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Contraseña</label>
+          <label for="inputAdminPass" class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Contraseña</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">key</span>
             <input type="password" id="inputAuthProPass" placeholder="••••••••" required
-                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+                   class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 transition-colors">
           </div>
         </div>
 
@@ -291,7 +291,7 @@
         <!-- Buscador -->
         <div class="relative w-full sm:w-72">
           <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#A09A94] text-sm pointer-events-none">search</span>
-          <input type="text" id="vaultSearchInput" placeholder="Buscar por anfitrión o lugar..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-xs text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] transition-colors">
+          <input type="text" id="vaultSearchInput" placeholder="Buscar por anfitrión o lugar..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-xs text-[#2E2E2E] placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 transition-colors">
         </div>
       </div>
 
@@ -568,16 +568,16 @@
         
         <!-- Nombre del Evento / Anfitriones -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Nombre del Evento / Pareja</label>
+          <label for="inputNewEventName" class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Nombre del Evento / Pareja</label>
           <input type="text" id="inputNewEventName" required placeholder="Ej. Boda Sofía & Mateo o Mis XV Camila" 
-                 class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 transition-colors">
+                 class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 transition-colors">
         </div>
 
         <!-- Tipo de Evento & Paquete Comercial -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Tipo de Evento</label>
-            <select id="selectNewEventType" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+            <label for="selectNewEventType" class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Tipo de Evento</label>
+            <select id="selectNewEventType" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 transition-colors">
               <option value="boda">💍 Boda</option>
               <option value="xv">👑 Mis XV Años</option>
               <option value="social">🎉 Evento Social</option>
@@ -585,8 +585,8 @@
           </div>
 
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Paquete Vendido</label>
-            <select id="selectNewEventPackage" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+            <label for="selectNewEventPackage" class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Paquete Vendido</label>
+            <select id="selectNewEventPackage" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 transition-colors">
               <option value="host_premium">💎 Premium (Mesas + RSVP)</option>
               <option value="host_basic">💌 Esencial (Solo RSVP)</option>
             </select>
@@ -596,23 +596,23 @@
         <!-- Fecha & Capacidad -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Fecha del Evento</label>
+            <label for="inputNewEventDate" class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Fecha del Evento</label>
             <input type="date" id="inputNewEventDate" required
-                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 transition-colors">
           </div>
 
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Capacidad Estimada (Pax)</label>
+            <label for="inputNewEventCapacity" class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Capacidad Estimada (Pax)</label>
             <input type="number" id="inputNewEventCapacity" value="150" min="10" max="1000"
-                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 transition-colors">
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 transition-colors">
           </div>
         </div>
 
         <!-- Salón / Lugar -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Lugar / Salón de Recepción</label>
+          <label for="inputNewEventVenue" class="block text-xs font-bold uppercase tracking-wider text-amber-300 mb-1.5">Lugar / Salón de Recepción</label>
           <input type="text" id="inputNewEventVenue" placeholder="Ej. Hacienda San José o Jardín Bellavista" 
-                 class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 transition-colors">
+                 class="w-full px-4 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 transition-colors">
         </div>
 
         <div class="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
@@ -641,7 +641,7 @@
       </div>
 
       <div class="p-4 rounded-2xl bg-black/60 border border-white/10 text-left space-y-2">
-        <label class="block text-[11px] font-bold uppercase tracking-wider text-neutral-400">Enlace Privado del Anfitrión:</label>
+        <label for="inputCreatedMagicLink" class="block text-[11px] font-bold uppercase tracking-wider text-neutral-400">Enlace Privado del Anfitrión:</label>
         <div class="flex items-center gap-2">
           <input type="text" id="inputCreatedMagicLink" readonly class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white font-mono outline-none">
           <button type="button" onclick="copyCreatedLink()" class="px-3 py-2 rounded-lg bg-amber-500 text-neutral-950 font-bold text-xs hover:bg-amber-400 transition-colors flex-shrink-0">

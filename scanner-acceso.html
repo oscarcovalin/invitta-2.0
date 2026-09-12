@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/main.css">
   <!-- Invitta 1.0 Design Tokens -->
   <link rel="stylesheet" href="theme.css">
   
@@ -148,7 +148,7 @@
     <!-- Barra de Búsqueda de Respaldo -->
     <div class="relative mb-2">
       <input id="inputManualSearch" type="text" placeholder="Buscar por Folio (ej. M03) o Apellido..." 
-             class="w-full border border-[#E8DDD0] focus:border-[#C9877D] rounded-xl px-3.5 py-2 pl-9 text-xs text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
+             class="w-full border border-[#E8DDD0] focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 rounded-xl px-3.5 py-2 pl-9 text-xs text-[#2E2E2E] placeholder-[#A09A94] outline-none transition-colors" style="background:#F2EDE4">
       <svg class="w-4 h-4 text-[#A09A94] absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       <button id="btnClearSearch" class="hidden absolute right-2.5 top-2 text-[#A09A94] hover:text-[#2E2E2E] text-xs">✕</button>
     </div>

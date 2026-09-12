@@ -14,48 +14,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="theme.css">
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#C9877D",
-            "surface": "#FAF7F2",
-            "surface-container": "#F2EDE4",
-            "surface-container-high": "#EAE6E0",
-            "surface-container-highest": "#E8DDD0",
-            "surface-container-lowest": "#FAF7F2",
-            "surface-variant": "#F2EDE4",
-            "outline-variant": "#E8DDD0",
-            "outline": "#A09A94",
-            "charcoal": "#2E2E2E",
-            "warm-grey": "#6B6560",
-            "light-grey": "#A09A94",
-            "on-surface": "#2E2E2E",
-            "on-surface-variant": "#6B6560",
-            "on-secondary-container": "#6B6560",
-            "rose": "#C9877D",
-            "rose-light": "#E8B4AD",
-            "rose-pale": "#F5E6E3",
-            "rose-deep": "#A86860",
-            "sage": "#8A9E7B",
-            "sage-light": "#C4D4BA",
-            "sand": "#E8DDD0",
-            "soft-linen": "#FAF7F2"
-          },
-          fontFamily: {
-            "body": ["Jost", "sans-serif"],
-            "display": ["Cormorant Garamond", "serif"],
-            "cinzel": ["Cormorant Garamond", "serif"],
-            "mono": ["ui-monospace", "SFMono-Regular", "monospace"]
-          }
-        }
-      }
-    }
-  </script>
+  
   <script src="role-manager.js"></script>
   <script src="event-vault-manager.js"></script>
 
@@ -528,19 +489,19 @@
         <input type="hidden" id="inputGuestId" value="">
         
         <div>
-          <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Nombre Completo o Familia *</label>
+          <label for="inputGuestName" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Nombre Completo o Familia *</label>
           <input type="text" id="inputGuestName" placeholder="Ej. Familia Martínez Valdés ó Camila Ortiz" required
             class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Pases Asignados *</label>
+            <label for="inputGuestPasses" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Pases Asignados *</label>
             <input type="number" id="inputGuestPasses" min="1" max="12" value="2" required
               class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs font-bold text-primary border border-outline-variant focus:border-primary focus:outline-none">
           </div>
           <div>
-            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Distinción / Rol</label>
+            <label for="inputGuestRole" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Distinción / Rol</label>
             <select id="inputGuestRole" class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
               <option value="general">Invitado General</option>
               <option value="family_bride">Familia de la Novia</option>
@@ -554,14 +515,14 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Mesa Asignada</label>
+            <label for="inputGuestTable" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Mesa Asignada</label>
             <select id="inputGuestTable" class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
               <option value="">Sin Asignar (En lista)</option>
               <!-- Llenado dinámico -->
             </select>
           </div>
           <div>
-            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Estado RSVP</label>
+            <label for="inputGuestStatus" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Estado RSVP</label>
             <select id="inputGuestStatus" class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
               <option value="DRAFT">Sin Enviar</option>
               <option value="SENT">Enviado (Pendiente)</option>
@@ -573,19 +534,19 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Teléfono / WhatsApp</label>
+            <label for="inputGuestPhone" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Teléfono / WhatsApp</label>
             <input type="tel" id="inputGuestPhone" placeholder="+52 55 1234 5678"
               class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
           </div>
           <div>
-            <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Correo Electrónico</label>
+            <label for="inputGuestEmail" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Correo Electrónico</label>
             <input type="email" id="inputGuestEmail" placeholder="invitado@ejemplo.com"
               class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
           </div>
         </div>
 
         <div>
-          <label class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Notas / Restricciones Alimenticias</label>
+          <label for="inputGuestNotes" class="font-mono text-[10.5px] uppercase tracking-wider text-on-surface-variant block mb-1">Notas / Restricciones Alimenticias</label>
           <input type="text" id="inputGuestNotes" placeholder="Ej. Menú sin gluten, vegetariano o menú infantil"
             class="w-full bg-surface-container rounded-xl py-2 px-3 text-xs border border-outline-variant focus:border-primary focus:outline-none">
         </div>
@@ -1217,7 +1178,7 @@
 
         <!-- Opción A: Subir Archivo CSV -->
         <div>
-          <label class="block text-xs font-bold text-primary mb-1.5">Opción 1: Seleccionar archivo CSV o TXT</label>
+          <label for="inputBulkFile" class="block text-xs font-bold text-primary mb-1.5">Opción 1: Seleccionar archivo CSV o TXT</label>
           <input type="file" id="inputBulkFile" accept=".csv,.txt,.tsv" class="block w-full text-xs text-on-surface-variant file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-charcoal file:cursor-pointer cursor-pointer border border-outline-variant rounded-xl p-1 bg-surface-container">
         </div>
 
