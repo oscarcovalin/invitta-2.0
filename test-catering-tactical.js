@@ -1,4 +1,4 @@
-Ôªøconst fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 let passed = 0;
@@ -6,15 +6,15 @@ let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ‚úÖ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ‚ùå FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-console.log("\nüß™ Testing Catering Tactical Sheet (WeasyPrint & PDF Optimization)...");
+console.log("\n?? Testing Catering Tactical Sheet (WeasyPrint & PDF Optimization)...");
 
 const htmlPath = path.join(__dirname, 'catering-module', 'catering-tactical-sheet.html');
 assert(fs.existsSync(htmlPath), 'catering-tactical-sheet.html exists');
@@ -37,15 +37,15 @@ assert(content.includes('stroke="#163C2B"') && content.includes('<svg'), 'Kids m
 
 // 4. Test Filtering Logic on mock data
 const mockConfig = {
-  brideFather: "Fernando Mart√≠nez Ruiz",
-  brideMother: "Catalina Ruiz de Mart√≠nez",
+  brideFather: "Fernando MartÌnez Ruiz",
+  brideMother: "Catalina Ruiz de MartÌnez",
   court: ["Renata Vega", "Diego Fuentes"],
   rsvpResponses: [
     { nombre: "Renata Vega", tipoMenu: "celiac", isKidMenu: false },
     { nombre: "Diego Fuentes", tipoMenu: "standard", isKidMenu: false },
-    { nombre: "Mateo Mart√≠nez", tipoMenu: "kids", isKidMenu: true },
-    { nombre: "Fernando Mart√≠nez Ruiz", tipoMenu: "standard", isKidMenu: false },
-    { nombre: "Luc√≠a Fern√°ndez", tipoMenu: "vegan", isKidMenu: false }
+    { nombre: "Mateo MartÌnez", tipoMenu: "kids", isKidMenu: true },
+    { nombre: "Fernando MartÌnez Ruiz", tipoMenu: "standard", isKidMenu: false },
+    { nombre: "LucÌa Fern·ndez", tipoMenu: "vegan", isKidMenu: false }
   ]
 };
 
@@ -56,10 +56,10 @@ const filtered = mockConfig.rsvpResponses.filter(r => {
 
 assert(filtered.length === 3, 'Filtered strictly out standard menus (3 special items out of 5)');
 assert(filtered.some(r => r.nombre === "Renata Vega"), 'Includes celiac court member Renata Vega');
-assert(filtered.some(r => r.nombre === "Mateo Mart√≠nez"), 'Includes kids menu Mateo Mart√≠nez');
-assert(filtered.some(r => r.nombre === "Luc√≠a Fern√°ndez"), 'Includes vegan guest Luc√≠a Fern√°ndez');
+assert(filtered.some(r => r.nombre === "Mateo MartÌnez"), 'Includes kids menu Mateo MartÌnez');
+assert(filtered.some(r => r.nombre === "LucÌa Fern·ndez"), 'Includes vegan guest LucÌa Fern·ndez');
 assert(!filtered.some(r => r.nombre === "Diego Fuentes"), 'Strictly excluded standard menu Diego Fuentes');
-assert(!filtered.some(r => r.nombre === "Fernando Mart√≠nez Ruiz"), 'Strictly excluded standard menu Fernando Mart√≠nez Ruiz');
+assert(!filtered.some(r => r.nombre === "Fernando MartÌnez Ruiz"), 'Strictly excluded standard menu Fernando MartÌnez Ruiz');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);

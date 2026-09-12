@@ -24,12 +24,12 @@ assert(seatingMasterHtml.includes('id="badgeImperialRatio"'), 'organizador-mesas
 assert(seatingMasterHtml.includes('id="labelRemainingGuests"'), 'organizador-mesas.html contains labelRemainingGuests');
 assert(seatingMasterHtml.includes('btn-quick-imperial'), 'organizador-mesas.html contains btn-quick-imperial quick buttons');
 
-// 2. Check HTML elements in seating-module/index.html
-const seatingHtml = fs.readFileSync(path.join(__dirname, 'seating-module', 'index.html'), 'utf-8');
-assert(seatingHtml.includes('id="inputImperialGuests"'), 'seating-module/index.html contains inputImperialGuests');
-assert(seatingHtml.includes('id="badgeImperialRatio"'), 'seating-module/index.html contains badgeImperialRatio');
-assert(seatingHtml.includes('id="labelRemainingGuests"'), 'seating-module/index.html contains labelRemainingGuests');
-assert(seatingHtml.includes('btn-quick-imperial'), 'seating-module/index.html contains btn-quick-imperial quick buttons');
+// 2. Check HTML elements in seating-module/portal.html
+const seatingHtml = fs.readFileSync(path.join(__dirname, 'seating-module', 'portal.html'), 'utf-8');
+assert(seatingHtml.includes('id="inputImperialGuests"'), 'seating-module/portal.html contains inputImperialGuests');
+assert(seatingHtml.includes('id="badgeImperialRatio"'), 'seating-module/portal.html contains badgeImperialRatio');
+assert(seatingHtml.includes('id="labelRemainingGuests"'), 'seating-module/portal.html contains labelRemainingGuests');
+assert(seatingHtml.includes('btn-quick-imperial'), 'seating-module/portal.html contains btn-quick-imperial quick buttons');
 
 // 3. Test SeatingPlanner configureSalonAndDistribute logic
 const planner = new SeatingPlanner();

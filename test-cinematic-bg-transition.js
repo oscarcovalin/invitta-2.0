@@ -1,19 +1,19 @@
-﻿const CinematicBgTransition = require('./cinematic-bg-transition.js');
+const CinematicBgTransition = require('./cinematic-bg-transition.js');
 
 let passed = 0;
 let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ✅ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ❌ FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-console.log("\n🧪 Testing CinematicBgTransition (60fps Scroll Crossfade #FAF8F5 -> #163C2B)...");
+console.log("\n?? Testing CinematicBgTransition (60fps Scroll Crossfade #FAF8F5 -> #163C2B)...");
 
 const engine = new CinematicBgTransition({
   autoInjectLayers: false

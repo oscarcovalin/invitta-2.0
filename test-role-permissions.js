@@ -83,7 +83,7 @@ assert(links.hostess.url.includes('scanner-acceso.html'), `Hostess link leads to
 assert(links.emergency.url.includes('generador-emergencia.html'), `Emergency link leads to generador-emergencia.html (${links.emergency.url})`);
 assert(links.catering.url.includes('catering-tactical-sheet.html'), `Catering link leads to tactical sheet (${links.catering.url})`);
 
-// 5. Integración en organizador-mesas.html, index.html y invitacion-estudio.html
+// 5. Integración en organizador-mesas.html, portal.html y invitacion-estudio.html
 const seatingHtml = fs.readFileSync('./organizador-mesas.html', 'utf-8');
 assert(seatingHtml.includes('badgeRoleAdmin'), 'organizador-mesas.html contains badgeRoleAdmin');
 assert(seatingHtml.includes('badgeRolePlanner'), 'organizador-mesas.html contains badgeRolePlanner');
@@ -99,9 +99,9 @@ assert(studioHtml.includes('designerRoleBadge'), 'invitacion-estudio.html contai
 assert(studioHtml.includes('adminNavigationLinks'), 'invitacion-estudio.html contains adminNavigationLinks');
 assert(studioHtml.includes('role === \'designer\''), 'invitacion-estudio.html contains designer isolation script');
 
-const portalHtml = fs.readFileSync('./index.html', 'utf-8');
-assert(portalHtml.includes('organizador-mesas.html?role=planner'), 'index.html contains direct card for Wedding Planner (?role=planner)');
-assert(portalHtml.includes('invitacion-estudio.html?role=designer'), 'index.html contains direct card for Designer (?role=designer)');
+const portalHtml = fs.readFileSync('./portal.html', 'utf-8');
+assert(portalHtml.includes('organizador-mesas.html?role=planner'), 'portal.html contains direct card for Wedding Planner (?role=planner)');
+assert(portalHtml.includes('invitacion-estudio.html?role=designer'), 'portal.html contains direct card for Designer (?role=designer)');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);

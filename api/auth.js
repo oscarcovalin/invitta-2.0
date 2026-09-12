@@ -60,7 +60,7 @@ export default async function handler(req, res) {
         token: 'tok_admin_' + Math.random().toString(36).substring(2, 9),
         createdAt: new Date().toISOString()
       };
-      return res.status(200).json({ success: true, session, redirectUrl: 'index.html' });
+      return res.status(200).json({ success: true, session, redirectUrl: 'portal.html' });
     }
 
     // 2. Validar Planners B2B

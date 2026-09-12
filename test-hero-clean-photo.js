@@ -1,4 +1,4 @@
-﻿const TemplateEngine = require('./template-engine');
+const TemplateEngine = require('./template-engine');
 
 console.log("\n=== RUNNING CLEAN HERO PHOTO TESTS ===\n");
 
@@ -7,15 +7,15 @@ let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ✅ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ❌ FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-// 1. Con Fotografía Principal
+// 1. Con Fotograf�a Principal
 const configWithPhoto = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
 configWithPhoto.photos = { hero: 'https://images.unsplash.com/photo-1519741497674-611481863552' };
 const htmlWithPhoto = TemplateEngine.generateHTML(configWithPhoto, 'classicGold');
@@ -34,7 +34,7 @@ assert(photoFrameIdx < brideNameIdx, 'Photo frame is placed BEFORE (above) bride
 assert(brideNameIdx < quoteIdx, 'Bride name is placed BEFORE quote');
 assert(quoteIdx < welcomeMsgIdx, 'Quote is placed BEFORE welcome message');
 
-// 2. Sin Fotografía Principal (Fallback al sistema centrado)
+// 2. Sin Fotograf�a Principal (Fallback al sistema centrado)
 const configWithoutPhoto = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
 configWithoutPhoto.photos = { hero: '' };
 const htmlWithoutPhoto = TemplateEngine.generateHTML(configWithoutPhoto, 'classicGold');

@@ -1,16 +1,16 @@
-﻿const assert = require("assert");
+const assert = require("assert");
 const fs = require("fs");
 const { EventVaultManager } = require("./event-vault-manager.js");
 
-console.log("\n🧪 Testing Fast Event Code & PIN Access Engine...\n");
+console.log("\n?? Testing Fast Event Code & PIN Access Engine...\n");
 let passed = 0;
 function it(desc, fn) {
   try {
     fn();
-    console.log("  ✅ PASS: " + desc);
+    console.log("  ? PASS: " + desc);
     passed++;
   } catch(e) {
-    console.error("  ❌ FAIL: " + desc, e.message);
+    console.error("  ? FAIL: " + desc, e.message);
   }
 }
 
@@ -53,12 +53,12 @@ it("Returns null for non-existent code", () => {
   assert.strictEqual(res, null);
 });
 
-it("index.html contains the code login portal and elements", () => {
-  const html = fs.readFileSync("index.html", "utf8");
+it("portal.html contains the code login portal and elements", () => {
+  const html = fs.readFileSync("portal.html", "utf8");
   assert.ok(html.includes('id="formEventCodeAccess"'), "formEventCodeAccess present");
   assert.ok(html.includes('id="inputClientEventCode"'), "inputClientEventCode present");
   assert.ok(html.includes('id="clientAccessFeedback"'), "clientAccessFeedback present");
-  assert.ok(html.includes('Código:'), "Código badge present");
+  assert.ok(html.includes('C�digo:'), "C�digo badge present");
 });
 
 console.log("\nResults: " + passed + " / 7 passed.\n");

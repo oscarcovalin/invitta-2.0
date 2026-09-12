@@ -1,24 +1,24 @@
-Ôªøconst RsvpManager = require('./rsvp-module/rsvp-manager.js');
+const RsvpManager = require('./rsvp-module/rsvp-manager.js');
 
 let passed = 0;
 let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ‚úÖ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ‚ùå FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-console.log("\nüß™ Testing Modular RsvpManager with Catalina & Juli√°n JSON...");
+console.log("\n?? Testing Modular RsvpManager with Catalina & Juli·n JSON...");
 
-// Mock Catalina & Juli√°n invitation JSON
+// Mock Catalina & Juli·n invitation JSON
 const mockConfig = {
   brideDisplayName: "Catalina",
-  groomDisplayName: "Juli√°n",
+  groomDisplayName: "Juli·n",
   court: ["Camila Ortiz", "Renata Vega", "Diego Fuentes", "Emiliano Cruz", "Ximena Paredes"]
 };
 
@@ -51,7 +51,7 @@ const response2 = {
 };
 const response3 = {
   id: "rsvp_3",
-  nombre: "Ana Mart√≠nez",
+  nombre: "Ana MartÌnez",
   esCorteDeHonor: false,
   prioridad: 2,
   timestamp: "2026-08-26T10:10:00.000Z"
@@ -62,7 +62,7 @@ manager.sortResponses();
 
 assert(mockConfig.rsvpResponses[0].nombre === "Renata Vega", 'Court member Renata Vega is prioritized at index 0');
 assert(mockConfig.rsvpResponses[0].esCorteDeHonor === true, 'Top member has esCorteDeHonor = true');
-assert(mockConfig.rsvpResponses[1].nombre === "Ana Mart√≠nez", 'Most recent general guest is at index 1');
+assert(mockConfig.rsvpResponses[1].nombre === "Ana MartÌnez", 'Most recent general guest is at index 1');
 assert(mockConfig.rsvpResponses[2].nombre === "Roberto Morales", 'Older general guest is at index 2');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);

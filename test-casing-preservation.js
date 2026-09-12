@@ -1,4 +1,4 @@
-ï»¿const TemplateEngine = require('./template-engine');
+const TemplateEngine = require('./template-engine');
 
 console.log("\n=== RUNNING CASING PRESERVATION TESTS ===\n");
 
@@ -7,10 +7,10 @@ let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  âœ… PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  âŒ FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
@@ -23,19 +23,19 @@ config.instagram = {
 };
 config.music = {
   enabled: true,
-  title: 'A Thousand Years (AcÃºstico)',
+  title: 'A Thousand Years (Acústico)',
   url: 'https://example.com/audio.mp3'
 };
 config.story = {
   enabled: true,
   subtitle: 'Nuestra Historia de Amor',
-  title: 'CÃ³mo nos conocimos',
-  text: 'Todo comenzÃ³ en una tarde de verano...'
+  title: 'Cómo nos conocimos',
+  text: 'Todo comenzó en una tarde de verano...'
 };
 config.sharedAlbum = {
   enabled: true,
-  subtitle: 'Recuerdos del Gran DÃ­a',
-  title: 'Ãlbum Colaborativo',
+  subtitle: 'Recuerdos del Gran Día',
+  title: 'Álbum Colaborativo',
   accessCode: 'Boda2027-Vip'
 };
 config.dressCode = {
@@ -57,10 +57,10 @@ config.giftRegistry = {
 };
 config.vendorCard = {
   enabled: true,
-  badge: 'Â¿Deseas una invitaciÃ³n como esta?',
-  agencyName: 'Invitta Studio Â· Invitaciones Digitales'
+  badge: '¿Deseas una invitación como esta?',
+  agencyName: 'Invitta Studio · Invitaciones Digitales'
 };
-config.eyebrow = 'Nuestra Boda SoÃ±ada';
+config.eyebrow = 'Nuestra Boda Soñada';
 
 const html = TemplateEngine.generateHTML(config, 'classicGold');
 
@@ -70,12 +70,12 @@ assert(!html.includes('id="instagramHashtag" class="font-display-lg'), 'Hashtag 
 assert(html.includes('id="instagramHashtag" class="font-body-lg text-2xl sm:text-3xl font-bold text-[#f7f6ec] mb-4 tracking-wide">#BodaCatalinayJulian</h3>'), 'Hashtag has correct casing structure');
 
 // 2. Music Title
-assert(html.includes('A Thousand Years (AcÃºstico)'), 'Music title retains mixed case');
+assert(html.includes('A Thousand Years (Acústico)'), 'Music title retains mixed case');
 const musicTitleMatch = html.match(/id="musicTitle"[^>]*>([\s\S]*?)<\/span>/);
 assert(musicTitleMatch && !musicTitleMatch[0].includes('uppercase'), 'Music title span has no uppercase class');
 
 // 3. Vendor Card Badge & Agency
-assert(html.includes('Â¿Deseas una invitaciÃ³n como esta?'), 'Vendor card badge retains mixed case');
+assert(html.includes('¿Deseas una invitación como esta?'), 'Vendor card badge retains mixed case');
 const badgeMatch = html.match(/id="vendorCardBadge"[^>]*>/);
 assert(badgeMatch && !badgeMatch[0].includes('uppercase'), 'Vendor card badge has no uppercase class');
 

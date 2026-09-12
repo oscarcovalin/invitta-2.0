@@ -1,19 +1,19 @@
-﻿const StardustEngine = require('./stardust-module/stardust-engine.js');
+const StardustEngine = require('./stardust-module/stardust-engine.js');
 
 let passed = 0;
 let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ✅ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ❌ FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-console.log("\n🧪 Testing StardustEngine (3D Parallax, Zero-Canvas, 60fps, #A38047)...");
+console.log("\n?? Testing StardustEngine (3D Parallax, Zero-Canvas, 60fps, #A38047)...");
 
 const engine = new StardustEngine({
   autoInject: false,

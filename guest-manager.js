@@ -1113,7 +1113,7 @@ class GuestManager {
         role: 'planner',
         title: 'Organizador / Wedding Planner',
         badge: '📋 Acceso Operativo',
-        url: `${base}index.html?role=planner`,
+        url: `${base}portal.html?role=planner`,
         description: 'Acceso táctico al plano de mesas, cronograma, semáforo de acceso y catering (sin edición de invitación ni borrado destructivo).'
       },
       hostess: {

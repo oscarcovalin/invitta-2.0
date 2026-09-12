@@ -1,4 +1,4 @@
-﻿const templateEngine = require('./template-engine.js');
+const templateEngine = require('./template-engine.js');
 
 console.log('--- TEST: MULTI-HOST RSVP & GUEST CONFIRMATION RETURN ---');
 
@@ -11,7 +11,7 @@ console.log('Has rsvpWebhookUrl property:', typeof config.rsvpWebhookUrl === 'st
 // 2. Custom Multi-Host HTML generation
 config.whatsappHosts = [
   { label: 'Novia (Catalina)', phone: '5215511112222' },
-  { label: 'Novio (Julián)', phone: '5215533334444' },
+  { label: 'Novio (Juli�n)', phone: '5215533334444' },
   { label: 'Wedding Planner', phone: '5215555556666' }
 ];
 config.rsvpWebhookUrl = 'https://webhook.site/test-endpoint';
@@ -29,4 +29,4 @@ console.log('Contains guest broadcast logic:', html.includes('INVITTA_GUEST_CONF
 console.log('Contains structured guest return message:', html.includes('buildGuestMessageText'));
 console.log('Contains structured host notification message:', html.includes('buildHostMessageText'));
 
-console.log('\n✅ ALL MULTI-HOST & RSVP RETURN TESTS COMPLETED SUCCESSFULLY.');
+console.log('\n? ALL MULTI-HOST & RSVP RETURN TESTS COMPLETED SUCCESSFULLY.');

@@ -30,16 +30,16 @@ const portalHtml = fs.readFileSync(path.join(__dirname, 'portal.html'), 'utf8');
 assert(portalHtml.includes('invitacion-estudio.html'), 'portal.html links to invitacion-estudio.html');
 assert(portalHtml.includes('Estudio de Invitación Digital'), 'portal.html contains original studio card');
 
-// 3. Check index.html contains link to invitacion-estudio.html
-const indexHtml = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-assert(indexHtml.includes('invitacion-estudio.html'), 'index.html sidebar links to invitacion-estudio.html');
+// 3. Check portal.html contains link to invitacion-estudio.html
+const indexHtml = fs.readFileSync(path.join(__dirname, 'portal.html'), 'utf8');
+assert(indexHtml.includes('invitacion-estudio.html'), 'portal.html sidebar links to invitacion-estudio.html');
 
 // 4. Check invitacion.html (Real Live Digital Webpage) exists
 const liveHtml = fs.readFileSync(path.join(__dirname, 'invitacion.html'), 'utf8');
 assert(liveHtml.includes('Catalina & Julián') || liveHtml.includes('Nuestra Boda'), 'invitacion.html contains full wedding invitation content');
 assert(liveHtml.includes('id="vipBanner"'), 'invitacion.html includes VIP banner personalization');
 assert(liveHtml.includes('id="itinerario"'), 'invitacion.html includes full itinerary program');
-assert(indexHtml.includes('href="invitacion.html"'), 'index.html links to invitacion.html for Ver Invitación Real');
+assert(indexHtml.includes('href="invitacion.html"'), 'portal.html links to invitacion.html for Ver Invitación Real');
 assert(portalHtml.includes('href="invitacion.html"'), 'portal.html links to invitacion.html for Invitación Real');
 
 // 5. Test GuestManager with custom invitation config

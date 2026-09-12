@@ -3,7 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Invitta 2.0 Beta — Portal Central de Módulos</title>
+  <title>Invitta 2.0 — Portal Central de Módulos &amp; Eventos</title>
+  <meta name="description" content="Accede a tu evento en Invitta 2.0 con tu código y PIN o gestiona tus salones y eventos desde el portal master.">
+
+  <!-- OPEN GRAPH / FACEBOOK / WHATSAPP / LINKEDIN -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://invitta-v2-production.vercel.app/">
+  <meta property="og:title" content="Invitta 2.0 — Portal Central de Eventos y Salones">
+  <meta property="og:description" content="Accede a tu evento con tu código y PIN o gestiona tus salones y eventos desde el portal master.">
+  <meta property="og:image" content="https://invitta-v2-production.vercel.app/assets/hero-phone-invitation-mexico.png">
+  <meta property="og:image:alt" content="Invitta 2.0 Portal Central">
 
   <!-- Tipografías Invitta 1.0 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -77,10 +86,12 @@
     <div class="rounded-3xl bg-white border border-[#E8DDD0] shadow-[0_20px_60px_rgba(46,46,46,0.08)] p-8">
       <div class="grid grid-cols-2 gap-2 p-1 bg-[#F2EDE4] rounded-2xl border border-[#E8DDD0] mb-6" id="authTabs">
         <button type="button" id="tabBtnHost" class="py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-[#C9877D] text-white shadow-md flex items-center justify-center gap-1.5">
-          <span>💎 Anfitrión / Evento</span>
+          <span class="material-symbols-outlined text-[15px]">favorite</span>
+          <span>Anfitrión / Evento</span>
         </button>
         <button type="button" id="tabBtnPro" class="py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all text-[#6B6560] hover:text-[#2E2E2E] flex items-center justify-center gap-1.5">
-          <span>💼 Profesional / B2B</span>
+          <span class="material-symbols-outlined text-[15px]">business_center</span>
+          <span>Profesional / B2B</span>
         </button>
       </div>
 
@@ -270,10 +281,10 @@
             Todos (<span id="countFilterAll">0</span>)
           </button>
           <button type="button" data-filter="boda" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-[#F2EDE4] hover:bg-[#F5E6E3] text-[#6B6560] border border-[#E8DDD0]">
-            💍 Bodas (<span id="countFilterBoda">0</span>)
+            <span class="material-symbols-outlined text-[13px] text-primary align-middle mr-0.5">favorite</span> Bodas (<span id="countFilterBoda">0</span>)
           </button>
           <button type="button" data-filter="xv" class="vault-filter-btn px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider transition-all bg-[#F2EDE4] hover:bg-[#F5E6E3] text-[#6B6560] border border-[#E8DDD0]">
-            👑 XV Años (<span id="countFilterXv">0</span>)
+            <span class="material-symbols-outlined text-[13px] text-primary align-middle mr-0.5">star</span> XV Años (<span id="countFilterXv">0</span>)
           </button>
         </div>
 
@@ -780,7 +791,7 @@
           if (res.success) {
             if (feedback) {
               feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-semibold block animate-pulse';
-              feedback.innerHTML = `✨ ¡Bienvenido/a a <strong>${res.event.name}</strong>! Accediendo a tu espacio privado...`;
+              feedback.textContent = `✨ ¡Bienvenido/a a ${res.event.name}! Accediendo a tu espacio privado...`;
             }
             setTimeout(() => {
               window.location.href = res.redirectUrl;
@@ -788,7 +799,7 @@
           } else {
             if (feedback) {
               feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-300 font-semibold block';
-              feedback.innerHTML = `❌ ${res.error}`;
+              feedback.textContent = `❌ ${res.error}`;
             }
           }
         });
@@ -796,17 +807,17 @@
 
       // 4. Formulario Profesional (Superadmin / Planner B2B)
       if (formPro && auth) {
-        formPro.addEventListener('submit', (e) => {
+        formPro.addEventListener('submit', async (e) => {
           e.preventDefault();
           const user = document.getElementById('inputAuthProUser').value.trim();
           const pass = document.getElementById('inputAuthProPass').value.trim();
           const feedback = document.getElementById('feedbackAuthPro');
 
-          const res = auth.loginProfessional(user, pass);
+          const res = await auth.loginProfessional(user, pass);
           if (res.success) {
             if (feedback) {
               feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-semibold block animate-pulse';
-              feedback.innerHTML = `✨ ¡Sesión iniciada como <strong>${res.session.name}</strong>! Redirigiendo...`;
+              feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.name}! Redirigiendo...`;
             }
             setTimeout(() => {
               if (res.session.role === 'superadmin') {
@@ -818,7 +829,7 @@
           } else {
             if (feedback) {
               feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-300 font-semibold block';
-              feedback.innerHTML = `❌ ${res.error}`;
+              feedback.textContent = `❌ ${res.error}`;
             }
           }
         });

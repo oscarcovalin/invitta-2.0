@@ -21,7 +21,7 @@ if (typeof window === 'undefined') {
   };
   global.window = {
     location: {
-      href: 'http://localhost:3000/index.html',
+      href: 'http://localhost:3000/portal.html',
       search: ''
     }
   };

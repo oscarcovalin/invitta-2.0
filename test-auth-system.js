@@ -1,17 +1,17 @@
-﻿const assert = require("assert");
+const assert = require("assert");
 const fs = require("fs");
 const { EventVaultManager } = require("./event-vault-manager.js");
 const { AuthManager } = require("./auth-manager.js");
 
-console.log("\n🧪 Testing Hybrid Authentication & Security Engine...\n");
+console.log("\n?? Testing Hybrid Authentication & Security Engine...\n");
 let passed = 0;
 function it(desc, fn) {
   try {
     fn();
-    console.log("  ✅ PASS: " + desc);
+    console.log("  ? PASS: " + desc);
     passed++;
   } catch(e) {
-    console.error("  ❌ FAIL: " + desc, e.message);
+    console.error("  ? FAIL: " + desc, e.message);
   }
 }
 
@@ -23,7 +23,7 @@ it("Superadmin logs in successfully with primary email and master password", () 
   const res = auth.loginProfessional("admin@invitta.mx", "invitta2027");
   assert.strictEqual(res.success, true);
   assert.strictEqual(res.session.role, "superadmin");
-  assert.strictEqual(res.redirectUrl, "index.html");
+  assert.strictEqual(res.redirectUrl, "portal.html");
   assert.ok(res.session.token.startsWith("tok_admin_"));
 });
 
@@ -64,7 +64,7 @@ it("Host logs in with valid Event Code (CATALINA-JULIAN) and 4-digit PIN (4821)"
   assert.ok(res.redirectUrl.includes("token=tok_cat_9823"));
 });
 
-it("Host login for Mis XV Años Valentina with valid PIN (7392)", () => {
+it("Host login for Mis XV A�os Valentina with valid PIN (7392)", () => {
   const res = auth.loginHostByPin("VALENTINA", "7392");
   assert.strictEqual(res.success, true);
   assert.strictEqual(res.event.slug, "xv-valentina-2027");
@@ -79,7 +79,7 @@ it("Host login fails with wrong PIN", () => {
 it("Host login fails with non-existent Event Code", () => {
   const res = auth.loginHostByPin("EVENTO_FANTASMA_XYZ", "1234");
   assert.strictEqual(res.success, false);
-  assert.ok(res.error.includes("Código de evento no encontrado"));
+  assert.ok(res.error.includes("C�digo de evento no encontrado"));
 });
 
 // 4. Session & Logout Lifecycle

@@ -119,9 +119,9 @@ assert(seatingHtml.includes('statInTransitPax'), 'organizador-mesas.html contain
 assert(seatingHtml.includes('statPendingPax'), 'organizador-mesas.html contains 🔴 statPendingPax counter');
 assert(seatingHtml.includes('statEmergencyPax'), 'organizador-mesas.html contains 🔵 statEmergencyPax counter');
 
-const portalHtml = fs.readFileSync('./index.html', 'utf-8');
-assert(portalHtml.includes('scanner-acceso.html'), 'index.html contains Escáner de Acceso card');
-assert(portalHtml.includes('generador-emergencia.html'), 'index.html contains Generador de Emergencia card');
+const portalHtml = fs.readFileSync('./portal.html', 'utf-8');
+assert(portalHtml.includes('scanner-acceso.html'), 'portal.html contains Escáner de Acceso card');
+assert(portalHtml.includes('generador-emergencia.html'), 'portal.html contains Generador de Emergencia card');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);

@@ -1,19 +1,19 @@
-﻿const TemplateEngine = require('./template-engine.js');
+const TemplateEngine = require('./template-engine.js');
 
 let passed = 0;
 let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ✅ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ❌ FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-console.log("\n🧪 Testing Footer Closing & Footer Text Customization...");
+console.log("\n?? Testing Footer Closing & Footer Text Customization...");
 
 // Test 1: Default footer closing is "Con amor,"
 const defaultHtml = TemplateEngine.generateHTML(TemplateEngine.defaultConfig);
@@ -21,9 +21,9 @@ assert(defaultHtml.includes('Con amor,'), 'Default HTML includes "Con amor,"');
 
 // Test 2: Custom footer closing
 const customConfig = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
-customConfig.footerClosing = '¡Los esperamos con los brazos abiertos!';
+customConfig.footerClosing = '�Los esperamos con los brazos abiertos!';
 const customHtml = TemplateEngine.generateHTML(customConfig);
-assert(customHtml.includes('¡Los esperamos con los brazos abiertos!'), 'Custom footer closing renders correctly');
+assert(customHtml.includes('�Los esperamos con los brazos abiertos!'), 'Custom footer closing renders correctly');
 
 // Test 3: Empty footer closing omits the element cleanly
 const emptyClosingConfig = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));

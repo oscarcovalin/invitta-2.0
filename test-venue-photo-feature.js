@@ -1,16 +1,16 @@
-﻿const fs = require("fs");
+const fs = require("fs");
 const assert = require("assert");
 const TemplateEngine = require("./template-engine.js");
 
-console.log("\n🧪 Testing Church & Venue Photograph Feature & Fallback Engine...\n");
+console.log("\n?? Testing Church & Venue Photograph Feature & Fallback Engine...\n");
 let passed = 0;
 function it(desc, fn) {
   try {
     fn();
-    console.log("  ✅ PASS: " + desc);
+    console.log("  ? PASS: " + desc);
     passed++;
   } catch(e) {
-    console.error("  ❌ FAIL: " + desc, e.message);
+    console.error("  ? FAIL: " + desc, e.message);
   }
 }
 
@@ -31,7 +31,7 @@ it("Fallback: When no photos are provided, generated HTML does not render image 
   assert.ok(html.includes('id="ceremonyCard"'));
   assert.ok(html.includes('id="receptionCard"'));
   assert.strictEqual(html.includes('alt="Lugar de la Ceremonia"'), false);
-  assert.strictEqual(html.includes('alt="Lugar de la Recepción"'), false);
+  assert.strictEqual(html.includes('alt="Lugar de la Recepci�n"'), false);
 });
 
 it("Church photo URL renders luxury banner in ceremonyCard", () => {
@@ -41,7 +41,7 @@ it("Church photo URL renders luxury banner in ceremonyCard", () => {
   const html = TemplateEngine.generateHTML(cfg);
   assert.ok(html.includes('src="https://images.unsplash.com/photo-church"'));
   assert.ok(html.includes('alt="Lugar de la Ceremonia"'));
-  assert.strictEqual(html.includes('alt="Lugar de la Recepción"'), false);
+  assert.strictEqual(html.includes('alt="Lugar de la Recepci�n"'), false);
 });
 
 it("Venue photo base64 renders luxury banner in receptionCard", () => {
@@ -51,7 +51,7 @@ it("Venue photo base64 renders luxury banner in receptionCard", () => {
   cfg.reception.image = b64Data;
   const html = TemplateEngine.generateHTML(cfg);
   assert.ok(html.includes('src="' + b64Data + '"'));
-  assert.ok(html.includes('alt="Lugar de la Recepción"'));
+  assert.ok(html.includes('alt="Lugar de la Recepci�n"'));
   assert.strictEqual(html.includes('alt="Lugar de la Ceremonia"'), false);
 });
 
@@ -63,7 +63,7 @@ it("Both photos provided renders both cards with photos", () => {
   assert.ok(html.includes('src="https://example.com/church.jpg"'));
   assert.ok(html.includes('src="https://example.com/venue.jpg"'));
   assert.ok(html.includes('alt="Lugar de la Ceremonia"'));
-  assert.ok(html.includes('alt="Lugar de la Recepción"'));
+  assert.ok(html.includes('alt="Lugar de la Recepci�n"'));
 });
 
 it("Clearing photo restores fallback layout without broken placeholders", () => {

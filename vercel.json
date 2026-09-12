@@ -34,11 +34,11 @@
   "rewrites": [
     {
       "source": "/landing",
-      "destination": "/landing.html"
+      "destination": "/index.html"
     },
     {
       "source": "/portal",
-      "destination": "/index.html"
+      "destination": "/portal.html"
     },
     {
       "source": "/estudio",

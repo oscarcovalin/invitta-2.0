@@ -1,19 +1,19 @@
-﻿const TemplateEngine = require('./template-engine.js');
+const TemplateEngine = require('./template-engine.js');
 
 let passed = 0;
 let failed = 0;
 
 function assert(condition, message) {
   if (condition) {
-    console.log(`  ✅ PASS: ${message}`);
+    console.log(`  ? PASS: ${message}`);
     passed++;
   } else {
-    console.error(`  ❌ FAIL: ${message}`);
+    console.error(`  ? FAIL: ${message}`);
     failed++;
   }
 }
 
-console.log("\n🧪 Testing Lodging / Hotel Suggestions Section...");
+console.log("\n?? Testing Lodging / Hotel Suggestions Section...");
 
 // Test 1: Default config renders 2 hotel options
 const configDefault = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
@@ -34,12 +34,12 @@ const configCustom = JSON.parse(JSON.stringify(TemplateEngine.defaultConfig));
 configCustom.lodging = {
   enabled: true,
   title: 'Hospedaje Recomendado',
-  subtitle: 'Para nuestros invitados foráneos',
+  subtitle: 'Para nuestros invitados for�neos',
   description: 'Tarifas especiales mencionando nuestro evento.',
   hotels: [
     {
       name: 'Hotel Boutique Casa Real',
-      address: 'Calle Hidalgo 45, Centro Histórico',
+      address: 'Calle Hidalgo 45, Centro Hist�rico',
       mapsUrl: 'https://maps.google.com/?q=Hotel+Boutique+Casa+Real',
       phone: '+52 33 1122 3344',
       code: 'BODA-CATALINA'
@@ -56,9 +56,9 @@ configCustom.lodging = {
 
 const htmlCustom = TemplateEngine.generateHTML(configCustom);
 assert(htmlCustom.includes('Hospedaje Recomendado'), 'Custom title renders');
-assert(htmlCustom.includes('Para nuestros invitados foráneos'), 'Custom subtitle renders');
+assert(htmlCustom.includes('Para nuestros invitados for�neos'), 'Custom subtitle renders');
 assert(htmlCustom.includes('Hotel Boutique Casa Real'), 'Custom hotel 1 name renders');
-assert(htmlCustom.includes('Calle Hidalgo 45, Centro Histórico'), 'Custom hotel 1 address renders');
+assert(htmlCustom.includes('Calle Hidalgo 45, Centro Hist�rico'), 'Custom hotel 1 address renders');
 assert(htmlCustom.includes('https://maps.google.com/?q=Hotel+Boutique+Casa+Real'), 'Custom hotel 1 Google Maps URL renders');
 assert(htmlCustom.includes('BODA-CATALINA'), 'Special agreement code renders');
 assert(htmlCustom.includes('tel:+523311223344'), 'Phone tel link renders');
