@@ -283,7 +283,7 @@
               <span class="material-symbols-outlined text-[#C9877D] text-lg">check</span> Ubicación y Mapas
             </li>
           </ul>
-          <a href="#contacto" class="block w-full text-center py-3 border border-[#2E2E2E] text-[#2E2E2E] text-xs font-bold uppercase tracking-wider hover:bg-[#2E2E2E] hover:text-white transition-colors">Seleccionar</a>
+          <button onclick="openCheckout('esencial')" class="block w-full text-center py-3 border border-[#2E2E2E] text-[#2E2E2E] text-xs font-bold uppercase tracking-wider hover:bg-[#2E2E2E] hover:text-white transition-colors">Seleccionar</button>
         </div>
 
         <!-- Plan 2 -->
@@ -310,7 +310,7 @@
               <span class="material-symbols-outlined text-[#C9877D] text-lg">check</span> Pases Inteligentes QR
             </li>
           </ul>
-          <a href="#contacto" class="block w-full text-center py-3 bg-[#C9877D] text-white text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-[#2E2E2E] transition-colors">Seleccionar</a>
+          <button onclick="openCheckout('premium')" class="block w-full text-center py-3 bg-[#C9877D] text-white text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-[#2E2E2E] transition-colors">Seleccionar</button>
         </div>
 
         <!-- Plan 3 -->
@@ -335,7 +335,7 @@
               <span class="material-symbols-outlined text-[#C9877D] text-lg">check</span> Soporte Prioritario 24/7
             </li>
           </ul>
-          <a href="#contacto" class="block w-full text-center py-3 border border-[#2E2E2E] text-[#2E2E2E] text-xs font-bold uppercase tracking-wider hover:bg-[#2E2E2E] hover:text-white transition-colors">Seleccionar</a>
+          <button onclick="openCheckout('vip')" class="block w-full text-center py-3 border border-[#2E2E2E] text-[#2E2E2E] text-xs font-bold uppercase tracking-wider hover:bg-[#2E2E2E] hover:text-white transition-colors">Seleccionar</button>
         </div>
 
       </div>
@@ -367,6 +367,131 @@
       Diseño Exclusivo.
     </p>
   </footer>
+
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#2E2E2E]/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+    <div class="bg-[#FAF7F2] w-full max-w-md p-8 rounded-none border border-[#E8DDD0] shadow-2xl transform scale-95 transition-transform duration-300 relative" id="checkoutModalContent">
+      <button onclick="closeCheckout()" class="absolute top-4 right-4 text-[#6B6560] hover:text-[#2E2E2E]">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      
+      <div class="text-center mb-6">
+        <span class="inline-block border-b border-[#C9877D] pb-1 mb-2">
+          <span class="text-[#C9877D] text-[10px] font-bold tracking-[0.2em] uppercase">Checkout Seguro</span>
+        </span>
+        <h3 class="font-serif text-3xl text-[#2E2E2E]" id="checkoutPlanName">Plan</h3>
+      </div>
+
+      <form id="checkoutForm" onsubmit="submitCheckout(event)" class="space-y-4">
+        <input type="hidden" id="checkoutPlanId" name="planId">
+        
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#6B6560] mb-1">Nombre Completo *</label>
+          <input type="text" id="checkoutName" required class="w-full px-4 py-3 bg-white border border-[#E8DDD0] text-sm focus:outline-none focus:border-[#C9877D] transition-colors rounded-none placeholder-[#A09A94]" placeholder="Ej. Ana García">
+        </div>
+        
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#6B6560] mb-1">WhatsApp *</label>
+          <input type="tel" id="checkoutPhone" required class="w-full px-4 py-3 bg-white border border-[#E8DDD0] text-sm focus:outline-none focus:border-[#C9877D] transition-colors rounded-none placeholder-[#A09A94]" placeholder="Ej. 5512345678">
+        </div>
+        
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#6B6560] mb-1">Tipo de Evento</label>
+          <select id="checkoutEvent" class="w-full px-4 py-3 bg-white border border-[#E8DDD0] text-sm focus:outline-none focus:border-[#C9877D] transition-colors rounded-none text-[#2E2E2E]">
+            <option value="boda">Boda / Matrimonio</option>
+            <option value="xv">XV Años</option>
+            <option value="otro">Otro Evento</option>
+          </select>
+        </div>
+
+        <button type="submit" id="checkoutBtnSubmit" class="w-full mt-6 bg-[#2E2E2E] text-white py-4 rounded-none border border-[#2E2E2E] text-xs font-bold uppercase tracking-widest hover:bg-[#C9877D] hover:border-[#C9877D] transition-colors flex items-center justify-center gap-2">
+          <span>Pagar de Forma Segura</span>
+          <span class="material-symbols-outlined text-[18px]">lock</span>
+        </button>
+
+        <p class="text-[10px] text-center text-[#A09A94] mt-4 uppercase tracking-widest">Pagos procesados por Clip México</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const planNames = {
+      'esencial': 'Plan Esencial',
+      'premium': 'Plan Premium',
+      'vip': 'Plan Platinum'
+    };
+
+    function openCheckout(planId) {
+      document.getElementById('checkoutPlanId').value = planId;
+      document.getElementById('checkoutPlanName').textContent = planNames[planId];
+      
+      const modal = document.getElementById('checkoutModal');
+      const content = document.getElementById('checkoutModalContent');
+      
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      // Trigger animations
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        content.classList.remove('scale-95');
+      }, 10);
+    }
+
+    function closeCheckout() {
+      const modal = document.getElementById('checkoutModal');
+      const content = document.getElementById('checkoutModalContent');
+      
+      modal.classList.add('opacity-0');
+      content.classList.add('scale-95');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 300);
+    }
+
+    async function submitCheckout(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('checkoutBtnSubmit');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="animate-spin material-symbols-outlined">sync</span><span>Procesando...</span>';
+      btn.disabled = true;
+
+      const payload = {
+        planId: document.getElementById('checkoutPlanId').value,
+        provider: 'clip',
+        clientName: document.getElementById('checkoutName').value,
+        clientPhone: document.getElementById('checkoutPhone').value,
+        eventType: document.getElementById('checkoutEvent').value
+      };
+
+      try {
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const data = await response.json();
+        
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error || 'Ocurrió un error al procesar el pago.');
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error de conexión. Intenta nuevamente.');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+  </script>
 
 </body>
 </html>
