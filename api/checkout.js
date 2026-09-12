@@ -208,6 +208,8 @@ module.exports = async function handler(req, res) {
   let businessClipLink = process.env.CLIP_PAYMENT_LINK || 'https://www.clip.mx/@cinewed';
   if (selectedPlan.id === 'esencial' || selectedPlan.id === 'basica') {
     businessClipLink = 'https://pago.clip.mx/85a05e71-4ffc-46f7-bff2-ede8f616556d';
+  } else if (selectedPlan.id === 'premium') {
+    businessClipLink = 'https://pago.clip.mx/ee494ddf-d012-4d6f-ab65-5f1571dbe11f';
   }
 
   if (!clipApiKey) {
