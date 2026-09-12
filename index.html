@@ -55,26 +55,9 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .feature-card:hover {
-      transform: translateY(-5px);
-      border-color: #E8B4AD;
-      box-shadow: 0 15px 35px rgba(46, 46, 46, 0.05);
+      border-color: #C9877D;
     }
-    /* Hero Gradient Animation */
-    .hero-glow {
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(245,230,227,0.8) 0%, rgba(250,247,242,0) 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      animation: pulseGlow 8s infinite alternate;
-    }
-    @keyframes pulseGlow {
-      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-      100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-    }
+    
   </style>
 </head>
 <body class="antialiased selection:bg-[#F5E6E3] selection:text-[#2E2E2E]">
@@ -102,7 +85,7 @@
           <a href="portal.html" class="hidden md:inline-flex text-xs font-bold uppercase tracking-wider text-[#6B6560] hover:text-[#2E2E2E] transition-colors items-center gap-1">
             <span class="material-symbols-outlined text-[18px]">lock</span> Portal Clientes
           </a>
-          <a href="#muestras" class="btn-primary px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider">
+          <a href="#muestras" class="btn-primary rounded-none px-6 py-2.5 rounded-none border border-transparent text-xs font-bold uppercase tracking-wider">
             Ver Catálogo
           </a>
         </div>
@@ -112,7 +95,7 @@
 
   <!-- HERO SECTION -->
   <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-    <div class="hero-glow"></div>
+    
     <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
       
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F5E6E3]/60 border border-[#E8B4AD]/60 text-[#C9877D] text-xs font-bold tracking-widest uppercase mb-6 backdrop-blur-sm">
@@ -130,11 +113,11 @@
       </p>
 
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <a href="#muestras" class="w-full sm:w-auto btn-primary px-8 py-3.5 rounded-full text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+        <a href="#muestras" class="w-full sm:w-auto btn-primary rounded-none px-8 py-3.5 rounded-none border border-[#2E2E2E] text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2">
           <span>Explorar Diseños</span>
           <span class="material-symbols-outlined text-[18px]">arrow_downward</span>
         </a>
-        <a href="portal.html" class="w-full sm:w-auto btn-outline px-8 py-3.5 rounded-full text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 bg-white">
+        <a href="portal.html" class="w-full sm:w-auto btn-outline px-8 py-3.5 rounded-none border border-[#2E2E2E] text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 bg-white">
           <span class="material-symbols-outlined text-[18px]">login</span>
           <span>Acceso Anfitriones</span>
         </a>
@@ -154,36 +137,36 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Feature 1 -->
-        <div class="feature-card p-8 rounded-3xl text-center group">
-          <div class="w-14 h-14 mx-auto rounded-2xl bg-[#F5E6E3] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-            <span class="material-symbols-outlined text-3xl text-[#C9877D]">local_play</span>
+        <div class="feature-card p-8 rounded-none text-center group">
+          <div class="mb-6 group-hover:-translate-y-1 transition-transform duration-300">
+            <span class="material-symbols-outlined text-[40px] text-[#C9877D] font-light">local_play</span>
           </div>
           <h3 class="font-serif text-xl font-semibold mb-3">Pases Inteligentes</h3>
           <p class="text-sm text-[#6B6560] font-light leading-relaxed">Asignación estricta de boletos por familia con códigos QR únicos e intransferibles.</p>
         </div>
         
         <!-- Feature 2 -->
-        <div class="feature-card p-8 rounded-3xl text-center group">
-          <div class="w-14 h-14 mx-auto rounded-2xl bg-[#E8F3E5] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-            <span class="material-symbols-outlined text-3xl text-[#8A9E7B]">table_restaurant</span>
+        <div class="feature-card p-8 rounded-none text-center group">
+          <div class="mb-6 group-hover:-translate-y-1 transition-transform duration-300">
+            <span class="material-symbols-outlined text-[40px] text-[#C9877D] font-light">table_restaurant</span>
           </div>
           <h3 class="font-serif text-xl font-semibold mb-3">Organizador de Mesas</h3>
           <p class="text-sm text-[#6B6560] font-light leading-relaxed">Distribuye a tus invitados confirmados en un plano visual interactivo (Floor Plan).</p>
         </div>
 
         <!-- Feature 3 -->
-        <div class="feature-card p-8 rounded-3xl text-center group">
-          <div class="w-14 h-14 mx-auto rounded-2xl bg-[#EAF0F8] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-            <span class="material-symbols-outlined text-3xl text-[#5B7FA6]">music_note</span>
+        <div class="feature-card p-8 rounded-none text-center group">
+          <div class="mb-6 group-hover:-translate-y-1 transition-transform duration-300">
+            <span class="material-symbols-outlined text-[40px] text-[#C9877D] font-light">music_note</span>
           </div>
           <h3 class="font-serif text-xl font-semibold mb-3">Música & Animaciones</h3>
           <p class="text-sm text-[#6B6560] font-light leading-relaxed">Sello de cera 3D al abrir, música de fondo ininterrumpida y efectos de polvo de estrellas.</p>
         </div>
 
         <!-- Feature 4 -->
-        <div class="feature-card p-8 rounded-3xl text-center group">
-          <div class="w-14 h-14 mx-auto rounded-2xl bg-[#F4EBF5] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-            <span class="material-symbols-outlined text-3xl text-[#9A7B9E]">photo_camera</span>
+        <div class="feature-card p-8 rounded-none text-center group">
+          <div class="mb-6 group-hover:-translate-y-1 transition-transform duration-300">
+            <span class="material-symbols-outlined text-[40px] text-[#C9877D] font-light">photo_camera</span>
           </div>
           <h3 class="font-serif text-xl font-semibold mb-3">Álbum Compartido</h3>
           <p class="text-sm text-[#6B6560] font-light leading-relaxed">Tus invitados pueden subir las fotos que tomen durante la fiesta en tiempo real.</p>
@@ -210,7 +193,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         <!-- Muestra Boda -->
-        <div class="group rounded-3xl overflow-hidden bg-white border border-[#E8DDD0] shadow-sm hover:shadow-xl transition-all duration-500">
+        <div class="group rounded-none overflow-hidden bg-white border border-[#E8DDD0] hover:border-[#C9877D] transition-all duration-500">
           <div class="aspect-[4/3] bg-[#F5E6E3] relative overflow-hidden flex items-center justify-center">
             <!-- Simulación de Portada (Imagen Placeholder o diseño CSS) -->
             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('assets/hero-boda-hd.jpg'); background-color: #2E2E2E; background-blend-mode: overlay;"></div>
@@ -221,14 +204,14 @@
           </div>
           <div class="p-8">
             <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-bold uppercase tracking-widest bg-[#E8F3E5] text-[#8A9E7B] px-3 py-1 rounded-full">Boda / Matrimonio</span>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-[#C9877D] px-0 py-1 border-b border-[#E8DDD0]">Boda / Matrimonio</span>
               <span class="text-xs text-[#6B6560] font-medium">Tema: Vino & Oro</span>
             </div>
             <p class="text-sm text-[#6B6560] font-light mb-6">
               Diseño elegante con confirmación de asistencia, mapa interactivo, mesa de regalos e itinerario detallado.
             </p>
             <div class="flex items-center gap-4">
-              <a href="invitacion-boda.html" target="_blank" class="w-full text-center bg-[#2E2E2E] text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#C9877D] transition-colors">
+              <a href="invitacion-boda.html" target="_blank" class="w-full text-center bg-[#2E2E2E] text-white py-3 rounded-none border border-[#2E2E2E] text-xs font-bold uppercase tracking-wider hover:bg-[#C9877D] transition-colors">
                 Ver Invitación en Vivo
               </a>
             </div>
@@ -236,7 +219,7 @@
         </div>
 
         <!-- Muestra XV Años -->
-        <div class="group rounded-3xl overflow-hidden bg-white border border-[#E8DDD0] shadow-sm hover:shadow-xl transition-all duration-500">
+        <div class="group rounded-none overflow-hidden bg-white border border-[#E8DDD0] hover:border-[#C9877D] transition-all duration-500">
           <div class="aspect-[4/3] bg-[#F5E6E3] relative overflow-hidden flex items-center justify-center">
             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('assets/hero-xv-hd.jpg'); background-color: #1a1a2e; background-blend-mode: overlay;"></div>
             <div class="relative z-10 text-center text-white px-6">
@@ -246,14 +229,14 @@
           </div>
           <div class="p-8">
             <div class="flex items-center justify-between mb-4">
-              <span class="text-[10px] font-bold uppercase tracking-widest bg-[#F4EBF5] text-[#9A7B9E] px-3 py-1 rounded-full">XV Años / Sweet 16</span>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-[#C9877D] px-0 py-1 border-b border-[#E8DDD0]">XV Años / Sweet 16</span>
               <span class="text-xs text-[#6B6560] font-medium">Tema: Medianoche</span>
             </div>
             <p class="text-sm text-[#6B6560] font-light mb-6">
               Diseño vibrante con sección para chambelanes, pase VIP escaneable, cuenta regresiva y galería de sesión de fotos.
             </p>
             <div class="flex items-center gap-4">
-              <a href="invitacion-xv.html" target="_blank" class="w-full text-center bg-[#2E2E2E] text-white py-3 rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#C9877D] transition-colors">
+              <a href="invitacion-xv.html" target="_blank" class="w-full text-center bg-[#2E2E2E] text-white py-3 rounded-none border border-[#2E2E2E] text-xs font-bold uppercase tracking-wider hover:bg-[#C9877D] transition-colors">
                 Ver Invitación en Vivo
               </a>
             </div>
@@ -271,7 +254,7 @@
       <p class="text-sm text-neutral-400 font-light mb-8 max-w-xl mx-auto leading-relaxed">
         Agenda una prueba y comienza a gestionar a tus invitados con la tecnología más avanzada en organización de eventos.
       </p>
-      <a href="portal.html" class="inline-block bg-[#C9877D] hover:bg-white hover:text-[#2E2E2E] text-white px-8 py-3.5 rounded-full text-sm font-bold uppercase tracking-widest transition-all">
+      <a href="portal.html" class="inline-block bg-[#C9877D] hover:bg-white hover:text-[#2E2E2E] text-white px-8 py-3.5 rounded-none border border-[#2E2E2E] text-sm font-bold uppercase tracking-widest transition-all">
         Ingresar al Portal de Clientes
       </a>
     </div>
