@@ -1,31 +1,16 @@
 // api/login.js
-// Función serverless de Node (NO Edge) — aquí sí puedes usar bcrypt.
-// Recibe { eventCode, pin } o { email, password } desde los formularios que
-// ya existen en portal.html, valida contra tu base de datos real (o contra
-// variables de entorno mientras migras), y si es correcto emite una cookie
-// httpOnly firmada. El navegador nunca ve ni valida el PIN por su cuenta.
-//
-// Requiere: npm install jose bcryptjs
-
 import { SignJWT } from 'jose';
 import bcrypt from 'bcryptjs';
+import { rateLimiter } from '../lib/rateLimit.js';
 
 const COOKIE_NAME = 'invitta_session';
 const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12 horas
 
-// -----------------------------------------------------------------------
-// TEMPORAL: mientras no tengas base de datos, guarda aquí (o mejor, en
-// variables de entorno de Vercel) el hash del PIN por evento. NUNCA el PIN
-// en texto plano. Genera el hash una vez con:
-//   node -e "console.log(require('bcryptjs').hashSync('1234', 10))"
-// -----------------------------------------------------------------------
 const EVENTS = {
   'CATALINA-JULIAN': {
     pinHash: process.env.EVENT_CATALINA_JULIAN_PIN_HASH, // desde Vercel env vars
     role: 'host',
   },
-  // agrega más eventos aquí, o reemplaza este objeto por una consulta real
-  // a tu base de datos (Postgres, Supabase, etc.)
 };
 
 export default async function handler(req, res) {
@@ -40,11 +25,26 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Faltan campos requeridos' });
   }
 
+  const ip = req.headers['x-forwarded-for'] || req.connection?.remoteAddress || '127.0.0.1';
+  const identifier = `${ip}:${String(eventCode).toUpperCase()}`;
+
+  if (process.env.UPSTASH_REDIS_REST_URL) {
+    try {
+      const { success, limit, reset, remaining } = await rateLimiter.limit(identifier);
+      res.setHeader('X-RateLimit-Limit', limit);
+      res.setHeader('X-RateLimit-Remaining', remaining);
+      res.setHeader('X-RateLimit-Reset', reset);
+      if (!success) {
+        return res.status(429).json({ error: 'Demasiados intentos. Intenta más tarde.' });
+      }
+    } catch (err) {
+      console.error('RateLimit error:', err);
+      // Fall open if redis is unreachable so users can still login
+    }
+  }
+
   const event = EVENTS[String(eventCode).toUpperCase()];
 
-  // Importante: responde con el MISMO mensaje genérico si el evento no
-  // existe o si el PIN es incorrecto, para no filtrar qué códigos son
-  // válidos (evita enumeración de eventos).
   const genericError = () =>
     res.status(401).json({ error: 'Código o PIN incorrecto' });
 

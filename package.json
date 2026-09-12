@@ -8,6 +8,8 @@
     "test": "node test-vendor-card.js"
   },
   "dependencies": {
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.4",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.12"
   },
