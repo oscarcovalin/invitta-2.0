@@ -46,13 +46,13 @@ function requiredRoles(pathname) {
 }
 
 export async function middleware(request) {
-  const { pathname } = request.nextUrl ?? new URL(request.url);
+  const { pathname } = new URL(request.url);
 
   if (!isProtected(pathname)) {
     return; // deja pasar rutas públicas (index, portal, invitacion-boda, etc.)
   }
 
-  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const token = request.headers.get('cookie')?.split(';').find(c => c.trim().startsWith(COOKIE_NAME + '='))?.split('=')[1];
 
   if (!token) {
     return redirectToLogin(request, pathname);
