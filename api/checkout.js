@@ -205,7 +205,10 @@ module.exports = async function handler(req, res) {
 
   // ─── CLIP (único proveedor activo) ────────────────────────────────────────
   const clipApiKey = (process.env.CLIP_API_KEY || '').trim();
-  const businessClipLink = process.env.CLIP_PAYMENT_LINK || 'https://www.clip.mx/@cinewed';
+  let businessClipLink = process.env.CLIP_PAYMENT_LINK || 'https://www.clip.mx/@cinewed';
+  if (selectedPlan.id === 'esencial' || selectedPlan.id === 'basica') {
+    businessClipLink = 'https://pago.clip.mx/85a05e71-4ffc-46f7-bff2-ede8f616556d';
+  }
 
   if (!clipApiKey) {
     // Sin API Key: redirigir directamente al Link de Negocio CineWed
