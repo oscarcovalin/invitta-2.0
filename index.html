@@ -121,8 +121,20 @@
         
         <!-- Mockup Composition -->
         <div class="relative z-10 w-full max-w-lg aspect-[4/5] sm:aspect-square lg:aspect-[3/4]">
-          <img src="assets/preview-boda-golden.png" alt="Invitación Boda Golden" class="absolute w-[80%] right-0 top-[10%] object-cover shadow-2xl z-10 image-parallax">
-          <img src="assets/preview-xv-champagne.png" alt="Invitación XV Champagne" class="absolute w-[60%] left-0 bottom-[10%] object-cover shadow-xl z-20 border-4 border-white image-parallax" style="transition-delay: 0.1s;">
+          <!-- Phone Mockup 1 -->
+          <div class="absolute w-[65%] right-0 top-0 sm:top-[5%] z-10 image-parallax bg-black rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-[#3A3A3A] shadow-2xl aspect-[9/19.5] overflow-hidden">
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-black rounded-b-xl sm:rounded-full z-20"></div>
+            <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
+              <img src="assets/preview-boda-golden.png" alt="Invitación Boda Golden" class="absolute inset-0 w-full h-full object-cover object-top opacity-90">
+            </div>
+          </div>
+          <!-- Phone Mockup 2 -->
+          <div class="absolute w-[55%] left-0 bottom-[5%] z-20 image-parallax bg-white rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-white shadow-2xl aspect-[9/19.5] overflow-hidden" style="transition-delay: 0.1s;">
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-white rounded-b-xl sm:rounded-full z-20"></div>
+            <div class="relative w-full h-full bg-[#FAF7F2] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
+              <img src="assets/preview-xv-champagne.png" alt="Invitación XV Champagne" class="absolute inset-0 w-full h-full object-cover object-top opacity-90">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -147,7 +159,13 @@
         </div>
         <div class="lg:col-span-6 lg:col-start-7 order-1 lg:order-2 relative">
           <div class="aspect-[4/3] bg-[#FAF7F2] relative overflow-hidden">
-             <img src="assets/preview-boda-classic.png" alt="RSVP Interface" class="absolute inset-0 w-full h-full object-cover object-top opacity-90 hover:scale-105 transition-transform duration-700">
+             
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] sm:w-[60%] aspect-[9/19.5] bg-black rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-[#3A3A3A] shadow-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-700">
+              <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-black rounded-b-xl sm:rounded-full z-20"></div>
+              <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
+                <img src="assets/preview-boda-classic.png" alt="RSVP Interface" class="absolute inset-0 w-full h-full object-cover object-top opacity-95">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -156,7 +174,13 @@
       <div class="grid lg:grid-cols-12 gap-12 lg:gap-0 items-center reveal">
         <div class="lg:col-span-6 lg:col-start-1 relative">
           <div class="aspect-[4/3] bg-[#FAF7F2] relative overflow-hidden">
-             <img src="assets/preview-xv-royal.png" alt="Table Organizer" class="absolute inset-0 w-full h-full object-cover object-top opacity-90 hover:scale-105 transition-transform duration-700">
+             
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] sm:w-[60%] aspect-[9/19.5] bg-black rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-[#E8DDD0] shadow-2xl overflow-hidden hover:scale-[1.02] transition-transform duration-700">
+              <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-black rounded-b-xl sm:rounded-full z-20"></div>
+              <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
+                <img src="assets/preview-xv-royal.png" alt="Table Organizer" class="absolute inset-0 w-full h-full object-cover object-top opacity-95">
+              </div>
+            </div>
           </div>
         </div>
         <div class="lg:col-span-5 lg:col-start-8">
@@ -185,18 +209,32 @@
 
       <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
         <!-- Boda -->
-        <a href="invitacion-boda.html" target="_blank" class="block group reveal">
-          <div class="relative overflow-hidden aspect-[3/4] mb-6 bg-[#1A1A1A]">
-            <img src="assets/hero-boda-hd.jpg" alt="Boda Muestra" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700">
-            <div class="absolute inset-0 flex items-center justify-center">
-               <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                 Ver En Vivo
-               </span>
+        <a href="invitacion-boda.html" target="_blank" class="block group reveal flex flex-col items-center">
+          <!-- Phone Mockup -->
+          <div class="relative w-[280px] h-[580px] sm:w-[320px] sm:h-[650px] bg-black rounded-[3rem] border-[8px] border-[#3A3A3A] shadow-2xl mb-10 overflow-hidden transform group-hover:-translate-y-2 transition-transform duration-500">
+            <!-- Dynamic Island / Notch area -->
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20"></div>
+            <!-- Phone buttons (CSS trick) -->
+            <div class="absolute top-32 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
+            <div class="absolute top-48 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
+            <div class="absolute top-32 -right-[10px] w-1 h-16 bg-[#3A3A3A] rounded-r-md"></div>
+            
+            <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2.5rem] overflow-hidden">
+              <img src="assets/preview-boda-golden.png" alt="Boda Muestra" class="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+              
+              <!-- Hover Overlay -->
+              <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm z-30">
+                 <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                   Ver En Vivo
+                 </span>
+              </div>
             </div>
           </div>
-          <div class="flex justify-between items-start">
+          
+          <div class="w-full flex justify-between items-start">
             <div>
-              <h3 class="font-serif text-2xl mb-1">Catalina & Julián</h3>
+              <h3 class="font-serif text-2xl mb-1 text-white">Catalina & Julián</h3>
               <p class="text-[#A09A94] text-xs uppercase tracking-widest">Boda / Matrimonio</p>
             </div>
             <span class="text-[#C9877D] text-xs border border-[#C9877D]/30 px-3 py-1 uppercase tracking-widest">Vino & Oro</span>
@@ -204,21 +242,35 @@
         </a>
 
         <!-- XV Años -->
-        <a href="invitacion-xv.html" target="_blank" class="block group reveal" style="transition-delay: 0.2s;">
-          <div class="relative overflow-hidden aspect-[3/4] mb-6 bg-[#1A1A1A]">
-            <img src="assets/hero-xv-hd.jpg" alt="XV Muestra" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700">
-            <div class="absolute inset-0 flex items-center justify-center">
-               <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                 Ver En Vivo
-               </span>
+        <a href="invitacion-xv.html" target="_blank" class="block group reveal flex flex-col items-center" style="transition-delay: 0.2s;">
+          <!-- Phone Mockup -->
+          <div class="relative w-[280px] h-[580px] sm:w-[320px] sm:h-[650px] bg-black rounded-[3rem] border-[8px] border-[#3A3A3A] shadow-2xl mb-10 overflow-hidden transform group-hover:-translate-y-2 transition-transform duration-500">
+            <!-- Dynamic Island / Notch area -->
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20"></div>
+            <!-- Phone buttons (CSS trick) -->
+            <div class="absolute top-32 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
+            <div class="absolute top-48 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
+            <div class="absolute top-32 -right-[10px] w-1 h-16 bg-[#3A3A3A] rounded-r-md"></div>
+            
+            <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2.5rem] overflow-hidden">
+              <img src="assets/preview-xv-champagne.png" alt="XV Muestra" class="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+              
+              <!-- Hover Overlay -->
+              <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm z-30">
+                 <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                   Ver En Vivo
+                 </span>
+              </div>
             </div>
           </div>
-          <div class="flex justify-between items-start">
+
+          <div class="w-full flex justify-between items-start">
             <div>
-              <h3 class="font-serif text-2xl mb-1">Mis XV Catalina</h3>
+              <h3 class="font-serif text-2xl mb-1 text-white">Mis XV Catalina</h3>
               <p class="text-[#A09A94] text-xs uppercase tracking-widest">XV Años</p>
             </div>
-            <span class="text-[#C9877D] text-xs border border-[#C9877D]/30 px-3 py-1 uppercase tracking-widest">Medianoche</span>
+            <span class="text-[#C9877D] text-xs border border-[#C9877D]/30 px-3 py-1 uppercase tracking-widest">Midnight</span>
           </div>
         </a>
       </div>
