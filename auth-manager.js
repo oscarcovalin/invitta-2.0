@@ -107,7 +107,7 @@
     /**
      * Autentica Anfitrión (Novios / XV) mediante Código de Evento + PIN Secreto de 4 Dígitos
      */
-    loginHostByPin(eventCode, pin) {
+    async loginHostByPin(eventCode, pin) {
       if (!eventCode || !eventCode.trim()) {
         return { success: false, error: 'Ingresa el código de tu evento.' };
       }
@@ -115,38 +115,24 @@
         return { success: false, error: 'Ingresa tu PIN de 4 dígitos.' };
       }
 
-      if (!this.evm) {
-        return { success: false, error: 'Motor de eventos no inicializado.' };
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventCode: eventCode.trim(), pin: pin.trim() })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          return { success: true, eventCode: eventCode.trim() };
+        } else {
+          return { success: false, error: data.error || 'Código o PIN incorrecto' };
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        return { success: false, error: 'Error de conexión con el servidor.' };
       }
-
-      const match = this.evm.findEventByCode(eventCode.trim());
-      if (!match || !match.event) {
-        return { success: false, error: 'Código de evento no encontrado. Verifica con tus organizadores.' };
-      }
-
-      const targetEvent = match.event;
-      const expectedPin = String(targetEvent.pin || '4821').trim();
-      const enteredPin = String(pin).trim();
-
-      if (enteredPin !== expectedPin) {
-        return { success: false, error: 'PIN incorrecto para este evento. Verifica tu PIN de 4 dígitos.' };
-      }
-
-      const session = {
-        role: targetEvent.packageType || 'host_premium',
-        eventSlug: targetEvent.slug,
-        eventName: targetEvent.name,
-        token: targetEvent.token,
-        createdAt: new Date().toISOString()
-      };
-      this.saveSession(session);
-
-      return {
-        success: true,
-        session,
-        event: targetEvent,
-        redirectUrl: `organizador-mesas.html?event=${targetEvent.slug}&role=${session.role}&token=${targetEvent.token}`
-      };
     }
 
     saveSession(session) {
@@ -184,13 +170,14 @@
       return Boolean(s && s.role === 'superadmin');
     }
 
-    logout() {
+    async logout() {
       this.memorySession = null;
       if (typeof sessionStorage !== 'undefined') {
         try { sessionStorage.removeItem(this.sessionKey); } catch (err) {}
       }
       if (typeof localStorage !== 'undefined') {
         try { localStorage.removeItem(this.sessionKey); } catch (err) {}
+      try { await fetch("/api/logout"); } catch (err) {}
       }
     }
   }

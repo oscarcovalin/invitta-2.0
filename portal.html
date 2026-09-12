@@ -163,7 +163,7 @@
     <div class="max-w-6xl mx-auto w-full flex items-center justify-between mb-4 pb-3 border-b border-[#E8DDD0]">
       <div class="inline-flex items-center gap-2 text-xs text-[#6B6560] font-semibold">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>Superadmin: <strong class="text-[#C9877D]" id="labelAdminSessionName">admin@invitta.mx</strong></span>
+        <span>Profesional: <strong class="text-[#C9877D]" id="labelAdminSessionName">Usuario</strong></span>
       </div>
       <button type="button" id="btnLogoutAdmin" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F2EDE4] hover:bg-[#F5E6E3] text-[#6B6560] hover:text-[#C9877D] border border-[#E8DDD0] hover:border-[#E8B4AD] text-xs font-semibold transition-all">
         <span class="material-symbols-outlined text-sm">logout</span>
@@ -781,21 +781,21 @@
 
       // 3. Formulario Anfitrión (Código + PIN)
       if (formHost && auth) {
-        formHost.addEventListener('submit', (e) => {
+        formHost.addEventListener('submit', async (e) => {
           e.preventDefault();
           const code = document.getElementById('inputAuthHostCode').value.trim();
           const pin = document.getElementById('inputAuthHostPin').value.trim();
           const feedback = document.getElementById('feedbackAuthHost');
 
-          const res = auth.loginHostByPin(code, pin);
+          const res = await auth.loginHostByPin(code, pin);
           if (res.success) {
             if (feedback) {
               feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-semibold block animate-pulse';
-              feedback.textContent = `✨ ¡Bienvenido/a a ${res.event.name}! Accediendo a tu espacio privado...`;
-            }
-            setTimeout(() => {
-              window.location.href = res.redirectUrl;
-            }, 300);
+              feedback.textContent = '✨ ¡Acceso concedido! Redirigiendo a tu espacio privado...';
+              setTimeout(() => {
+                const next = new URLSearchParams(window.location.search).get('next') || 'organizador-mesas.html';
+                window.location.href = next;
+              }, 300);
           } else {
             if (feedback) {
               feedback.className = 'text-xs mt-2 p-2.5 rounded-xl bg-rose-500/20 border border-rose-400/40 text-rose-300 font-semibold block';
@@ -885,7 +885,7 @@
         if (publicGate) publicGate.classList.add('hidden');
         if (adminDash) adminDash.classList.remove('hidden');
         const session = auth.getCurrentSession();
-        if (labelAdminName && session) labelAdminName.textContent = session.username || 'admin@invitta.mx';
+        if (labelAdminName && session) labelAdminName.textContent = session.username || 'Usuario Profesional';
         renderVaultProjects();
       } else {
         if (publicGate) publicGate.classList.remove('hidden');
