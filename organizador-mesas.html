@@ -1280,6 +1280,26 @@
   <script src="guest-manager.js"></script>
 
   <script>
+
+    async function generateSecureLink(folio, btn) {
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span><span>Generando...</span>';
+      try {
+        const res = await fetch('/api/invitacion/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folio })
+        });
+        if (!res.ok) throw new Error('Error al generar');
+        const { link } = await res.json();
+        await navigator.clipboard.writeText(link);
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span><span>¡Copiado!</span>';
+      } catch (err) {
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">error</span><span>Error</span>';
+      }
+      setTimeout(() => btn.innerHTML = originalHtml, 2000);
+    }
+
     // 🏛️ RESOLUCIÓN MULTI-TENANT POR EVENTO
     const evm = window.EventVaultManager ? window.EventVaultManager.create() : null;
     const activeSlug = evm ? evm.activeEventSlug : 'boda-catalina-julian';
@@ -2182,10 +2202,10 @@
                 <span>WhatsApp</span>
               </a>
 
-              <button type="button" class="btn-copy-rsvp-link px-2 py-1.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] flex items-center gap-1 transition-colors" data-url="${inviteUrl}">
-                <span class="material-symbols-outlined text-sm">link</span>
-                <span>Link</span>
-              </button>
+              <button type="button" onclick="generateSecureLink('${cleanId}', this)" class="px-2 py-1.5 rounded-lg bg-surface-container border border-outline-variant hover:border-primary text-primary text-[11px] flex items-center gap-1 transition-colors">
+                  <span class="material-symbols-outlined text-sm">link</span>
+                  <span>Generar Link Seguro</span>
+                </button>
 
               <button type="button" class="btn-modal-edit-guest p-1.5 rounded-lg bg-surface-container hover:bg-surface-variant text-primary text-xs" title="Editar datos" data-id="${g.id}">
                 <span class="material-symbols-outlined text-sm">edit</span>
