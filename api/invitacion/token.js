@@ -16,7 +16,7 @@ const GUEST_RECORDS = {
         ? JSON.parse(process.env.WEDDING_GODPARENTS_JSON)
         : ['Andrea & Roberto (Velación)', 'Sofía & Carlos (Lazo)'],
     },
-    venue: {
+    parents: { bride: ['Roberto Mart�nez', 'Elena de Mart�nez'], groom: ['Carlos Morales', 'Mar�a de Morales'] }, venue: { ceremonyMap: 'https://maps.google.com/?q=Parroquia+San+Rafael', ceremonyWaze: 'https://waze.com/ul?q=Parroquia+San+Rafael', receptionMap: 'https://maps.google.com/?q=Jard�n+Las+Magnolias', receptionWaze: 'https://waze.com/ul?q=Jard�n+Las+Magnolias',
       parroquia: process.env.WEDDING_VENUE_CHURCH || 'Parroquia de San Miguel Arcángel',
       salon: process.env.WEDDING_VENUE_RECEPTION || 'Hacienda Los Arcángeles',
     },
