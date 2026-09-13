@@ -605,14 +605,16 @@ class SeatingPlanner {
     } else {
       // ==================== MESA CIRCULAR ====================
       const seatSlots = Math.max(table.capacity, seatedSlots.length);
-      const radius = 124; // Radio en px
+      // Dynamic radius -- respects mobile viewport
+      const circleSize = Math.min(288, (typeof window !== 'undefined' ? window.innerWidth - 80 : 288));
+      const radius = circleSize / 2 - 28; // Radio en px (dynamic)
 
       return `
         <div class="table-card-dropzone relative group flex justify-center mb-6"
           data-table-id="${table.id}"
           style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
           
-          <div class="rounded-full bg-surface-container-lowest border ${overBorderClass} flex flex-col items-center justify-center relative transition-all hover:border-charcoal shadow-md" style="width: 288px; height: 288px;">
+          <div class="rounded-full bg-surface-container-lowest border ${overBorderClass} flex flex-col items-center justify-center relative transition-all hover:border-charcoal shadow-md" style="width: min(288px, calc(100vw - 80px)); height: min(288px, calc(100vw - 80px));">
             
             <!-- Asientos Radiales Circulares -->
             ${Array.from({ length: seatSlots }).map((_, i) => {

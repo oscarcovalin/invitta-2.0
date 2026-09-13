@@ -107,7 +107,11 @@
       }
     }
 
-  </style>
+  
+    /* Mobile scrollable stats bar */
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+</style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased flex h-screen overflow-hidden select-none">
 
@@ -313,7 +317,7 @@
       <div class="flex items-center gap-2.5">
         
         <!-- Grupo A: Herramientas de Salón (Acomodo, Auto-distribución y Nueva Mesa) -->
-        <div class="flex items-center bg-surface-container p-1 rounded-2xl border border-outline-variant gap-1">
+        <div class="hidden md:flex items-center bg-surface-container p-1 rounded-2xl border border-outline-variant gap-1">
           <!-- ⚙️ Configuración / Acomodo -->
           <button type="button" id="btnTopOpenSettings" onclick="window.openSettingsModal()" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-container-high border border-outline-variant hover:border-rose-light text-charcoal rounded-xl transition-all text-xs font-semibold shadow-2xs" title="Dimensionar salón y capacidades de mesa (8, 10, 12)">
             <span class="material-symbols-outlined text-[16px] text-primary">tune</span>
@@ -347,10 +351,19 @@
           </div>
 
         <!-- Separador visual fino -->
-        <div class="w-px h-6 bg-outline-variant"></div>
+        <div class="hidden md:block w-px h-6 bg-outline-variant"></div>
 
         <!-- Grupo B: Logística & Operación en Puerta -->
-        <div class="flex items-center gap-1">
+        <!-- Mobile: More Actions Dropdown -->
+        <div class="relative md:hidden" id="mobileMoreContainer">
+          <button type="button" id="btnMobileMore" onclick="document.getElementById('mobileMoreDropdown').classList.toggle('hidden')" class="p-2 rounded-xl bg-surface-container border border-outline-variant text-charcoal hover:text-primary transition-colors flex items-center justify-center text-xs font-bold gap-1" title="Más acciones">
+            <span class="material-symbols-outlined text-[18px]">more_horiz</span>
+          </button>
+          <div id="mobileMoreDropdown" class="hidden absolute right-0 top-full mt-2 z-50 bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-xl p-2 flex flex-col gap-1.5 min-w-[160px]">
+            <!-- filled by JS -->
+          </div>
+        </div>
+        <div id="mobileMoreMenu" class="hidden md:flex items-center gap-1">
           <!-- 📄 Imprimir Hoja para Meseros -->
           <button type="button" id="btnPrintWaiterSheet" onclick="window.openWaiterSheetModal()" class="flex items-center gap-1 px-2.5 py-1.5 bg-surface hover:bg-surface-container border border-outline-variant text-warm-grey hover:text-primary rounded-xl transition-all text-xs font-medium" title="Imprimir hoja para el Capitán de Meseros y Cocina">
             <span class="material-symbols-outlined text-[16px] text-primary">print</span>
@@ -374,7 +387,7 @@
             <span class="material-symbols-outlined text-[16px] text-blue-600">bolt</span>
             <span class="hidden xl:inline">Express ↗</span>
           </a>
-        </div>
+        </div><!-- /mobileMoreMenu -->
 
       </div>
     </header>
@@ -383,8 +396,8 @@
     <main class="flex-1 flex flex-col overflow-hidden bg-surface">
       
       <!-- STATS BAR SUPERIOR EN VIVO CON SEMÁFORO DE 4 COLORES -->
-      <div class="flex flex-wrap items-center justify-between px-6 sm:px-8 py-2.5 bg-surface border-b border-outline-variant flex-shrink-0 z-10">
-        <div class="flex items-center gap-6">
+      <div class="flex items-center justify-between px-4 sm:px-8 py-2 bg-surface border-b border-outline-variant flex-shrink-0 z-10 gap-2">
+        <div class="flex items-center gap-2 sm:gap-4 overflow-x-auto pb-0.5 max-w-full scrollbar-none">
           
           <!-- Asignados -->
           <div class="flex items-center gap-2">
@@ -400,25 +413,25 @@
           <!-- SEMÁFORO EN TIEMPO REAL: 4 ESTADOS -->
           <div class="flex items-center gap-2 text-xs">
             <!-- 🟢 Ingresados al Salón -->
-            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 font-semibold" title="Invitados con Check-in confirmado en puerta">
+            <span class="flex items-center gap-1.5 px-2 py-0.5 whitespace-nowrap rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 font-semibold" title="Invitados con Check-in confirmado en puerta">
               <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
               <span id="statInSalonPax">0</span> en Salón
             </span>
 
             <!-- 🟡 Confirmados en Camino -->
-            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-900 font-medium" title="Confirmaron asistencia por RSVP">
+            <span class="flex items-center gap-1.5 px-2 py-0.5 whitespace-nowrap rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-900 font-medium" title="Confirmaron asistencia por RSVP">
               <span class="w-2 h-2 rounded-full bg-amber-500"></span>
               <span id="statInTransitPax">6</span> confirmados
             </span>
 
             <!-- 🔴 Pendientes -->
-            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-pale border border-rose-light text-rose-deep font-medium" title="Pendientes de confirmar">
+            <span class="flex items-center gap-1.5 px-2 py-0.5 whitespace-nowrap rounded-full bg-rose-pale border border-rose-light text-rose-deep font-medium" title="Pendientes de confirmar">
               <span class="w-2 h-2 rounded-full bg-rose"></span>
               <span id="statPendingPax">8</span> pendientes
             </span>
 
             <!-- 🔵 Emergencias / Express -->
-            <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-900 font-medium" title="Pases de emergencia generados en puerta">
+            <span class="flex items-center gap-1.5 px-2 py-0.5 whitespace-nowrap rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-900 font-medium" title="Pases de emergencia generados en puerta">
               <span class="w-2 h-2 rounded-full bg-blue-600"></span>
               <span id="statEmergencyPax">0</span> express
             </span>
@@ -452,8 +465,14 @@
       <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
         
         <!-- SIDEBAR IZQUIERDA: PENDIENTES & FAMILIAS (w-full lg:w-96) -->
-        <div id="unassignedPanel" class="w-full lg:w-96 bg-surface-container-lowest border-b lg:border-b-0 lg:border-r border-outline-variant flex flex-col max-h-56 lg:max-h-full lg:h-full z-10 shrink-0">
+        <div id="unassignedPanel" class="w-full lg:w-96 bg-surface-container-lowest border-b lg:border-b-0 lg:border-r border-outline-variant flex flex-col max-h-[40vh] lg:max-h-full lg:h-full z-10 shrink-0">
           
+          
+          <!-- Mobile Collapse Toggle -->
+          <button type="button" id="btnTogglePanel" class="lg:hidden flex items-center justify-between w-full px-4 py-2 bg-surface-container border-b border-outline-variant text-xs font-semibold text-charcoal" onclick="(function(){var p=document.getElementById('unassignedPanel');var isOpen=p.dataset.mobileOpen!=='false';p.dataset.mobileOpen=isOpen?'false':'true';p.style.maxHeight=isOpen?'2.5rem':'40vh';this.querySelector('span.label').textContent=isOpen?'▼ Ver Invitados Pendientes':'▲ Ocultar Panel';}).call(this)">
+            <span class="label">▲ Ocultar Panel</span>
+            <span class="text-warm-grey text-[10px]">Toca para colapsar</span>
+          </button>
           <div class="p-5 border-b border-outline-variant bg-surface-container-lowest space-y-3">
             <div class="flex items-center justify-between">
               <h2 class="font-['Cinzel'] text-primary text-base font-bold flex items-center gap-1.5">
@@ -2479,6 +2498,76 @@
     document.querySelectorAll('.btn-close-access-modal').forEach(btn => {
       btn.addEventListener('click', () => modalShareAccess.classList.add('hidden'));
     });
+  </script>
+
+  <script>
+  /* Mobile More Dropdown — populated at runtime */
+  (function() {
+    const drop = document.getElementById('mobileMoreDropdown');
+    if (!drop) return;
+    drop.innerHTML = `
+      <button type="button" onclick="document.getElementById('btnAddNewTable').click(); document.getElementById('mobileMoreDropdown').classList.add('hidden');" class="flex items-center gap-2 w-full px-3 py-2 rounded-xl hover:bg-surface-container text-xs font-semibold text-charcoal">
+        <span class="material-symbols-outlined text-[16px] text-primary">add_circle</span> + Mesa
+      </button>
+      <button type="button" onclick="document.getElementById('btnAddNewStaffTable').click(); document.getElementById('mobileMoreDropdown').classList.add('hidden');" class="flex items-center gap-2 w-full px-3 py-2 rounded-xl hover:bg-surface-container text-xs font-semibold text-charcoal">
+        <span class="material-symbols-outlined text-[16px] text-amber-700">engineering</span> + Staff
+      </button>
+      <button type="button" onclick="window.openWaiterSheetModal && window.openWaiterSheetModal(); document.getElementById('mobileMoreDropdown').classList.add('hidden');" class="flex items-center gap-2 w-full px-3 py-2 rounded-xl hover:bg-surface-container text-xs font-semibold text-charcoal">
+        <span class="material-symbols-outlined text-[16px] text-primary">print</span> Imprimir Meseros
+      </button>
+      <button type="button" onclick="window.openDispatchModal && window.openDispatchModal(); document.getElementById('mobileMoreDropdown').classList.add('hidden');" class="flex items-center gap-2 w-full px-3 py-2 rounded-xl hover:bg-surface-container text-xs font-semibold text-charcoal">
+        <span class="material-symbols-outlined text-[16px] text-emerald-600">send</span> Envíos WhatsApp
+      </button>
+      <a href="scanner-acceso.html" target="_blank" class="flex items-center gap-2 w-full px-3 py-2 rounded-xl hover:bg-surface-container text-xs font-bold text-[#4a6a3a]">
+        <span class="material-symbols-outlined text-[16px]">qr_code_scanner</span> Escáner Puerta
+      </a>
+      <a href="generador-emergencia.html" target="_blank" class="flex items-center gap-2 w-full px-3 py-2 rounded-xl hover:bg-surface-container text-xs font-bold text-blue-900">
+        <span class="material-symbols-outlined text-[16px] text-blue-600">bolt</span> Pases Express
+      </a>
+    `;
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+      const container = document.getElementById('mobileMoreContainer');
+      if (container && !container.contains(e.target)) {
+        const d = document.getElementById('mobileMoreDropdown');
+        if (d) d.classList.add('hidden');
+      }
+    });
+  })();
+  </script>
+  <script>
+  // --- PINCH-TO-ZOOM for Plano 2D (mobile) ---
+  (function() {
+    var fpContainer = document.getElementById('floorPlanCanvas')
+      || document.getElementById('viewFloorPlanContainer')
+      || document.querySelector('#tablesContainer');
+    if (!fpContainer) return;
+    var initialDistance = 0, currentScale = 1, lastScale = 1;
+    fpContainer.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 2) {
+        initialDistance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        e.preventDefault();
+      }
+    }, { passive: false });
+    fpContainer.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 2) {
+        var distance = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        currentScale = Math.min(3, Math.max(0.4, lastScale * (distance / initialDistance)));
+        fpContainer.style.transform = 'scale(' + currentScale + ')';
+        fpContainer.style.transformOrigin = 'top center';
+        e.preventDefault();
+      }
+    }, { passive: false });
+    fpContainer.addEventListener('touchend', function(e) {
+      if (e.touches.length < 2) { lastScale = currentScale; }
+    });
+  })();
   </script>
 </body>
 </html>
