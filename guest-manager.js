@@ -731,8 +731,13 @@ class GuestManager {
     guest.folio = folio;
 
     this.state.checkinLogs = this.state.checkinLogs || [];
+    
+    const syncId = this.generateSyncId();
     this.state.checkinLogs.unshift({
+      syncId: syncId,
+      synced: false,
       timestamp: guest.checkedInAt,
+
       guestId: guest.id,
       guestName: guest.name,
       folio: folio,
@@ -793,8 +798,13 @@ class GuestManager {
 
     if (autoCheckIn) {
       this.state.checkinLogs = this.state.checkinLogs || [];
+      
+      const syncId = this.generateSyncId();
       this.state.checkinLogs.unshift({
+        syncId: syncId,
+        synced: false,
         timestamp: newGuest.checkedInAt,
+
         guestId: newGuest.id,
         guestName: newGuest.name,
         folio: folio,
@@ -976,6 +986,35 @@ class GuestManager {
       totalGuests: this.state.guests.length
     };
   }
+
+  
+  async syncOfflineCheckins() {
+    this.state.checkinLogs = this.state.checkinLogs || [];
+    const pending = this.state.checkinLogs.filter(log => !log.synced);
+    if (pending.length === 0) return { success: true, count: 0 };
+    
+    try {
+      // In a real app, this would be a fetch() to Supabase/Vercel POST /api/checkin/sync
+      // Conflict resolution: Server deduplicates by syncId. If guest already checked in by another scanner,
+      // server responds with a conflict warning, but we still mark local as synced.
+      console.log('Syncing checkins to server...', pending);
+      
+      // Simulate network latency
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      pending.forEach(log => log.synced = true);
+      this.saveState();
+      return { success: true, count: pending.length };
+    } catch (e) {
+      console.error('Sync failed', e);
+      return { success: false, error: e.message };
+    }
+  }
+
+  getPendingSyncCount() {
+    return (this.state.checkinLogs || []).filter(log => !log.synced).length;
+  }
+
 
   getAccessMetrics() {
     const totalGuests = this.state.guests.length;
