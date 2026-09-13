@@ -7,7 +7,7 @@ const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12 horas
 
 const EVENTS = {
   'CATALINA-JULIAN': {
-    pinHash: process.env.EVENT_CATALINA_JULIAN_PIN_HASH || '$2b$10$HcpYqSR1E90yBcxFW5ka9OQUipgpBL50Tg1.NG0I6Zh74ah1dbNFC', // default: 1234
+    pinHash: process.env.EVENT_CATALINA_JULIAN_PIN_HASH || '$2b$10$gSwoqNwOMCXzA/Feox2UgeWK.XIpA/f17VnOKAqrIY0HNxbiHlfK2',
     role: 'host',
   },
 };
