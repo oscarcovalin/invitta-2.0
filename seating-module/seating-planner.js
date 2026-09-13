@@ -356,7 +356,7 @@ class SeatingPlanner {
 
               <!-- Botón Editar Invitado / Familia -->
               <button type="button" class="btn-guest-card-edit p-1.5 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Editar datos" data-id="${g.id}">
-                <span class="material-symbols-outlined text-[16px]">edit</span>
+                <span class="material-symbols-outlined text-[14px]">edit</span>
               </button>
             </div>
           </div>
@@ -412,10 +412,10 @@ class SeatingPlanner {
           data-table-id="${table.id}"
           style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
           
-          <div class="w-full min-h-[135px] bg-surface-container-lowest rounded-2xl border ${overBorderClass} shadow-md flex flex-col items-center justify-center relative transition-all hover:border-charcoal p-5">
+          <div class="w-full min-h-[180px] bg-surface-container-lowest rounded-2xl border ${overBorderClass} shadow-md flex flex-col items-center justify-center relative transition-all hover:border-charcoal p-5">
             
             <!-- Asientos Superiores -->
-            <div class="absolute -top-4 w-full flex justify-around px-8">
+            <div class="absolute -top-5 w-full flex justify-around px-12">
               ${Array.from({ length: half }).map((_, i) => {
                 const slot = topAssigned[i];
                 if (slot) {
@@ -425,7 +425,7 @@ class SeatingPlanner {
                   const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                   const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
                   return `
-                    <div class="seat-pill w-8 h-8 rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
@@ -444,7 +444,7 @@ class SeatingPlanner {
             </div>
 
             <!-- Asientos Inferiores -->
-            <div class="absolute -bottom-4 w-full flex justify-around px-8">
+            <div class="absolute -bottom-5 w-full flex justify-around px-12">
               ${Array.from({ length: half }).map((_, i) => {
                 const slot = botAssigned[i];
                 if (slot) {
@@ -454,7 +454,7 @@ class SeatingPlanner {
                   const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                   const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
                   return `
-                    <div class="seat-pill w-8 h-8 rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
@@ -501,14 +501,14 @@ class SeatingPlanner {
     } else {
       // ==================== MESA CIRCULAR ====================
       const seatSlots = Math.max(table.capacity, seatedSlots.length);
-      const radius = 92; // Radio en px
+      const radius = 124; // Radio en px
 
       return `
         <div class="table-card-dropzone relative group flex justify-center mb-6"
           data-table-id="${table.id}"
           style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
           
-          <div class="w-56 h-56 rounded-full bg-surface-container-lowest border ${overBorderClass} flex flex-col items-center justify-center relative transition-all hover:border-charcoal shadow-md">
+          <div class="w-72 h-72 rounded-full bg-surface-container-lowest border ${overBorderClass} flex flex-col items-center justify-center relative transition-all hover:border-charcoal shadow-md">
             
             <!-- Asientos Radiales Circulares -->
             ${Array.from({ length: seatSlots }).map((_, i) => {
@@ -524,8 +524,8 @@ class SeatingPlanner {
                 const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                 const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
                 return `
-                  <div class="seat-pill w-8 h-8 rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
-                    style="left: calc(50% + ${x}px - 16px); top: calc(50% + ${y}px - 16px);"
+                  <div class="seat-pill w-7 h-7 text-[9px] rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
+                    style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);"
                     draggable="true"
                     data-drag-type="single"
                     data-guest-id="${g.id}"
@@ -538,7 +538,7 @@ class SeatingPlanner {
 
               return `
                 <div class="w-8 h-8 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-label-sm text-on-surface-variant opacity-60 absolute"
-                  style="left: calc(50% + ${x}px - 16px); top: calc(50% + ${y}px - 16px);">
+                  style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);">
                   +
                 </div>
               `;
@@ -611,7 +611,7 @@ class SeatingPlanner {
     // ── ZONA INFERIOR: DISTRIBUCIÓN BILATERAL (ALA IZQUIERDA Y ALA DERECHA) ──
     if (guestTables.length > 0) {
       html += `
-        <div class="floor-plan-wings-grid grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8 w-full max-w-[960px] mx-auto items-start">
+        <div class="floor-plan-wings-grid grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-12 w-full max-w-[960px] mx-auto items-start">
           
           <!-- ALA IZQUIERDA (50% de las mesas) -->
           <div class="wing-column wing-left flex flex-col items-center gap-6 p-4 rounded-2xl bg-white/50 border border-outline-variant/60 shadow-xs">
