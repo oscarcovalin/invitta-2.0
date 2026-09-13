@@ -3766,6 +3766,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const contCorte2 = document.getElementById('datos-corte-2');
       const contParroquia = document.getElementById('datos-parroquia');
       const contSalon = document.getElementById('datos-salon');
+      const btnCMap = document.getElementById('ceremonyMap');
+      const btnCWaze = document.getElementById('ceremonyWaze');
+      const btnRMap = document.getElementById('receptionMap');
+      const btnRWaze = document.getElementById('receptionWaze');
 
       if (!token) {
         if (contDatosRegalo) contDatosRegalo.innerHTML = '<p class="text-xs text-rose-800">Enlace de demostración. Los datos reales son privados.</p>';
@@ -3773,6 +3777,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (contCorte2) contCorte2.innerHTML = '<li class="text-xs text-[#f7f6ec]">Datos ocultos por privacidad.</li>';
         if (contParroquia) contParroquia.innerHTML = '<em>Parroquia Privada</em>';
         if (contSalon) contSalon.innerHTML = '<em>Salón Privado</em>';
+        if (btnCMap) btnCMap.href = 'https://maps.google.com/?q=Ceremonia';
+        if (btnCWaze) btnCWaze.href = 'https://waze.com/ul';
+        if (btnRMap) btnRMap.href = 'https://maps.google.com/?q=Recepcion';
+        if (btnRWaze) btnRWaze.href = 'https://waze.com/ul';
         return;
       }
 
@@ -3803,6 +3811,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (contParroquia && data.venue) contParroquia.textContent = data.venue.parroquia;
         if (contSalon && data.venue) contSalon.textContent = data.venue.salon;
+
+        if (data.venue) {
+          if (btnCMap && data.venue.ceremonyMap) btnCMap.href = data.venue.ceremonyMap;
+          if (btnCWaze && data.venue.ceremonyWaze) btnCWaze.href = data.venue.ceremonyWaze;
+          if (btnRMap && data.venue.receptionMap) btnRMap.href = data.venue.receptionMap;
+          if (btnRWaze && data.venue.receptionWaze) btnRWaze.href = data.venue.receptionWaze;
+        }
 
         // Populate links
         if (data.venue && data.venue.ceremonyMap) document.getElementById('ceremonyMap')?.setAttribute('href', data.venue.ceremonyMap);
