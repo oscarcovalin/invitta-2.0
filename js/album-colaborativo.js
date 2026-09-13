@@ -6,7 +6,7 @@ import imageCompression from "https://cdn.jsdelivr.net/npm/browser-image-compres
 
 // REEMPLAZAR CON TUS CREDENCIALES DE FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyBfT0COJlHiCQBPQmbKU2HyOBxfj0_5o6k",
+  apiKey: "AIzaSyBfT0COJlHiCQBPQmbKU2HyOBxfjO_5o6k",
   authDomain: "album-colaborativo-a538b.firebaseapp.com",
   projectId: "album-colaborativo-a538b",
   storageBucket: "album-colaborativo-a538b.firebasestorage.app",
