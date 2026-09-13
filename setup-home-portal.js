@@ -3,7 +3,7 @@
 // 1. Copy old index.html (Seating Planner) to organizador-mesas.html
 const seatingPlannerHtml = fs.readFileSync('./index.html', 'utf8');
 // In seatingPlannerHtml, change sidebar link to index.html
-const updatedSeatingPlanner = seatingPlannerHtml.replace(/href="portal\.html"/g, 'href="index.html"');
+const updatedSeatingPlanner = seatingPlannerHtml.replace(/href="portal\.html"/g, 'href="portal.html"');
 fs.writeFileSync('./organizador-mesas.html', updatedSeatingPlanner, 'utf8');
 console.log('✅ Created organizador-mesas.html with updated sidebar link to index.html');
 
@@ -11,7 +11,7 @@ console.log('✅ Created organizador-mesas.html with updated sidebar link to ind
 let portalHtml = fs.readFileSync('./portal.html', 'utf8');
 
 // 3. Update links in portalHtml to point to organizador-mesas.html
-portalHtml = portalHtml.replaceAll('href="index.html"', 'href="organizador-mesas.html"');
+portalHtml = portalHtml.replaceAll('href="portal.html"', 'href="organizador-mesas.html"');
 portalHtml = portalHtml.replaceAll('href="index.html?role=planner"', 'href="organizador-mesas.html?role=planner"');
 
 // 4. Save updated portalHtml as index.html and portal.html
