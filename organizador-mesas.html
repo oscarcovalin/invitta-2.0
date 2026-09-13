@@ -67,6 +67,46 @@
       box-shadow: 0 0 25px rgba(201, 135, 125, 0.35) !important;
       outline: 2px solid #C9877D !important;
     }
+  
+    /* RF-02: Vista de Impresión "Modo Meseros" */
+    @media print {
+      body { background-color: #fff !important; margin: 0 !important; padding: 0 !important; }
+      header, nav, aside, #unassignedList, button, .modal-backdrop, .print-hide, .btn-guest-card-edit {
+        display: none !important;
+      }
+      
+      main { margin: 0 !important; padding: 0 !important; max-width: 100% !important; height: auto !important; overflow: visible !important; }
+      
+      /* Reset interactive zooming container */
+      #tablesContainer {
+        transform: none !important;
+        width: 100% !important;
+        height: auto !important;
+        position: relative !important;
+        display: block !important;
+      }
+
+      /* Adjust grid for print */
+      .floor-plan-wings-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 2rem !important;
+      }
+      
+      .table-card-container {
+        page-break-inside: avoid !important;
+        transform: scale(1) !important;
+        margin: 1rem !important;
+        break-inside: avoid;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
   </style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased flex h-screen overflow-hidden select-none">
@@ -297,6 +337,13 @@
               <span class="material-symbols-outlined text-[16px] text-amber-700">engineering</span>
               <span>+ Staff</span>
             </button>
+
+            <!-- Print Mode -->
+            <button type="button" onclick="window.print()" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-container-high border border-outline-variant hover:border-emerald-400 text-charcoal rounded-xl transition-all text-xs font-semibold shadow-2xs print-hide" title="Imprimir Plano para Meseros">
+              <span class="material-symbols-outlined text-[16px] text-emerald-700">print</span>
+              <span>Imprimir</span>
+            </button>
+
           </div>
 
         <!-- Separador visual fino -->

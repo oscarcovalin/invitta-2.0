@@ -482,24 +482,44 @@ class SeatingPlanner {
                     const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                     const shortName = rawName.split(' ')[0].substring(0, 6) || 'INV';
                     const baseLabel = this.shortNamesMode ? shortName : initials;
+                    
                     const label = slot.totalPasses > 1 ? `${baseLabel}${slot.passNumber}` : baseLabel;
+                    
+                    let dietBadge = '';
+                    if (g.diet && g.diet.toLowerCase() !== 'none' && g.diet.toLowerCase() !== 'ninguna') {
+                      const d = g.diet.toLowerCase();
+                      let color = 'bg-red-500'; // Default alert
+                      if (d.match(/veg|vegan/)) color = 'bg-emerald-500';
+                      else if (d.match(/infant|niñ|kid/)) color = 'bg-amber-400';
+                      dietBadge = `<div class="absolute -top-1 -right-1 w-2.5 h-2.5 ${color} rounded-full border-2 border-white shadow-xs z-10"></div>`;
+                    }
+
 
                   return `
-                    <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill relative h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
                       data-table-id="${table.id}"
                       title="${g.name} (${slot.totalPasses} ${slot.totalPasses === 1 ? 'pase' : 'pases'} · ${st.label})">
-                      ${label}
+                      ${dietBadge}
+                        ${label}
                     </div>
                   `;
                 }
-                return `
-                  <div class="w-7 h-7 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-[10px] text-on-surface-variant opacity-60">
-                    +
-                  </div>
-                `;
+                const seatKey = `top-${i}`;
+                  const config = (table.seatsConfig || {})[seatKey] || 'standard';
+                  let seatIcon = '+';
+                  let extraClass = 'text-on-surface-variant opacity-60 bg-surface-container-low border-outline-variant text-[10px]';
+                  if (config === 'wheelchair') { seatIcon = '♿'; extraClass = 'text-blue-600 bg-blue-50 border-blue-300 opacity-100 text-[14px]'; }
+                  if (config === 'highchair') { seatIcon = '🪑'; extraClass = 'text-amber-600 bg-amber-50 border-amber-300 opacity-100 text-[14px]'; }
+                  return `
+                    <div class="empty-seat w-7 h-7 rounded-full border border-dashed flex items-center justify-center cursor-pointer hover:scale-110 transition-transform ${extraClass}"
+                      data-table-id="${table.id}"
+                      data-seat-key="${seatKey}"
+                      title="${config === 'standard' ? 'Asiento Estándar (Clic para cambiar)' : config === 'wheelchair' ? 'Silla de Ruedas' : 'Periquera'}">
+                      ${seatIcon}
+                    </div>`;
               }).join('')}
             </div>
 
@@ -515,24 +535,44 @@ class SeatingPlanner {
                     const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                     const shortName = rawName.split(' ')[0].substring(0, 6) || 'INV';
                     const baseLabel = this.shortNamesMode ? shortName : initials;
+                    
                     const label = slot.totalPasses > 1 ? `${baseLabel}${slot.passNumber}` : baseLabel;
+                    
+                    let dietBadge = '';
+                    if (g.diet && g.diet.toLowerCase() !== 'none' && g.diet.toLowerCase() !== 'ninguna') {
+                      const d = g.diet.toLowerCase();
+                      let color = 'bg-red-500'; // Default alert
+                      if (d.match(/veg|vegan/)) color = 'bg-emerald-500';
+                      else if (d.match(/infant|niñ|kid/)) color = 'bg-amber-400';
+                      dietBadge = `<div class="absolute -top-1 -right-1 w-2.5 h-2.5 ${color} rounded-full border-2 border-white shadow-xs z-10"></div>`;
+                    }
+
 
                   return `
-                    <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill relative h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
                       data-table-id="${table.id}"
                       title="${g.name} (${slot.totalPasses} ${slot.totalPasses === 1 ? 'pase' : 'pases'} · ${st.label})">
-                      ${label}
+                      ${dietBadge}
+                        ${label}
                     </div>
                   `;
                 }
-                return `
-                  <div class="w-7 h-7 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-[10px] text-on-surface-variant opacity-60">
-                    +
-                  </div>
-                `;
+                const seatKey = `bot-${i}`;
+                  const config = (table.seatsConfig || {})[seatKey] || 'standard';
+                  let seatIcon = '+';
+                  let extraClass = 'text-on-surface-variant opacity-60 bg-surface-container-low border-outline-variant text-[10px]';
+                  if (config === 'wheelchair') { seatIcon = '♿'; extraClass = 'text-blue-600 bg-blue-50 border-blue-300 opacity-100 text-[14px]'; }
+                  if (config === 'highchair') { seatIcon = '🪑'; extraClass = 'text-amber-600 bg-amber-50 border-amber-300 opacity-100 text-[14px]'; }
+                  return `
+                    <div class="empty-seat w-7 h-7 rounded-full border border-dashed flex items-center justify-center cursor-pointer hover:scale-110 transition-transform ${extraClass}"
+                      data-table-id="${table.id}"
+                      data-seat-key="${seatKey}"
+                      title="${config === 'standard' ? 'Asiento Estándar (Clic para cambiar)' : config === 'wheelchair' ? 'Silla de Ruedas' : 'Periquera'}">
+                      ${seatIcon}
+                    </div>`;
               }).join('')}
             </div>
 
@@ -589,27 +629,50 @@ class SeatingPlanner {
                     const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                     const shortName = rawName.split(' ')[0].substring(0, 6) || 'INV';
                     const baseLabel = this.shortNamesMode ? shortName : initials;
+                    
                     const label = slot.totalPasses > 1 ? `${baseLabel}${slot.passNumber}` : baseLabel;
+                    
+                    let dietBadge = '';
+                    if (g.diet && g.diet.toLowerCase() !== 'none' && g.diet.toLowerCase() !== 'ninguna') {
+                      const d = g.diet.toLowerCase();
+                      let color = 'bg-red-500'; // Default alert
+                      if (d.match(/veg|vegan/)) color = 'bg-emerald-500';
+                      else if (d.match(/infant|niñ|kid/)) color = 'bg-amber-400';
+                      dietBadge = `<div class="absolute -top-1 -right-1 w-2.5 h-2.5 ${color} rounded-full border-2 border-white shadow-xs z-10"></div>`;
+                    }
+
 
                 return `
-                  <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
+                  <div class="seat-pill relative h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
                     style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);"
                     draggable="true"
                     data-drag-type="single"
                     data-guest-id="${g.id}"
                     data-table-id="${table.id}"
                     title="${g.name} (${slot.totalPasses} ${slot.totalPasses === 1 ? 'pase' : 'pases'} · ${st.label})">
-                    ${label}
+                    ${dietBadge}
+                        ${label}
                   </div>
                 `;
               }
 
-              return `
-                <div class="w-7 h-7 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-[10px] text-on-surface-variant opacity-60 absolute"
-                  style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);">
-                  +
-                </div>
-              `;
+              
+                const seatKey = `circ-${i}`;
+                const config = (table.seatsConfig || {})[seatKey] || 'standard';
+                let seatIcon = '+';
+                let extraClass = 'text-on-surface-variant opacity-60 bg-surface-container-low border-outline-variant text-[10px]';
+                if (config === 'wheelchair') { seatIcon = '♿'; extraClass = 'text-blue-600 bg-blue-50 border-blue-300 opacity-100 text-[14px]'; }
+                if (config === 'highchair') { seatIcon = '🪑'; extraClass = 'text-amber-600 bg-amber-50 border-amber-300 opacity-100 text-[14px]'; }
+                return `
+                  <div class="empty-seat w-7 h-7 rounded-full border border-dashed flex items-center justify-center cursor-pointer hover:scale-110 transition-transform absolute ${extraClass}"
+                    data-table-id="${table.id}"
+                    data-seat-key="${seatKey}"
+                    title="${config === 'standard' ? 'Asiento Estándar (Clic para cambiar)' : config === 'wheelchair' ? 'Silla de Ruedas' : 'Periquera'}"
+                    style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);">
+                    ${seatIcon}
+                  </div>
+                `;
+
             }).join('')}
 
             <!-- Contenido Central Mesa Circular -->
@@ -802,7 +865,26 @@ class SeatingPlanner {
     if (typeof document === 'undefined') return;
 
     // 1. Dropzones de Mesa (Reasignación y Mover entre mesas)
-    scopeElement.querySelectorAll('.table-card-dropzone').forEach(dropzone => {
+    
+      // -- EMPTY SEAT CONFIG (WHEELCHAIR/HIGHCHAIR) --
+      scopeElement.querySelectorAll('.empty-seat').forEach(seat => {
+        seat.addEventListener('click', (e) => {
+          if (this.options.readOnly) return;
+          const tableId = seat.dataset.tableId;
+          const seatKey = seat.dataset.seatKey;
+          const table = this.state.tables.find(t => t.id === tableId);
+          if (table) {
+            table.seatsConfig = table.seatsConfig || {};
+            const current = table.seatsConfig[seatKey] || 'standard';
+            if (current === 'standard') table.seatsConfig[seatKey] = 'wheelchair';
+            else if (current === 'wheelchair') table.seatsConfig[seatKey] = 'highchair';
+            else table.seatsConfig[seatKey] = 'standard';
+            this.updateStateAndDOM();
+          }
+        });
+      });
+
+      scopeElement.querySelectorAll('.table-card-dropzone').forEach(dropzone => {
       const tableId = dropzone.dataset.tableId;
       const indicator = dropzone.querySelector('.drop-indicator');
 
