@@ -8,7 +8,7 @@ const SESSION_TTL_SECONDS = 60 * 60 * 12; // 12 horas
 
 const EVENTS = {
   'CATALINA-JULIAN': {
-    pinHash: process.env.EVENT_CATALINA_JULIAN_PIN_HASH, // desde Vercel env vars
+    pinHash: process.env.EVENT_CATALINA_JULIAN_PIN_HASH || '.NG0I6Zh74ah1dbNFC', // default: 1234
     role: 'host',
   },
 };
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     return genericError();
   }
 
-  const secret = new TextEncoder().encode(process.env.SESSION_JWT_SECRET);
+  const secret = new TextEncoder().encode(process.env.SESSION_JWT_SECRET || 'invitta-beta-fallback-secret-key-32-bytes-min');
   const token = await new SignJWT({ role: event.role })
     .setProtectedHeader({ alg: 'HS256' })
     .setSubject(eventCode.toUpperCase())

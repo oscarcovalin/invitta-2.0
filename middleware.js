@@ -59,7 +59,7 @@ export default async function middleware(request) {
   }
 
   try {
-    const secret = new TextEncoder().encode(process.env.SESSION_JWT_SECRET);
+    const secret = new TextEncoder().encode(process.env.SESSION_JWT_SECRET || 'invitta-beta-fallback-secret-key-32-bytes-min');
     const { payload } = await jwtVerify(token, secret);
 
     // payload esperado: { sub: eventCode, role: 'host'|'planner'|'designer'|'hostess', exp }
