@@ -412,7 +412,7 @@ class SeatingPlanner {
           data-table-id="${table.id}"
           style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
           
-          <div class="w-full min-h-[135px] bg-surface-container-lowest rounded-2xl" style="min-height: 180px; border ${overBorderClass} shadow-md flex flex-col items-center justify-center relative transition-all hover:border-charcoal p-5">
+          <div class="w-full bg-surface-container-lowest rounded-2xl border ${overBorderClass} shadow-md flex flex-col items-center justify-center relative transition-all hover:border-charcoal p-5" style="min-height: 180px;">
             
             <!-- Asientos Superiores -->
             <div class="absolute w-full flex justify-around px-12" style="top: -20px;">
@@ -508,7 +508,7 @@ class SeatingPlanner {
           data-table-id="${table.id}"
           style="transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
           
-          <div class="rounded-full bg-surface-container-lowest" style="width: 288px; height: 288px; border ${overBorderClass} flex flex-col items-center justify-center relative transition-all hover:border-charcoal shadow-md">
+          <div class="rounded-full bg-surface-container-lowest border ${overBorderClass} flex flex-col items-center justify-center relative transition-all hover:border-charcoal shadow-md" style="width: 288px; height: 288px;">
             
             <!-- Asientos Radiales Circulares -->
             ${Array.from({ length: seatSlots }).map((_, i) => {
@@ -611,7 +611,7 @@ class SeatingPlanner {
     // ── ZONA INFERIOR: DISTRIBUCIÓN BILATERAL (ALA IZQUIERDA Y ALA DERECHA) ──
     if (guestTables.length > 0) {
       html += `
-        <div class="floor-plan-wings-grid grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8" style="column-gap: 4rem; row-gap: 3.5rem; w-full max-w-[960px] mx-auto items-start">
+        <div class="floor-plan-wings-grid grid grid-cols-1 lg:grid-cols-2 w-full max-w-[960px] mx-auto items-start" style="column-gap: 4rem; row-gap: 3.5rem;">
           
           <!-- ALA IZQUIERDA (50% de las mesas) -->
           <div class="wing-column wing-left flex flex-col items-center gap-6 p-4 rounded-2xl bg-white/50 border border-outline-variant/60 shadow-xs">
