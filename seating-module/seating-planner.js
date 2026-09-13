@@ -645,7 +645,7 @@ class SeatingPlanner {
 
 
                 return `
-                  <div class="seat-pill relative h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
+                  <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
                     style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);"
                     draggable="true"
                     data-drag-type="single"
