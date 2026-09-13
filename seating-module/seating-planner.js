@@ -425,7 +425,7 @@ class SeatingPlanner {
                   const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                   const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
                   return `
-                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
@@ -436,7 +436,7 @@ class SeatingPlanner {
                   `;
                 }
                 return `
-                  <div class="w-8 h-8 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-label-sm text-on-surface-variant opacity-60">
+                  <div class="w-7 h-7 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-[10px] text-on-surface-variant opacity-60">
                     +
                   </div>
                 `;
@@ -454,7 +454,7 @@ class SeatingPlanner {
                   const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                   const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
                   return `
-                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
@@ -465,7 +465,7 @@ class SeatingPlanner {
                   `;
                 }
                 return `
-                  <div class="w-8 h-8 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-label-sm text-on-surface-variant opacity-60">
+                  <div class="w-7 h-7 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-[10px] text-on-surface-variant opacity-60">
                     +
                   </div>
                 `;
@@ -524,7 +524,7 @@ class SeatingPlanner {
                 const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
                 const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
                 return `
-                  <div class="seat-pill w-7 h-7 text-[9px] rounded-full ${st.pill} flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
+                  <div class="seat-pill w-7 h-7 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
                     style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);"
                     draggable="true"
                     data-drag-type="single"
@@ -537,7 +537,7 @@ class SeatingPlanner {
               }
 
               return `
-                <div class="w-8 h-8 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-label-sm text-on-surface-variant opacity-60 absolute"
+                <div class="w-7 h-7 rounded-full bg-surface-container-low border border-dashed border-outline-variant flex items-center justify-center text-[10px] text-on-surface-variant opacity-60 absolute"
                   style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);">
                   +
                 </div>
