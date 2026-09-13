@@ -140,19 +140,22 @@
       return this.events;
     }
 
+    
     isSingleEventMode(searchStr) {
-      if (typeof searchStr === 'string') {
-        const p = new URLSearchParams(searchStr);
-        return p.has('event') && p.get('role') !== 'superadmin';
-      }
       if (typeof window !== 'undefined' && window.location) {
-        const p = new URLSearchParams(window.location.search);
-        return p.has('event') && p.get('role') !== 'superadmin';
+        const p = new URLSearchParams(searchStr || window.location.search);
+        // Sólo la agencia maestra puede ver todos los eventos en el dropdown
+        if (p.get('role') === 'superadmin' || p.get('role') === 'master_agency') {
+          return false;
+        }
+        // Para cualquier otro rol (admin/host/planner), bloquear siempre al evento activo aislando el tenant
+        return true;
       }
-      return false;
+      return true;
     }
 
     getVisibleEvents(searchStr) {
+
       if (this.isSingleEventMode(searchStr)) {
         return [this.getActiveEvent()];
       }
