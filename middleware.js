@@ -45,7 +45,7 @@ function requiredRoles(pathname) {
   return key ? ROUTE_ROLES[key] : [];
 }
 
-export async function middleware(request) {
+export default async function middleware(request) {
   const { pathname } = new URL(request.url);
 
   if (!isProtected(pathname)) {
