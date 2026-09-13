@@ -914,39 +914,27 @@
       <div id="parentsWeddingGrid" class="hidden grid-cols-1 md:grid-cols-2 gap-10 text-center gsap-stagger-container transition-transform duration-300 will-change-transform" style="">
         <!-- Padres de la Novia -->
         <div id="brideParentsBlock" class="gsap-stagger-item ">
-          <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres de la Novia</p>
-          <div class="flex flex-col items-center">
-            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Roberto Martínez</p>
-            
-            <span class="font-script text-antique-gold my-[-2px] leading-none select-none" style="font-family: var(--font-script); font-size: 25px;">&amp;</span>
-            
-            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Elena de Martínez</p>
+          <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres</p>
+          <div class="flex flex-col items-center" id="brideParentsBlock-names">
+            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all text-xs opacity-50">Nombres protegidos</p>
           </div>
         </div>
 
         <!-- Padres del Novio -->
         <div id="groomParentsBlock" class="gsap-stagger-item ">
-          <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres del Novio</p>
-          <div class="flex flex-col items-center">
-            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Carlos Morales</p>
-            
-            <span class="font-script text-antique-gold my-[-2px] leading-none select-none" style="font-family: var(--font-script); font-size: 25px;">&amp;</span>
-            
-            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">María de Morales</p>
+          <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres</p>
+          <div class="flex flex-col items-center" id="groomParentsBlock-names">
+            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all text-xs opacity-50">Nombres protegidos</p>
           </div>
         </div>
       </div>
 
       <!-- Padres XV (Single) -->
       <div id="parentsXvGrid" class="block gsap-stagger-item transition-transform duration-300 will-change-transform" style="">
-        <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Mis Padres</p>
-        <div class="flex flex-col items-center">
-          <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Roberto Martínez</p>
-          
-          <span class="font-script text-antique-gold my-[-2px] leading-none select-none" style="font-family: var(--font-script); font-size: 25px;">&amp;</span>
-          
-          <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 19px;">Elena de Martínez</p>
-        </div>
+          <p class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium mb-3 gsap-eyebrow">Padres</p>
+          <div class="flex flex-col items-center" id="parentsXvGrid-names">
+            <p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all text-xs opacity-50">Nombres protegidos</p>
+          </div>
       </div>
 
       <!-- Padrinos -->
@@ -1031,7 +1019,7 @@
         <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide" id="datos-parroquia-dir"></p>
         
         <div class="flex flex-wrap justify-center items-center gap-3">
-          <a id="ceremonyMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Parroquia+San+Rafael" target="_blank" rel="noopener noreferrer">
+          <a id="ceremonyMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="#" target="_blank" rel="noopener noreferrer">
             
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <path d="M1.5 3.5l4.25-1.75 4.5 1.75 4.25-1.75v10.5l-4.25 1.75-4.5-1.75-4.25 1.75V3.5z"/>
@@ -1040,7 +1028,7 @@
     
             <span>Google Maps</span>
           </a>
-          <a id="ceremonyWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://waze.com/ul?q=Parroquia+San+Rafael" target="_blank" rel="noopener noreferrer">
+          <a id="ceremonyWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="#" target="_blank" rel="noopener noreferrer">
             
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="8,1.5 14.5,13.5 8,10.75 1.5,13.5"/>
@@ -1088,7 +1076,7 @@
         <p class="font-display-lg text-[14.5px] sm:text-[15.5px] text-tertiary mb-6 leading-[1.65] font-light tracking-wide" id="datos-salon-dir"></p>
 
         <div class="flex flex-wrap justify-center items-center gap-3">
-          <a id="receptionMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://maps.google.com/?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
+          <a id="receptionMap" class="btn-luxury-primary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="#" target="_blank" rel="noopener noreferrer">
             
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <path d="M1.5 3.5l4.25-1.75 4.5 1.75 4.25-1.75v10.5l-4.25 1.75-4.5-1.75-4.25 1.75V3.5z"/>
@@ -1097,7 +1085,7 @@
     
             <span>Google Maps</span>
           </a>
-          <a id="receptionWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="https://waze.com/ul?q=Jardín+Las+Magnolias" target="_blank" rel="noopener noreferrer">
+          <a id="receptionWaze" class="btn-luxury-secondary text-[11px] uppercase tracking-[0.25em] font-medium inline-flex items-center gap-2 " href="#" target="_blank" rel="noopener noreferrer">
             
       <svg viewBox="0 0 16 16" class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="8,1.5 14.5,13.5 8,10.75 1.5,13.5"/>
@@ -2040,9 +2028,7 @@
             <div id="qrContainer" class="flex justify-center my-2"></div>
 
             <div class="inline-block px-3.5 py-1 rounded-full bg-black/5 border border-antique-gold/40 mt-1">
-              <p class="font-mono text-xs text-deep-onyx font-bold tracking-widest uppercase" id="qrFolio">
-                M03-MARTINEZ-4P
-              </p>
+              <p class="font-mono text-xs text-deep-onyx font-bold tracking-widest uppercase" id="qrFolio">**********</p>
             </div>
 
             <div id="passDietarySummary" class="text-[10px] text-tertiary italic mt-2 hidden"></div>
@@ -2456,18 +2442,18 @@ const CONFIG = {
     }
   },
   "ceremony": {
-    "venue": "Parroquia San Rafael",
-    "address": "Av. de las Rosas 123, Col. Centro",
+    "venue": "",
+    "address": "",
     "time": "4:00 PM",
-    "mapsUrl": "https://maps.google.com/?q=Parroquia+San+Rafael",
-    "wazeUrl": "https://waze.com/ul?q=Parroquia+San+Rafael"
+    "mapsUrl": "",
+    "wazeUrl": ""
   },
   "reception": {
-    "venue": "Jardín Las Magnolias",
-    "address": "Camino Real 456, Valle Alto",
+    "venue": "",
+    "address": "",
     "time": "6:30 PM",
-    "mapsUrl": "https://maps.google.com/?q=Jardín+Las+Magnolias",
-    "wazeUrl": "https://waze.com/ul?q=Jardín+Las+Magnolias"
+    "mapsUrl": "",
+    "wazeUrl": ""
   },
   "stardust": {
     "enabled": true,
@@ -2576,9 +2562,9 @@ const CONFIG = {
       }
     ],
     "bank": {
-      "bankName": "BBVA",
-      "holder": "Catalina Martínez Ruiz",
-      "clabe": "0121 8001 2345 6789 01"
+      "bankName": "",
+      "holder": "",
+      "clabe": ""
     },
     "envelopeNote": "Agradecemos de corazón tu muestra de cariño en nuestra tradicional lluvia de sobres."
   },
@@ -4190,15 +4176,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (contCorte && data.corte) {
-          contCorte.innerHTML = data.corte.padrinos.map((p) => `<li class="font-display-lg text-lg text-[#f7f6ec]">${p}</li>`).join('');
-        }
+          contCorte.innerHTML = data.corte.padrinos.map((p) => `<li class="font-display-lg text-lg text-[#f7f6ec]">${p}
         
         if (contCorte2 && data.corte) {
           contCorte2.innerHTML = data.corte.padrinos.map((p) => `<li class="font-display-lg text-lg text-[#f7f6ec]">${p}</li>`).join('');
         }
 
+        
         if (contParroquia && data.venue) contParroquia.textContent = data.venue.parroquia;
         if (contSalon && data.venue) contSalon.textContent = data.venue.salon;
+
+        // Populate links
+        if (data.venue && data.venue.ceremonyMap) document.getElementById('ceremonyMap')?.setAttribute('href', data.venue.ceremonyMap);
+        if (data.venue && data.venue.ceremonyWaze) document.getElementById('ceremonyWaze')?.setAttribute('href', data.venue.ceremonyWaze);
+        if (data.venue && data.venue.receptionMap) document.getElementById('receptionMap')?.setAttribute('href', data.venue.receptionMap);
+        if (data.venue && data.venue.receptionWaze) document.getElementById('receptionWaze')?.setAttribute('href', data.venue.receptionWaze);
+
+        // Populate parents
+        if (data.parents) {
+            const bp = document.getElementById('brideParentsBlock-names');
+            if (bp && data.parents.bride) bp.innerHTML = `<p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 21px;">${data.parents.bride[0]}</p><span class="font-script text-antique-gold my-[-2px] leading-none select-none" style="font-family: var(--font-script); font-size: 27px;">&amp;</span><p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 21px;">${data.parents.bride[1]}</p>`;
+            
+            const gp = document.getElementById('groomParentsBlock-names');
+            if (gp && data.parents.groom) gp.innerHTML = `<p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 21px;">${data.parents.groom[0]}</p><span class="font-script text-antique-gold my-[-2px] leading-none select-none" style="font-family: var(--font-script); font-size: 27px;">&amp;</span><p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 21px;">${data.parents.groom[1]}</p>`;
+            
+            const xp = document.getElementById('parentsXvGrid-names');
+            if (xp && data.parents.bride) xp.innerHTML = `<p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 21px;">${data.parents.bride[0]}</p><span class="font-script text-antique-gold my-[-2px] leading-none select-none" style="font-family: var(--font-script); font-size: 27px;">&amp;</span><p class="font-display-lg text-[#f7f6ec] font-light tracking-wide transition-all" style="font-size: 21px;">${data.parents.bride[1]}</p>`;
+        }
+        
+        // Populate Folio
+        if (data.folio) {
+            const qrFolio = document.getElementById('qrFolio');
+            if (qrFolio) qrFolio.textContent = data.folio;
+        }
+
 
       } catch (e) {
         if (contDatosRegalo) contDatosRegalo.innerHTML = '<p class="text-xs text-rose-800 font-bold">Enlace vencido o inválido. Solicita uno nuevo.</p>';
