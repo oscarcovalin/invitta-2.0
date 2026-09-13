@@ -6,12 +6,12 @@ import imageCompression from "https://cdn.jsdelivr.net/npm/browser-image-compres
 
 // REEMPLAZAR CON TUS CREDENCIALES DE FIREBASE
 const firebaseConfig = {
-  apiKey: "TU_API_KEY_AQUI",
-  authDomain: "tu-proyecto.firebaseapp.com",
-  projectId: "tu-proyecto",
-  storageBucket: "tu-proyecto.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyBfT0COJlHiCQBPQmbKU2HyOBxfj0_5o6k",
+  authDomain: "album-colaborativo-a538b.firebaseapp.com",
+  projectId: "album-colaborativo-a538b",
+  storageBucket: "album-colaborativo-a538b.firebasestorage.app",
+  messagingSenderId: "491502772327",
+  appId: "1:491502772327:web:c2a49422ee64a8be30f4c2"
 };
 
 // Initialize Firebase
