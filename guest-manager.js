@@ -1037,7 +1037,17 @@ class GuestManager {
     return String(inputPin).trim() === this.getMasterPin();
   }
 
+  
+  isEventFrozen() {
+    const eventDate = window.CONFIG ? new Date(window.CONFIG.eventDate) : new Date('2026-10-18T16:00:00');
+    // For testing/QA purposes, if you want to force freeze, uncomment:
+    // return true;
+    const freezeDate = new Date(eventDate.getTime() - (48 * 60 * 60 * 1000));
+    return new Date() >= freezeDate;
+  }
+
   getCurrentRole(explicitRole = null) {
+
     if (explicitRole) return explicitRole.toLowerCase();
     
     if (typeof window !== 'undefined' && window.location && window.location.search) {
@@ -1063,10 +1073,23 @@ class GuestManager {
     return targetRole;
   }
 
+  
   canPerformAction(action, role = null) {
     const activeRole = role || this.getCurrentRole();
     
+    // Check Freeze State restrictions
+    if (this.isEventFrozen()) {
+      const frozenActions = ['manage_tables', 'edit_guest_assignment', 'reset_database'];
+      if (frozenActions.includes(action)) {
+        // Planner keeps full control during freeze. Admin (novios) becomes read-only.
+        if (activeRole !== 'planner') {
+          return false;
+        }
+      }
+    }
+    
     const permissions = {
+
       // Exclusivo Novios / Admin Master
       reset_database: ['admin'],
       modify_event_settings: ['admin'],

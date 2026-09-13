@@ -7,6 +7,7 @@
 
 class SeatingPlanner {
   constructor(options = {}) {
+    this.shortNamesMode = typeof localStorage !== "undefined" && localStorage.getItem("invitta_seat_names") === "short";
     this.options = Object.assign({
       unassignedListSelector: '#unassignedList',
       tablesContainerSelector: '#tablesContainer',
@@ -149,6 +150,60 @@ class SeatingPlanner {
         posY: '530px'
       }
     ];
+  }
+
+  
+  setupTooltip() {
+    if (typeof document !== 'undefined' && !document.getElementById('seat-tooltip')) {
+      const tooltip = document.createElement('div');
+      tooltip.id = 'seat-tooltip';
+      tooltip.className = 'fixed z-[100] hidden pointer-events-none bg-charcoal text-white text-xs rounded-xl shadow-xl p-3 border border-outline-variant/20 flex flex-col gap-1 w-max transition-opacity duration-150';
+      document.body.appendChild(tooltip);
+      
+      document.addEventListener('touchstart', (e) => {
+        if (!e.target.closest('.seat-pill')) {
+          this.hideTooltip();
+        }
+      }, { passive: true });
+    }
+  }
+
+  showTooltip(e, guestId) {
+    const tooltip = document.getElementById('seat-tooltip');
+    if (!tooltip || !guestId) return;
+    const g = this.state.guests.find(x => x.id === guestId);
+    if (!g) return;
+    
+    const roleLabel = g.roleLabel || g.role || 'Invitado';
+    const ageCategory = (g.diet === 'infantil' || g.diet === 'infant') ? 'Infantil' : 'Adulto';
+    
+    tooltip.innerHTML = `
+      <span class="font-['Cinzel'] font-bold text-sm tracking-wide text-brushed-champagne">${g.name}</span>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="px-2 py-0.5 rounded-md bg-white/10 text-white font-mono text-[9px] uppercase tracking-wider">${roleLabel}</span>
+        <span class="px-2 py-0.5 rounded-md bg-white/10 text-white font-mono text-[9px] uppercase tracking-wider">${ageCategory}</span>
+      </div>
+    `;
+    
+    tooltip.classList.remove('hidden');
+    
+    const rect = e.target.getBoundingClientRect();
+    let top = rect.top - tooltip.offsetHeight - 12;
+    let left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
+    
+    if (top < 10) top = rect.bottom + 12;
+    if (left < 10) left = 10;
+    if (left + tooltip.offsetWidth > window.innerWidth - 10) left = window.innerWidth - tooltip.offsetWidth - 10;
+    
+    tooltip.style.top = `${top}px`;
+    tooltip.style.left = `${left}px`;
+  }
+
+  hideTooltip() {
+    const tooltip = document.getElementById('seat-tooltip');
+    if (tooltip) {
+      tooltip.classList.add('hidden');
+    }
   }
 
   init() {
@@ -398,7 +453,8 @@ class SeatingPlanner {
     });
 
     // Estilo de Sobrecupo Elegante (#A38047)
-    const overBorderClass = isOver ? 'border-[#A38047] shadow-[0_0_25px_rgba(163,128,71,0.25)] ring-1 ring-[#A38047]' : 'border-outline-variant';
+    let overBorderClass = isOver ? 'border-[#A38047] shadow-[0_0_25px_rgba(163,128,71,0.25)] ring-1 ring-[#A38047]' : 'border-outline-variant';
+      if (table.isStaff) overBorderClass = 'border-amber-700/50 bg-amber-50 shadow-sm';
     const isImperial = table.type === 'imperial';
 
     if (isImperial) {
@@ -421,11 +477,15 @@ class SeatingPlanner {
                 if (slot) {
                   const g = slot.guest;
                   const st = this.getGuestStatusClasses(g);
-                  const rawName = g.name.replace(/^(Familia|Hermanos|Sr\.|Sra\.|Dr\.|Dra\.)\s+/i, '');
-                  const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
-                  const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
+                  
+                    const rawName = g.name.replace(/^(Familia|Hermanos|Sr\.|Sra\.|Dr\.|Dra\.)\s+/i, '');
+                    const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
+                    const shortName = rawName.split(' ')[0].substring(0, 6) || 'INV';
+                    const baseLabel = this.shortNamesMode ? shortName : initials;
+                    const label = slot.totalPasses > 1 ? `${baseLabel}${slot.passNumber}` : baseLabel;
+
                   return `
-                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
@@ -450,11 +510,15 @@ class SeatingPlanner {
                 if (slot) {
                   const g = slot.guest;
                   const st = this.getGuestStatusClasses(g);
-                  const rawName = g.name.replace(/^(Familia|Hermanos|Sr\.|Sra\.|Dr\.|Dra\.)\s+/i, '');
-                  const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
-                  const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
+                  
+                    const rawName = g.name.replace(/^(Familia|Hermanos|Sr\.|Sra\.|Dr\.|Dra\.)\s+/i, '');
+                    const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
+                    const shortName = rawName.split(' ')[0].substring(0, 6) || 'INV';
+                    const baseLabel = this.shortNamesMode ? shortName : initials;
+                    const label = slot.totalPasses > 1 ? `${baseLabel}${slot.passNumber}` : baseLabel;
+
                   return `
-                    <div class="seat-pill w-7 h-7 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
+                    <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary"
                       draggable="true"
                       data-drag-type="single"
                       data-guest-id="${g.id}"
@@ -520,11 +584,15 @@ class SeatingPlanner {
               if (slot) {
                 const g = slot.guest;
                 const st = this.getGuestStatusClasses(g);
-                const rawName = g.name.replace(/^(Familia|Hermanos|Sr\.|Sra\.|Dr\.|Dra\.)\s+/i, '');
-                const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
-                const label = slot.totalPasses > 1 ? `${initials}${slot.passNumber}` : initials;
+                
+                    const rawName = g.name.replace(/^(Familia|Hermanos|Sr\.|Sra\.|Dr\.|Dra\.)\s+/i, '');
+                    const initials = rawName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'IN';
+                    const shortName = rawName.split(' ')[0].substring(0, 6) || 'INV';
+                    const baseLabel = this.shortNamesMode ? shortName : initials;
+                    const label = slot.totalPasses > 1 ? `${baseLabel}${slot.passNumber}` : baseLabel;
+
                 return `
-                  <div class="seat-pill w-7 h-7 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
+                  <div class="seat-pill h-7 w-auto min-w-[28px] px-1.5 text-[9px] rounded-full bg-emerald-100 text-emerald-900 border border-emerald-400 ring-2 ring-emerald-500/30 flex items-center justify-center cursor-grab active:cursor-grabbing text-[10px] font-mono font-bold shadow-sm transition-all hover:scale-125 select-none hover:ring-2 hover:ring-primary absolute"
                     style="left: calc(50% + ${x}px - 14px); top: calc(50% + ${y}px - 14px);"
                     draggable="true"
                     data-drag-type="single"
@@ -652,11 +720,15 @@ class SeatingPlanner {
   /**
    * Renderizado de la barra de estadísticas superior (por número total de pases)
    */
+  
   renderStats() {
     if (typeof document === 'undefined') return;
 
-    const totalPasses = this.state.guests.reduce((s, g) => s + (g.pases || g.passes || 1), 0);
-    const assignedPasses = this.state.guests.filter(g => g.tableId).reduce((s, g) => s + (g.pases || g.passes || 1), 0);
+    const staffTableIds = this.state.tables.filter(t => t.isStaff).map(t => t.id);
+    const guestPassesList = this.state.guests.filter(g => !staffTableIds.includes(g.tableId));
+
+    const totalPasses = guestPassesList.reduce((s, g) => s + (g.pases || g.passes || 1), 0);
+    const assignedPasses = guestPassesList.filter(g => g.tableId).reduce((s, g) => s + (g.pases || g.passes || 1), 0);
     const unassignedPasses = totalPasses - assignedPasses;
     const percent = totalPasses > 0 ? Math.round((assignedPasses / totalPasses) * 100) : 0;
 
@@ -664,6 +736,7 @@ class SeatingPlanner {
       const passes = this.state.guests.filter(g => g.tableId === table.id).reduce((s, g) => s + (g.pases || g.passes || 1), 0);
       return passes > table.capacity;
     }).length;
+
 
     // Actualizar contadores DOM
     const elAssigned = document.querySelector(this.options.statsAssignedCountSelector);
@@ -701,9 +774,15 @@ class SeatingPlanner {
 
   bindDragStartEvents(scopeElement) {
     if (typeof document === 'undefined') return;
-    scopeElement.querySelectorAll('[draggable="true"]').forEach(el => {
-      el.addEventListener('dragstart', (e) => {
-        const guestId = el.dataset.guestId;
+    
+      scopeElement.querySelectorAll('[draggable="true"]').forEach(el => {
+        el.addEventListener('dragstart', (e) => {
+          if (this.options.readOnly) {
+            e.preventDefault();
+            return;
+          }
+          const guestId = el.dataset.guestId;
+
         this.state.draggedItem = { type: 'single', id: guestId };
         e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'single', id: guestId }));
 
@@ -761,7 +840,29 @@ class SeatingPlanner {
     scopeElement.querySelectorAll('.seat-pill').forEach(pill => {
       const targetGuestId = pill.dataset.guestId;
 
-      pill.addEventListener('dragstart', (e) => {
+      
+        pill.addEventListener('mouseenter', (e) => {
+          if (targetGuestId) this.showTooltip(e, targetGuestId);
+        });
+        pill.addEventListener('mouseleave', () => {
+          this.hideTooltip();
+        });
+        pill.addEventListener('touchstart', (e) => {
+          if (targetGuestId) {
+            this.showTooltip(e, targetGuestId);
+            setTimeout(() => this.hideTooltip(), 3000);
+          }
+        }, { passive: true });
+        
+        
+        pill.addEventListener('dragstart', (e) => {
+          if (this.options.readOnly) {
+            e.preventDefault();
+            return;
+          }
+          this.hideTooltip();
+
+
         e.stopPropagation();
         this.state.draggedItem = { type: 'single', id: targetGuestId };
         e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'single', id: targetGuestId }));
@@ -851,13 +952,14 @@ class SeatingPlanner {
     });
   }
 
-  addTable(name = 'Mesa', type = 'circular', capacity = 8) {
+  addTable(name = 'Mesa', type = 'circular', capacity = 8, isStaff = false) {
     const newNumber = this.state.tables.length + 1;
     const newTable = {
       id: 'tbl_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
       number: String(newNumber),
-      name: `${name} ${newNumber}`,
-      subtitle: 'Invitados',
+      name: isStaff ? `STAFF ${newNumber}` : `${name} ${newNumber}`,
+      subtitle: isStaff ? 'Proveedores y Crew' : 'Invitados',
+        isStaff: isStaff,
       type: type,
       capacity: capacity
     };

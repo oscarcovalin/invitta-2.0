@@ -261,8 +261,15 @@
           <span>Plano 2D</span>
         </button>
       </div>
-      
-      <!-- 3. ZONA DERECHA: Herramientas de Salón + Centro de Operaciones -->
+
+        <div class="flex items-center bg-surface-container rounded-2xl p-1 border border-outline-variant text-xs shadow-2xs ml-3">
+          <button type="button" id="btnToggleSeatLabels" class="px-3.5 py-1.5 rounded-xl text-warm-grey hover:text-charcoal transition-all flex items-center gap-1.5 font-semibold" title="Alternar entre Iniciales y Nombres Cortos">
+            <span class="material-symbols-outlined text-[16px]">badge</span>
+            <span id="labelToggleText">Ver Nombres Cortos</span>
+          </button>
+        </div>
+
+        <!-- 3. ZONA DERECHA: Herramientas de Salón + Centro de Operaciones -->
       <div class="flex items-center gap-2.5">
         
         <!-- Grupo A: Herramientas de Salón (Acomodo, Auto-distribución y Nueva Mesa) -->
@@ -282,9 +289,15 @@
           <!-- ➕ Agregar Nueva Mesa -->
           <button type="button" id="btnAddNewTable" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-container-high border border-outline-variant hover:border-rose-light text-charcoal rounded-xl transition-all text-xs font-semibold shadow-2xs" title="Agregar una nueva mesa al salón">
             <span class="material-symbols-outlined text-[16px] text-primary">add_circle</span>
-            <span>+ Mesa</span>
-          </button>
-        </div>
+              <span>+ Mesa</span>
+            </button>
+
+            <!-- + Staff -->
+            <button type="button" id="btnAddNewStaffTable" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-container-high border border-outline-variant hover:border-amber-400 text-charcoal rounded-xl transition-all text-xs font-semibold shadow-2xs" title="Agregar mesa de Staff/Crew (no cuenta en estadísticas)">
+              <span class="material-symbols-outlined text-[16px] text-amber-700">engineering</span>
+              <span>+ Staff</span>
+            </button>
+          </div>
 
         <!-- Separador visual fino -->
         <div class="w-px h-6 bg-outline-variant"></div>
@@ -1716,7 +1729,48 @@
 
     // 🗺️ SELECTOR DE VISTAS (TARJETAS VS PLANO 2D)
     let currentViewMode = 'cards';
-    const btnViewCards = document.getElementById('btnViewCards');
+    
+      
+      // -- STAFF TABLE --
+      const btnAddNewStaffTable = document.getElementById('btnAddNewStaffTable');
+      if (btnAddNewStaffTable && planner) {
+        btnAddNewStaffTable.addEventListener('click', () => {
+          planner.addTable('Staff', 'circular', 8, true);
+        });
+      }
+      
+      // -- TOGGLE NOMBRES / INICIALES --
+
+      const btnToggleSeatLabels = document.getElementById('btnToggleSeatLabels');
+      const labelToggleText = document.getElementById('labelToggleText');
+      if (btnToggleSeatLabels && planner) {
+        // Init UI
+        if (planner.shortNamesMode) {
+          labelToggleText.textContent = "Ver Iniciales";
+          btnToggleSeatLabels.classList.add('bg-primary', 'text-white');
+          btnToggleSeatLabels.classList.remove('text-warm-grey', 'hover:text-charcoal');
+        }
+        
+        btnToggleSeatLabels.addEventListener('click', () => {
+          planner.shortNamesMode = !planner.shortNamesMode;
+          localStorage.setItem('invitta_seat_names', planner.shortNamesMode ? 'short' : 'initials');
+          
+          if (planner.shortNamesMode) {
+            labelToggleText.textContent = "Ver Iniciales";
+            btnToggleSeatLabels.classList.add('bg-primary', 'text-white');
+            btnToggleSeatLabels.classList.remove('text-warm-grey', 'hover:text-charcoal');
+          } else {
+            labelToggleText.textContent = "Ver Nombres Cortos";
+            btnToggleSeatLabels.classList.remove('bg-primary', 'text-white');
+            btnToggleSeatLabels.classList.add('text-warm-grey', 'hover:text-charcoal');
+          }
+          
+          planner.updateStateAndDOM();
+        });
+      }
+      
+      const btnViewCards =
+ document.getElementById('btnViewCards');
     const btnViewFloorPlan = document.getElementById('btnViewFloorPlan');
 
     function renderFloorPlan2D() {
