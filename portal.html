@@ -60,7 +60,7 @@
   </style>
 
 </head>
-<body class="min-h-screen flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-[#FAF7F2] text-[#2E2E2E] selection:bg-[#F5E6E3]">
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-8 lg:p-12 overflow-x-hidden bg-[#FAF7F2] text-[#2E2E2E] selection:bg-[#F5E6E3]">
 
 
   <!-- ==================== GATEWAY DE AUTENTICACIÓN PÚBLICA & BLINDAJE ==================== -->
@@ -102,7 +102,7 @@
           <label for="inputEventCode" class="block text-xs font-bold uppercase tracking-wider text-[#C9877D] mb-1.5">Código de tu Evento</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A09A94] text-lg">tag</span>
-            <input type="text" id="inputAuthHostCode" value="CATALINA-JULIAN" placeholder="Ej. CATALINA-JULIAN o VALENTINA" required
+            <input type="text" id="inputAuthHostCode" inputmode="text" autocapitalize="characters" autocomplete="off" value="CATALINA-JULIAN" placeholder="Ej. CATALINA-JULIAN o VALENTINA" required
                    class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#E8DDD0] text-sm text-[#2E2E2E] uppercase tracking-wider font-mono placeholder-[#A09A94] focus:outline-none focus:border-[#C9877D] focus:ring-2 focus:ring-[#C9877D]/50 transition-colors">
           </div>
         </div>
@@ -202,7 +202,7 @@
 
 
     <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
-    <main class="max-w-6xl mx-auto w-full space-y-10 mb-16">
+    <main class="max-w-6xl mx-auto w-full space-y-8 sm:space-y-10 mb-16 px-0">
 
     <!-- ==================== PORTAL DE ACCESO RÁPIDO A MI EVENTO (CLIENTES & PLANNERS) ==================== -->
     <section class="rounded-3xl p-6 sm:p-7 bg-[#F2EDE4] border border-[#E8DDD0] shadow-[0_8px_30px_rgba(46,46,46,0.07)] relative overflow-hidden">
@@ -220,7 +220,7 @@
           </p>
         </div>
 
-        <div class="w-full md:w-96">
+        <div class="w-full sm:w-96">
           <form id="formEventCodeAccess" class="space-y-2">
             <div class="relative">
               <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#C9877D] text-lg pointer-events-none">key</span>
@@ -315,7 +315,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         <!-- Invitta Estudio (Generador Completo) -->
-        <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
+        <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-4 sm:p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-xl bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] flex items-center justify-center shadow-md">
@@ -337,7 +337,7 @@
         </a>
 
         <!-- Muestra 1: Mis XV Años Catalina -->
-        <a href="invitacion-xv.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
+        <a href="invitacion-xv.html" target="_blank" class="glass-portal-card rounded-2xl p-4 sm:p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-xl bg-[#F5E6E3] border border-[#E8B4AD] text-[#C9877D] flex items-center justify-center shadow-md">
@@ -359,7 +359,7 @@
         </a>
 
         <!-- Muestra 2: Nuestra Boda Catalina & Julián -->
-        <a href="invitacion-boda.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
+        <a href="invitacion-boda.html" target="_blank" class="glass-portal-card rounded-2xl p-4 sm:p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-xl bg-[#E8F3E5] border border-[#C4D4BA] text-[#8A9E7B] flex items-center justify-center shadow-md">
@@ -396,7 +396,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <!-- Organizador de Mesas & Floor Plan Drag & Drop Studio -->
-        <a href="organizador-mesas.html" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
+        <a href="organizador-mesas.html" class="glass-portal-card rounded-2xl p-4 sm:p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-xl bg-[#F5E6E3] border border-[#C9877D] text-[#C9877D] flex items-center justify-center shadow-lg">
@@ -418,7 +418,7 @@
         </a>
 
         <!-- Catering Táctico (Hoja de Ruta de Banquetes) -->
-        <a href="catering-module/catering-tactical-sheet.html" target="_blank" class="glass-portal-card rounded-2xl p-6 flex flex-col justify-between group">
+        <a href="catering-module/catering-tactical-sheet.html" target="_blank" class="glass-portal-card rounded-2xl p-4 sm:p-6 flex flex-col justify-between group">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 rounded-xl bg-[#E8F3E5] border border-[#C4D4BA] text-[#8A9E7B] flex items-center justify-center shadow-md">
