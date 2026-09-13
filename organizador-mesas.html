@@ -113,7 +113,7 @@
     .scrollbar-none::-webkit-scrollbar { display: none; }
 </style>
 </head>
-<body class="bg-surface font-body text-on-surface antialiased flex h-screen overflow-hidden select-none">
+<body class="bg-surface font-body text-on-surface antialiased flex flex-col lg:flex-row h-auto lg:h-screen overflow-y-auto lg:overflow-hidden select-none">
 
   <!-- BACKDROP PARA MÓVILES -->
   <div id="sidebarBackdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 hidden lg:hidden"></div>
@@ -259,7 +259,7 @@
   </aside>
 
   <!-- ==================== CONTENIDO PRINCIPAL (DRAG & DROP WORKSPACE) ==================== -->
-  <div class="w-full lg:pl-[300px] flex-1 flex flex-col h-full overflow-hidden">
+  <div class="w-full lg:pl-[300px] flex-1 flex flex-col lg:h-full lg:overflow-hidden">
     
     <!-- HEADER SUPERIOR (BARRA DE CONTROL PRINCIPAL) -->
     <header class="h-16 bg-surface border-b border-outline-variant px-4 sm:px-8 flex items-center justify-between flex-shrink-0 z-40">
@@ -393,7 +393,7 @@
     </header>
 
     <!-- ÁREA DE TRABAJO (Stats Bar + Layout Drag & Drop de 2 Columnas) -->
-    <main class="flex-1 flex flex-col overflow-hidden bg-surface">
+    <main class="flex-1 flex flex-col lg:overflow-hidden bg-surface">
       
       <!-- STATS BAR SUPERIOR EN VIVO CON SEMÁFORO DE 4 COLORES -->
       <div class="flex items-center justify-between px-4 sm:px-8 py-2 bg-surface border-b border-outline-variant flex-shrink-0 z-10 gap-2">
@@ -462,10 +462,10 @@
       </div>
 
       <!-- WORKSPACE AREA: 2 COLUMNAS DRAG & DROP (RESPONSIVE EN MÓVILES) -->
-      <div class="flex flex-col lg:flex-row flex-1 overflow-hidden">
+      <div class="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
         
         <!-- SIDEBAR IZQUIERDA: PENDIENTES & FAMILIAS (w-full lg:w-96) -->
-        <div id="unassignedPanel" class="w-full lg:w-96 bg-surface-container-lowest border-b lg:border-b-0 lg:border-r border-outline-variant flex flex-col max-h-[40vh] lg:max-h-full lg:h-full z-10 shrink-0">
+        <div id="unassignedPanel" class="w-full lg:w-96 bg-surface-container-lowest border-b lg:border-b-0 lg:border-r border-outline-variant flex flex-col lg:max-h-full lg:h-full z-10 shrink-0">
           
           
           <!-- Mobile Collapse Toggle -->
@@ -499,7 +499,7 @@
           </div>
 
           <!-- LISTA SCROLLABLE DE INVITADOS ARRASTRABLES -->
-          <div class="flex-1 overflow-y-auto p-5 space-y-3.5 custom-scrollbar" id="unassignedList"></div>
+          <div class="overflow-y-auto p-5 space-y-3.5 custom-scrollbar max-h-[30vh] lg:flex-1 lg:max-h-none" id="unassignedList"></div>
 
           <!-- ZONA DE SOLTAR PARA DESASIGNAR -->
           <div id="dropzoneUnassignLeft" class="p-3 mx-4 mb-4 rounded-xl border-2 border-dashed border-outline-variant/70 bg-surface-container text-center text-xs text-on-surface-variant hover:border-rose-500 hover:bg-rose-50 hover:text-rose-700 transition-all cursor-default flex items-center justify-center gap-2">
@@ -520,7 +520,7 @@
           </div>
 
           <!-- VISTA 1: TARJETAS DE MESA INTERACTIVAS (DRAG & DROP) -->
-          <div id="viewCardsContainer" class="w-full max-w-[1020px] mx-auto relative pt-2 pb-24">
+          <div id="viewCardsContainer" class="w-full max-w-[1020px] mx-auto relative pt-2 pb-16 min-h-[50vh]">
             <div id="tablesContainer"></div>
           </div>
 
