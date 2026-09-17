@@ -3,401 +3,1085 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Invitta 2.0 | Elegancia Digital</title>
-  <meta name="description" content="Crea invitaciones digitales elegantes para Bodas y XV Años. Sello de cera 3D, música, control de accesos RSVP y organizador de mesas.">
+  <title>Invitta 2.0 | Invitaciones Digitales Interactivas para Bodas y XV Años</title>
+  <meta name="description" content="Invitaciones digitales interactivas, elegantes y modernas para Bodas, XV Años y eventos exclusivos. RSVP en tiempo real, organizador de mesas, música, Google Maps, código QR y envíos ilimitados por WhatsApp.">
   
+  <!-- Preconnect & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            salvia: {
+              DEFAULT: '#4E9C87',
+              light: '#EBF5F2',
+              soft: '#D5EBE4',
+              dark: '#377061',
+            },
+            coral: '#F27852',
+            gold: '#C5A059'
+          },
+          fontFamily: {
+            script: ['"Great Vibes"', 'cursive'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Jost"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
 
   <link rel="stylesheet" href="css/main.css">
   
   <style>
-    body { font-family: 'Jost', sans-serif; background-color: #FAF7F2; overflow-x: hidden; }
-    h1, h2, h3, h4, .font-serif { font-family: 'Cormorant Garamond', serif; }
-    
-    .text-outline {
-      color: transparent;
-      -webkit-text-stroke: 1px #2E2E2E;
+    :root {
+      --primary-salvia: #4E9C87;
+      --primary-dark: #377061;
+      --salvia-light: #EBF5F2;
+      --salvia-soft: #D5EBE4;
+      --accent-coral: #F27852;
+      --accent-gold: #C5A059;
+      --warm-bg: #FAF8F5;
+      --dark-text: #242928;
+      --sub-text: #596562;
     }
     
-    .btn-outline {
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-outline::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; width: 100%; height: 1px;
-      background-color: currentColor;
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.4s ease;
-    }
-    .btn-outline:hover::after {
-      transform: scaleX(1);
-      transform-origin: left;
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: var(--warm-bg);
+      color: var(--dark-text);
+      overflow-x: hidden;
     }
     
-    .image-parallax {
-      transform: translateY(0);
-      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    .font-script {
+      font-family: 'Great Vibes', cursive;
     }
     
-    /* Reveal Animation */
+    .font-serif {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    /* Gradient Overlays */
+    .hero-gradient {
+      background: radial-gradient(circle at 15% 20%, rgba(78, 156, 135, 0.12) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 70%, rgba(197, 160, 89, 0.1) 0%, transparent 45%);
+    }
+
+    .salvia-gradient-banner {
+      background: linear-gradient(135deg, #4E9C87 0%, #3B7767 100%);
+    }
+
+    /* Soft Floating Elements */
+    .floating-badge {
+      animation: floatBadge 3.5s ease-in-out infinite alternate;
+    }
+    @keyframes floatBadge {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-8px); }
+    }
+
+    /* Scroll Indicator Animation */
+    .bounce-vertical {
+      animation: bounceArrow 2s infinite;
+    }
+    @keyframes bounceArrow {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(8px); }
+      60% { transform: translateY(4px); }
+    }
+
+    /* Smooth Transitions & Reveals */
     .reveal {
       opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateY(24px);
+      transition: all 0.75s cubic-bezier(0.2, 0.9, 0.3, 1);
     }
     .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Glass Effect */
+    .glass-nav {
+      background: rgba(250, 248, 245, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* WhatsApp Button Pulsing Effect */
+    .pulse-wa {
+      box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+      animation: waPulse 2s infinite;
+    }
+    @keyframes waPulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+      70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
   </style>
 </head>
-<body class="text-[#2E2E2E] antialiased selection:bg-[#C9877D] selection:text-white">
+<body class="selection:bg-[#4E9C87] selection:text-white">
 
-  <!-- NAVBAR MAGINE STYLE -->
-  <nav class="fixed w-full z-50 transition-all duration-500 py-6" id="navbar">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
-      <div class="flex items-center gap-1 group cursor-pointer">
-        <span class="font-serif italic text-3xl text-[#C9877D] leading-none group-hover:text-[#2E2E2E] transition-colors">In</span>
-        <span class="font-serif text-3xl text-[#2E2E2E] leading-none">vitta</span>
-        <span class="font-sans text-[9px] text-[#2E2E2E] tracking-[0.2em] font-medium ml-1 uppercase border-l border-[#2E2E2E] pl-1">2.0</span>
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="bg-[#377061] text-white text-xs font-normal py-2 text-center px-4 tracking-wide flex items-center justify-center gap-2">
+    <span class="bg-[#F27852] text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Novedad</span>
+    <span>¡Pagas una sola vez y envías tu invitación a <strong>todos tus invitados sin límite</strong> por WhatsApp!</span>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="sticky top-0 z-50 transition-all duration-300 glass-nav border-b border-[#E5E0D8]" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#inicio" class="flex items-center gap-1.5 group">
+        <span class="font-script text-4xl text-[#4E9C87] leading-none group-hover:scale-105 transition-transform">In</span>
+        <span class="font-serif text-3xl font-semibold tracking-tight text-[#242928] leading-none">vitta</span>
+        <span class="text-[10px] bg-[#EBF5F2] text-[#4E9C87] font-semibold tracking-widest px-2 py-0.5 rounded-full uppercase ml-1 border border-[#D5EBE4]">2.0</span>
+      </a>
+      
+      <!-- Navigation Links -->
+      <div class="hidden lg:flex items-center gap-8">
+        <a href="#inicio" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">Inicio</a>
+        <a href="#celebraciones" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">Eventos</a>
+        <a href="#funciones" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">Funciones</a>
+        <a href="#pasos" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">¿Cómo Funciona?</a>
+        <a href="#muestras" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">Modelos</a>
+        <a href="#precios" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">Precios</a>
+        <a href="#faq" class="text-xs font-semibold uppercase tracking-wider text-[#596562] hover:text-[#4E9C87] transition-colors">Preguntas</a>
       </div>
       
-      <div class="hidden md:flex items-center gap-10">
-        <a href="#experiencia" class="text-xs font-medium uppercase tracking-widest text-[#2E2E2E] hover:text-[#C9877D] transition-colors">Diseño</a>
-        <a href="#muestras" class="text-xs font-medium uppercase tracking-widest text-[#2E2E2E] hover:text-[#C9877D] transition-colors">Colección</a>
-        <a href="#precios" class="text-xs font-medium uppercase tracking-widest text-[#2E2E2E] hover:text-[#C9877D] transition-colors">Precios</a>
-      </div>
-      
-      <div>
-        <a href="portal.html" class="hidden md:inline-flex text-xs font-medium uppercase tracking-widest text-[#2E2E2E] hover:text-[#C9877D] transition-colors items-center gap-2 btn-outline pb-1">
-          Acceso Clientes <span class="material-symbols-outlined text-sm">east</span>
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="portal.html" class="hidden sm:inline-flex items-center gap-1.5 border border-[#4E9C87] text-[#4E9C87] hover:bg-[#4E9C87] hover:text-white px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300">
+          <span class="material-symbols-outlined text-sm">login</span>
+          <span>Portal Clientes</span>
+        </a>
+        <a href="https://wa.me/?text=Hola%20Invitta,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20las%20invitaciones%20digitales" target="_blank" class="bg-[#4E9C87] hover:bg-[#377061] text-white px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 shadow-md shadow-[#4E9C87]/20">
+          <span class="material-symbols-outlined text-sm">chat</span>
+          <span>Asesoría</span>
         </a>
       </div>
     </div>
   </nav>
 
-  <!-- SPLIT SCREEN HERO -->
-  <section class="relative pt-32 pb-20 lg:pt-0 lg:pb-0 min-h-screen flex items-center">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+  <!-- HERO SECTION CON ESTILO AMO INVITAR -->
+  <section id="inicio" class="relative pt-12 pb-20 lg:pt-16 lg:pb-28 hero-gradient">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
       
-      <!-- Text Side -->
-      <div class="relative z-10 pt-12 lg:pt-0 reveal">
-        <div class="inline-flex items-center gap-3 mb-8">
-          <span class="w-8 h-[1px] bg-[#C9877D]"></span>
-          <span class="text-[#C9877D] text-[10px] font-bold tracking-[0.3em] uppercase">Invitaciones Digitales</span>
+      <!-- Left: Value Proposition -->
+      <div class="lg:col-span-7 reveal">
+        <div class="inline-flex items-center gap-2 bg-[#EBF5F2] border border-[#D5EBE4] px-4 py-1.5 rounded-full mb-6 text-[#4E9C87] text-xs font-medium tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-[#4E9C87] animate-pulse"></span>
+          <span>Invitaciones Digitales 100% Interactivas</span>
         </div>
 
-        <h1 class="font-serif text-6xl sm:text-7xl lg:text-[5.5rem] leading-[0.95] mb-8 text-[#2E2E2E]">
-          Elegancia<br>
-          <span class="italic text-[#C9877D] font-light">Sin Fronteras.</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl text-[#242928] font-normal leading-[1.1] mb-6">
+          Invitar <span class="font-script text-6xl sm:text-7xl lg:text-8xl text-[#4E9C87] inline-block pr-2">nunca fue</span> tan fácil y elegante.
         </h1>
         
-        <p class="text-sm sm:text-base text-[#6B6560] max-w-md mb-12 font-light leading-[1.8]">
-          Diseñamos experiencias digitales inmersivas para eventos de lujo. 
-          Sello de cera interactivo, RSVP inteligente y organización de mesas en una plataforma 
-          exclusiva de clase mundial.
+        <p class="text-base sm:text-lg text-[#596562] max-w-xl mb-8 font-light leading-relaxed">
+          Diseñamos tu invitación web personalizada con confirmación RSVP online, organizador de mesas, música de fondo, Google Maps y pases digitales. Se envía con un solo clic por WhatsApp a todos tus invitados.
         </p>
 
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <a href="#muestras" class="bg-[#2E2E2E] text-white px-8 py-4 text-xs font-medium uppercase tracking-widest hover:bg-[#C9877D] transition-colors flex items-center gap-3">
-            Ver Colección <span class="material-symbols-outlined text-sm">trending_flat</span>
+        <!-- CTAs estilo Amo Invitar (Pill Buttons) -->
+        <div class="flex flex-wrap items-center gap-4 mb-10">
+          <a href="#muestras" class="bg-[#4E9C87] hover:bg-[#377061] text-white px-8 py-4 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300 shadow-lg shadow-[#4E9C87]/25 flex items-center gap-2">
+            <span>Ver Modelos y Precios</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </a>
-          <a href="#precios" class="text-xs font-medium uppercase tracking-widest text-[#2E2E2E] flex items-center gap-2 btn-outline pb-1">
-            Planes y Precios
+          <a href="invitacion-boda.html" target="_blank" class="border-2 border-[#242928] hover:border-[#4E9C87] text-[#242928] hover:text-[#4E9C87] px-7 py-3.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300 flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">play_circle</span>
+            <span>Ver Demo en Vivo</span>
           </a>
         </div>
-      </div>
 
-      <!-- Image/Mockup Side -->
-      <div class="relative lg:h-screen w-full flex items-center justify-center lg:justify-end reveal" style="transition-delay: 0.2s;">
-        <!-- Backdrop block -->
-        <div class="absolute right-0 top-0 w-3/4 h-full bg-[#EAE5D9] hidden lg:block"></div>
-        
-        <!-- Mockup Composition -->
-        <div class="relative z-10 w-full max-w-lg h-[500px] sm:h-[600px] lg:h-[750px]">
-          <!-- Phone Mockup 1 -->
-          <div class="absolute h-[85%] right-0 top-0 sm:top-[5%] z-10 image-parallax bg-black rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-[#3A3A3A] shadow-2xl aspect-[9/19.5]">
-            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-black rounded-b-xl sm:rounded-full z-20"></div>
-            <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
-              <img loading="lazy" src="assets/preview-boda-golden.png" alt="Invitación Boda Golden" class="absolute inset-0 w-full h-full object-cover object-top opacity-90">
-            </div>
+        <!-- Trust Badges -->
+        <div class="grid grid-cols-3 gap-4 pt-6 border-t border-[#E5E0D8] max-w-lg">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#4E9C87] text-xl">all_inclusive</span>
+            <span class="text-xs text-[#596562] leading-tight">Envíos <strong>ilimitados</strong></span>
           </div>
-          <!-- Phone Mockup 2 -->
-          <div class="absolute h-[75%] left-0 bottom-[5%] z-20 image-parallax bg-white rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-white shadow-2xl aspect-[9/19.5]" style="transition-delay: 0.1s;">
-            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-white rounded-b-xl sm:rounded-full z-20"></div>
-            <div class="relative w-full h-full bg-[#FAF7F2] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
-              <img loading="lazy" src="assets/preview-xv-champagne.png" alt="Invitación XV Champagne" class="absolute inset-0 w-full h-full object-cover object-top opacity-90">
-            </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#4E9C87] text-xl">schedule</span>
+            <span class="text-xs text-[#596562] leading-tight">Lista en <strong>24 a 48h</strong></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#4E9C87] text-xl">verified</span>
+            <span class="text-xs text-[#596562] leading-tight">Garantía <strong>de lujo</strong></span>
           </div>
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- EXPERIENCIA / ASYMMETRIC GRID -->
-  <section id="experiencia" class="py-24 lg:py-40 bg-white">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-      
-      <div class="mb-20 lg:mb-32 max-w-2xl reveal">
-        <h2 class="font-serif text-4xl lg:text-5xl mb-6 text-[#2E2E2E]">El Arte de<br><span class="italic text-[#C9877D]">Invitar.</span></h2>
-        <p class="text-[#6B6560] font-light leading-[1.8]">Nuestra plataforma no solo envía un enlace; crea una expectativa. Cada interacción está diseñada meticulosamente para reflejar la importancia de tu evento.</p>
-      </div>
-
-      <!-- Feature 1 -->
-      <div class="grid lg:grid-cols-12 gap-12 lg:gap-0 items-center mb-24 lg:mb-40 reveal">
-        <div class="lg:col-span-5 lg:col-start-1 order-2 lg:order-1">
-          <span class="text-[10px] text-[#C9877D] font-bold tracking-[0.2em] uppercase mb-4 block">01 / Confirmación RSVP</span>
-          <h3 class="font-serif text-3xl lg:text-4xl mb-6 text-[#2E2E2E]">Respuestas en<br>Tiempo Real.</h3>
-          <p class="text-[#6B6560] font-light leading-[1.8] text-sm">Olvida los mensajes de WhatsApp dispersos. Tus invitados confirman su asistencia con un clic en su pase personal, y tu panel de control se actualiza instantáneamente.</p>
-        </div>
-        <div class="lg:col-span-6 lg:col-start-7 order-1 lg:order-2 relative">
-          <div class="aspect-square sm:aspect-[4/5] lg:aspect-square bg-[#FAF7F2] relative rounded-3xl">
-             
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[85%] aspect-[9/19.5] bg-black rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-[#3A3A3A] shadow-2xl hover:scale-[1.02] transition-transform duration-700">
-              <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-black rounded-b-xl sm:rounded-full z-20"></div>
-              <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
-                <img loading="lazy" src="assets/preview-boda-classic.png" alt="RSVP Interface" class="absolute inset-0 w-full h-full object-cover object-top opacity-95">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Feature 2 -->
-      <div class="grid lg:grid-cols-12 gap-12 lg:gap-0 items-center reveal">
-        <div class="lg:col-span-6 lg:col-start-1 relative">
-          <div class="aspect-square sm:aspect-[4/5] lg:aspect-square bg-[#FAF7F2] relative rounded-3xl">
-             
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[85%] aspect-[9/19.5] bg-black rounded-[2.5rem] sm:rounded-[3rem] border-[6px] sm:border-[8px] border-[#E8DDD0] shadow-2xl hover:scale-[1.02] transition-transform duration-700">
-              <div class="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-5 sm:h-7 bg-black rounded-b-xl sm:rounded-full z-20"></div>
-              <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
-                <img loading="lazy" src="assets/preview-xv-royal.png" alt="Table Organizer" class="absolute inset-0 w-full h-full object-cover object-top opacity-95">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="lg:col-span-5 lg:col-start-8">
-          <span class="text-[10px] text-[#C9877D] font-bold tracking-[0.2em] uppercase mb-4 block">02 / Logística Inteligente</span>
-          <h3 class="font-serif text-3xl lg:text-4xl mb-6 text-[#2E2E2E]">Organizador de<br>Mesas Drag & Drop.</h3>
-          <p class="text-[#6B6560] font-light leading-[1.8] text-sm">Una vez que tus invitados confirman, arrástralos a sus mesas en nuestra vista de plano 2D. Genera reportes PDF exactos para tu catering y banquetero.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- MUESTRAS EDITORIAL -->
-  <section id="muestras" class="py-24 lg:py-32 bg-[#2E2E2E] text-white">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 lg:mb-24 gap-8 reveal">
-        <div>
-          <span class="text-[10px] text-[#C9877D] font-bold tracking-[0.3em] uppercase mb-4 block">Colección 2026</span>
-          <h2 class="font-serif text-4xl lg:text-5xl text-outline hover:text-white transition-colors duration-500 cursor-default">Obras Maestras.</h2>
-        </div>
-        <a href="#precios" class="text-xs font-medium uppercase tracking-widest text-[#C9877D] flex items-center gap-2 btn-outline pb-1 self-start md:self-end">
-          Cotizar Ahora <span class="material-symbols-outlined text-sm">trending_flat</span>
-        </a>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
-        <!-- Boda -->
-        <a href="invitacion-boda.html" target="_blank" class="block group reveal flex flex-col items-center">
-          <!-- Phone Mockup -->
-          <div class="relative w-[280px] h-[580px] sm:w-[320px] sm:h-[650px] bg-black rounded-[3rem] border-[8px] border-[#3A3A3A] shadow-2xl mb-10 transform group-hover:-translate-y-2 transition-transform duration-500">
-            <!-- Dynamic Island / Notch area -->
-            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20"></div>
-            <!-- Phone buttons (CSS trick) -->
-            <div class="absolute top-32 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
-            <div class="absolute top-48 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
-            <div class="absolute top-32 -right-[10px] w-1 h-16 bg-[#3A3A3A] rounded-r-md"></div>
-            
-            <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2.5rem] overflow-hidden">
-              <img loading="lazy" src="assets/preview-boda-golden.png" alt="Boda Muestra" class="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-700">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
-              
-              <!-- Hover Overlay -->
-              <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm z-30">
-                 <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                   Ver En Vivo
-                 </span>
-              </div>
-            </div>
-          </div>
+      <!-- Right: Mobile Device Interactive Showcase -->
+      <div class="lg:col-span-5 flex justify-center lg:justify-end reveal" style="transition-delay: 0.15s;">
+        <div class="relative">
           
-          <div class="w-full flex justify-between items-start">
-            <div>
-              <h3 class="font-serif text-2xl mb-1 text-white">Catalina & Julián</h3>
-              <p class="text-[#A09A94] text-xs uppercase tracking-widest">Boda / Matrimonio</p>
-            </div>
-            <span class="text-[#C9877D] text-xs border border-[#C9877D]/30 px-3 py-1 uppercase tracking-widest">Vino & Oro</span>
-          </div>
-        </a>
+          <!-- Decorative Glow Backdrop -->
+          <div class="absolute inset-0 bg-[#4E9C87]/15 rounded-full blur-3xl -z-10 scale-90"></div>
 
-        <!-- XV Años -->
-        <a href="invitacion-xv.html" target="_blank" class="block group reveal flex flex-col items-center" style="transition-delay: 0.2s;">
-          <!-- Phone Mockup -->
-          <div class="relative w-[280px] h-[580px] sm:w-[320px] sm:h-[650px] bg-black rounded-[3rem] border-[8px] border-[#3A3A3A] shadow-2xl mb-10 transform group-hover:-translate-y-2 transition-transform duration-500">
-            <!-- Dynamic Island / Notch area -->
-            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full z-20"></div>
-            <!-- Phone buttons (CSS trick) -->
-            <div class="absolute top-32 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
-            <div class="absolute top-48 -left-[10px] w-1 h-12 bg-[#3A3A3A] rounded-l-md"></div>
-            <div class="absolute top-32 -right-[10px] w-1 h-16 bg-[#3A3A3A] rounded-r-md"></div>
+          <!-- Floating Badge Top-Left -->
+          <div class="absolute -left-6 top-16 z-30 bg-white/90 backdrop-blur-md border border-[#E5E0D8] rounded-2xl p-3 shadow-xl flex items-center gap-3 floating-badge hidden sm:flex">
+            <div class="w-10 h-10 rounded-full bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">how_to_reg</span>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-[#242928] uppercase tracking-wider">RSVP Digital</p>
+              <p class="text-[10px] text-[#4E9C87] font-medium">Confirmación en 1 clic</p>
+            </div>
+          </div>
+
+          <!-- Floating Badge Bottom-Right -->
+          <div class="absolute -right-6 bottom-20 z-30 bg-white/90 backdrop-blur-md border border-[#E5E0D8] rounded-2xl p-3 shadow-xl flex items-center gap-3 floating-badge hidden sm:flex" style="animation-delay: 1.5s;">
+            <div class="w-10 h-10 rounded-full bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center">
+              <span class="material-symbols-outlined text-xl">table_bar</span>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold text-[#242928] uppercase tracking-wider">Mesas 2D</p>
+              <p class="text-[10px] text-[#C5A059] font-medium">Organizador integrado</p>
+            </div>
+          </div>
+
+          <!-- Smartphone Showcase (High Definition Render) -->
+          <div class="relative w-[300px] sm:w-[340px] lg:w-[370px] transition-transform duration-700 hover:scale-[1.02]">
+            <img src="assets/hero-phone-invitation-mexico.png" alt="Invitación Digital de Lujo Invitta" class="w-full h-auto drop-shadow-[0_25px_35px_rgba(0,0,0,0.22)] rounded-[2.5rem]">
             
-            <div class="relative w-full h-full bg-[#1A1A1A] rounded-[2.5rem] overflow-hidden">
-              <img loading="lazy" src="assets/preview-xv-champagne.png" alt="XV Muestra" class="absolute inset-0 w-full h-full object-cover object-top opacity-70 group-hover:opacity-100 transition-all duration-700">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
-              
-              <!-- Hover Overlay -->
-              <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-sm z-30">
-                 <span class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 text-xs uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                   Ver En Vivo
-                 </span>
-              </div>
+            <!-- Scroll Indicator Overlay Pill -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 bg-[#242928]/85 hover:bg-[#242928] text-white backdrop-blur-md px-5 py-2 rounded-full flex items-center gap-2 shadow-xl border border-white/20 cursor-pointer transition-all hover:scale-105">
+              <span class="text-[11px] font-semibold uppercase tracking-wider">¡Desliza la invitación!</span>
+              <span class="material-symbols-outlined text-sm text-[#4E9C87] bounce-vertical">south</span>
             </div>
           </div>
 
-          <div class="w-full flex justify-between items-start">
-            <div>
-              <h3 class="font-serif text-2xl mb-1 text-white">Mis XV Catalina</h3>
-              <p class="text-[#A09A94] text-xs uppercase tracking-widest">XV Años</p>
-            </div>
-            <span class="text-[#C9877D] text-xs border border-[#C9877D]/30 px-3 py-1 uppercase tracking-widest">Midnight</span>
-          </div>
-        </a>
+        </div>
       </div>
-      
+
     </div>
   </section>
 
-  <!-- PRECIOS EDITORIAL LIST -->
-  <section id="precios" class="py-24 lg:py-40 bg-[#FAF7F2]">
+  <!-- SECCIÓN "¿QUÉ CELEBRAMOS?" ESTILO AMO INVITAR -->
+  <section id="celebraciones" class="py-20 bg-white border-y border-[#E5E0D8]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+      
+      <div class="max-w-2xl mx-auto mb-14 reveal">
+        <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Diseños Especializados</span>
+        <h2 class="text-4xl lg:text-5xl font-normal text-[#242928] mb-4">
+          ¿Qué <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">celebramos</span> hoy?
+        </h2>
+        <p class="text-sm sm:text-base text-[#596562] font-light">
+          Tenemos estilos elegantes y funcionalidades a la medida de cada tipo de evento.
+        </p>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        
+        <!-- Tarjeta Boda -->
+        <div class="group relative rounded-3xl overflow-hidden border border-[#E5E0D8] bg-[#FAF8F5] shadow-sm hover:shadow-xl transition-all duration-500 reveal">
+          <div class="h-64 overflow-hidden relative">
+            <img src="assets/gallery-boda-1.jpg" alt="Invitaciones para Bodas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-[#377061] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">Más Popular</span>
+            <div class="absolute bottom-4 left-6 right-6 text-white">
+              <h3 class="text-2xl font-serif font-semibold mb-1">Bodas y Matrimonios</h3>
+              <p class="text-xs text-white/80 font-light">Elegancia clásica, romántica y contemporánea</p>
+            </div>
+          </div>
+          <div class="p-6">
+            <ul class="text-xs text-[#596562] space-y-2 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Confirmación RSVP con control de pases</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Organizador de mesas y asignación</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Mesa de regalos física y cuenta CLABE</span>
+              </li>
+            </ul>
+            <div class="flex items-center justify-between pt-4 border-t border-[#E5E0D8]">
+              <a href="invitacion-boda.html" target="_blank" class="text-xs font-semibold uppercase tracking-wider text-[#4E9C87] hover:text-[#377061] flex items-center gap-1">
+                <span>Ver Muestra</span>
+                <span class="material-symbols-outlined text-xs">open_in_new</span>
+              </a>
+              <a href="#muestras" class="bg-[#242928] hover:bg-[#4E9C87] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition-colors">
+                Modelos
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta XV Años -->
+        <div class="group relative rounded-3xl overflow-hidden border border-[#E5E0D8] bg-[#FAF8F5] shadow-sm hover:shadow-xl transition-all duration-500 reveal" style="transition-delay: 0.1s;">
+          <div class="h-64 overflow-hidden relative">
+            <img src="assets/gallery-xv-1.jpg" alt="Invitaciones para XV Años" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-[#C5A059] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">Tendencia</span>
+            <div class="absolute bottom-4 left-6 right-6 text-white">
+              <h3 class="text-2xl font-serif font-semibold mb-1">Mis XV Años</h3>
+              <p class="text-xs text-white/80 font-light">Glamour moderno, música e interactividad</p>
+            </div>
+          </div>
+          <div class="p-6">
+            <ul class="text-xs text-[#596562] space-y-2 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Padrinos, chambelanes y corte de honor</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Sugerencia de canciones para el DJ</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Galería de fotos de sesión previa</span>
+              </li>
+            </ul>
+            <div class="flex items-center justify-between pt-4 border-t border-[#E5E0D8]">
+              <a href="invitacion-xv.html" target="_blank" class="text-xs font-semibold uppercase tracking-wider text-[#4E9C87] hover:text-[#377061] flex items-center gap-1">
+                <span>Ver Muestra</span>
+                <span class="material-symbols-outlined text-xs">open_in_new</span>
+              </a>
+              <a href="#muestras" class="bg-[#242928] hover:bg-[#4E9C87] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition-colors">
+                Modelos
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta Eventos Exclusivos -->
+        <div class="group relative rounded-3xl overflow-hidden border border-[#E5E0D8] bg-[#FAF8F5] shadow-sm hover:shadow-xl transition-all duration-500 reveal sm:col-span-2 lg:col-span-1" style="transition-delay: 0.2s;">
+          <div class="h-64 overflow-hidden relative">
+            <img src="assets/gallery-boda-4.jpg" alt="Bautizos y Eventos" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-[#242928] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">A Medida</span>
+            <div class="absolute bottom-4 left-6 right-6 text-white">
+              <h3 class="text-2xl font-serif font-semibold mb-1">Bautizos y Aniversarios</h3>
+              <p class="text-xs text-white/80 font-light">Celebraciones íntimas y corporativas de gala</p>
+            </div>
+          </div>
+          <div class="p-6">
+            <ul class="text-xs text-[#596562] space-y-2 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Itinerario y programa protocolario</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Código de vestimenta sugerido</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Ubicación precisa con Waze & Maps</span>
+              </li>
+            </ul>
+            <div class="flex items-center justify-between pt-4 border-t border-[#E5E0D8]">
+              <a href="portal.html" class="text-xs font-semibold uppercase tracking-wider text-[#4E9C87] hover:text-[#377061] flex items-center gap-1">
+                <span>Personalizar</span>
+                <span class="material-symbols-outlined text-xs">tune</span>
+              </a>
+              <a href="#precios" class="bg-[#242928] hover:bg-[#4E9C87] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition-colors">
+                Cotizar
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE FUNCIONES (EL FAMOSO GRID DE 16 CAPACIDADES DE AMO INVITAR) -->
+  <section id="funciones" class="py-24 bg-[#FAF8F5]">
     <div class="max-w-7xl mx-auto px-6 lg:px-12">
       
-      <div class="text-center mb-20 reveal">
-        <h2 class="font-serif text-4xl lg:text-5xl mb-4 text-[#2E2E2E]">Inversión.</h2>
-        <p class="text-[#6B6560] font-light max-w-xl mx-auto text-sm">Transparencia absoluta. Planes diseñados para adaptarse a la magnitud de tu celebración.</p>
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Todo Incluido</span>
+        <h2 class="text-4xl lg:text-5xl font-normal text-[#242928] mb-4">
+          Funciones <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">prácticas</span> y modernas
+        </h2>
+        <p class="text-sm sm:text-base text-[#596562] font-light">
+          Diseñadas para que tus invitados interactúen y tú tengas control total de tu evento.
+        </p>
       </div>
 
-      <div class="max-w-4xl mx-auto reveal">
-        <!-- Plan 1 -->
-        <div class="group border-t border-[#E8DDD0] py-8 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-white transition-colors duration-300 px-4 -mx-4">
-          <div class="mb-4 sm:mb-0 w-1/3">
-            <h3 class="font-serif text-3xl text-[#2E2E2E]">Esencial</h3>
-            <p class="text-xs text-[#A09A94] tracking-widest uppercase mt-2">$399 MXN</p>
+      <!-- 16 Functional Unit Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- 1. RSVP Digital -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">how_to_reg</span>
           </div>
-          <div class="w-1/3">
-            <ul class="text-sm text-[#6B6560] font-light space-y-1">
-              <li>Pase Digital</li>
-              <li>Mesa de Regalos</li>
-              <li>Soporte Email</li>
-            </ul>
-          </div>
-          <div class="w-1/3 text-left sm:text-right mt-6 sm:mt-0">
-            <a href="https://pago.clip.mx/85a05e71-4ffc-46f7-bff2-ede8f616556d" target="_blank" class="inline-block text-xs font-medium uppercase tracking-widest text-[#C9877D] btn-outline pb-1">Seleccionar Plan</a>
-          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">RSVP Digital</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Tus invitados confirman asistencia en línea con 1 clic. Respuestas centralizadas en tu panel de control.
+          </p>
         </div>
 
-        <!-- Plan 2 -->
-        <div class="group border-t border-[#E8DDD0] py-8 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-white transition-colors duration-300 px-4 -mx-4 relative">
-          <div class="absolute right-4 top-4 sm:top-auto sm:bottom-4">
-            <span class="text-[9px] bg-[#C9877D] text-white px-2 py-1 uppercase tracking-widest">Destacado</span>
+        <!-- 2. Lista y Pases -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">badge</span>
           </div>
-          <div class="mb-4 sm:mb-0 w-1/3">
-            <h3 class="font-serif text-3xl text-[#C9877D]">Premium</h3>
-            <p class="text-xs text-[#A09A94] tracking-widest uppercase mt-2">$699 MXN</p>
-          </div>
-          <div class="w-1/3">
-            <ul class="text-sm text-[#6B6560] font-light space-y-1">
-              <li>Organizador de Mesas</li>
-              <li>RSVP Inteligente</li>
-              <li>Control de Accesos (QR)</li>
-            </ul>
-          </div>
-          <div class="w-1/3 text-left sm:text-right mt-6 sm:mt-0">
-            <a href="https://pago.clip.mx/ee494ddf-d012-4d6f-ab65-5f1571dbe11f" target="_blank" class="inline-block text-xs font-medium uppercase tracking-widest text-[#2E2E2E] btn-outline pb-1">Seleccionar Plan</a>
-          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Pases Personalizados</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Cada invitado o familia recibe su pase con su nombre exacto y el número de acompañantes asignados.
+          </p>
         </div>
 
-        <!-- Plan 3 -->
-        <div class="group border-t border-b border-[#E8DDD0] py-8 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-white transition-colors duration-300 px-4 -mx-4">
-          <div class="mb-4 sm:mb-0 w-1/3">
-            <h3 class="font-serif text-3xl text-[#2E2E2E]">Platinum</h3>
-            <p class="text-xs text-[#A09A94] tracking-widest uppercase mt-2">$999 MXN</p>
+        <!-- 3. Ubicación Google Maps -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">distance</span>
           </div>
-          <div class="w-1/3">
-            <ul class="text-sm text-[#6B6560] font-light space-y-1">
-              <li>Todo lo Premium</li>
-              <li>Dominio Propio (.com)</li>
-              <li>Soporte 24/7</li>
-            </ul>
-          </div>
-          <div class="w-1/3 text-left sm:text-right mt-6 sm:mt-0">
-            <a href="https://pago.clip.mx/12b42e94-8a5d-4b69-9878-9d1b24635736" target="_blank" class="inline-block text-xs font-medium uppercase tracking-widest text-[#2E2E2E] btn-outline pb-1">Seleccionar Plan</a>
-          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Ubicación GPS</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Botones directos para abrir la iglesia y el salón en Google Maps o Waze con indicaciones paso a paso.
+          </p>
         </div>
+
+        <!-- 4. Cuenta Regresiva -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">alarm_on</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Cuenta Regresiva</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Cronómetro en tiempo real con días, horas y minutos que faltan para el gran día, generando expectativa.
+          </p>
+        </div>
+
+        <!-- 5. Música de Fondo -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
+          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">music_note</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Música de Fondo</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Elige la canción especial para que suene de fondo con un reproductor elegante y botón play/pausa.
+          </p>
+        </div>
+
+        <!-- 6. Organizador de Mesas -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">table_restaurant</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Organizador de Mesas</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Plano 2D interactivo Drag & Drop para ubicar a tus invitados y descargar listas directas para el banquetero.
+          </p>
+        </div>
+
+        <!-- 7. Itinerario del Evento -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">timeline</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Itinerario Completo</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Línea de tiempo detallada: ceremonia, recepción, vals, cena y fiesta para que nadie se pierda nada.
+          </p>
+        </div>
+
+        <!-- 8. Mesa de Regalos -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">featured_seasonal_and_gifts</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Mesa de Regalos</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Muestra enlaces a tus mesas de regalos (Liverpool, Amazon) o datos bancarios y sobre de lluvia de sobres.
+          </p>
+        </div>
+
+        <!-- 9. Álbum de Fotos -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
+          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">photo_library</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Álbum Digital</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Galería fotográfica de tu sesión previa o de pareja con visualizador de pantalla completa de alta calidad.
+          </p>
+        </div>
+
+        <!-- 10. Sugerencia de Canciones -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">queue_music</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Canciones para DJ</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Tus invitados te sugieren las canciones que no pueden faltar en la pista de baile antes de la fiesta.
+          </p>
+        </div>
+
+        <!-- 11. Dress Code -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">checkroom</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Código de Vestimenta</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Indica claramente si el evento es Rigurosa Etiqueta, Formal o Guayabera, con paleta de colores reservada.
+          </p>
+        </div>
+
+        <!-- 12. Padrinos y Corte -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">diversity_1</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Corte y Padrinos</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Reconoce con cariño a tus padres, padrinos de velación, anillos, damas de honor y chambelanes.
+          </p>
+        </div>
+
+        <!-- 13. Control QR de Accesos -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">qr_code_scanner</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Control de Acceso QR</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Pase digital con código QR único para recepcionistas, evitando colados y agilizando la entrada.
+          </p>
+        </div>
+
+        <!-- 14. Envíos Ilimitados -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">share</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Envíos Ilimitados</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Sin límites ni cobros por invitado adicional. Envías tantas invitaciones como desees por WhatsApp.
+          </p>
+        </div>
+
+        <!-- 15. Menú y Restricciones -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">restaurant</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Menú y Dietas</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Recopila alergias, opciones vegetarianas o menú infantil de tus invitados antes de ordenar el banquete.
+          </p>
+        </div>
+
+        <!-- 16. Panel de Control -->
+        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
+          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
+            <span class="material-symbols-outlined text-2xl">dashboard</span>
+          </div>
+          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Panel de Anfitrión</h3>
+          <p class="text-xs text-[#596562] leading-relaxed">
+            Administra todo desde tu móvil: estadísticas de confirmación, descarga de Excel y edición en tiempo real.
+          </p>
+        </div>
+
       </div>
 
+    </div>
+  </section>
+
+  <!-- SECCIÓN "TU INVITACIÓN EN 3 PASOS" ESTILO AMO INVITAR -->
+  <section id="pasos" class="py-24 bg-white border-y border-[#E5E0D8]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Proceso Sencillo</span>
+        <h2 class="text-4xl lg:text-5xl font-normal text-[#242928] mb-4">
+          Tu invitación en <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">3 pasos</span>
+        </h2>
+        <p class="text-sm sm:text-base text-[#596562] font-light">
+          Rápido, sin complicaciones y con acompañamiento personalizado.
+        </p>
+      </div>
+
+      <!-- Steps Timeline Grid -->
+      <div class="grid md:grid-cols-3 gap-8 relative">
+
+        <!-- Step 1 -->
+        <div class="relative bg-[#FAF8F5] p-8 rounded-3xl border border-[#E5E0D8] text-center reveal">
+          <div class="w-16 h-16 rounded-full bg-[#EBF5F2] text-[#4E9C87] font-bold text-2xl flex items-center justify-center mx-auto mb-6 border-2 border-[#D5EBE4]">
+            1
+          </div>
+          <h3 class="text-xl font-bold text-[#242928] mb-3">Elige tu Modelo</h3>
+          <p class="text-xs sm:text-sm text-[#596562] leading-relaxed mb-6 font-light">
+            Explora nuestra colección para Bodas o XV Años y selecciona el estilo visual que mejor combine con la temática de tu evento.
+          </p>
+          <span class="inline-block text-[11px] font-semibold text-[#4E9C87] bg-white px-3 py-1 rounded-full border border-[#D5EBE4]">
+            Paso 1: Elección
+          </span>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative bg-[#FAF8F5] p-8 rounded-3xl border border-[#E5E0D8] text-center reveal" style="transition-delay: 0.1s;">
+          <div class="w-16 h-16 rounded-full bg-[#FAF3E7] text-[#C5A059] font-bold text-2xl flex items-center justify-center mx-auto mb-6 border-2 border-[#EADBBF]">
+            2
+          </div>
+          <h3 class="text-xl font-bold text-[#242928] mb-3">Personaliza Datos</h3>
+          <p class="text-xs sm:text-sm text-[#596562] leading-relaxed mb-6 font-light">
+            Ingresa al portal de clientes para cargar tus fotografías, fechas, música favorita, mesas de regalos y nombres de tus seres queridos.
+          </p>
+          <span class="inline-block text-[11px] font-semibold text-[#C5A059] bg-white px-3 py-1 rounded-full border border-[#EADBBF]">
+            Paso 2: Edición
+          </span>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative bg-[#FAF8F5] p-8 rounded-3xl border border-[#E5E0D8] text-center reveal" style="transition-delay: 0.2s;">
+          <div class="w-16 h-16 rounded-full bg-[#EBF5F2] text-[#377061] font-bold text-2xl flex items-center justify-center mx-auto mb-6 border-2 border-[#D5EBE4]">
+            3
+          </div>
+          <h3 class="text-xl font-bold text-[#242928] mb-3">Envía por WhatsApp</h3>
+          <p class="text-xs sm:text-sm text-[#596562] leading-relaxed mb-6 font-light">
+            ¡Tu link está listo! Compártelo al instante con todos tus invitados por WhatsApp, correo o redes y monitorea las respuestas en vivo.
+          </p>
+          <span class="inline-block text-[11px] font-semibold text-[#377061] bg-white px-3 py-1 rounded-full border border-[#D5EBE4]">
+            Paso 3: Envío Inmediato
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Action Footer -->
+      <div class="mt-14 text-center reveal">
+        <a href="https://wa.me/?text=Hola%20Invitta,%20deseo%20que%20me%20ayuden%20a%20crear%20mi%20invitaci%C3%B3n" target="_blank" class="inline-flex items-center gap-2 bg-[#4E9C87] hover:bg-[#377061] text-white px-8 py-4 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300 shadow-md shadow-[#4E9C87]/20">
+          <span class="material-symbols-outlined text-sm">support_agent</span>
+          <span>¡Solicita tu Invitación con un Asesor!</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE MUESTRAS / CATÁLOGO INTERACTIVO -->
+  <section id="muestras" class="py-24 bg-[#242928] text-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 reveal">
+        <div>
+          <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Catálogo Oficial</span>
+          <h2 class="text-4xl lg:text-5xl font-normal text-white">
+            Colección de <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">Modelos</span>
+          </h2>
+        </div>
+        <p class="text-xs sm:text-sm text-white/70 max-w-md font-light">
+          Diseños certificados listos para producción con animaciones fluidas, sello de cera 3D y compatibilidad móvil absoluta.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10">
+        
+        <!-- Modelo 1: Boda Vino & Oro -->
+        <div class="bg-[#1C201F] rounded-3xl border border-[#3A403E] p-6 lg:p-8 flex flex-col items-center reveal">
+          <div class="w-full flex items-center justify-between mb-6">
+            <div>
+              <span class="text-[10px] text-[#4E9C87] font-bold uppercase tracking-widest block">Boda / Matrimonio</span>
+              <h3 class="text-2xl font-serif text-white">Catalina & Julián</h3>
+            </div>
+            <span class="bg-[#4E9C87]/20 border border-[#4E9C87]/40 text-[#4E9C87] text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full">
+              Vino & Oro Luxury
+            </span>
+          </div>
+
+          <!-- Phone Mockup Container -->
+          <div class="relative w-[260px] sm:w-[290px] h-[520px] bg-black rounded-[2.8rem] border-[8px] border-[#333] shadow-2xl overflow-hidden mb-6 group">
+            <img src="assets/preview-boda-golden.png" alt="Muestra Boda" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-6">
+              <a href="invitacion-boda.html" target="_blank" class="bg-white text-[#242928] px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-xl flex items-center gap-1.5">
+                <span>Ver En Vivo</span>
+                <span class="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="w-full flex items-center justify-between pt-4 border-t border-[#3A403E]">
+            <span class="text-xs text-white/60">Disponible en los 3 planes</span>
+            <a href="invitacion-boda.html" target="_blank" class="text-xs font-semibold text-[#4E9C87] hover:text-white uppercase tracking-wider flex items-center gap-1">
+              <span>Probar Invitación Completa</span>
+              <span class="material-symbols-outlined text-xs">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Modelo 2: Mis XV Años Midnight Champagne -->
+        <div class="bg-[#1C201F] rounded-3xl border border-[#3A403E] p-6 lg:p-8 flex flex-col items-center reveal" style="transition-delay: 0.15s;">
+          <div class="w-full flex items-center justify-between mb-6">
+            <div>
+              <span class="text-[10px] text-[#C5A059] font-bold uppercase tracking-widest block">XV Años / Quinceañera</span>
+              <h3 class="text-2xl font-serif text-white">Mis XV Catalina</h3>
+            </div>
+            <span class="bg-[#C5A059]/20 border border-[#C5A059]/40 text-[#C5A059] text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full">
+              Champagne & Royal
+            </span>
+          </div>
+
+          <!-- Phone Mockup Container -->
+          <div class="relative w-[260px] sm:w-[290px] h-[520px] bg-black rounded-[2.8rem] border-[8px] border-[#333] shadow-2xl overflow-hidden mb-6 group">
+            <img src="assets/preview-xv-champagne.png" alt="Muestra XV Años" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-6">
+              <a href="invitacion-xv.html" target="_blank" class="bg-white text-[#242928] px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-xl flex items-center gap-1.5">
+                <span>Ver En Vivo</span>
+                <span class="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="w-full flex items-center justify-between pt-4 border-t border-[#3A403E]">
+            <span class="text-xs text-white/60">Disponible en los 3 planes</span>
+            <a href="invitacion-xv.html" target="_blank" class="text-xs font-semibold text-[#C5A059] hover:text-white uppercase tracking-wider flex items-center gap-1">
+              <span>Probar Invitación Completa</span>
+              <span class="material-symbols-outlined text-xs">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE PRECIOS E INVERSIÓN ESTILO AMO INVITAR -->
+  <section id="precios" class="py-24 bg-[#FAF8F5]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+        <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Inversión Transparente</span>
+        <h2 class="text-4xl lg:text-5xl font-normal text-[#242928] mb-4">
+          Planes y <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">Precios</span>
+        </h2>
+        <p class="text-sm sm:text-base text-[#596562] font-light">
+          Pago único sin mensualidades ni límites de invitados. Escoge el paquete ideal para tu evento.
+        </p>
+      </div>
+
+      <!-- Pricing Cards Grid -->
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+
+        <!-- Plan 1: Esencial -->
+        <div class="bg-white rounded-3xl border border-[#E5E0D8] p-8 shadow-sm flex flex-col justify-between hover:shadow-lg transition-all duration-300 reveal">
+          <div>
+            <div class="mb-4">
+              <span class="text-[10px] text-[#596562] font-bold uppercase tracking-widest">Básico & Práctico</span>
+              <h3 class="text-2xl font-serif font-bold text-[#242928] mt-1">Esencial</h3>
+            </div>
+            <div class="mb-6">
+              <span class="text-3xl sm:text-4xl font-extrabold text-[#242928]">$399</span>
+              <span class="text-xs text-[#596562] uppercase tracking-wider">MXN</span>
+              <p class="text-[11px] text-[#596562] mt-1">Pago único para todo tu evento</p>
+            </div>
+            <hr class="border-[#E5E0D8] mb-6">
+            <ul class="text-xs text-[#596562] space-y-3 font-light">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check</span>
+                <span>Pase Digital Interactivo</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check</span>
+                <span>Ubicación Google Maps & Waze</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check</span>
+                <span>Mesa de Regalos & CLABE</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check</span>
+                <span>Cuenta Regresiva en Tiempo Real</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check</span>
+                <span>Envíos ilimitados por WhatsApp</span>
+              </li>
+            </ul>
+          </div>
+          <div class="pt-8">
+            <a href="https://pago.clip.mx/85a05e71-4ffc-46f7-bff2-ede8f616556d" target="_blank" class="w-full text-center block border-2 border-[#242928] hover:border-[#4E9C87] hover:bg-[#4E9C87] text-[#242928] hover:text-white px-6 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300">
+              Contratar Esencial
+            </a>
+          </div>
+        </div>
+
+        <!-- Plan 2: Premium (Destacado) -->
+        <div class="bg-white rounded-3xl border-2 border-[#4E9C87] p-8 shadow-xl flex flex-col justify-between relative transform md:-translate-y-2 reveal" style="transition-delay: 0.1s;">
+          <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#4E9C87] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow">
+            Más Recomendado
+          </span>
+          <div>
+            <div class="mb-4">
+              <span class="text-[10px] text-[#4E9C87] font-bold uppercase tracking-widest">Experiencia Completa</span>
+              <h3 class="text-2xl font-serif font-bold text-[#4E9C87] mt-1">Premium</h3>
+            </div>
+            <div class="mb-6">
+              <span class="text-3xl sm:text-4xl font-extrabold text-[#242928]">$699</span>
+              <span class="text-xs text-[#596562] uppercase tracking-wider">MXN</span>
+              <p class="text-[11px] text-[#4E9C87] font-medium mt-1">Todo lo necesario para bodas y XV</p>
+            </div>
+            <hr class="border-[#E5E0D8] mb-6">
+            <ul class="text-xs text-[#596562] space-y-3 font-light">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span><strong>Todo lo del plan Esencial</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span><strong>RSVP Inteligente con Pases Asignados</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span><strong>Organizador de Mesas Drag & Drop</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Control de Accesos con Código QR</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Música de Fondo & Sugerencias para DJ</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#4E9C87] text-sm">check_circle</span>
+                <span>Álbum de Fotos & Panel de Anfitrión</span>
+              </li>
+            </ul>
+          </div>
+          <div class="pt-8">
+            <a href="https://pago.clip.mx/ee494ddf-d012-4d6f-ab65-5f1571dbe11f" target="_blank" class="w-full text-center block bg-[#4E9C87] hover:bg-[#377061] text-white px-6 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-lg shadow-[#4E9C87]/25">
+              Contratar Premium
+            </a>
+          </div>
+        </div>
+
+        <!-- Plan 3: Platinum -->
+        <div class="bg-white rounded-3xl border border-[#E5E0D8] p-8 shadow-sm flex flex-col justify-between hover:shadow-lg transition-all duration-300 reveal" style="transition-delay: 0.2s;">
+          <div>
+            <div class="mb-4">
+              <span class="text-[10px] text-[#C5A059] font-bold uppercase tracking-widest">Exclusividad Total</span>
+              <h3 class="text-2xl font-serif font-bold text-[#242928] mt-1">Platinum</h3>
+            </div>
+            <div class="mb-6">
+              <span class="text-3xl sm:text-4xl font-extrabold text-[#242928]">$999</span>
+              <span class="text-xs text-[#596562] uppercase tracking-wider">MXN</span>
+              <p class="text-[11px] text-[#596562] mt-1">Con dominio web personalizado</p>
+            </div>
+            <hr class="border-[#E5E0D8] mb-6">
+            <ul class="text-xs text-[#596562] space-y-3 font-light">
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#C5A059] text-sm">star</span>
+                <span><strong>Todo lo incluido en Premium</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#C5A059] text-sm">star</span>
+                <span><strong>Dominio Propio (.com / .mx)</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#C5A059] text-sm">star</span>
+                <span>Diseño y Paleta de Colores a la Medida</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#C5A059] text-sm">star</span>
+                <span>Soporte Prioritario VIP 24/7</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#C5A059] text-sm">star</span>
+                <span>Carga de invitados y apoyo logístico</span>
+              </li>
+            </ul>
+          </div>
+          <div class="pt-8">
+            <a href="https://pago.clip.mx/12b42e94-8a5d-4b69-9878-9d1b24635736" target="_blank" class="w-full text-center block border-2 border-[#242928] hover:border-[#C5A059] hover:bg-[#C5A059] text-[#242928] hover:text-white px-6 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300">
+              Contratar Platinum
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE PREGUNTAS FRECUENTES (FAQ ACCORDION ESTILO AMO INVITAR) -->
+  <section id="faq" class="py-24 bg-white border-t border-[#E5E0D8]">
+    <div class="max-w-4xl mx-auto px-6 lg:px-12">
+      
+      <div class="text-center mb-16 reveal">
+        <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Dudas Comunes</span>
+        <h2 class="text-4xl lg:text-5xl font-normal text-[#242928] mb-4">
+          Preguntas <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">Frecuentes</span>
+        </h2>
+        <p class="text-sm sm:text-base text-[#596562] font-light">
+          Todo lo que necesitas saber antes de solicitar tu invitación.
+        </p>
+      </div>
+
+      <!-- Accordion List -->
+      <div class="space-y-4 reveal" id="faqAccordion">
+
+        <!-- Item 1 -->
+        <div class="border border-[#E5E0D8] rounded-2xl overflow-hidden bg-[#FAF8F5] transition-colors">
+          <button class="w-full text-left p-6 font-medium text-base text-[#242928] flex justify-between items-center gap-4 faq-toggle focus:outline-none">
+            <span class="font-semibold">¿El precio es por cantidad de invitados?</span>
+            <span class="material-symbols-outlined text-[#4E9C87] transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="px-6 pb-6 text-xs sm:text-sm text-[#596562] leading-relaxed hidden faq-content font-light">
+            No. El precio es único por tu evento completo. Puedes enviar tu invitación a 50, 200 o 500 invitados sin ningún costo extra y cuantas veces sea necesario.
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="border border-[#E5E0D8] rounded-2xl overflow-hidden bg-[#FAF8F5] transition-colors">
+          <button class="w-full text-left p-6 font-medium text-base text-[#242928] flex justify-between items-center gap-4 faq-toggle focus:outline-none">
+            <span class="font-semibold">¿Cómo me entero de quién confirmó su asistencia?</span>
+            <span class="material-symbols-outlined text-[#4E9C87] transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="px-6 pb-6 text-xs sm:text-sm text-[#596562] leading-relaxed hidden faq-content font-light">
+            En tu <strong>Portal de Anfitrión</strong> exclusivo ves en tiempo real cada confirmación, comentarios de los invitados, alergias y canciones sugeridas. Además, puedes descargar la lista final en formato Excel con un solo clic.
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="border border-[#E5E0D8] rounded-2xl overflow-hidden bg-[#FAF8F5] transition-colors">
+          <button class="w-full text-left p-6 font-medium text-base text-[#242928] flex justify-between items-center gap-4 faq-toggle focus:outline-none">
+            <span class="font-semibold">¿En cuánto tiempo está lista mi invitación?</span>
+            <span class="material-symbols-outlined text-[#4E9C87] transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="px-6 pb-6 text-xs sm:text-sm text-[#596562] leading-relaxed hidden faq-content font-light">
+            Generalmente tu invitación queda lista en un plazo de <strong>24 a 48 horas hábiles</strong> una vez que nos compartes los datos e imágenes en el portal de personalización.
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="border border-[#E5E0D8] rounded-2xl overflow-hidden bg-[#FAF8F5] transition-colors">
+          <button class="w-full text-left p-6 font-medium text-base text-[#242928] flex justify-between items-center gap-4 faq-toggle focus:outline-none">
+            <span class="font-semibold">¿Puedo personalizar la música, fotos y colores?</span>
+            <span class="material-symbols-outlined text-[#4E9C87] transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="px-6 pb-6 text-xs sm:text-sm text-[#596562] leading-relaxed hidden faq-content font-light">
+            ¡Totalmente! Puedes subir tu canción favorita en MP3, tus fotos de sesión de novios o quinceañera, ajustar el itinerario, los datos bancarios y quitar o añadir las secciones que necesites.
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="border border-[#E5E0D8] rounded-2xl overflow-hidden bg-[#FAF8F5] transition-colors">
+          <button class="w-full text-left p-6 font-medium text-base text-[#242928] flex justify-between items-center gap-4 faq-toggle focus:outline-none">
+            <span class="font-semibold">¿Cuánto tiempo permanece activa mi invitación en línea?</span>
+            <span class="material-symbols-outlined text-[#4E9C87] transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="px-6 pb-6 text-xs sm:text-sm text-[#596562] leading-relaxed hidden faq-content font-light">
+            Tu invitación estará activa desde el momento de su publicación y durante al menos <strong>3 meses posteriores</strong> a la fecha de tu evento para que tus invitados sigan consultando recuerdos y fotos.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BANNER CTA FINAL -->
+  <section class="salvia-gradient-banner py-16 text-white text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl sm:text-4xl font-normal mb-4">
+        Haz que tu evento sea <span class="font-script text-5xl sm:text-6xl text-[#FAF3E7]">inolvidable</span> desde el primer mensaje
+      </h2>
+      <p class="text-white/90 text-sm sm:text-base font-light max-w-xl mx-auto mb-8">
+        Comienza hoy mismo y sorprende a tus invitados con una experiencia digital que recordarán siempre.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#precios" class="bg-white hover:bg-[#FAF8F5] text-[#377061] font-bold px-8 py-4 rounded-full text-xs uppercase tracking-widest shadow-lg transition-all duration-300">
+          Elegir Mi Plan
+        </a>
+        <a href="https://wa.me/?text=Hola%20Invitta,%20quiero%20iniciar%20mi%20invitaci%C3%B3n%20digital" target="_blank" class="border-2 border-white hover:bg-white/10 text-white font-bold px-8 py-3.5 rounded-full text-xs uppercase tracking-widest transition-all duration-300 flex items-center gap-2">
+          <span>Consultar por WhatsApp</span>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="bg-[#2E2E2E] py-16 text-center border-t border-[#3A3A3A]">
-    <div class="flex justify-center items-baseline gap-1 mb-6">
-      <span class="font-serif italic text-3xl text-[#C9877D] leading-none">In</span>
-      <span class="font-serif text-3xl text-white leading-none">vitta</span>
-      <span class="font-sans text-[9px] text-[#A09A94] tracking-[0.2em] font-medium ml-1 uppercase">2.0</span>
+  <footer class="bg-[#1C201F] py-16 text-center border-t border-[#2A2A2A] text-white/70">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex justify-center items-center gap-1.5 mb-6">
+        <span class="font-script text-4xl text-[#4E9C87] leading-none">In</span>
+        <span class="font-serif text-3xl font-semibold text-white leading-none">vitta</span>
+        <span class="text-[9px] bg-white/10 text-white px-2 py-0.5 rounded-full uppercase tracking-widest font-mono ml-1">2.0</span>
+      </div>
+      
+      <div class="flex justify-center flex-wrap gap-8 mb-8 text-xs font-semibold uppercase tracking-wider">
+        <a href="#inicio" class="hover:text-white transition-colors">Inicio</a>
+        <a href="#celebraciones" class="hover:text-white transition-colors">Eventos</a>
+        <a href="#funciones" class="hover:text-white transition-colors">Funciones</a>
+        <a href="#muestras" class="hover:text-white transition-colors">Modelos</a>
+        <a href="#precios" class="hover:text-white transition-colors">Precios</a>
+        <a href="portal.html" class="hover:text-white transition-colors">Portal de Clientes</a>
+      </div>
+
+      <p class="text-xs text-white/50 font-light">
+        © 2026 Invitta 2.0. Plataforma de Invitaciones Digitales de Lujo y Logística de Eventos.
+      </p>
     </div>
-    <div class="flex justify-center gap-6 mb-8">
-       <a href="portal.html" class="text-xs text-[#A09A94] uppercase tracking-widest hover:text-white transition-colors">Portal Clientes</a>
-       <a href="mailto:hola@invitta.mx" class="text-xs text-[#A09A94] uppercase tracking-widest hover:text-white transition-colors">Contacto</a>
-    </div>
-    <p class="text-[10px] text-[#6B6560] font-medium tracking-widest uppercase">
-      © 2026 Invitta Digital. Todos los derechos reservados.
-    </p>
   </footer>
 
+  <!-- BOTÓN FLOTANTE DE WHATSAPP (ESTILO AMO INVITAR) -->
+  <a href="https://wa.me/?text=Hola%20Invitta,%20me%20gustar%C3%ADa%20informaci%C3%B3n%20sobre%20las%20invitaciones%20digitales" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20ba59] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl pulse-wa transition-transform hover:scale-110" title="Contactar por WhatsApp">
+    <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+    </svg>
+  </a>
+
+  <!-- SCRIPTS DE INTERACTIVIDAD -->
   <script>
-    // Parallax & Reveal animations
     document.addEventListener('DOMContentLoaded', () => {
+      // 1. Reveal Elements on Scroll
       const reveals = document.querySelectorAll('.reveal');
-      const parallaxImages = document.querySelectorAll('.image-parallax');
-      
       const revealOnScroll = () => {
         const windowHeight = window.innerHeight;
-        const elementVisible = 100;
-        
+        const revealPoint = 70;
         reveals.forEach(reveal => {
           const elementTop = reveal.getBoundingClientRect().top;
-          if (elementTop < windowHeight - elementVisible) {
+          if (elementTop < windowHeight - revealPoint) {
             reveal.classList.add('active');
           }
         });
       };
-      
-      // Initial check
       revealOnScroll();
-      
-      // Scroll event
-      window.addEventListener('scroll', () => {
-        revealOnScroll();
-        
-        // Parallax simple
-        const scrollY = window.scrollY;
-        parallaxImages.forEach((img, index) => {
-          const speed = index === 0 ? 0.05 : 0.02;
-          img.style.transform = `translateY(${scrollY * speed}px)`;
+      window.addEventListener('scroll', revealOnScroll, { passive: true });
+
+      // 2. FAQ Accordion Functionality
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const content = toggle.nextElementSibling;
+          const icon = toggle.querySelector('.faq-icon');
+          const isHidden = content.classList.contains('hidden');
+
+          // Close all other items
+          document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+          document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+          if (isHidden) {
+            content.classList.remove('hidden');
+            icon.style.transform = 'rotate(180deg)';
+          }
         });
-      }, { passive: true });
+      });
     });
   </script>
+
 </body>
 </html>
