@@ -68,6 +68,7 @@ const PLANS = {
 
 // [C-2] Dominios permitidos para CORS
 const ALLOWED_ORIGINS = [
+  'https://invitta-2-0.vercel.app',
   'https://invitta-v2-production.vercel.app',
   'https://invitta.vercel.app',
   'http://localhost:8080',
@@ -235,7 +236,7 @@ module.exports = async function handler(req, res) {
       redirection_url: {
         success: `${baseUrl}/pago-exitoso.html?provider=clip&plan=${selectedPlan.id}`,
         error: `${baseUrl}/pago-pendiente.html?status=error&provider=clip`,
-        default: `${baseUrl}/landing.html`
+        default: `${baseUrl}/index.html`
       },
       webhook_url: `${baseUrl}/api/webhooks/clip${webhookSecret}`,
       metadata: {

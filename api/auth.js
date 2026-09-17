@@ -1,4 +1,5 @@
 const ALLOWED_ORIGINS = [
+  'https://invitta-2-0.vercel.app',
   'https://invitta-v2-production.vercel.app',
   'https://invitta.vercel.app',
   'http://localhost:8080',
