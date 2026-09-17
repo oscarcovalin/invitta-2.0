@@ -212,8 +212,7 @@ module.exports = async function handler(req, res) {
   } else if (selectedPlan.id === 'premium') {
     businessClipLink = 'https://pago.clip.mx/ee494ddf-d012-4d6f-ab65-5f1571dbe11f';
   } else if (selectedPlan.id === 'vip' || selectedPlan.id === 'platinum') {
-    // Si se configura un nuevo enlace de Clip en Vercel env se utiliza, sino fallback directo a WhatsApp
-    businessClipLink = process.env.CLIP_VIP_LINK || getWhatsAppFallback();
+    businessClipLink = process.env.CLIP_VIP_LINK || 'https://pago.clip.mx/v3/a0ad265f-0dc1-4090-94a4-85a9eaeee638';
   }
 
   if (!clipApiKey) {
