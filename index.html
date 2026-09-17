@@ -401,196 +401,205 @@
     </div>
   </section>
 
-  <!-- SECCIÓN DE FUNCIONES (EL FAMOSO GRID DE 16 CAPACIDADES DE AMO INVITAR) -->
-  <section id="funciones" class="py-24 bg-[#FAF8F5]">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+  <!-- SECCIÓN DE FUNCIONES (ESTILO EXACTO AMO INVITAR) -->
+  <section id="funciones" class="py-24 relative overflow-hidden" style="background-color: #4E9C87; background-image: linear-gradient(135deg, rgba(78, 156, 135, 0.94), rgba(58, 122, 105, 0.96)), url('assets/botanical-garland.jpg'); background-size: cover; background-position: center;">
+    
+    <!-- Subtle Botanical Leaf Accents in corners like the screenshot -->
+    <div class="absolute -top-12 -left-12 w-64 h-64 opacity-15 pointer-events-none">
+      <img src="assets/botanical-garland.jpg" alt="" class="w-full h-full object-cover rounded-full filter blur-sm">
+    </div>
+    <div class="absolute -bottom-12 -right-12 w-64 h-64 opacity-15 pointer-events-none">
+      <img src="assets/botanical-garland.jpg" alt="" class="w-full h-full object-cover rounded-full filter blur-sm">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
       
-      <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-        <span class="text-xs text-[#4E9C87] font-bold tracking-[0.25em] uppercase mb-2 block">Todo Incluido</span>
-        <h2 class="text-4xl lg:text-5xl font-normal text-[#242928] mb-4">
-          Funciones <span class="font-script text-5xl lg:text-6xl text-[#4E9C87] pr-1">prácticas</span> y modernas
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-4xl sm:text-5xl font-normal text-white mb-3">
+          Funciones
         </h2>
-        <p class="text-sm sm:text-base text-[#596562] font-light">
-          Diseñadas para que tus invitados interactúen y tú tengas control total de tu evento.
+        <p class="text-white font-medium text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+          Prácticas y modernas. Las principales funciones y secciones de nuestras invitaciones digitales.
         </p>
+        <div class="w-full max-w-4xl mx-auto mt-6 border-b border-white/30"></div>
       </div>
 
-      <!-- 16 Functional Unit Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- 16 Functional Unit Items Grid (Direct on green background, solid black icons & titles, white descriptions) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 text-center">
 
-        <!-- 1. RSVP Digital -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">how_to_reg</span>
+        <!-- 1. RSVP DIGITAL -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">event_available</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">RSVP Digital</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Tus invitados confirman asistencia en línea con 1 clic. Respuestas centralizadas en tu panel de control.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">RSVP DIGITAL</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Los invitados van a poder confirmar su asistencia online con un click, administrando la lista desde el panel privado exclusivo.
           </p>
         </div>
 
-        <!-- 2. Lista y Pases -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">badge</span>
+        <!-- 2. LISTA DE INVITADOS -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">group</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Pases Personalizados</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Cada invitado o familia recibe su pase con su nombre exacto y el número de acompañantes asignados.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">LISTA DE INVITADOS</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Con la lista de asistentes, cada invitado puede tener una invitación personalizada con su nombre, pases adicionales y número de mesa.
           </p>
         </div>
 
-        <!-- 3. Ubicación Google Maps -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">distance</span>
+        <!-- 3. AGENDA -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">calendar_month</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Ubicación GPS</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Botones directos para abrir la iglesia y el salón en Google Maps o Waze con indicaciones paso a paso.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">AGENDA</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Tus invitados podrán agendar cada momento de tu evento con un solo clic en sus agendas digitales, incluyendo el horario y ubicación.
           </p>
         </div>
 
-        <!-- 4. Cuenta Regresiva -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#4E9C87] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">alarm_on</span>
+        <!-- 4. UBICACIÓN -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">map</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Cuenta Regresiva</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Cronómetro en tiempo real con días, horas y minutos que faltan para el gran día, generando expectativa.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">UBICACIÓN</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Nadie se va a perder, tus invitados van a acceder a la ubicación del evento con Google Maps integrado y con indicaciones.
           </p>
         </div>
 
-        <!-- 5. Música de Fondo -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
-          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">music_note</span>
+        <!-- 5. ENVÍO ILIMITADO -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">send</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Música de Fondo</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Elige la canción especial para que suene de fondo con un reproductor elegante y botón play/pausa.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">ENVÍO ILIMITADO</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Se paga una vez y se puede enviar a tantos invitados como necesites, desde WhatsApp, email, redes, etc.
           </p>
         </div>
 
-        <!-- 6. Organizador de Mesas -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">table_restaurant</span>
+        <!-- 6. ITINERARIO -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">timeline</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Organizador de Mesas</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">ITINERARIO</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Podrás anunciar cada momento importante y cada actividad del evento, en una línea de tiempo, paso a paso.
+          </p>
+        </div>
+
+        <!-- 7. CUENTA REGRESIVA -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">timer</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">CUENTA REGRESIVA</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Cuenta los días, horas, minutos y segundos que faltan para el inicio del evento, generando más expectativa y emoción.
+          </p>
+        </div>
+
+        <!-- 8. REGALOS -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">featured_seasonal_and_gifts</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">REGALOS</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Podrás recibir regalos en una cuenta bancaria o billetera virtual y sumar también una lista de regalos.
+          </p>
+        </div>
+
+        <!-- 9. ÁLBUM DE FOTOS -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">photo_library</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">ÁLBUM DE FOTOS</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Comparte con los invitados las fotos que más te gusten o las de la sesión de fotos previa, para personalizar la invitación.
+          </p>
+        </div>
+
+        <!-- 10. SUGERENCIAS DE CANCIONES -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">music_note</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">SUGERENCIAS DE CANCIONES</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Los invitados pueden participar, permitiendo que envíen sugerencias de canciones que no pueden faltar en la fiesta.
+          </p>
+        </div>
+
+        <!-- 11. INSTAGRAM WALL -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">tag</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">INSTAGRAM WALL</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Con el hashtag personalizado, tú y tus invitados podrán etiquetar todas las fotos del evento que suban a Instagram y visualizarlas en un solo lugar.
+          </p>
+        </div>
+
+        <!-- 12. COMPARTIR FOTOS -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">photo_camera</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">COMPARTIR FOTOS</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Los invitados pueden cargar en la nube, las fotos y videos que vayan tomando durante el evento.
+          </p>
+        </div>
+
+        <!-- 13. ORGANIZADOR DE MESAS -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">table_restaurant</span>
+          </div>
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">ORGANIZADOR DE MESAS</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
             Plano 2D interactivo Drag & Drop para ubicar a tus invitados y descargar listas directas para el banquetero.
           </p>
         </div>
 
-        <!-- 7. Itinerario del Evento -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">timeline</span>
+        <!-- 14. DRESS CODE -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">checkroom</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Itinerario Completo</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Línea de tiempo detallada: ceremonia, recepción, vals, cena y fiesta para que nadie se pierda nada.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">DRESS CODE</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Indica claramente a los invitados el código de vestimenta elegido para tu celebración con paleta sugerida.
           </p>
         </div>
 
-        <!-- 8. Mesa de Regalos -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#FAF3E7] text-[#C5A059] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">featured_seasonal_and_gifts</span>
+        <!-- 15. CONTROL DE ACCESOS QR -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">qr_code_scanner</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Mesa de Regalos</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Muestra enlaces a tus mesas de regalos (Liverpool, Amazon) o datos bancarios y sobre de lluvia de sobres.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">CONTROL DE ACCESOS</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Pase digital con código QR para recepcionistas en puerta, garantizando seguridad y evitando colados.
           </p>
         </div>
 
-        <!-- 9. Álbum de Fotos -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
-          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">photo_library</span>
+        <!-- 16. PANEL PROPIETARIO -->
+        <div class="flex flex-col items-center">
+          <div class="text-black mb-3">
+            <span class="material-symbols-outlined text-[52px] leading-none">dashboard</span>
           </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Álbum Digital</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Galería fotográfica de tu sesión previa o de pareja con visualizador de pantalla completa de alta calidad.
-          </p>
-        </div>
-
-        <!-- 10. Sugerencia de Canciones -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">queue_music</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Canciones para DJ</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Tus invitados te sugieren las canciones que no pueden faltar en la pista de baile antes de la fiesta.
-          </p>
-        </div>
-
-        <!-- 11. Dress Code -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">checkroom</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Código de Vestimenta</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Indica claramente si el evento es Rigurosa Etiqueta, Formal o Guayabera, con paleta de colores reservada.
-          </p>
-        </div>
-
-        <!-- 12. Padrinos y Corte -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#FBF0EE] text-[#F27852] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">diversity_1</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Corte y Padrinos</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Reconoce con cariño a tus padres, padrinos de velación, anillos, damas de honor y chambelanes.
-          </p>
-        </div>
-
-        <!-- 13. Control QR de Accesos -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">qr_code_scanner</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Control de Acceso QR</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Pase digital con código QR único para recepcionistas, evitando colados y agilizando la entrada.
-          </p>
-        </div>
-
-        <!-- 14. Envíos Ilimitados -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.05s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">share</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Envíos Ilimitados</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Sin límites ni cobros por invitado adicional. Envías tantas invitaciones como desees por WhatsApp.
-          </p>
-        </div>
-
-        <!-- 15. Menú y Restricciones -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.1s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">restaurant</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Menú y Dietas</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Recopila alergias, opciones vegetarianas o menú infantil de tus invitados antes de ordenar el banquete.
-          </p>
-        </div>
-
-        <!-- 16. Panel de Control -->
-        <div class="bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm hover:shadow-md hover:border-[#4E9C87] transition-all duration-300 reveal" style="transition-delay: 0.15s;">
-          <div class="w-12 h-12 rounded-2xl bg-[#EBF5F2] text-[#377061] flex items-center justify-center mb-4">
-            <span class="material-symbols-outlined text-2xl">dashboard</span>
-          </div>
-          <h3 class="text-base font-bold text-[#242928] mb-2 uppercase tracking-wide">Panel de Anfitrión</h3>
-          <p class="text-xs text-[#596562] leading-relaxed">
-            Administra todo desde tu móvil: estadísticas de confirmación, descarga de Excel y edición en tiempo real.
+          <h3 class="text-black font-bold uppercase tracking-[0.16em] text-sm mb-2.5">PANEL PROPIETARIO</h3>
+          <p class="text-white text-xs sm:text-[13px] font-light leading-relaxed max-w-xs">
+            Personalización de la invitación, envío con un clic, gestión de invitados, descargar lista en Excel y mucho más.
           </p>
         </div>
 
