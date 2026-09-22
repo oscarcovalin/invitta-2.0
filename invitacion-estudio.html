@@ -38,9 +38,9 @@
     </div>
 
     <!-- Live Sync Status Pill -->
-    <div class="sync-indicator" id="syncStatusIndicator" title="Todos los cambios se procesan en tiempo real">
+    <div class="sync-indicator" id="syncStatusIndicator" title="La vista previa se actualiza en esta página; guardar en nube es una acción separada">
       <span class="sync-dot"></span>
-      <span id="syncStatusText">Sincronizado</span>
+      <span id="syncStatusText" role="status" aria-live="polite">Vista local</span>
     </div>
 
     <div class="header-actions">
@@ -2048,6 +2048,7 @@
   <script src="decor-assets.js"></script>
   <script src="projects-vault.js"></script>
   <script src="template-engine.js"></script>
+  <script src="invitation-document-adapter.js"></script>
   <script src="app.js"></script>
   <script>
     window.closeHostProtectedModal = function() {

@@ -1,4 +1,6 @@
-const { INVITATION_SCHEMA_VERSION } = require('./invitation-document.js');
+const INVITATION_SCHEMA_VERSION = typeof module === 'object' && module.exports
+  ? require('./invitation-document.js').INVITATION_SCHEMA_VERSION
+  : 1;
 
 const EVENT_TYPES_TO_CANONICAL = { boda: 'wedding', xv: 'quinceanera' };
 const EVENT_TYPES_TO_LEGACY = { wedding: 'boda', quinceanera: 'xv', other: 'other' };
@@ -108,4 +110,6 @@ function toLegacyTemplateConfig(document) {
   return config;
 }
 
-module.exports = { fromLegacyTemplateConfig, toLegacyTemplateConfig };
+const InvitationDocumentAdapter = { fromLegacyTemplateConfig, toLegacyTemplateConfig };
+if (typeof module === 'object' && module.exports) module.exports = InvitationDocumentAdapter;
+else if (typeof window !== 'undefined') window.InvitationDocumentAdapter = InvitationDocumentAdapter;

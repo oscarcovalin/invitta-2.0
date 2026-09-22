@@ -1,5 +1,8 @@
 
 let currentProjectId = null;
+let requestedCloudProjectId = null;
+let loadedCloudRevision = null;
+let cloudLoadError = false;
 
 /**
  * Lógica principal del Dashboard Generador de Invitaciones de Lujo (XV Años & Bodas)
@@ -12,9 +15,37 @@ let customTheme = JSON.parse(JSON.stringify(TemplateEngine.defaultThemes.vino));
 let debounceTimer = null;
 let currentVipUrl = "";
 
+async function loadCloudProject() {
+  if (!requestedCloudProjectId) return;
+  const status = document.getElementById('syncStatusText');
+  if (status) status.textContent = 'Cargando proyecto...';
+  try {
+    const response = await fetch(`/api/projects/latest-revision?projectId=${encodeURIComponent(requestedCloudProjectId)}`);
+    const result = await response.json();
+    const savedDocument = result && result.revision && result.revision.document;
+    if (!response.ok || !savedDocument || savedDocument.projectId !== requestedCloudProjectId) {
+      throw new Error('La revisión no está disponible para esta cuenta.');
+    }
+    if (!window.InvitationDocumentAdapter) throw new Error('El adaptador de invitaciones no está disponible.');
+    currentConfig = window.InvitationDocumentAdapter.toLegacyTemplateConfig(savedDocument);
+    currentProjectId = requestedCloudProjectId;
+    loadedCloudRevision = result.revision.revision;
+    currentThemeName = currentConfig.theme || 'vino';
+    customTheme = JSON.parse(JSON.stringify(TemplateEngine.defaultThemes[currentThemeName] || TemplateEngine.defaultThemes.vino));
+    if (status) status.textContent = `Revisión ${result.revision.revision} cargada`;
+  } catch (error) {
+    cloudLoadError = true;
+    if (status) status.textContent = 'Sin acceso a la revisión en nube';
+    showToast(error.message || 'No fue posible cargar el proyecto.');
+  }
+}
+
 (function initVaultProject() {
   const urlParams = new URLSearchParams(window.location.search);
   const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(projId || '')) {
+    requestedCloudProjectId = projId;
+  }
   if (projId && typeof ProjectsVault !== 'undefined') {
     const proj = ProjectsVault.getById(projId);
     if (proj && proj.config) {
@@ -27,7 +58,7 @@ let currentVipUrl = "";
 })();
 
 // ==================== INICIALIZACIÓN ====================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   setupAccordion();
   setupDeviceSwitcher();
   setupThemePicker();
@@ -48,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupHeaderActions();
   setupInputListeners();
 
+  await loadCloudProject();
   populateForm();
   updatePreview(true);
 });
@@ -2625,7 +2657,7 @@ function setupFileUploads() {
 // ==================== PREVIEW GENERATOR ====================
 function schedulePreviewUpdate() {
   const syncText = document.getElementById('syncStatusText');
-  if (syncText) syncText.textContent = 'Sincronizando...';
+  if (syncText && !cloudLoadError) syncText.textContent = 'Actualizando vista...';
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
     updatePreview(false);
@@ -2638,7 +2670,11 @@ function updatePreview(forced = false) {
   const html = TemplateEngine.generateHTML(currentConfig, currentThemeName, customTheme, decorAssets);
   iframe.srcdoc = html;
   const syncText = document.getElementById('syncStatusText');
-  if (syncText) syncText.textContent = 'Sincronizado';
+  if (syncText && !cloudLoadError) {
+    syncText.textContent = loadedCloudRevision
+      ? `Vista actualizada · revisión ${loadedCloudRevision} cargada`
+      : 'Vista actualizada · sin guardar en nube';
+  }
 }
 
 // ==================== HEADER ACTIONS & EXPORT ====================
