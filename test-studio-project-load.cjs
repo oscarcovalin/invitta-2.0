@@ -40,6 +40,7 @@ const context = {
 
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
+vm.runInContext(fs.readFileSync('./project-asset-client.js', 'utf8'), context);
 assert.doesNotThrow(() => vm.runInContext(initialization, context));
 assert.strictEqual(vm.runInContext('currentProjectId', context), projectId);
 assert.strictEqual(vm.runInContext('currentConfig.name', context), 'Proyecto guardado');

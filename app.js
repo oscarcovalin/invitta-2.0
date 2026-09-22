@@ -30,7 +30,9 @@ async function loadCloudProject() {
       throw new Error('La revisión no está disponible para esta cuenta.');
     }
     if (!window.InvitationDocumentAdapter) throw new Error('El adaptador de invitaciones no está disponible.');
-    currentConfig = window.InvitationDocumentAdapter.toLegacyTemplateConfig(savedDocument);
+    currentConfig = window.ProjectAssetClient.toDisplayConfig(
+      window.InvitationDocumentAdapter.toLegacyTemplateConfig(savedDocument)
+    );
     currentProjectId = requestedCloudProjectId;
     loadedCloudRevision = result.revision.revision;
     savedCloudDocumentId = result.revision.id || null;
@@ -2682,6 +2684,7 @@ function updatePreview(forced = false) {
     syncText.textContent = loadedCloudRevision
       ? `Vista actualizada · revisión ${loadedCloudRevision}${cloudDirty ? ' · cambios sin guardar' : ' guardada'}`
       : 'Vista actualizada · sin guardar en nube';
+  }
 }
 
 function setupCloudActions() {
@@ -2694,14 +2697,24 @@ function setupCloudActions() {
   saveButton.addEventListener('click', async () => {
     if (cloudLoadError) return showToast('No se puede guardar: primero resuelve el acceso al proyecto.');
     const configAtSave = JSON.stringify(currentConfig);
-    const { document: invitation, pendingAssets } = window.InvitationDocumentAdapter.fromLegacyTemplateConfig(
-      currentConfig, { projectId: requestedCloudProjectId, revision: (loadedCloudRevision || 0) + 1 }
-    );
-    if (pendingAssets.length) {
-      return showToast(`Hay ${pendingAssets.length} imagen(es) externas o incrustadas sin migrar. Descarga el JSON como respaldo; no se guardó una revisión incompleta.`);
-    }
     saveButton.disabled = true;
     try {
+      const storedConfig = await window.ProjectAssetClient.toStoredConfig(currentConfig, {
+        projectId: requestedCloudProjectId,
+        upload: async (asset) => {
+          const uploadResponse = await fetch('/api/projects/upload-asset', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+            body: JSON.stringify(asset)
+          });
+          const uploadResult = await uploadResponse.json();
+          if (!uploadResponse.ok || !uploadResult.asset) throw new Error(uploadResult.error || 'No se pudo subir la imagen.');
+          return uploadResult.asset;
+        }
+      });
+      const { document: invitation, pendingAssets } = window.InvitationDocumentAdapter.fromLegacyTemplateConfig(
+        storedConfig, { projectId: requestedCloudProjectId, revision: (loadedCloudRevision || 0) + 1 }
+      );
+      if (pendingAssets.length) throw new Error('Quedan archivos sin migrar; no se guardó una revisión incompleta.');
       const response = await fetch('/api/projects/save-revision', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
         body: JSON.stringify({ document: invitation, expectedRevision: loadedCloudRevision || 0 })
@@ -2710,8 +2723,13 @@ function setupCloudActions() {
       if (!response.ok || !result.revision || !result.revision.id) throw new Error(result.error || 'No se pudo guardar.');
       loadedCloudRevision = result.revision.revision;
       savedCloudDocumentId = result.revision.id;
-      cloudDirty = JSON.stringify(currentConfig) !== configAtSave;
-      savedCloudConfig = configAtSave;
+      const savedDisplayConfig = window.ProjectAssetClient.toDisplayConfig(storedConfig);
+      if (JSON.stringify(currentConfig) === configAtSave) {
+        currentConfig = savedDisplayConfig;
+        populateForm();
+      }
+      savedCloudConfig = JSON.stringify(savedDisplayConfig);
+      cloudDirty = JSON.stringify(currentConfig) !== savedCloudConfig;
       updatePreview(false);
       showToast(`Revisión ${loadedCloudRevision} guardada en nube.`);
     } catch (error) {
@@ -2740,7 +2758,6 @@ function setupCloudActions() {
       publishButton.disabled = false;
     }
   });
-}
 }
 
 // ==================== HEADER ACTIONS & EXPORT ====================

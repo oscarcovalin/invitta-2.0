@@ -1064,3 +1064,5 @@ input[type="range"]::-webkit-slider-thumb:hover {
   opacity: 1;
   pointer-events: auto;
 }
+/* Keep cloud actions out of the local-only editor regardless of .btn display rules. */
+.header-actions button[hidden] { display: none !important; }
