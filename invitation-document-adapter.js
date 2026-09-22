@@ -18,6 +18,35 @@ function fromLegacyTemplateConfig(config, { projectId, revision = 1 } = {}) {
   const visibility = config.sectionVisibility || {};
   const assets = {};
   const pendingAssets = [];
+  const legacyConfig = JSON.parse(JSON.stringify(config));
+
+  function isUnmigratedAsset(value, path) {
+    if (typeof value !== 'string') return false;
+    if (/^data:/i.test(value)) return true;
+    const assetPath = path.some((part) => /image|photo|logo|banner|gallery|background|savethedate/i.test(String(part)));
+    return assetPath && /^https?:\/\//i.test(value);
+  }
+
+  function removeInlineAssets(value, path = []) {
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        if (isUnmigratedAsset(item, path)) {
+          pendingAssets.push({ key: [...path, index].join('.'), source: item });
+          value[index] = '';
+        } else if (item && typeof item === 'object') removeInlineAssets(item, [...path, index]);
+      });
+      return;
+    }
+    for (const [key, item] of Object.entries(value)) {
+      if (isUnmigratedAsset(item, [...path, key])) {
+        if (!(path.length === 1 && ASSET_FIELDS.includes(path[0]) && key === 'image')) {
+          pendingAssets.push({ key: [...path, key].join('.'), source: item });
+        }
+        value[key] = '';
+      } else if (item && typeof item === 'object') removeInlineAssets(item, [...path, key]);
+    }
+  }
+  removeInlineAssets(legacyConfig);
 
   for (const key of ASSET_FIELDS) {
     const source = config[key] && config[key].image;
@@ -48,7 +77,7 @@ function fromLegacyTemplateConfig(config, { projectId, revision = 1 } = {}) {
       design: { theme: config.theme || 'vino' },
       sections: sectionOrder.map((id) => ({ id, enabled: visibility[id] !== false })),
       assets,
-      legacy: { source: 'template-engine-v2' }
+      legacy: { source: 'template-engine-v2', config: legacyConfig }
     },
     pendingAssets
   };
@@ -58,6 +87,7 @@ function toLegacyTemplateConfig(document) {
   const content = document.content || {};
   const sections = document.sections || [];
   const config = {
+    ...(document.legacy && document.legacy.config || {}),
     eventType: EVENT_TYPES_TO_LEGACY[document.event && document.event.type] || 'other',
     name: content.title || '',
     brideName: content.primaryName || '',

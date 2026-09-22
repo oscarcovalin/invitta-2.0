@@ -49,4 +49,23 @@ assert.deepStrictEqual(restored.sectionVisibility, legacy.sectionVisibility);
 assert.strictEqual(restored.ceremony.image, legacy.ceremony.image);
 assert.strictEqual(restored.reception.image, '');
 
+const advanced = {
+  ...legacy,
+  typography: { names: 'Bodoni Moda', scale: 1.2 },
+  dressCode: { colors: ['#ab1234'] },
+  photos: { gallery: ['data:image/png;base64,AAAA'] }
+};
+advanced.photos.banner = 'https://images.example.test/banner.webp';
+const advancedResult = fromLegacyTemplateConfig(advanced, {
+  projectId: '20000000-0000-4000-8000-000000000002',
+  revision: 4
+});
+assert.deepStrictEqual(advancedResult.document.legacy.config.typography, advanced.typography);
+assert.deepStrictEqual(advancedResult.document.legacy.config.dressCode, advanced.dressCode);
+assert.strictEqual(advancedResult.document.legacy.config.photos.gallery[0], '');
+assert.strictEqual(advancedResult.document.legacy.config.photos.banner, '');
+assert.ok(advancedResult.pendingAssets.some((item) => item.key === 'photos.gallery.0'));
+assert.ok(advancedResult.pendingAssets.some((item) => item.key === 'photos.banner'));
+assert.deepStrictEqual(toLegacyTemplateConfig(advancedResult.document).typography, advanced.typography);
+
 console.log('Legacy invitation adapter preserves supported fields and quarantines inline assets.');
