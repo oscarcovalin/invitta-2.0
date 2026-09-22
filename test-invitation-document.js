@@ -36,4 +36,10 @@ const invalidResult = validateInvitationDocument(invalid);
 assert.strictEqual(invalidResult.valid, false);
 assert.ok(invalidResult.errors.some((error) => error.includes('Storage')));
 
+const invalidProject = structuredClone(weddingFixture);
+invalidProject.projectId = 'readable-but-not-a-uuid';
+const invalidProjectResult = validateInvitationDocument(invalidProject);
+assert.strictEqual(invalidProjectResult.valid, false);
+assert.ok(invalidProjectResult.errors.some((error) => error.includes('UUID')));
+
 console.log('Invitation document v1 contract is valid.');

@@ -18,12 +18,12 @@ const legacy = {
   theme: 'rosa',
   sectionOrder: ['hero', 'itinerary', 'rsvp'],
   sectionVisibility: { hero: true, itinerary: true, rsvp: false },
-  ceremony: { image: 'projects/project-xv/images/ceremony.webp' },
+  ceremony: { image: '20000000-0000-4000-8000-000000000002/ceremony/30000000-0000-4000-8000-000000000002.webp' },
   reception: { image: 'data:image/png;base64,AAAA' }
 };
 
 const { document, pendingAssets } = fromLegacyTemplateConfig(legacy, {
-  projectId: 'project-xv',
+  projectId: '20000000-0000-4000-8000-000000000002',
   revision: 3
 });
 

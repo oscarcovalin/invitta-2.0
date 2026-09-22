@@ -1,4 +1,5 @@
 const INVITATION_SCHEMA_VERSION = 1;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function validateInvitationDocument(document) {
   const errors = [];
@@ -8,7 +9,7 @@ function validateInvitationDocument(document) {
     return { valid: false, errors: ['Document must be an object.'] };
   }
   if (document.schemaVersion !== INVITATION_SCHEMA_VERSION) errors.push('Unsupported schemaVersion.');
-  if (typeof document.projectId !== 'string' || !document.projectId.trim()) errors.push('projectId is required.');
+  if (!UUID_PATTERN.test(document.projectId || '')) errors.push('projectId must be a valid UUID.');
   if (!Number.isInteger(document.revision) || document.revision < 1) errors.push('revision must be a positive integer.');
   for (const key of requiredObjects) {
     if (!document[key] || typeof document[key] !== 'object' || Array.isArray(document[key])) {

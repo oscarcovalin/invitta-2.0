@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "projectId": "fixture-catalina-julian",
+  "projectId": "20000000-0000-4000-8000-000000000001",
   "revision": 1,
   "event": {
     "type": "wedding",
@@ -29,7 +29,7 @@
   ],
   "assets": {
     "hero": {
-      "storagePath": "projects/fixture-catalina-julian/images/hero.webp",
+      "storagePath": "20000000-0000-4000-8000-000000000001/hero/30000000-0000-4000-8000-000000000001.webp",
       "alt": "Catalina y Julián",
       "mimeType": "image/webp"
     }

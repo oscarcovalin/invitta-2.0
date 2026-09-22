@@ -7,7 +7,11 @@
   "required": ["schemaVersion", "projectId", "revision", "event", "content", "design", "sections", "assets"],
   "properties": {
     "schemaVersion": { "const": 1 },
-    "projectId": { "type": "string", "minLength": 1 },
+    "projectId": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
     "revision": { "type": "integer", "minimum": 1 },
     "event": {
       "type": "object",
