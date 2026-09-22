@@ -51,7 +51,7 @@ function getTimestamp() {
 /**
  * Crea un punto de restauración con nombre o versión
  */
-function createSnapshot(label = 'manual') {
+function createSnapshot(label = 'manual', options = {}) {
   ensureDir(BACKUPS_DIR);
   const timestamp = getTimestamp();
   const safeLabel = String(label).replace(/[^a-zA-Z0-9_.-]/g, '_');
@@ -79,13 +79,14 @@ function createSnapshot(label = 'manual') {
   // Guardar metadata
   fs.writeFileSync(path.join(targetDir, 'manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
 
-  // Crear también un commit y tag en Git si está disponible de forma segura (sin interpolar en shell)
-  try {
-    execFileSync('git', ['add', '.'], { cwd: PROJECT_DIR, stdio: 'ignore' });
-    execFileSync('git', ['commit', '-m', `Snapshot [${safeLabel}]: ${timestamp}`], { cwd: PROJECT_DIR, stdio: 'ignore' });
-    execFileSync('git', ['tag', '-a', `snapshot_${safeLabel}_${Date.now()}`, '-m', safeLabel], { cwd: PROJECT_DIR, stdio: 'ignore' });
-  } catch (e) {
-    // Si no hay cambios en git, continuar
+  if (options.commitToGit === true) {
+    try {
+      execFileSync('git', ['add', '.'], { cwd: PROJECT_DIR, stdio: 'ignore' });
+      execFileSync('git', ['commit', '-m', `Snapshot [${safeLabel}]: ${timestamp}`], { cwd: PROJECT_DIR, stdio: 'ignore' });
+      execFileSync('git', ['tag', '-a', `snapshot_${safeLabel}_${Date.now()}`, '-m', safeLabel], { cwd: PROJECT_DIR, stdio: 'ignore' });
+    } catch (e) {
+      // Si no hay cambios en git, continuar.
+    }
   }
 
   console.log(`✅ Punto de restauración creado con éxito:`);
@@ -180,11 +181,12 @@ function restoreSnapshot(target) {
 }
 
 class BackupManager {
-  constructor() {
+  constructor(options = {}) {
     this.coreFiles = CORE_FILES;
+    this.commitToGit = options.commitToGit === true;
   }
   createSnapshot(label) {
-    return createSnapshot(label);
+    return createSnapshot(label, { commitToGit: this.commitToGit });
   }
   listSnapshots() {
     return listSnapshots();
@@ -201,7 +203,7 @@ if (require.main === module) {
 
   if (command === 'create' || command === 'save') {
     const label = args[1] || 'v5.6_estable';
-    createSnapshot(label);
+    createSnapshot(label, { commitToGit: args.includes('--git') });
   } else if (command === 'list') {
     listSnapshots();
   } else if (command === 'restore') {
