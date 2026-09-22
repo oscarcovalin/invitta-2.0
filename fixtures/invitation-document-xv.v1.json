@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "projectId": "fixture-xv-valentina",
+  "revision": 1,
+  "event": {
+    "type": "quinceanera",
+    "startsAt": "2027-03-20T18:00:00-06:00",
+    "timeZone": "America/Mexico_City",
+    "durationMinutes": 420
+  },
+  "content": {
+    "title": "Mis XV Valentina",
+    "hosts": ["Valentina"],
+    "welcomeMessage": "Acompáñame a celebrar mis quince años.",
+    "itinerary": [
+      { "time": "18:00", "label": "Ceremonia" },
+      { "time": "20:00", "label": "Recepción" },
+      { "time": "21:30", "label": "Vals" }
+    ]
+  },
+  "design": {
+    "theme": "rosa",
+    "nameConnector": ""
+  },
+  "sections": [
+    { "id": "hero", "enabled": true },
+    { "id": "family", "enabled": true },
+    { "id": "itinerary", "enabled": true },
+    { "id": "rsvp", "enabled": true }
+  ],
+  "assets": {}
+}

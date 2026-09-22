@@ -10,8 +10,12 @@ const schema = JSON.parse(fs.readFileSync(
   path.join(__dirname, 'schemas', 'invitation-document.schema.json'),
   'utf8'
 ));
-const fixture = JSON.parse(fs.readFileSync(
+const weddingFixture = JSON.parse(fs.readFileSync(
   path.join(__dirname, 'fixtures', 'invitation-document.v1.json'),
+  'utf8'
+));
+const quinceaneraFixture = JSON.parse(fs.readFileSync(
+  path.join(__dirname, 'fixtures', 'invitation-document-xv.v1.json'),
   'utf8'
 ));
 
@@ -21,10 +25,12 @@ assert.deepStrictEqual(schema.required, [
   'schemaVersion', 'projectId', 'revision', 'event', 'content', 'design', 'sections', 'assets'
 ]);
 
-const result = validateInvitationDocument(fixture);
-assert.strictEqual(result.valid, true, result.errors.join('\n'));
+for (const fixture of [weddingFixture, quinceaneraFixture]) {
+  const result = validateInvitationDocument(fixture);
+  assert.strictEqual(result.valid, true, result.errors.join('\n'));
+}
 
-const invalid = structuredClone(fixture);
+const invalid = structuredClone(weddingFixture);
 invalid.assets.hero = { storagePath: 'data:image/png;base64,AAAA' };
 const invalidResult = validateInvitationDocument(invalid);
 assert.strictEqual(invalidResult.valid, false);
