@@ -1,96 +1,115 @@
-const assert = require("assert");
-const fs = require("fs");
-const { EventVaultManager } = require("./event-vault-manager.js");
-const { AuthManager } = require("./auth-manager.js");
+const assert = require('assert');
+const { AuthManager } = require('./auth-manager.js');
 
-console.log("\n?? Testing Hybrid Authentication & Security Engine...\n");
-let passed = 0;
-function it(desc, fn) {
-  try {
-    fn();
-    console.log("  ? PASS: " + desc);
-    passed++;
-  } catch(e) {
-    console.error("  ? FAIL: " + desc, e.message);
-  }
+console.log('\nTesting server-backed authentication and session handling...\n');
+
+const tests = [];
+function test(description, fn) {
+  tests.push({ description, fn });
 }
 
-const evm = new EventVaultManager();
-const auth = new AuthManager({ evm });
+function response(ok, data) {
+  return { ok, json: async () => data };
+}
 
-// 1. Superadmin Authentication
-it("Superadmin logs in successfully with primary email and master password", () => {
-  const res = auth.loginProfessional("admin@invitta.mx", "invitta2027");
-  assert.strictEqual(res.success, true);
-  assert.strictEqual(res.session.role, "superadmin");
-  assert.strictEqual(res.redirectUrl, "portal.html");
-  assert.ok(res.session.token.startsWith("tok_admin_"));
-});
+test('professional login sends credentials to the auth API and saves its session', async () => {
+  let request;
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return response(true, {
+      success: true,
+      session: { role: 'superadmin', token: 'server-issued-token' },
+      redirectUrl: 'portal.html'
+    });
+  };
 
-it("Superadmin logs in successfully with alias 'admin'", () => {
-  const res = auth.loginProfessional("admin", "invitta2027");
-  assert.strictEqual(res.success, true);
-  assert.strictEqual(res.session.role, "superadmin");
-});
-
-it("Superadmin login fails with wrong password", () => {
-  const res = auth.loginProfessional("admin", "wrongpass123");
-  assert.strictEqual(res.success, false);
-  assert.ok(res.error.includes("Credenciales"));
-});
-
-// 2. Planner B2B Authentication
-it("Planner logs in successfully and retrieves assigned event route", () => {
-  const res = auth.loginProfessional("planner@hacienda.com", "planner123");
-  assert.strictEqual(res.success, true);
-  assert.strictEqual(res.session.role, "planner");
-  assert.ok(res.redirectUrl.includes("event=boda-catalina-julian"));
-  assert.ok(res.redirectUrl.includes("role=planner"));
-});
-
-it("Planner alias 'hacienda' works with correct password", () => {
-  const res = auth.loginProfessional("hacienda", "planner123");
-  assert.strictEqual(res.success, true);
-  assert.strictEqual(res.session.role, "planner");
-});
-
-// 3. Host PIN Authentication
-it("Host logs in with valid Event Code (CATALINA-JULIAN) and 4-digit PIN (4821)", () => {
-  const res = auth.loginHostByPin("CATALINA-JULIAN", "4821");
-  assert.strictEqual(res.success, true);
-  assert.strictEqual(res.session.role, "host_premium");
-  assert.strictEqual(res.event.slug, "boda-catalina-julian");
-  assert.ok(res.redirectUrl.includes("event=boda-catalina-julian"));
-  assert.ok(res.redirectUrl.includes("token=tok_cat_9823"));
-});
-
-it("Host login for Mis XV A�os Valentina with valid PIN (7392)", () => {
-  const res = auth.loginHostByPin("VALENTINA", "7392");
-  assert.strictEqual(res.success, true);
-  assert.strictEqual(res.event.slug, "xv-valentina-2027");
-});
-
-it("Host login fails with wrong PIN", () => {
-  const res = auth.loginHostByPin("CATALINA-JULIAN", "0000");
-  assert.strictEqual(res.success, false);
-  assert.ok(res.error.includes("PIN incorrecto"));
-});
-
-it("Host login fails with non-existent Event Code", () => {
-  const res = auth.loginHostByPin("EVENTO_FANTASMA_XYZ", "1234");
-  assert.strictEqual(res.success, false);
-  assert.ok(res.error.includes("C�digo de evento no encontrado"));
-});
-
-// 4. Session & Logout Lifecycle
-it("Session persists and isSuperadmin helper returns true after admin login", () => {
-  auth.loginProfessional("admin", "invitta2027");
+  const auth = new AuthManager();
+  const result = await auth.loginProfessional('admin@invitta.mx', 'secret');
+  assert.strictEqual(result.success, true);
+  assert.strictEqual(request.url, '/api/auth');
+  assert.deepStrictEqual(JSON.parse(request.options.body), {
+    username: 'admin@invitta.mx',
+    password: 'secret'
+  });
   assert.strictEqual(auth.isSuperadmin(), true);
-  
-  auth.logout();
+});
+
+test('professional login rejects incomplete credentials without calling the API', async () => {
+  let calls = 0;
+  global.fetch = async () => { calls += 1; };
+  const result = await new AuthManager().loginProfessional('', 'secret');
+  assert.strictEqual(result.success, false);
+  assert.strictEqual(calls, 0);
+});
+
+test('professional login exposes the server error without creating a session', async () => {
+  global.fetch = async () => response(false, { error: 'Credenciales inválidas' });
+  const auth = new AuthManager();
+  const result = await auth.loginProfessional('admin', 'wrong');
+  assert.deepStrictEqual(result, { success: false, error: 'Credenciales inválidas' });
+  assert.strictEqual(auth.getCurrentSession(), null);
+});
+
+test('professional login returns a controlled connection error', async () => {
+  global.fetch = async () => { throw new Error('offline'); };
+  const result = await new AuthManager().loginProfessional('admin', 'secret');
+  assert.strictEqual(result.success, false);
+  assert.match(result.error, /conexión/i);
+});
+
+test('host login sends normalized event code and PIN to the login API', async () => {
+  let request;
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return response(true, { success: true });
+  };
+
+  const result = await new AuthManager().loginHostByPin('  CATALINA-JULIAN  ', ' 4821 ');
+  assert.strictEqual(result.success, true);
+  assert.strictEqual(result.eventCode, 'CATALINA-JULIAN');
+  assert.strictEqual(request.url, '/api/login');
+  assert.deepStrictEqual(JSON.parse(request.options.body), {
+    eventCode: 'CATALINA-JULIAN',
+    pin: '4821'
+  });
+});
+
+test('host login rejects missing values before contacting the API', async () => {
+  let calls = 0;
+  global.fetch = async () => { calls += 1; };
+  const auth = new AuthManager();
+  assert.strictEqual((await auth.loginHostByPin('', '4821')).success, false);
+  assert.strictEqual((await auth.loginHostByPin('EVENTO', '')).success, false);
+  assert.strictEqual(calls, 0);
+});
+
+test('host login preserves a server validation error', async () => {
+  global.fetch = async () => response(false, { error: 'Código o PIN incorrecto' });
+  const result = await new AuthManager().loginHostByPin('EVENTO', '0000');
+  assert.deepStrictEqual(result, { success: false, error: 'Código o PIN incorrecto' });
+});
+
+test('logout clears the in-memory session', async () => {
+  global.fetch = async () => response(true, {});
+  const auth = new AuthManager();
+  auth.saveSession({ role: 'superadmin', token: 'server-issued-token' });
+  await auth.logout();
   assert.strictEqual(auth.isSuperadmin(), false);
   assert.strictEqual(auth.getCurrentSession(), null);
 });
 
-console.log("\nResults: " + passed + " / 10 passed.\n");
-if (passed < 10) process.exit(1);
+(async () => {
+  let passed = 0;
+  for (const { description, fn } of tests) {
+    try {
+      await fn();
+      console.log(`  PASS: ${description}`);
+      passed += 1;
+    } catch (error) {
+      console.error(`  FAIL: ${description}`, error.message);
+    }
+  }
+
+  console.log(`\nResults: ${passed} / ${tests.length} passed.\n`);
+  if (passed < tests.length) process.exitCode = 1;
+})();
