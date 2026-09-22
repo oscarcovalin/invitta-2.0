@@ -35,3 +35,12 @@ La autoridad se decide en servidor y RLS. Parámetros URL, `localStorage`, etiqu
 4. La invitación pública sólo expone la revisión publicada y activos públicos deliberados.
 5. Las funciones privilegiadas fijan `search_path`, tienen grants mínimos y escriben auditoría.
 6. El modo offline puede capturar operaciones pendientes, pero no confirma acceso, RSVP o publicación hasta reconciliar con el servidor.
+
+## Sesión profesional durante la migración
+
+- Supabase Auth valida correo y contraseña; ya no existen contraseñas profesionales en variables de entorno ni tokens aleatorios locales.
+- El navegador recibe access y refresh tokens únicamente como cookies `HttpOnly`, `SameSite=Lax` y `Secure` en producción.
+- La UI sólo conserva en memoria una vista pública de la sesión (`userId`, correo y rol de plataforma). Al recargar, `/api/session` verifica el access token con Supabase y rota el refresh token cuando corresponde.
+- Sólo `app_metadata.platform_role = platform_admin` concede administración de plataforma. `user_metadata`, parámetros URL y Storage no son autoridad.
+- Esta decisión obliga a que las operaciones autenticadas pasen por endpoints del servidor. No se debe añadir un cliente Supabase directo en el navegador mientras los tokens sigan siendo `HttpOnly`.
+- Los roles de proyecto se resolverán desde membresías y RLS; el rol global `member` no concede acceso a ningún proyecto por sí mismo.

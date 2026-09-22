@@ -1,4 +1,5 @@
 const assert = require('assert');
+const fs = require('fs');
 const { AuthManager } = require('./auth-manager.js');
 
 console.log('\nTesting server-backed authentication and session handling...\n');
@@ -12,13 +13,13 @@ function response(ok, data) {
   return { ok, json: async () => data };
 }
 
-test('professional login sends credentials to the auth API and saves its session', async () => {
+test('professional login sends credentials to the auth API and keeps only its public session in memory', async () => {
   let request;
   global.fetch = async (url, options) => {
     request = { url, options };
     return response(true, {
       success: true,
-      session: { role: 'superadmin', token: 'server-issued-token' },
+      session: { role: 'platform_admin', email: 'admin@invitta.mx' },
       redirectUrl: 'portal.html'
     });
   };
@@ -32,6 +33,7 @@ test('professional login sends credentials to the auth API and saves its session
     password: 'secret'
   });
   assert.strictEqual(auth.isSuperadmin(), true);
+  assert.strictEqual(auth.getCurrentSession().token, undefined);
 });
 
 test('professional login rejects incomplete credentials without calling the API', async () => {
@@ -90,12 +92,24 @@ test('host login preserves a server validation error', async () => {
 });
 
 test('logout clears the in-memory session', async () => {
-  global.fetch = async () => response(true, {});
+  let request;
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return response(true, {});
+  };
   const auth = new AuthManager();
-  auth.saveSession({ role: 'superadmin', token: 'server-issued-token' });
+  auth.saveSession({ role: 'platform_admin' });
   await auth.logout();
+  assert.strictEqual(request.url, '/api/logout');
+  assert.strictEqual(request.options.method, 'POST');
   assert.strictEqual(auth.isSuperadmin(), false);
   assert.strictEqual(auth.getCurrentSession(), null);
+});
+
+test('portal restores the server session before deciding which interface to show', async () => {
+  const portal = fs.readFileSync('./portal.html', 'utf8');
+  assert.match(portal, /await auth\.refreshSession\(\)/);
+  assert.match(portal, /res\.session\.role === 'platform_admin'/);
 });
 
 (async () => {

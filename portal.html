@@ -814,8 +814,9 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // 1. Verificar Estado de Autenticación
+      if (auth) await auth.refreshSession();
       updateAuthGateUI();
 
       // 2. Control de Pestañas de Acceso (Host vs Pro)
@@ -879,10 +880,10 @@
           if (res.success) {
             if (feedback) {
               feedback.className = 'text-xs mt-3 p-3 rounded-xl bg-[#EBF5F2] border border-[#D5EBE4] text-[#377061] font-semibold block animate-pulse';
-              feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.name}! Redirigiendo...`;
+              feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.email}! Redirigiendo...`;
             }
             setTimeout(() => {
-              if (res.session.role === 'superadmin') {
+              if (res.session.role === 'platform_admin') {
                 updateAuthGateUI();
               } else {
                 window.location.href = res.redirectUrl;
@@ -900,8 +901,8 @@
       // 5. Botón Cerrar Sesión Superadmin
       const btnLogout = document.getElementById('btnLogoutAdmin');
       if (btnLogout && auth) {
-        btnLogout.addEventListener('click', () => {
-          auth.logout();
+        btnLogout.addEventListener('click', async () => {
+          await auth.logout();
           updateAuthGateUI();
         });
       }
@@ -947,7 +948,7 @@
         if (publicGate) publicGate.classList.add('hidden');
         if (adminDash) adminDash.classList.remove('hidden');
         const session = auth.getCurrentSession();
-        if (labelAdminName && session) labelAdminName.textContent = session.username || 'Usuario Profesional';
+        if (labelAdminName && session) labelAdminName.textContent = session.email || 'Usuario Profesional';
         renderVaultProjects();
       } else {
         if (publicGate) publicGate.classList.remove('hidden');

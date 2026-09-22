@@ -138,36 +138,31 @@
     saveSession(session) {
       this.memorySession = session;
       if (typeof sessionStorage !== 'undefined') {
-        try {
-          sessionStorage.setItem(this.sessionKey, JSON.stringify(session));
-        } catch (err) {}
+        try { sessionStorage.removeItem(this.sessionKey); } catch (err) {}
       }
       if (typeof localStorage !== 'undefined') {
-        try {
-          localStorage.setItem(this.sessionKey, JSON.stringify(session));
-        } catch (err) {}
+        try { localStorage.removeItem(this.sessionKey); } catch (err) {}
       }
     }
 
     getCurrentSession() {
-      if (typeof sessionStorage !== 'undefined') {
-        try {
-          const s = sessionStorage.getItem(this.sessionKey);
-          if (s) return JSON.parse(s);
-        } catch (err) {}
-      }
-      if (typeof localStorage !== 'undefined') {
-        try {
-          const s = localStorage.getItem(this.sessionKey);
-          if (s) return JSON.parse(s);
-        } catch (err) {}
-      }
       return this.memorySession || null;
+    }
+
+    async refreshSession() {
+      try {
+        const response = await fetch('/api/session', { method: 'GET' });
+        const data = await response.json();
+        this.memorySession = response.ok && data.authenticated ? data.session : null;
+      } catch (err) {
+        this.memorySession = null;
+      }
+      return this.memorySession;
     }
 
     isSuperadmin() {
       const s = this.getCurrentSession();
-      return Boolean(s && s.role === 'superadmin');
+      return Boolean(s && s.role === 'platform_admin');
     }
 
     async logout() {
@@ -177,8 +172,8 @@
       }
       if (typeof localStorage !== 'undefined') {
         try { localStorage.removeItem(this.sessionKey); } catch (err) {}
-      try { await fetch("/api/logout"); } catch (err) {}
       }
+      try { await fetch('/api/logout', { method: 'POST' }); } catch (err) {}
     }
   }
 
