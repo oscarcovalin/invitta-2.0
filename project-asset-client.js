@@ -33,7 +33,36 @@ const ProjectAssetClient = (() => {
     return 'hero';
   }
 
-  async function toStoredConfig(config, { projectId, upload }) {
+  async function importRemoteImage(value, fetchImpl = fetch) {
+    let url;
+    try { url = new URL(value); } catch (_) { throw new Error('La URL de imagen no es válida.'); }
+    const host = url.hostname.toLowerCase();
+    if (url.protocol !== 'https:' || !host || host === 'localhost' || host.endsWith('.local')
+        || host.endsWith('.internal') || /^\d+(?:\.\d+){3}$/.test(host) || host.includes(':')) {
+      throw new Error('La imagen externa debe usar HTTPS en un dominio público.');
+    }
+    const response = await fetchImpl(url.href, {
+      mode: 'cors', credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'error',
+    });
+    if (!response.ok) throw new Error('No se pudo descargar la imagen externa.');
+    const mimeType = String(response.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(mimeType)) {
+      throw new Error('La imagen externa debe ser JPG, PNG, WebP o GIF.');
+    }
+    const maxBytes = 3 * 1024 * 1024;
+    if (Number(response.headers.get('content-length')) > maxBytes) {
+      throw new Error('La imagen externa excede 3 MB.');
+    }
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (!bytes.length || bytes.length > maxBytes) throw new Error('La imagen externa está vacía o excede 3 MB.');
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += 8192) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+    }
+    return { mimeType, base64: btoa(binary) };
+  }
+
+  async function toStoredConfig(config, { projectId, upload, importRemote }) {
     const clone = JSON.parse(JSON.stringify(config));
     const pending = [];
     function inspect(value, keys = [], parent, key) {
@@ -49,11 +78,23 @@ const ProjectAssetClient = (() => {
         if (!match) throw new Error(`El archivo incrustado en ${keys.join('.')} no es compatible. Usa JPG, PNG, WebP o GIF.`);
         pending.push({ parent, key, slot: slotFor(keys), mimeType: match[1].toLowerCase(), base64: match[2] });
       } else if (/^https?:\/\//i.test(value) && keys.some((part) => /image|photo|logo|banner|gallery|background|savethedate/i.test(String(part)))) {
-        throw new Error(`La imagen externa en ${keys.join('.')} debe subirse como archivo local antes de guardar en nube.`);
+        if (!importRemote) throw new Error(`La imagen externa en ${keys.join('.')} debe subirse como archivo local antes de guardar en nube.`);
+        pending.push({ parent, key, slot: slotFor(keys), remoteUrl: value, field: keys.join('.') });
       }
     }
     inspect(clone);
     if (pending.length > 30) throw new Error('Hay demasiadas imágenes para un solo guardado.');
+    for (const asset of pending) {
+      if (!asset.remoteUrl) continue;
+      try {
+        const imported = await importRemote(asset.remoteUrl);
+        asset.mimeType = imported.mimeType;
+        asset.base64 = imported.base64;
+      } catch (error) {
+        const reason = error && error.message ? ` ${error.message}` : '';
+        throw new Error(`No se pudo importar ${asset.field}.${reason} Súbela como archivo local antes de guardar en nube.`);
+      }
+    }
     for (const asset of pending) {
       const uploaded = await upload({ projectId, slot: asset.slot, mimeType: asset.mimeType, base64: asset.base64 });
       if (!uploaded || !STORAGE_PATH.test(uploaded.storagePath) || !uploaded.storagePath.startsWith(`${projectId}/`)) {
@@ -64,6 +105,6 @@ const ProjectAssetClient = (() => {
     return clone;
   }
 
-  return { toDisplayConfig, toStoredConfig };
+  return { importRemoteImage, toDisplayConfig, toStoredConfig };
 })();
 if (typeof window !== 'undefined') window.ProjectAssetClient = ProjectAssetClient;

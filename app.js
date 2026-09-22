@@ -2701,6 +2701,7 @@ function setupCloudActions() {
     try {
       const storedConfig = await window.ProjectAssetClient.toStoredConfig(currentConfig, {
         projectId: requestedCloudProjectId,
+        importRemote: window.ProjectAssetClient.importRemoteImage,
         upload: async (asset) => {
           const uploadResponse = await fetch('/api/projects/upload-asset', {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
@@ -2751,7 +2752,7 @@ function setupCloudActions() {
       });
       const result = await response.json();
       if (!response.ok || !result.project) throw new Error(result.error || 'No se pudo publicar.');
-      showToast(`Revisión ${loadedCloudRevision} publicada.`);
+      showToast(`Revisión ${loadedCloudRevision} marcada como publicada. La entrega pública requiere un paso adicional.`);
     } catch (error) {
       showToast(error.message || 'No se pudo publicar.');
     } finally {

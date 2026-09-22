@@ -5,7 +5,7 @@ const vm = require('node:vm');
 const projectId = '20000000-0000-4000-8000-000000000001';
 const assetId = '30000000-0000-4000-8000-000000000001';
 const storagePath = `${projectId}/hero/${assetId}.png`;
-const context = { window: {}, URLSearchParams, encodeURIComponent, JSON };
+const context = { window: {}, URL, URLSearchParams, encodeURIComponent, JSON, Uint8Array, btoa };
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('./project-asset-client.js', 'utf8'), context);
 const client = context.window.ProjectAssetClient;
@@ -26,6 +26,33 @@ const client = context.window.ProjectAssetClient;
   assert.strictEqual(uploadCalls[0].slot, 'hero');
   assert.strictEqual(uploadCalls[0].mimeType, 'image/png');
   assert.strictEqual(uploadCalls[0].base64, 'iVBORw0KGgo=');
+
+  const imported = await client.toStoredConfig({ photos: { hero: 'https://example.com/photo.jpg' } }, {
+    projectId,
+    importRemote: async (url) => {
+      assert.strictEqual(url, 'https://example.com/photo.jpg');
+      return { mimeType: 'image/png', base64: 'iVBORw0KGgo=' };
+    },
+    upload: async () => ({ storagePath }),
+  });
+  assert.strictEqual(imported.photos.hero, storagePath);
+
+  let remoteRequest;
+  const remoteImage = await client.importRemoteImage('https://images.example.com/photo.png', async (url, options) => {
+    remoteRequest = { url, options };
+    return {
+      ok: true,
+      headers: { get: (name) => name === 'content-type' ? 'image/png' : '8' },
+      arrayBuffer: async () => Uint8Array.from([137, 80, 78, 71, 13, 10, 26, 10]).buffer,
+    };
+  });
+  assert.strictEqual(remoteImage.mimeType, 'image/png');
+  assert.strictEqual(remoteImage.base64, 'iVBORw0KGgo=');
+  assert.strictEqual(remoteRequest.options.credentials, 'omit');
+  assert.strictEqual(remoteRequest.options.redirect, 'error');
+  await assert.rejects(client.importRemoteImage('http://localhost/private.png', async () => {
+    throw Error('unexpected fetch');
+  }), /HTTPS/);
 
   await assert.rejects(client.toStoredConfig({ photos: { hero: 'https://example.com/photo.jpg' } }, {
     projectId, upload: async () => { throw Error('unexpected upload'); },
