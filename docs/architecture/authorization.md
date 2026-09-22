@@ -44,3 +44,5 @@ La autoridad se decide en servidor y RLS. Parámetros URL, `localStorage`, etiqu
 - Sólo `app_metadata.platform_role = platform_admin` concede administración de plataforma. `user_metadata`, parámetros URL y Storage no son autoridad.
 - Esta decisión obliga a que las operaciones autenticadas pasen por endpoints del servidor. No se debe añadir un cliente Supabase directo en el navegador mientras los tokens sigan siendo `HttpOnly`.
 - Los roles de proyecto se resolverán desde membresías y RLS; el rol global `member` no concede acceso a ningún proyecto por sí mismo.
+
+El primer endpoint que aplica este contrato es `POST /api/projects/save-revision`: verifica la cookie profesional con Supabase y reenvía la escritura a PostgREST usando el JWT del usuario. La política `invitation_documents_insert` limita la operación a `project_owner`, `planner` o `designer`; el servidor no usa una clave de servicio ni puede saltarse RLS.
