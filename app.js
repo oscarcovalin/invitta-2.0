@@ -1,18 +1,5 @@
 
 let currentProjectId = null;
-(function initVaultProject() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
-  if (projId && typeof ProjectsVault !== 'undefined') {
-    const proj = ProjectsVault.getById(projId);
-    if (proj && proj.config) {
-      currentConfig = JSON.parse(JSON.stringify(proj.config));
-      currentProjectId = proj.id;
-      if (proj.theme) currentTheme = proj.theme;
-      console.log('📦 Loaded project from vault:', proj.title);
-    }
-  }
-})();
 
 /**
  * Lógica principal del Dashboard Generador de Invitaciones de Lujo (XV Años & Bodas)
@@ -24,6 +11,20 @@ let currentThemeName = "vino";
 let customTheme = JSON.parse(JSON.stringify(TemplateEngine.defaultThemes.vino));
 let debounceTimer = null;
 let currentVipUrl = "";
+
+(function initVaultProject() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
+  if (projId && typeof ProjectsVault !== 'undefined') {
+    const proj = ProjectsVault.getById(projId);
+    if (proj && proj.config) {
+      currentConfig = JSON.parse(JSON.stringify(proj.config));
+      currentProjectId = proj.id;
+      if (proj.theme) currentThemeName = proj.theme;
+      console.log('📦 Loaded project from vault:', proj.title);
+    }
+  }
+})();
 
 // ==================== INICIALIZACIÓN ====================
 document.addEventListener('DOMContentLoaded', () => {
