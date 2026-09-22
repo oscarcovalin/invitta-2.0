@@ -3,11 +3,13 @@ const fixture = require('./fixtures/invitation-document.v1.json');
 
 const {
   ProjectRevisionError,
+  getLatestRevisionWithUserToken,
   publishRevisionWithUserToken,
   saveRevisionWithUserToken,
 } = require('./lib/supabase-project-revisions.cjs');
 const { createProjectRevisionHandler } = require('./lib/project-revision-handler.cjs');
 const { createPublishRevisionHandler } = require('./lib/publish-revision-handler.cjs');
+const { createLatestRevisionHandler } = require('./lib/latest-revision-handler.cjs');
 
 const config = {
   url: 'https://example.supabase.co',
@@ -145,6 +147,27 @@ const userId = '10000000-0000-4000-8000-000000000001';
   });
   assert.strictEqual(published.status, 'published');
 
+  let loadRequest;
+  const latest = await getLatestRevisionWithUserToken({
+    accessToken: 'member-token', projectId: fixture.projectId, config,
+    fetchImpl: async (url, options) => {
+      loadRequest = { url, options };
+      return { ok: true, status: 200, json: async () => [{ id: documentId, revision: 3, document: fixture }] };
+    },
+  });
+  assert.ok(loadRequest.url.includes(`project_id=eq.${fixture.projectId}`));
+  assert.ok(loadRequest.url.includes('order=revision.desc'));
+  assert.strictEqual(loadRequest.options.headers.Authorization, 'Bearer member-token');
+  assert.strictEqual(latest.revision, 3);
+
+  await assert.rejects(
+    getLatestRevisionWithUserToken({
+      accessToken: 'outsider-token', projectId: fixture.projectId, config,
+      fetchImpl: async () => ({ ok: true, status: 200, json: async () => [] }),
+    }),
+    (error) => error.code === 'REVISION_NOT_FOUND' && error.status === 404
+  );
+
   await assert.rejects(
     publishRevisionWithUserToken({
       accessToken: 'planner-token', projectId: fixture.projectId, documentId, config,
@@ -172,6 +195,23 @@ const userId = '10000000-0000-4000-8000-000000000001';
   }, publishResponse);
   assert.strictEqual(publishResponse.statusCode, 200);
   assert.strictEqual(publishResponse.body.project.status, 'published');
+
+  const loadHandler = createLatestRevisionHandler({
+    authService: {
+      ACCESS_COOKIE: 'invitta_access_token',
+      getAuthConfig: () => config,
+      parseCookies: () => ({ invitta_access_token: 'member-token' }),
+      getAuthenticatedUser: async () => ({ id: userId }),
+    },
+    loadRevision: async ({ projectId }) => ({ project_id: projectId, revision: 3, document: fixture }),
+  });
+  const loadResponse = responseRecorder();
+  await loadHandler({
+    method: 'GET', headers: {}, query: { projectId: fixture.projectId },
+  }, loadResponse);
+  assert.strictEqual(loadResponse.statusCode, 200);
+  assert.strictEqual(loadResponse.body.revision.revision, 3);
+  assert.strictEqual(loadResponse.headers['Cache-Control'], 'no-store');
 
   const unauthenticatedHandler = createProjectRevisionHandler({
     authService: {
