@@ -1086,7 +1086,8 @@ class GuestManager {
 
   
   isEventFrozen() {
-    const eventDate = window.CONFIG ? new Date(window.CONFIG.eventDate) : new Date('2026-10-18T16:00:00');
+    const runtimeConfig = typeof window !== 'undefined' ? window.CONFIG : null;
+    const eventDate = runtimeConfig ? new Date(runtimeConfig.eventDate) : new Date('2026-10-18T16:00:00');
     // For testing/QA purposes, if you want to force freeze, uncomment:
     // return true;
     const freezeDate = new Date(eventDate.getTime() - (48 * 60 * 60 * 1000));
