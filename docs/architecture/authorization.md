@@ -46,3 +46,5 @@ La autoridad se decide en servidor y RLS. Parámetros URL, `localStorage`, etiqu
 - Los roles de proyecto se resolverán desde membresías y RLS; el rol global `member` no concede acceso a ningún proyecto por sí mismo.
 
 El primer endpoint que aplica este contrato es `POST /api/projects/save-revision`: verifica la cookie profesional con Supabase y reenvía la escritura a PostgREST usando el JWT del usuario. La política `invitation_documents_insert` limita la operación a `project_owner`, `planner` o `designer`; el servidor no usa una clave de servicio ni puede saltarse RLS.
+
+`POST /api/projects/publish-revision` usa el mismo límite de confianza, pero la política de actualización permite publicar exclusivamente a `project_owner`. Una respuesta vacía de PostgREST se trata como denegación y no como éxito para evitar que un recurso inexistente o invisible se reporte como publicado.

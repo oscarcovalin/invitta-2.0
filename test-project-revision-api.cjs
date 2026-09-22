@@ -3,9 +3,11 @@ const fixture = require('./fixtures/invitation-document.v1.json');
 
 const {
   ProjectRevisionError,
+  publishRevisionWithUserToken,
   saveRevisionWithUserToken,
 } = require('./lib/supabase-project-revisions.cjs');
 const { createProjectRevisionHandler } = require('./lib/project-revision-handler.cjs');
+const { createPublishRevisionHandler } = require('./lib/publish-revision-handler.cjs');
 
 const config = {
   url: 'https://example.supabase.co',
@@ -114,6 +116,62 @@ const userId = '10000000-0000-4000-8000-000000000001';
   });
   assert.deepStrictEqual(verifiedCalls, ['verified-access-token']);
   assert.strictEqual(successfulResponse.headers['Cache-Control'], 'no-store');
+
+  const documentId = '30000000-0000-4000-8000-000000000001';
+  let publishRequest;
+  const published = await publishRevisionWithUserToken({
+    accessToken: 'owner-access-token',
+    projectId: fixture.projectId,
+    documentId,
+    config,
+    fetchImpl: async (url, options) => {
+      publishRequest = { url, options };
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [{ id: fixture.projectId, published_document_id: documentId, status: 'published' }],
+      };
+    },
+  });
+  assert.strictEqual(
+    publishRequest.url,
+    `https://example.supabase.co/rest/v1/invitation_projects?id=eq.${fixture.projectId}&select=id%2Cpublished_document_id%2Cstatus%2Cupdated_at`
+  );
+  assert.strictEqual(publishRequest.options.method, 'PATCH');
+  assert.strictEqual(publishRequest.options.headers.Authorization, 'Bearer owner-access-token');
+  assert.deepStrictEqual(JSON.parse(publishRequest.options.body), {
+    published_document_id: documentId,
+    status: 'published',
+  });
+  assert.strictEqual(published.status, 'published');
+
+  await assert.rejects(
+    publishRevisionWithUserToken({
+      accessToken: 'planner-token', projectId: fixture.projectId, documentId, config,
+      fetchImpl: async () => ({ ok: true, status: 200, json: async () => [] }),
+    }),
+    (error) => error.code === 'PROJECT_ACCESS_DENIED' && error.status === 403
+  );
+
+  const publishHandler = createPublishRevisionHandler({
+    authService: {
+      ACCESS_COOKIE: 'invitta_access_token',
+      getAuthConfig: () => config,
+      parseCookies: () => ({ invitta_access_token: 'owner-access-token' }),
+      getAuthenticatedUser: async () => ({ id: userId }),
+    },
+    publishRevision: async (input) => ({
+      id: input.projectId,
+      published_document_id: input.documentId,
+      status: 'published',
+    }),
+  });
+  const publishResponse = responseRecorder();
+  await publishHandler({
+    method: 'POST', headers: {}, body: { projectId: fixture.projectId, documentId },
+  }, publishResponse);
+  assert.strictEqual(publishResponse.statusCode, 200);
+  assert.strictEqual(publishResponse.body.project.status, 'published');
 
   const unauthenticatedHandler = createProjectRevisionHandler({
     authService: {
