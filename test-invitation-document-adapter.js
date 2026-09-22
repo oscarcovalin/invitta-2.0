@@ -1,0 +1,52 @@
+const assert = require('assert');
+const {
+  fromLegacyTemplateConfig,
+  toLegacyTemplateConfig
+} = require('./invitation-document-adapter.js');
+const { validateInvitationDocument } = require('./invitation-document.js');
+
+const legacy = {
+  eventType: 'xv',
+  name: 'Mis XV Valentina',
+  brideName: 'Valentina',
+  nameConnector: '',
+  welcomeMessage: 'Celebra conmigo.',
+  eventDateISO: '2027-03-20T18:00',
+  timezoneOffset: '-06:00',
+  eventDurationHours: 7,
+  itinerary: [{ time: '21:30', label: 'Vals' }],
+  theme: 'rosa',
+  sectionOrder: ['hero', 'itinerary', 'rsvp'],
+  sectionVisibility: { hero: true, itinerary: true, rsvp: false },
+  ceremony: { image: 'projects/project-xv/images/ceremony.webp' },
+  reception: { image: 'data:image/png;base64,AAAA' }
+};
+
+const { document, pendingAssets } = fromLegacyTemplateConfig(legacy, {
+  projectId: 'project-xv',
+  revision: 3
+});
+
+assert.strictEqual(validateInvitationDocument(document).valid, true);
+assert.strictEqual(document.event.type, 'quinceanera');
+assert.strictEqual(document.revision, 3);
+assert.strictEqual(document.assets.ceremony.storagePath, legacy.ceremony.image);
+assert.strictEqual(document.assets.reception, undefined);
+assert.deepStrictEqual(pendingAssets, [{ key: 'reception', source: legacy.reception.image }]);
+assert.deepStrictEqual(document.sections.map(({ id, enabled }) => ({ id, enabled })), [
+  { id: 'hero', enabled: true },
+  { id: 'itinerary', enabled: true },
+  { id: 'rsvp', enabled: false }
+]);
+
+const restored = toLegacyTemplateConfig(document);
+assert.strictEqual(restored.eventType, legacy.eventType);
+assert.strictEqual(restored.name, legacy.name);
+assert.strictEqual(restored.brideName, legacy.brideName);
+assert.deepStrictEqual(restored.itinerary, legacy.itinerary);
+assert.deepStrictEqual(restored.sectionOrder, legacy.sectionOrder);
+assert.deepStrictEqual(restored.sectionVisibility, legacy.sectionVisibility);
+assert.strictEqual(restored.ceremony.image, legacy.ceremony.image);
+assert.strictEqual(restored.reception.image, '');
+
+console.log('Legacy invitation adapter preserves supported fields and quarantines inline assets.');
