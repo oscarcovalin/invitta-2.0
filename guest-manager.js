@@ -690,6 +690,14 @@ class GuestManager {
     return `${mesaCode}-${apellidoCode}-${passes}P`;
   }
 
+  generateSyncId() {
+    if (typeof globalThis !== 'undefined' && globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function') {
+      return globalThis.crypto.randomUUID();
+    }
+
+    return `sync_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+  }
+
   checkInGuest(queryOrFolio, admittedPasses) {
     if (!queryOrFolio) return { success: false, error: 'Query o Folio requerido' };
     const q = String(queryOrFolio).trim().toLowerCase();
