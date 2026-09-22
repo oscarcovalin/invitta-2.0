@@ -1,6 +1,9 @@
 const assert = require('assert');
 const fixture = require('./fixtures/invitation-document.v1.json');
-const { saveInvitationRevision } = require('./lib/invitation-project-repository.js');
+const {
+  publishInvitationRevision,
+  saveInvitationRevision
+} = require('./lib/invitation-project-repository.js');
 
 function createClient(result) {
   const calls = [];
@@ -15,6 +18,32 @@ function createClient(result) {
             select(columns) {
               calls.push({ method: 'select', columns });
               return { single: async () => result };
+            }
+          };
+        }
+      };
+    }
+  };
+}
+
+function createPublishClient(result) {
+  const calls = [];
+  return {
+    calls,
+    from(table) {
+      calls.push({ method: 'from', table });
+      return {
+        update(payload) {
+          calls.push({ method: 'update', payload });
+          return {
+            eq(column, value) {
+              calls.push({ method: 'eq', column, value });
+              return {
+                select(columns) {
+                  calls.push({ method: 'select', columns });
+                  return { single: async () => result };
+                }
+              };
             }
           };
         }
@@ -49,6 +78,28 @@ function createClient(result) {
   await assert.rejects(
     saveInvitationRevision(deniedClient, fixture, { userId: 'user-id' }),
     (error) => error.code === 'REVISION_SAVE_FAILED' && error.cause.code === '42501'
+  );
+
+  const documentId = '30000000-0000-4000-8000-000000000001';
+  const publishedRow = { id: fixture.projectId, published_document_id: documentId, status: 'published' };
+  const publishClient = createPublishClient({ data: publishedRow, error: null });
+  const published = await publishInvitationRevision(publishClient, {
+    projectId: fixture.projectId,
+    documentId
+  });
+  assert.deepStrictEqual(published, publishedRow);
+  assert.deepStrictEqual(publishClient.calls[1], {
+    method: 'update',
+    payload: { published_document_id: documentId, status: 'published' }
+  });
+
+  const deniedPublishClient = createPublishClient({ data: null, error: { code: '42501' } });
+  await assert.rejects(
+    publishInvitationRevision(deniedPublishClient, {
+      projectId: fixture.projectId,
+      documentId
+    }),
+    (error) => error.code === 'REVISION_PUBLISH_FAILED' && error.cause.code === '42501'
   );
 
   console.log('Invitation revisions validate before persistence and preserve RLS errors.');
