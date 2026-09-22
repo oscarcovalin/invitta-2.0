@@ -23,8 +23,10 @@ const userId = '10000000-0000-4000-8000-000000000001';
     accessToken: 'user-access-token',
     userId,
     document: fixture,
+    expectedRevision: 0,
     config,
     fetchImpl: async (url, options) => {
+      if (options.method === 'GET') return { ok: true, status: 200, json: async () => [] };
       request = { url, options };
       return {
         ok: true,
@@ -54,12 +56,30 @@ const userId = '10000000-0000-4000-8000-000000000001';
   });
   assert.strictEqual(saved.project_id, fixture.projectId);
 
+  let conflictWrote = false;
+  await assert.rejects(
+    saveRevisionWithUserToken({
+      accessToken: 'token', userId, document: fixture, expectedRevision: 0, config,
+      fetchImpl: async (_url, options) => {
+        if (options.method === 'GET') return { ok: true, status: 200, json: async () => [{ revision: 2 }] };
+        conflictWrote = true;
+      },
+    }),
+    (error) => error.code === 'REVISION_CONFLICT' && error.status === 409
+  );
+  assert.strictEqual(conflictWrote, false);
+
+  await assert.rejects(
+    saveRevisionWithUserToken({ accessToken: 'token', userId, document: fixture, expectedRevision: 1, config }),
+    (error) => error.code === 'INVALID_REVISION' && error.status === 422
+  );
+
   const invalid = structuredClone(fixture);
   invalid.projectId = 'not-a-uuid';
   let invalidCalled = false;
   await assert.rejects(
     saveRevisionWithUserToken({
-      accessToken: 'token', userId, document: invalid, config,
+      accessToken: 'token', userId, document: invalid, expectedRevision: 0, config,
       fetchImpl: async () => { invalidCalled = true; },
     }),
     (error) => error instanceof ProjectRevisionError && error.code === 'INVALID_DOCUMENT' && error.status === 422
@@ -68,8 +88,10 @@ const userId = '10000000-0000-4000-8000-000000000001';
 
   await assert.rejects(
     saveRevisionWithUserToken({
-      accessToken: 'token', userId, document: fixture, config,
-      fetchImpl: async () => ({
+      accessToken: 'token', userId, document: fixture, expectedRevision: 0, config,
+      fetchImpl: async (_url, options) => options.method === 'GET'
+        ? { ok: true, status: 200, json: async () => [] }
+        : ({
         ok: false,
         status: 403,
         json: async () => ({ code: '42501', message: 'private database detail' }),
@@ -81,7 +103,7 @@ const userId = '10000000-0000-4000-8000-000000000001';
   );
 
   await assert.rejects(
-    saveRevisionWithUserToken({ accessToken: '', userId, document: fixture, config, fetchImpl: async () => ({}) }),
+    saveRevisionWithUserToken({ accessToken: '', userId, document: fixture, expectedRevision: 0, config, fetchImpl: async () => ({}) }),
     (error) => error.code === 'UNAUTHENTICATED' && error.status === 401
   );
 
@@ -97,6 +119,7 @@ const userId = '10000000-0000-4000-8000-000000000001';
   }
 
   const verifiedCalls = [];
+  let receivedExpectedRevision;
   const handler = createProjectRevisionHandler({
     authService: {
       ACCESS_COOKIE: 'invitta_access_token',
@@ -107,16 +130,20 @@ const userId = '10000000-0000-4000-8000-000000000001';
         return { id: userId };
       },
     },
-    saveRevision: async (input) => ({ id: 'revision-id', project_id: input.document.projectId }),
+    saveRevision: async (input) => {
+      receivedExpectedRevision = input.expectedRevision;
+      return { id: 'revision-id', project_id: input.document.projectId };
+    },
   });
   const successfulResponse = responseRecorder();
-  await handler({ method: 'POST', headers: { cookie: 'ignored=test' }, body: { document: fixture } }, successfulResponse);
+  await handler({ method: 'POST', headers: { cookie: 'ignored=test' }, body: { document: fixture, expectedRevision: 0 } }, successfulResponse);
   assert.strictEqual(successfulResponse.statusCode, 201);
   assert.deepStrictEqual(successfulResponse.body, {
     success: true,
     revision: { id: 'revision-id', project_id: fixture.projectId },
   });
   assert.deepStrictEqual(verifiedCalls, ['verified-access-token']);
+  assert.strictEqual(receivedExpectedRevision, 0);
   assert.strictEqual(successfulResponse.headers['Cache-Control'], 'no-store');
 
   const documentId = '30000000-0000-4000-8000-000000000001';

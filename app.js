@@ -3,6 +3,9 @@ let currentProjectId = null;
 let requestedCloudProjectId = null;
 let loadedCloudRevision = null;
 let cloudLoadError = false;
+let savedCloudDocumentId = null;
+let cloudDirty = false;
+let savedCloudConfig = null;
 
 /**
  * Lógica principal del Dashboard Generador de Invitaciones de Lujo (XV Años & Bodas)
@@ -30,6 +33,9 @@ async function loadCloudProject() {
     currentConfig = window.InvitationDocumentAdapter.toLegacyTemplateConfig(savedDocument);
     currentProjectId = requestedCloudProjectId;
     loadedCloudRevision = result.revision.revision;
+    savedCloudDocumentId = result.revision.id || null;
+    cloudDirty = false;
+    savedCloudConfig = JSON.stringify(currentConfig);
     currentThemeName = currentConfig.theme || 'vino';
     customTheme = JSON.parse(JSON.stringify(TemplateEngine.defaultThemes[currentThemeName] || TemplateEngine.defaultThemes.vino));
     if (status) status.textContent = `Revisión ${result.revision.revision} cargada`;
@@ -77,6 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupVendorCardLogoControls();
   setupFileUploads();
   setupHeaderActions();
+  setupCloudActions();
   setupInputListeners();
 
   await loadCloudProject();
@@ -2656,6 +2663,7 @@ function setupFileUploads() {
 
 // ==================== PREVIEW GENERATOR ====================
 function schedulePreviewUpdate() {
+  if (requestedCloudProjectId) cloudDirty = true;
   const syncText = document.getElementById('syncStatusText');
   if (syncText && !cloudLoadError) syncText.textContent = 'Actualizando vista...';
   clearTimeout(debounceTimer);
@@ -2672,9 +2680,67 @@ function updatePreview(forced = false) {
   const syncText = document.getElementById('syncStatusText');
   if (syncText && !cloudLoadError) {
     syncText.textContent = loadedCloudRevision
-      ? `Vista actualizada · revisión ${loadedCloudRevision} cargada`
+      ? `Vista actualizada · revisión ${loadedCloudRevision}${cloudDirty ? ' · cambios sin guardar' : ' guardada'}`
       : 'Vista actualizada · sin guardar en nube';
-  }
+}
+
+function setupCloudActions() {
+  const saveButton = document.getElementById('btnSaveCloud');
+  const publishButton = document.getElementById('btnPublishCloud');
+  if (!requestedCloudProjectId || !saveButton || !publishButton) return;
+  saveButton.hidden = false;
+  publishButton.hidden = false;
+
+  saveButton.addEventListener('click', async () => {
+    if (cloudLoadError) return showToast('No se puede guardar: primero resuelve el acceso al proyecto.');
+    const configAtSave = JSON.stringify(currentConfig);
+    const { document: invitation, pendingAssets } = window.InvitationDocumentAdapter.fromLegacyTemplateConfig(
+      currentConfig, { projectId: requestedCloudProjectId, revision: (loadedCloudRevision || 0) + 1 }
+    );
+    if (pendingAssets.length) {
+      return showToast(`Hay ${pendingAssets.length} imagen(es) externas o incrustadas sin migrar. Descarga el JSON como respaldo; no se guardó una revisión incompleta.`);
+    }
+    saveButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/save-revision', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ document: invitation, expectedRevision: loadedCloudRevision || 0 })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.revision || !result.revision.id) throw new Error(result.error || 'No se pudo guardar.');
+      loadedCloudRevision = result.revision.revision;
+      savedCloudDocumentId = result.revision.id;
+      cloudDirty = JSON.stringify(currentConfig) !== configAtSave;
+      savedCloudConfig = configAtSave;
+      updatePreview(false);
+      showToast(`Revisión ${loadedCloudRevision} guardada en nube.`);
+    } catch (error) {
+      showToast(error.message || 'No se pudo guardar en nube.');
+    } finally {
+      saveButton.disabled = false;
+    }
+  });
+
+  publishButton.addEventListener('click', async () => {
+    if (cloudLoadError || !savedCloudDocumentId || cloudDirty || JSON.stringify(currentConfig) !== savedCloudConfig) {
+      return showToast('Guarda primero los cambios en nube antes de publicar.');
+    }
+    publishButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/publish-revision', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ projectId: requestedCloudProjectId, documentId: savedCloudDocumentId })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.project) throw new Error(result.error || 'No se pudo publicar.');
+      showToast(`Revisión ${loadedCloudRevision} publicada.`);
+    } catch (error) {
+      showToast(error.message || 'No se pudo publicar.');
+    } finally {
+      publishButton.disabled = false;
+    }
+  });
+}
 }
 
 // ==================== HEADER ACTIONS & EXPORT ====================

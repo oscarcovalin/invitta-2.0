@@ -9,7 +9,6 @@ const status = { textContent: '' };
 const context = {
   window: {
     location: { search: `?project=${projectId}` },
-    InvitationDocumentAdapter: require('./invitation-document-adapter.js'),
   },
   URLSearchParams,
   JSON,
@@ -36,9 +35,11 @@ const context = {
     }),
   }),
   console: { log: () => {} },
+  showToast: (message) => { throw new Error(message); },
 };
 
 vm.createContext(context);
+vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
 assert.doesNotThrow(() => vm.runInContext(initialization, context));
 assert.strictEqual(vm.runInContext('currentProjectId', context), projectId);
 assert.strictEqual(vm.runInContext('currentConfig.name', context), 'Proyecto guardado');
