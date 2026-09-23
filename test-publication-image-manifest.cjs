@@ -35,6 +35,17 @@ const hidden = structuredClone(document);
 hidden.sections = [];
 assert.deepEqual(collectPublicationImages(hidden), []);
 
+const legacyHidden = structuredClone(document);
+legacyHidden.legacy.config.locations = { enabled: false };
+legacyHidden.sections.find((section) => section.id === 'story').enabled = true;
+legacyHidden.legacy.config.story.enabled = false;
+assert.equal(collectPublicationImages(legacyHidden).some((entry) =>
+  ['ceremony.image', 'reception.image', 'story.photo', 'sectionBackgrounds.details.image', 'sectionBackgrounds.story.image'].includes(entry.field)), false);
+legacyHidden.legacy.config.locations = { enabled: true };
+legacyHidden.legacy.config.locationsEnabled = false;
+assert.equal(collectPublicationImages(legacyHidden).some((entry) =>
+  ['ceremony.image', 'reception.image', 'sectionBackgrounds.details.image'].includes(entry.field)), false);
+
 for (const badPath of [
   '40000000-0000-4000-8000-000000000001/hero/30000000-0000-4000-8000-000000000001.webp',
   '../secret.webp',
