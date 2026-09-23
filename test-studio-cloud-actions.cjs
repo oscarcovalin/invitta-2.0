@@ -25,7 +25,7 @@ const context = {
     if (url.endsWith('/upload-asset')) return { ok: true, json: async () => ({ asset: { storagePath } }) };
     if (url.endsWith('/save-revision')) return { ok: true, json: async () => ({ revision: { id: documentId, revision: 1 } }) };
     if (url.endsWith('/publication-preview') && previewFailure) return {
-      ok: false, json: async () => ({ error: 'Hay datos de ejemplo por corregir.', fields: ['content.title', 'whatsappNumber', 'story.text'] })
+      ok: false, json: async () => ({ error: 'Hay datos de ejemplo por corregir.', fields: ['content.title', 'whatsappNumber', 'story.text', 'event.startsAt'] })
     };
     if (url.endsWith('/publication-preview')) return { ok: true, json: async () => ({ preview: {
       revision: 1, artifact: { content: { content: { title: 'Ana y Luis' }, giftRegistry: { bank: { clabe: '123456789012345678' } } }, imageFields: ['photos.hero'] }
@@ -91,6 +91,7 @@ setupProjectCreationAction();
   assert.match(toasts.at(-1), /Título/);
   assert.match(toasts.at(-1), /WhatsApp/);
   assert.match(toasts.at(-1), /Texto de historia/);
+  assert.match(toasts.at(-1), /Fecha del evento/);
   const studioHtml = fs.readFileSync('./invitacion-estudio.html', 'utf8');
   assert.match(studioHtml, /id="publicationPreviewDialog"[^>]*aria-labelledby=/);
   assert.match(studioHtml, /id="btnPreviewPublication"/);

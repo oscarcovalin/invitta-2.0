@@ -149,6 +149,7 @@ const userId = '10000000-0000-4000-8000-000000000001';
   const documentId = '30000000-0000-4000-8000-000000000001';
   const publishableDocument = structuredClone(fixture);
   publishableDocument.content.title = 'Ana y Luis';
+  publishableDocument.event.startsAt = '2027-05-01T18:00:00-06:00';
   let publishRequest;
   let publishRead;
   const published = await publishRevisionWithUserToken({

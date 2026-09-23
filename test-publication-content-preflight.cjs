@@ -44,4 +44,13 @@ defaultStory.story.text = 'Nos conocimos en mayo.';
 assert.deepEqual(findSamplePublicationFields(defaultStory), ['story.title', 'story.subtitle']);
 delete defaultStory.story;
 assert.deepEqual(findSamplePublicationFields(defaultStory), []);
+
+const defaultDates = structuredClone(approved);
+defaultDates.event = { startsAt: '2026-12-18T18:00:00-06:00' };
+defaultDates.dateLabels = { long: '20 de Marzo, 2027', short: '20 · Marzo · 2027' };
+assert.deepEqual(findSamplePublicationFields(defaultDates), [
+  'event.startsAt', 'dateLabels.long', 'dateLabels.short'
+]);
+defaultDates.event.startsAt = '2027-04-18T18:00:00-06:00';
+assert.deepEqual(findSamplePublicationFields(defaultDates), ['dateLabels.long', 'dateLabels.short']);
 console.log('Publication preflight detects exact Studio sample values only in projected fields.');
