@@ -2704,10 +2704,51 @@ function updatePreview(forced = false) {
 
 function setupCloudActions() {
   const saveButton = document.getElementById('btnSaveCloud');
+  const previewButton = document.getElementById('btnPreviewPublication');
   const publishButton = document.getElementById('btnPublishCloud');
   if (!requestedCloudProjectId || !saveButton || !publishButton) return;
   saveButton.hidden = false;
+  if (previewButton) previewButton.hidden = false;
   publishButton.hidden = false;
+
+  if (previewButton) previewButton.addEventListener('click', async () => {
+    if (cloudLoadError || !savedCloudDocumentId || cloudDirty || JSON.stringify(currentConfig) !== savedCloudConfig) {
+      return showToast('Guarda primero los cambios en nube para revisar la publicación.');
+    }
+    previewButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/publication-preview', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ projectId: requestedCloudProjectId, documentId: savedCloudDocumentId })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.preview || !result.preview.artifact) throw new Error(result.error || 'No se pudo preparar la revisión.');
+      const artifact = result.preview.artifact;
+      const publicContent = artifact.content || {};
+      const venues = publicContent.details || {};
+      const bank = publicContent.giftRegistry && publicContent.giftRegistry.bank || {};
+      const lines = [
+        `Revisión ${result.preview.revision}`,
+        `Título: ${publicContent.content && publicContent.content.title || 'Sin título'}`,
+        `Fecha: ${publicContent.dateLabels && publicContent.dateLabels.long || publicContent.event && publicContent.event.startsAt || 'Sin fecha'}`,
+        venues.ceremony && venues.ceremony.venue ? `Ceremonia: ${venues.ceremony.venue}` : '',
+        venues.reception && venues.reception.venue ? `Recepción: ${venues.reception.venue}` : '',
+        bank.clabe ? `Cuenta bancaria: ${bank.bankName || ''} · ${bank.holder || ''} · ${bank.clabe}` : '',
+        publicContent.whatsappNumber ? `WhatsApp: ${publicContent.whatsappNumber}` : '',
+        ...(publicContent.whatsappHosts || []).filter(host => host.phone).map(host => `Contacto: ${host.label || 'Anfitrión'} · ${host.phone}`),
+        ...(publicContent.lodging && publicContent.lodging.hotels || []).filter(hotel => hotel.code).map(hotel => `Hotel: ${hotel.name || ''} · código ${hotel.code}`),
+        publicContent.sharedAlbum && publicContent.sharedAlbum.accessCode ? `Código de álbum: ${publicContent.sharedAlbum.accessCode}` : '',
+        `Imágenes: ${(artifact.imageFields || []).length}`
+      ].filter(Boolean);
+      document.getElementById('publicationPreviewSummary').textContent = lines.join('\n');
+      document.getElementById('publicationPreviewJson').textContent = JSON.stringify(artifact, null, 2);
+      document.getElementById('publicationPreviewDialog').showModal();
+    } catch (error) {
+      showToast(error.message || 'No se pudo preparar la revisión.');
+    } finally {
+      previewButton.disabled = false;
+    }
+  });
 
   saveButton.addEventListener('click', async () => {
     if (cloudLoadError) return showToast('No se puede guardar: primero resuelve el acceso al proyecto.');
