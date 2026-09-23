@@ -187,9 +187,9 @@ const userId = '10000000-0000-4000-8000-000000000001';
   });
   assert.strictEqual(published.status, 'published');
 
-  for (const rejectedDocument of [
-    { ...publishableDocument, content: { primaryName: 'Catalina' } },
-    { ...publishableDocument, assets: { hero: { storagePath: `${documentId}/hero/${documentId}.webp` } } },
+  for (const [rejectedDocument, expectedCode] of [
+    [{ ...publishableDocument, content: { primaryName: 'Catalina' } }, 'PUBLICATION_SAMPLE_DATA'],
+    [{ ...publishableDocument, assets: { hero: { storagePath: `${documentId}/hero/${documentId}.webp` } } }, 'INVALID_PUBLICATION'],
   ]) {
     let patchCalled = false;
     await assert.rejects(publishRevisionWithUserToken({
@@ -200,7 +200,7 @@ const userId = '10000000-0000-4000-8000-000000000001';
           id: documentId, project_id: fixture.projectId, revision: 1, document: rejectedDocument,
         }] };
       },
-    }), (error) => error.code === 'INVALID_PUBLICATION' && error.status === 422);
+    }), (error) => error.code === expectedCode && error.status === 422);
     assert.strictEqual(patchCalled, false);
   }
 

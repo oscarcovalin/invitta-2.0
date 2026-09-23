@@ -2722,7 +2722,21 @@ function setupCloudActions() {
         body: JSON.stringify({ projectId: requestedCloudProjectId, documentId: savedCloudDocumentId })
       });
       const result = await response.json();
-      if (!response.ok || !result.preview || !result.preview.artifact) throw new Error(result.error || 'No se pudo preparar la revisión.');
+      if (!response.ok || !result.preview || !result.preview.artifact) {
+        if (Array.isArray(result.fields) && result.fields.length) {
+          const names = {
+            'content.title': 'Título', 'content.primaryName': 'Primer nombre', 'content.secondaryName': 'Segundo nombre',
+            'giftRegistry.bank.holder': 'Titular bancario', 'giftRegistry.bank.clabe': 'CLABE',
+            whatsappNumber: 'WhatsApp', 'sharedAlbum.accessCode': 'Código de álbum'
+          };
+          const labels = result.fields.map(field => names[field]
+            || (field.startsWith('whatsappHosts[') ? 'Teléfono de anfitrión' : null)
+            || (field.startsWith('lodging.hotels[') ? 'Código de hotel' : null)
+            || 'Otro dato');
+          throw new Error(`Corrige estos datos de ejemplo: ${labels.join(', ')}.`);
+        }
+        throw new Error(result.error || 'No se pudo preparar la revisión.');
+      }
       const artifact = result.preview.artifact;
       const publicContent = artifact.content || {};
       const venues = publicContent.details || {};

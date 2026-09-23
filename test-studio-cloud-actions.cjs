@@ -15,6 +15,8 @@ const previewJson = { textContent: '' };
 const elements = { ...buttons, publicationPreviewDialog: previewDialog,
   publicationPreviewSummary: previewSummary, publicationPreviewJson: previewJson };
 const requests = [];
+const toasts = [];
+let previewFailure = false;
 const context = {
   window: { history: { replaceState(_state, _title, url) { this.lastUrl = url; } } }, URLSearchParams, encodeURIComponent, JSON,
   document: { getElementById: (id) => elements[id] },
@@ -22,6 +24,9 @@ const context = {
     requests.push({ url, body: JSON.parse(options.body) });
     if (url.endsWith('/upload-asset')) return { ok: true, json: async () => ({ asset: { storagePath } }) };
     if (url.endsWith('/save-revision')) return { ok: true, json: async () => ({ revision: { id: documentId, revision: 1 } }) };
+    if (url.endsWith('/publication-preview') && previewFailure) return {
+      ok: false, json: async () => ({ error: 'Hay datos de ejemplo por corregir.', fields: ['content.title', 'whatsappNumber'] })
+    };
     if (url.endsWith('/publication-preview')) return { ok: true, json: async () => ({ preview: {
       revision: 1, artifact: { content: { content: { title: 'Ana y Luis' }, giftRegistry: { bank: { clabe: '123456789012345678' } } }, imageFields: ['photos.hero'] }
     } }) };
@@ -29,7 +34,7 @@ const context = {
     if (url.endsWith('/create')) return { ok: true, json: async () => ({ project: { id: projectId, status: 'draft' } }) };
     throw new Error(`Unexpected request: ${url}`);
   },
-  populateForm() {}, updatePreview() {}, showToast() {},
+  populateForm() {}, updatePreview() {}, showToast(message) { toasts.push(message); },
 };
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
@@ -81,6 +86,10 @@ setupProjectCreationAction();
   await buttons.btnPublishCloud.handlers.click();
   assert.strictEqual(requests[4].url, '/api/projects/publish-revision');
   assert.strictEqual(requests[4].body.documentId, documentId);
+  previewFailure = true;
+  await buttons.btnPreviewPublication.handlers.click();
+  assert.match(toasts.at(-1), /Título/);
+  assert.match(toasts.at(-1), /WhatsApp/);
   const studioHtml = fs.readFileSync('./invitacion-estudio.html', 'utf8');
   assert.match(studioHtml, /id="publicationPreviewDialog"[^>]*aria-labelledby=/);
   assert.match(studioHtml, /id="btnPreviewPublication"/);

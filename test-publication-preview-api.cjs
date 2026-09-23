@@ -41,7 +41,8 @@ function response() {
   await assert.rejects(previewPublicationWithUserToken({
     accessToken: 'owner-token', projectId, documentId, config,
     fetchImpl: async () => ({ ok: true, json: async () => [{ id: documentId, project_id: projectId, revision: 2, document: sample }] }),
-  }), (error) => error.code === 'INVALID_PUBLICATION' && error.status === 422);
+  }), (error) => error.code === 'PUBLICATION_SAMPLE_DATA' && error.status === 422
+    && error.fields.includes('content.title'));
   await assert.rejects(previewPublicationWithUserToken({
     accessToken: 'owner-token', projectId, documentId, config,
     fetchImpl: async () => ({ ok: true, json: async () => [] }),
@@ -61,6 +62,22 @@ function response() {
   assert.deepEqual(ok.body, { success: true, preview });
   assert.equal(ok.headers['Cache-Control'], 'no-store');
   assert.equal(readCalled, true);
+
+  const sampleHandler = createPublicationPreviewHandler({
+    authService: {
+      ACCESS_COOKIE: 'session', parseCookies: () => ({ session: 'owner-token' }),
+      getAuthConfig: () => config, getAuthenticatedUser: async () => ({ id: projectId }),
+    },
+    previewPublication: async () => {
+      const error = new Error('Hay datos de ejemplo por corregir.');
+      error.code = 'PUBLICATION_SAMPLE_DATA'; error.status = 422; error.fields = ['content.title'];
+      throw error;
+    },
+  });
+  const needsCorrection = response();
+  await sampleHandler({ method: 'POST', headers: {}, body: { projectId, documentId } }, needsCorrection);
+  assert.equal(needsCorrection.code, 422);
+  assert.deepEqual(needsCorrection.body.fields, ['content.title']);
 
   const off = createPublicationPreviewHandler({
     authService: { ACCESS_COOKIE: 'session', parseCookies: () => ({}) },

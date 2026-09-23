@@ -48,6 +48,8 @@ La acción actual de Studio conserva su respuesta, pero ahora lee la revisión g
 
 `POST /api/projects/publication-preview` permite preparar una revisión privada por `projectId` y `documentId` con la sesión de Studio. Devuelve sólo el `publicArtifact` y el número de revisión, con `no-store`; las rutas privadas de Storage y el documento fuente no salen en la respuesta. Studio ofrece ahora «Revisar publicación» para ver un resumen de los datos sensibles y el contenido permitido completo de una revisión guardada, sin activar la URL. La lectura conserva las políticas RLS del usuario. Aún falta persistencia y verificación visual en navegador.
 
+Si la revisión conserva ejemplos exactos de Studio, esta ruta privada devuelve sólo las rutas de campo afectadas (sin valores) para que Studio indique qué corregir. Las rutas públicas no muestran ese diagnóstico ni distinguen una revisión rechazada de una inexistente.
+
 1. Inventariar los campos que el motor de invitación realmente necesita y clasificarlos como públicos o privados; probar que la proyección excluye datos privados.
 2. Crear el almacenamiento aditivo del artefacto y su rollback sin modificar ni borrar documentos privados existentes.
 3. Hacer que la acción de publicar genere y valide el artefacto antes de activar el slug; probar fallos parciales y concurrencia.
