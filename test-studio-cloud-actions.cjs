@@ -29,7 +29,8 @@ vm.runInContext(fs.readFileSync('./project-asset-client.js', 'utf8'), context);
 const app = fs.readFileSync('./app.js', 'utf8');
 const cloudActions = app.slice(app.indexOf('function setupCloudActions()'), app.indexOf('// ==================== HEADER ACTIONS & EXPORT'));
 vm.runInContext(`
-let requestedCloudProjectId = '${projectId}';
+let requestedCloudProjectId = null;
+let currentProjectId = null;
 let currentConfig = { eventType: 'boda', name: 'Prueba', photos: { hero: 'data:image/png;base64,iVBORw0KGgo=' } };
 let loadedCloudRevision = null;
 let cloudLoadError = false;
@@ -38,26 +39,27 @@ let cloudDirty = true;
 let savedCloudConfig = null;
 ${cloudActions}
 setupCloudActions();
+setupProjectCreationAction();
 `, context);
 
 (async () => {
+  assert.strictEqual(buttons.btnSaveCloud.hidden, true);
+  assert.strictEqual(buttons.btnCreateCloud.hidden, false);
+  await buttons.btnCreateCloud.handlers.click();
+  assert.strictEqual(requests[0].url, '/api/projects/create');
+  assert.strictEqual(requests[0].body.name, 'Prueba');
+  assert.strictEqual(vm.runInContext('requestedCloudProjectId', context), projectId);
+  assert.match(context.window.history.lastUrl, /project=20000000/);
+  assert.strictEqual(buttons.btnCreateCloud.hidden, true);
   assert.strictEqual(buttons.btnSaveCloud.hidden, false);
   await buttons.btnSaveCloud.handlers.click();
-  assert.deepStrictEqual(requests.map((item) => item.url), ['/api/projects/upload-asset', '/api/projects/save-revision']);
-  assert.strictEqual(requests[1].body.document.legacy.config.photos.hero, storagePath);
-  assert.strictEqual(requests[1].body.expectedRevision, 0);
+  assert.deepStrictEqual(requests.map((item) => item.url), ['/api/projects/create', '/api/projects/upload-asset', '/api/projects/save-revision']);
+  assert.strictEqual(requests[2].body.document.legacy.config.photos.hero, storagePath);
+  assert.strictEqual(requests[2].body.expectedRevision, 0);
   assert.strictEqual(vm.runInContext('cloudDirty', context), false);
   assert.match(vm.runInContext('currentConfig.photos.hero', context), /^\/api\/projects\/asset\?path=/);
   await buttons.btnPublishCloud.handlers.click();
-  assert.strictEqual(requests[2].url, '/api/projects/publish-revision');
-  assert.strictEqual(requests[2].body.documentId, documentId);
-
-  vm.runInContext("requestedCloudProjectId = null; currentProjectId = null; currentConfig.name = 'Nueva boda';", context);
-  vm.runInContext('setupProjectCreationAction()', context);
-  await buttons.btnCreateCloud.handlers.click();
-  assert.strictEqual(requests[3].url, '/api/projects/create');
-  assert.strictEqual(requests[3].body.name, 'Nueva boda');
-  assert.strictEqual(vm.runInContext('requestedCloudProjectId', context), projectId);
-  assert.match(context.window.history.lastUrl, /project=20000000/);
-  console.log('Studio uploads private images, saves a revision, and publishes only the saved document.');
+  assert.strictEqual(requests[3].url, '/api/projects/publish-revision');
+  assert.strictEqual(requests[3].body.documentId, documentId);
+  console.log('Studio creates a private project, saves its first revision, and marks that revision published.');
 })().catch((error) => { console.error(error); process.exitCode = 1; });
