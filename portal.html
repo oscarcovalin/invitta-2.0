@@ -855,8 +855,7 @@
               feedback.className = 'text-xs mt-3 p-3 rounded-xl bg-[#EBF5F2] border border-[#D5EBE4] text-[#377061] font-semibold block animate-pulse';
               feedback.textContent = '✨ ¡Acceso concedido! Redirigiendo a tu espacio privado...';
               setTimeout(() => {
-                const next = new URLSearchParams(window.location.search).get('next') || 'organizador-mesas.html';
-                window.location.href = next;
+                window.location.href = 'organizador-mesas.html';
               }, 300);
             }
           } else {
