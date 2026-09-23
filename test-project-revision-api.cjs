@@ -147,13 +147,23 @@ const userId = '10000000-0000-4000-8000-000000000001';
   assert.strictEqual(successfulResponse.headers['Cache-Control'], 'no-store');
 
   const documentId = '30000000-0000-4000-8000-000000000001';
+  const publishableDocument = structuredClone(fixture);
+  publishableDocument.content.title = 'Ana y Luis';
   let publishRequest;
+  let publishRead;
   const published = await publishRevisionWithUserToken({
     accessToken: 'owner-access-token',
     projectId: fixture.projectId,
     documentId,
     config,
     fetchImpl: async (url, options) => {
+      if (options.method === 'GET') {
+        publishRead = { url, options };
+        return { ok: true, status: 200, json: async () => [{
+          id: documentId, project_id: fixture.projectId, revision: 1,
+          document: publishableDocument,
+        }] };
+      }
       publishRequest = { url, options };
       return {
         ok: true,
@@ -162,6 +172,9 @@ const userId = '10000000-0000-4000-8000-000000000001';
       };
     },
   });
+  assert.ok(publishRead.url.includes(`id=eq.${documentId}`));
+  assert.ok(publishRead.url.includes(`project_id=eq.${fixture.projectId}`));
+  assert.strictEqual(publishRead.options.headers.Authorization, 'Bearer owner-access-token');
   assert.strictEqual(
     publishRequest.url,
     `https://example.supabase.co/rest/v1/invitation_projects?id=eq.${fixture.projectId}&select=id%2Cpublished_document_id%2Cstatus%2Cupdated_at`
@@ -173,6 +186,39 @@ const userId = '10000000-0000-4000-8000-000000000001';
     status: 'published',
   });
   assert.strictEqual(published.status, 'published');
+
+  for (const rejectedDocument of [
+    { ...publishableDocument, content: { primaryName: 'Catalina' } },
+    { ...publishableDocument, assets: { hero: { storagePath: `${documentId}/hero/${documentId}.webp` } } },
+  ]) {
+    let patchCalled = false;
+    await assert.rejects(publishRevisionWithUserToken({
+      accessToken: 'owner-access-token', projectId: fixture.projectId, documentId, config,
+      fetchImpl: async (_url, options) => {
+        if (options.method === 'PATCH') patchCalled = true;
+        return { ok: true, status: 200, json: async () => [{
+          id: documentId, project_id: fixture.projectId, revision: 1, document: rejectedDocument,
+        }] };
+      },
+    }), (error) => error.code === 'INVALID_PUBLICATION' && error.status === 422);
+    assert.strictEqual(patchCalled, false);
+  }
+
+  for (const readResponse of [
+    { ok: true, status: 200, json: async () => [] },
+    { ok: false, status: 502, json: async () => ({ message: 'private database detail' }) },
+  ]) {
+    let patchCalled = false;
+    await assert.rejects(publishRevisionWithUserToken({
+      accessToken: 'owner-access-token', projectId: fixture.projectId, documentId, config,
+      fetchImpl: async (_url, options) => {
+        if (options.method === 'PATCH') patchCalled = true;
+        return readResponse;
+      },
+    }), (error) => (error.code === 'PROJECT_ACCESS_DENIED' || error.code === 'REVISION_LOAD_FAILED')
+      && !error.message.includes('private database detail'));
+    assert.strictEqual(patchCalled, false);
+  }
 
   let loadRequest;
   const latest = await getLatestRevisionWithUserToken({

@@ -42,7 +42,9 @@ Conserva la apariencia actual y puede servir como artefacto derivado, pero exige
 
 ## Secuencia y criterios de salida
 
-Ya existe un constructor puro del candidato de publicación. Separa `publicArtifact` (contenido filtrado, identificadores de imágenes y rutas estáticas permitidas) de `privateImages` (rutas internas de Storage) y de `source` (identidad de revisión). Rechaza ejemplos exactos de Studio e imágenes inválidas. Todavía no persiste el candidato, no concede acceso anónimo y no modifica el comportamiento del botón Publicar.
+Ya existe un constructor puro del candidato de publicación. Separa `publicArtifact` (contenido filtrado, identificadores de imágenes y rutas estáticas permitidas) de `privateImages` (rutas internas de Storage) y de `source` (identidad de revisión). Rechaza ejemplos exactos de Studio e imágenes inválidas. Todavía no persiste el candidato ni concede acceso anónimo.
+
+La acción actual de Studio conserva su respuesta, pero ahora lee la revisión guardada con el JWT del usuario y ejecuta esa validación **antes** de marcarla `published`. Una revisión ausente, mal formada, con ejemplos o con rutas inválidas no cambia el estado. Esto es un control preliminar, no la generación persistida del artefacto: `published` sigue sin significar que exista una URL final aprobada.
 
 1. Inventariar los campos que el motor de invitación realmente necesita y clasificarlos como públicos o privados; probar que la proyección excluye datos privados.
 2. Crear el almacenamiento aditivo del artefacto y su rollback sin modificar ni borrar documentos privados existentes.
