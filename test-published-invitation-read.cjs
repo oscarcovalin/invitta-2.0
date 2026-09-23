@@ -40,6 +40,13 @@ function response() {
   assert.doesNotMatch(JSON.stringify(result), /SECRET_|legacy|projectId/);
   assert.equal(ok.calls.length, 3);
 
+  const sampleDocument = structuredClone(document);
+  sampleDocument.content.primaryName = 'Catalina';
+  const sample = fakeFetch({ saved: sampleDocument });
+  await assert.rejects(readPublishedInvitation({ slug: 'ana-luis', config, fetchImpl: sample.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(sample.calls.length, 2);
+
   for (const [input, setup, expectedCalls] of [
     ['../private', {}, 0],
     ['ana-luis', { first: { ...project, status: 'draft' } }, 1],
