@@ -37,6 +37,24 @@ const client = context.window.ProjectAssetClient;
   });
   assert.strictEqual(imported.photos.hero, storagePath);
 
+  vm.runInContext(fs.readFileSync('./template-engine.js', 'utf8') + '; globalThis.defaultInvitationConfig = TemplateEngine.defaultConfig;', context);
+  const bundledFontConfig = { typography: context.defaultInvitationConfig.typography };
+  const bundledFontStored = await client.toStoredConfig(bundledFontConfig, {
+    projectId,
+    upload: async () => { throw Error('Bundled font must not need a private upload'); },
+  });
+  assert.strictEqual(bundledFontStored.typography.customNamesFile, 'assets/cherolina.ttf');
+  assert.ok(fs.existsSync('./assets/cherolina.ttf'));
+  const defaultStored = await client.toStoredConfig(context.defaultInvitationConfig, {
+    projectId,
+    importRemote: async () => ({ mimeType: 'image/png', base64: 'iVBORw0KGgo=' }),
+    upload: async ({ slot }) => ({ storagePath: `${projectId}/${slot}/${assetId}.png` }),
+  });
+  assert.strictEqual(defaultStored.typography.customNamesFile, 'assets/cherolina.ttf');
+  vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
+  const firstRevision = context.window.InvitationDocumentAdapter.fromLegacyTemplateConfig(defaultStored, { projectId });
+  assert.strictEqual(firstRevision.pendingAssets.length, 0);
+
   let remoteRequest;
   const remoteImage = await client.importRemoteImage('https://images.example.com/photo.png', async (url, options) => {
     remoteRequest = { url, options };
