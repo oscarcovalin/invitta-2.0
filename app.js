@@ -1347,12 +1347,14 @@ function populateForm() {
 
   // Ubicaciones
   document.getElementById('inputCeremonyVenue').value = currentConfig.ceremony.venue || '';
+  document.getElementById('inputCeremonyImage').value = currentConfig.ceremony.image || '';
   document.getElementById('inputCeremonyAddress').value = currentConfig.ceremony.address || '';
   document.getElementById('inputCeremonyTime').value = currentConfig.ceremony.time || '';
   document.getElementById('inputCeremonyMap').value = currentConfig.ceremony.mapsUrl || '';
   document.getElementById('inputCeremonyWaze').value = currentConfig.ceremony.wazeUrl || '';
 
   document.getElementById('inputReceptionVenue').value = currentConfig.reception.venue || '';
+  document.getElementById('inputReceptionImage').value = currentConfig.reception.image || '';
   document.getElementById('inputReceptionAddress').value = currentConfig.reception.address || '';
   document.getElementById('inputReceptionTime').value = currentConfig.reception.time || '';
   document.getElementById('inputReceptionMap').value = currentConfig.reception.mapsUrl || '';
@@ -1675,11 +1677,13 @@ function setupInputListeners() {
     { id: 'inputGodmother', path: 'godmother' },
     { id: 'inputGodfather', path: 'godfather' },
     { id: 'inputCeremonyVenue', path: 'ceremony.venue' },
+    { id: 'inputCeremonyImage', path: 'ceremony.image' },
     { id: 'inputCeremonyAddress', path: 'ceremony.address' },
     { id: 'inputCeremonyTime', path: 'ceremony.time' },
     { id: 'inputCeremonyMap', path: 'ceremony.mapsUrl' },
     { id: 'inputCeremonyWaze', path: 'ceremony.wazeUrl' },
     { id: 'inputReceptionVenue', path: 'reception.venue' },
+    { id: 'inputReceptionImage', path: 'reception.image' },
     { id: 'inputReceptionAddress', path: 'reception.address' },
     { id: 'inputReceptionTime', path: 'reception.time' },
     { id: 'inputReceptionMap', path: 'reception.mapsUrl' },
@@ -2642,7 +2646,9 @@ function setupFileUploads() {
   const map = [
     { fileId: 'filePhotoHero', inputId: 'inputPhotoHero', clearBtnId: 'btnClearPhotoHero', path: 'photos.hero', name: 'Foto de portada' },
     { fileId: 'filePhotoDate', inputId: 'inputPhotoDate', clearBtnId: 'btnClearPhotoDate', path: 'photos.saveTheDate', name: 'Foto Save The Date' },
-    { fileId: 'filePhotoPortrait', inputId: 'inputPhotoPortrait', clearBtnId: 'btnClearPhotoPortrait', path: 'photos.portrait', name: 'Retrato de bienvenida' }
+    { fileId: 'filePhotoPortrait', inputId: 'inputPhotoPortrait', clearBtnId: 'btnClearPhotoPortrait', path: 'photos.portrait', name: 'Retrato de bienvenida' },
+    { fileId: 'fileCeremonyImage', inputId: 'inputCeremonyImage', clearBtnId: 'btnClearCeremonyImage', path: 'ceremony.image', name: 'Foto de ceremonia' },
+    { fileId: 'fileReceptionImage', inputId: 'inputReceptionImage', clearBtnId: 'btnClearReceptionImage', path: 'reception.image', name: 'Foto de recepción' }
   ];
 
   map.forEach(({ fileId, inputId, clearBtnId, path, name }) => {
@@ -2654,6 +2660,12 @@ function setupFileUploads() {
       fileEl.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
+          if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)
+              || !Number.isFinite(file.size) || file.size < 1 || file.size > 3 * 1024 * 1024) {
+            fileEl.value = '';
+            showToast('Usa una foto JPG, PNG, WebP o GIF de hasta 3 MB.');
+            return;
+          }
           const reader = new FileReader();
           reader.onload = (re) => {
             inputEl.value = re.target.result;
