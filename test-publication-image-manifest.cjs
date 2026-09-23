@@ -46,6 +46,39 @@ legacyHidden.legacy.config.locationsEnabled = false;
 assert.equal(collectPublicationImages(legacyHidden).some((entry) =>
   ['ceremony.image', 'reception.image', 'sectionBackgrounds.details.image'].includes(entry.field)), false);
 
+const disabledBackgrounds = structuredClone(document);
+disabledBackgrounds.sections = ['hero', 'details', 'gallery', 'giftRegistry', 'itinerary', 'lodging', 'sharedAlbum', 'rsvp', 'unknown']
+  .map((id) => ({ id, enabled: true }));
+disabledBackgrounds.legacy.config.sectionBackgrounds = Object.fromEntries(
+  disabledBackgrounds.sections.map(({ id }) => [id, { image: image('section-background') }])
+);
+disabledBackgrounds.legacy.config.photos.galleryEnabled = false;
+disabledBackgrounds.legacy.config.giftRegistry = { enabled: false };
+disabledBackgrounds.legacy.config.itineraryEnabled = false;
+disabledBackgrounds.legacy.config.itinerary = [{ label: 'Ceremonia' }];
+disabledBackgrounds.legacy.config.lodging = { enabled: false, hotels: [{ name: 'Hotel' }] };
+disabledBackgrounds.legacy.config.sharedAlbum = { enabled: false };
+disabledBackgrounds.legacy.config.rsvpEnabled = false;
+assert.deepEqual(collectPublicationImages(disabledBackgrounds)
+  .filter((entry) => entry.field.startsWith('sectionBackgrounds.'))
+  .map((entry) => entry.field), [
+    'sectionBackgrounds.hero.image', 'sectionBackgrounds.details.image'
+  ]);
+disabledBackgrounds.legacy.config.photos.galleryEnabled = true;
+disabledBackgrounds.legacy.config.giftRegistry.enabled = true;
+disabledBackgrounds.legacy.config.itineraryEnabled = true;
+disabledBackgrounds.legacy.config.lodging.enabled = true;
+disabledBackgrounds.legacy.config.sharedAlbum.enabled = true;
+disabledBackgrounds.legacy.config.rsvpEnabled = true;
+assert.deepEqual(collectPublicationImages(disabledBackgrounds)
+  .filter((entry) => entry.field.startsWith('sectionBackgrounds.'))
+  .map((entry) => entry.field), [
+    'sectionBackgrounds.hero.image', 'sectionBackgrounds.details.image',
+    'sectionBackgrounds.gallery.image', 'sectionBackgrounds.giftRegistry.image',
+    'sectionBackgrounds.itinerary.image', 'sectionBackgrounds.lodging.image',
+    'sectionBackgrounds.sharedAlbum.image', 'sectionBackgrounds.rsvp.image'
+  ]);
+
 for (const badPath of [
   '40000000-0000-4000-8000-000000000001/hero/30000000-0000-4000-8000-000000000001.webp',
   '../secret.webp',
