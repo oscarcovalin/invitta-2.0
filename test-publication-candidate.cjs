@@ -43,6 +43,13 @@ const invalidImage = structuredClone(document);
 invalidImage.assets.hero.storagePath = `${documentId}/hero/${assetId}.webp`;
 assert.throws(() => buildPublicationCandidate({ documentId, document: invalidImage }), /Invalid publication image/);
 
+const oldEmptySections = structuredClone(document);
+oldEmptySections.sections = [];
+assert.throws(() => buildPublicationCandidate({ documentId, document: oldEmptySections }), /enabled section/i);
+const allHiddenSections = structuredClone(document);
+allHiddenSections.sections = [{ id: 'hero', enabled: false }];
+assert.throws(() => buildPublicationCandidate({ documentId, document: allHiddenSections }), /enabled section/i);
+
 assert.throws(() => buildPublicationCandidate({ documentId: 'invalid', document }), /Invalid publication source/);
 assert.throws(() => buildPublicationCandidate({ documentId, document: { ...document, revision: 0 } }), /Invalid publication source/);
 assert.throws(() => buildPublicationCandidate({ documentId, document: { ...document, schemaVersion: 2 } }), /Invalid publication source/);
