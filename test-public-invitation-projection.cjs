@@ -67,5 +67,32 @@ assert.equal('details' in unclassifiedResult, false);
 assert.equal('itinerary' in unclassifiedResult, false);
 assert.equal('giftRegistry' in unclassifiedResult, false);
 
+const links = structuredClone(document);
+links.legacy.config.ceremony.mapsUrl = 'https://maps.google.com/?q=Parroquia';
+links.legacy.config.ceremony.wazeUrl = 'https://waze.com/ul?q=Parroquia';
+links.legacy.config.reception.mapsUrl = 'https://maps.google.com.evil.test/place';
+links.legacy.config.reception.wazeUrl = 'https://waze.com@evil.test/ul';
+links.legacy.config.lodging.hotels[0].mapsUrl = 'https://www.google.com/maps/place/Hotel';
+assert.deepEqual(projectPublicInvitation(links).details, {
+  ceremony: {
+    venue: 'Parroquia', address: 'Calle Uno', time: '18:00',
+    mapsUrl: 'https://maps.google.com/?q=Parroquia',
+    wazeUrl: 'https://waze.com/ul?q=Parroquia',
+  },
+  reception: { venue: 'Jardín', address: 'Calle Dos', time: '20:00' },
+});
+assert.deepEqual(projectPublicInvitation(links).lodging.hotels[0], {
+  name: 'Hotel', code: 'FIESTA', mapsUrl: 'https://www.google.com/maps/place/Hotel',
+});
+
+const unsafeLinks = structuredClone(links);
+unsafeLinks.legacy.config.ceremony.mapsUrl = 'http://maps.google.com/?q=Parroquia';
+unsafeLinks.legacy.config.ceremony.wazeUrl = 'https://user@waze.com/ul?q=Parroquia';
+unsafeLinks.legacy.config.lodging.hotels[0].mapsUrl = 'javascript:alert(1)';
+const unsafeResult = projectPublicInvitation(unsafeLinks);
+assert.equal('mapsUrl' in unsafeResult.details.ceremony, false);
+assert.equal('wazeUrl' in unsafeResult.details.ceremony, false);
+assert.equal('mapsUrl' in unsafeResult.lodging.hotels[0], false);
+
 assert.throws(() => projectPublicInvitation({ ...document, schemaVersion: 2 }), /Unsupported/);
 console.log('Public invitation projection tests passed.');
