@@ -49,6 +49,10 @@ assert.throws(() => buildPublicationCandidate({ documentId, document: oldEmptySe
 const allHiddenSections = structuredClone(document);
 allHiddenSections.sections = [{ id: 'hero', enabled: false }];
 assert.throws(() => buildPublicationCandidate({ documentId, document: allHiddenSections }), /enabled section/i);
+const hiddenByLegacy = structuredClone(document);
+hiddenByLegacy.sections = [{ id: 'story', enabled: true }, { id: 'unknown', enabled: true }];
+hiddenByLegacy.legacy.config.story = { enabled: false, title: 'No visible' };
+assert.throws(() => buildPublicationCandidate({ documentId, document: hiddenByLegacy }), /enabled section/i);
 
 assert.throws(() => buildPublicationCandidate({ documentId: 'invalid', document }), /Invalid publication source/);
 assert.throws(() => buildPublicationCandidate({ documentId, document: { ...document, revision: 0 } }), /Invalid publication source/);

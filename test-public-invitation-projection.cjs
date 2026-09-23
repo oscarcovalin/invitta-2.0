@@ -88,6 +88,14 @@ assert.equal('giftRegistry' in unclassifiedResult, false);
 assert.equal('whatsappNumber' in unclassifiedResult, false);
 assert.equal('whatsappHosts' in unclassifiedResult, false);
 
+const legacyHiddenSections = structuredClone(document);
+legacyHiddenSections.sections = [{ id: 'details', enabled: true }, { id: 'rsvp', enabled: true }, { id: 'unknown', enabled: true }];
+legacyHiddenSections.legacy.config.locationsEnabled = false;
+legacyHiddenSections.legacy.config.rsvpEnabled = false;
+assert.deepEqual(projectPublicInvitation(legacyHiddenSections).sections, [
+  { id: 'details', enabled: false }, { id: 'rsvp', enabled: false }, { id: 'unknown', enabled: false }
+]);
+
 const links = structuredClone(document);
 links.legacy.config.ceremony.mapsUrl = 'https://maps.google.com/?q=Parroquia';
 links.legacy.config.ceremony.wazeUrl = 'https://waze.com/ul?q=Parroquia';
