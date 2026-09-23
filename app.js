@@ -2735,7 +2735,10 @@ function setupCloudActions() {
             || (field.startsWith('whatsappHosts[') ? 'Teléfono de anfitrión' : null)
             || (field.startsWith('lodging.hotels[') ? 'Código de hotel' : null)
             || 'Otro dato');
-          throw new Error(`Corrige estos datos de ejemplo: ${labels.join(', ')}.`);
+          const reason = result.code === 'PUBLICATION_DATE_MISMATCH'
+            ? 'Estas fechas no coinciden con la fecha del evento'
+            : 'Corrige estos datos de ejemplo';
+          throw new Error(`${reason}: ${labels.join(', ')}.`);
         }
         throw new Error(result.error || 'No se pudo preparar la revisión.');
       }

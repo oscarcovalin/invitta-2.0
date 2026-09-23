@@ -43,6 +43,13 @@ function response() {
     fetchImpl: async () => ({ ok: true, json: async () => [{ id: documentId, project_id: projectId, revision: 2, document: sample }] }),
   }), (error) => error.code === 'PUBLICATION_SAMPLE_DATA' && error.status === 422
     && error.fields.includes('content.title'));
+  const inconsistentDate = structuredClone(document);
+  inconsistentDate.legacy.config.eventDateLabel = '2 de Mayo, 2027';
+  await assert.rejects(previewPublicationWithUserToken({
+    accessToken: 'owner-token', projectId, documentId, config,
+    fetchImpl: async () => ({ ok: true, json: async () => [{ id: documentId, project_id: projectId, revision: 2, document: inconsistentDate }] }),
+  }), (error) => error.code === 'PUBLICATION_DATE_MISMATCH' && error.status === 422
+    && error.fields.includes('dateLabels.long'));
   await assert.rejects(previewPublicationWithUserToken({
     accessToken: 'owner-token', projectId, documentId, config,
     fetchImpl: async () => ({ ok: true, json: async () => [] }),
@@ -78,6 +85,22 @@ function response() {
   await sampleHandler({ method: 'POST', headers: {}, body: { projectId, documentId } }, needsCorrection);
   assert.equal(needsCorrection.code, 422);
   assert.deepEqual(needsCorrection.body.fields, ['content.title']);
+
+  const dateHandler = createPublicationPreviewHandler({
+    authService: {
+      ACCESS_COOKIE: 'session', parseCookies: () => ({ session: 'owner-token' }),
+      getAuthConfig: () => config, getAuthenticatedUser: async () => ({ id: projectId }),
+    },
+    previewPublication: async () => {
+      const error = new Error('La fecha escrita no coincide con la fecha del evento.');
+      error.code = 'PUBLICATION_DATE_MISMATCH'; error.status = 422; error.fields = ['dateLabels.long'];
+      throw error;
+    },
+  });
+  const dateCorrection = response();
+  await dateHandler({ method: 'POST', headers: {}, body: { projectId, documentId } }, dateCorrection);
+  assert.equal(dateCorrection.body.code, 'PUBLICATION_DATE_MISMATCH');
+  assert.deepEqual(dateCorrection.body.fields, ['dateLabels.long']);
 
   const off = createPublicationPreviewHandler({
     authService: { ACCESS_COOKIE: 'session', parseCookies: () => ({}) },

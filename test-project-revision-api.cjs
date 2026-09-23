@@ -190,6 +190,7 @@ const userId = '10000000-0000-4000-8000-000000000001';
 
   for (const [rejectedDocument, expectedCode] of [
     [{ ...publishableDocument, content: { primaryName: 'Catalina' } }, 'PUBLICATION_SAMPLE_DATA'],
+    [{ ...publishableDocument, legacy: { config: { eventDateLabel: '2 de Mayo, 2027' } } }, 'PUBLICATION_DATE_MISMATCH'],
     [{ ...publishableDocument, assets: { hero: { storagePath: `${documentId}/hero/${documentId}.webp` } } }, 'INVALID_PUBLICATION'],
   ]) {
     let patchCalled = false;

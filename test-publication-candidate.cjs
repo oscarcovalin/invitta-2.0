@@ -39,6 +39,21 @@ sampleStory.legacy.config.story = { enabled: true, title: 'Nuestra Historia' };
 assert.throws(() => buildPublicationCandidate({ documentId, document: sampleStory }), (error) =>
   error.fields.includes('story.title'));
 
+const inconsistentDate = structuredClone(document);
+inconsistentDate.event = { startsAt: '2027-04-18T18:00:00-06:00' };
+inconsistentDate.legacy.config.eventDateLabel = '19 de Abril, 2027';
+inconsistentDate.legacy.config.eventDateShort = '18 · Abril · 2027';
+assert.throws(() => buildPublicationCandidate({ documentId, document: inconsistentDate }), (error) =>
+  error.code === 'PUBLICATION_DATE_MISMATCH' && error.fields.includes('dateLabels.long'));
+inconsistentDate.legacy.config.eventDateLabel = '18 de Abril, 2027';
+assert.doesNotThrow(() => buildPublicationCandidate({ documentId, document: inconsistentDate }));
+inconsistentDate.legacy.config.eventDateShort = '18 · Mayo · 2027';
+assert.throws(() => buildPublicationCandidate({ documentId, document: inconsistentDate }), (error) =>
+  error.code === 'PUBLICATION_DATE_MISMATCH' && error.fields.includes('dateLabels.short'));
+inconsistentDate.legacy.config.eventDateShort = '18 · Abril · 2027';
+inconsistentDate.legacy.config.eventDateLabel = 'Domingo por la tarde';
+assert.doesNotThrow(() => buildPublicationCandidate({ documentId, document: inconsistentDate }));
+
 const invalidImage = structuredClone(document);
 invalidImage.assets.hero.storagePath = `${documentId}/hero/${assetId}.webp`;
 assert.throws(() => buildPublicationCandidate({ documentId, document: invalidImage }), /Invalid publication image/);
