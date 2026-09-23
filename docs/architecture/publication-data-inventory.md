@@ -6,6 +6,9 @@ Este inventario delimita la futura entrega por `slug`. Hay una proyección parci
 
 `TemplateEngine.defaultConfig` tiene 54 campos de primer nivel. El adaptador actual traslada 12 de ellos, total o parcialmente, a `event`, `content`, `design`, `sections` o `assets`; los otros 42 sólo sobreviven dentro de `legacy.config`. Incluso `ceremony` y `reception` sólo trasladan sus imágenes a `assets`: sede, dirección y hora permanecen en `legacy`. Por eso eliminar `legacy` de una respuesta pública sin evolucionar el contrato cambiaría visiblemente la invitación.
 
+Studio no incluye `sectionOrder` en su configuración predeterminada. Para revisiones nuevas sin ese campo, el adaptador infiere únicamente las secciones conocidas por el candidato público y sus indicadores de visibilidad; un orden explícito existente conserva su semántica. Este respaldo evita un artefacto sin secciones, pero no traslada todavía todas las secciones visuales del motor heredado.
+Las revisiones ya guardadas con `sections: []` no se reescriben: el propietario debe guardar una revisión nueva antes de intentar publicar su contenido. No se debe inferir secciones al leer documentos antiguos, porque eso cambiaría retrospectivamente una revisión publicada.
+
 ## Clasificación
 
 | Grupo | Campos actuales | Tratamiento para una entrega pública |

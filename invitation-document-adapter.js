@@ -5,6 +5,21 @@ const INVITATION_SCHEMA_VERSION = typeof module === 'object' && module.exports
 const EVENT_TYPES_TO_CANONICAL = { boda: 'wedding', xv: 'quinceanera' };
 const EVENT_TYPES_TO_LEGACY = { wedding: 'boda', quinceanera: 'xv', other: 'other' };
 const ASSET_FIELDS = ['ceremony', 'reception'];
+const STUDIO_SECTION_ORDER = ['hero', 'story', 'details', 'lodging', 'gallery', 'giftRegistry', 'itinerary', 'sharedAlbum', 'rsvp'];
+
+function studioSectionVisibility(config) {
+  return {
+    hero: true,
+    story: !!(config.story && config.story.enabled !== false && (config.story.title || config.story.text)),
+    details: (!config.locations || config.locations.enabled !== false) && config.locationsEnabled !== false,
+    lodging: !!(config.lodging && config.lodging.enabled !== false && Array.isArray(config.lodging.hotels) && config.lodging.hotels.length),
+    gallery: !!(config.photos && config.photos.galleryEnabled !== false && Array.isArray(config.photos.gallery) && config.photos.gallery.length),
+    giftRegistry: !!(config.giftRegistry && config.giftRegistry.enabled !== false),
+    itinerary: config.itineraryEnabled !== false && (!config.itinerary || config.itinerary.enabled !== false) && Array.isArray(config.itinerary) && config.itinerary.length > 0,
+    sharedAlbum: !!(config.sharedAlbum && config.sharedAlbum.enabled !== false),
+    rsvp: (!config.rsvp || config.rsvp.enabled !== false) && config.rsvpEnabled !== false,
+  };
+}
 
 function normalizeStartsAt(value, offset) {
   if (!value) return new Date().toISOString();
@@ -16,8 +31,10 @@ function fromLegacyTemplateConfig(config, { projectId, revision = 1 } = {}) {
   if (!config || typeof config !== 'object') throw new TypeError('Legacy config must be an object.');
   if (!projectId) throw new TypeError('projectId is required.');
 
-  const sectionOrder = Array.isArray(config.sectionOrder) ? config.sectionOrder : [];
+  const hasSectionOrder = Array.isArray(config.sectionOrder);
+  const sectionOrder = hasSectionOrder ? config.sectionOrder : STUDIO_SECTION_ORDER;
   const visibility = config.sectionVisibility || {};
+  const inferredVisibility = hasSectionOrder ? null : studioSectionVisibility(config);
   const assets = {};
   const pendingAssets = [];
   const legacyConfig = JSON.parse(JSON.stringify(config));
@@ -77,7 +94,7 @@ function fromLegacyTemplateConfig(config, { projectId, revision = 1 } = {}) {
         itinerary: Array.isArray(config.itinerary) ? config.itinerary : []
       },
       design: { theme: config.theme || 'vino' },
-      sections: sectionOrder.map((id) => ({ id, enabled: visibility[id] !== false })),
+      sections: sectionOrder.map((id) => ({ id, enabled: visibility[id] !== false && (!inferredVisibility || inferredVisibility[id] === true) })),
       assets,
       legacy: { source: 'template-engine-v2', config: legacyConfig }
     },

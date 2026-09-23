@@ -4,6 +4,7 @@ const {
   toLegacyTemplateConfig
 } = require('./invitation-document-adapter.js');
 const { validateInvitationDocument } = require('./invitation-document.js');
+const TemplateEngine = require('./template-engine.js');
 
 const legacy = {
   eventType: 'xv',
@@ -67,5 +68,37 @@ assert.strictEqual(advancedResult.document.legacy.config.photos.banner, '');
 assert.ok(advancedResult.pendingAssets.some((item) => item.key === 'photos.gallery.0'));
 assert.ok(advancedResult.pendingAssets.some((item) => item.key === 'photos.banner'));
 assert.deepStrictEqual(toLegacyTemplateConfig(advancedResult.document).typography, advanced.typography);
+
+const studioConfig = {
+  eventType: 'boda', name: 'Ana y Luis', eventDateISO: '2027-05-01T18:00',
+  story: { enabled: true, title: 'Nos conocimos en mayo' },
+  locations: { enabled: false },
+  itinerary: [{ time: '18:00', label: 'Ceremonia' }],
+  giftRegistry: { enabled: false, bank: { holder: 'Ana' } },
+  lodging: { enabled: true, hotels: [{ name: 'Hotel' }] },
+  sharedAlbum: { enabled: false, accessCode: 'FOTOS' },
+  rsvp: { enabled: true }, rsvpEnabled: false,
+  photos: { galleryEnabled: true, gallery: ['assets/gallery-boda-1.jpg'] },
+};
+const studioDocument = fromLegacyTemplateConfig(studioConfig, {
+  projectId: '20000000-0000-4000-8000-000000000002', revision: 1
+}).document;
+assert.deepStrictEqual(studioDocument.sections.map((section) => section.id), [
+  'hero', 'story', 'details', 'lodging', 'gallery', 'giftRegistry', 'itinerary', 'sharedAlbum', 'rsvp'
+]);
+assert.strictEqual(studioDocument.sections.find((section) => section.id === 'story').enabled, true);
+assert.strictEqual(studioDocument.sections.find((section) => section.id === 'details').enabled, false);
+assert.strictEqual(studioDocument.sections.find((section) => section.id === 'giftRegistry').enabled, false);
+assert.strictEqual(studioDocument.sections.find((section) => section.id === 'rsvp').enabled, false);
+assert.deepStrictEqual(toLegacyTemplateConfig(studioDocument).sectionOrder,
+  studioDocument.sections.map((section) => section.id));
+
+const defaultStudioDocument = fromLegacyTemplateConfig(TemplateEngine.defaultConfig, {
+  projectId: '20000000-0000-4000-8000-000000000002', revision: 1
+}).document;
+assert.strictEqual(defaultStudioDocument.sections.find((section) => section.id === 'hero').enabled, true);
+assert.strictEqual(defaultStudioDocument.sections.find((section) => section.id === 'story').enabled, true);
+assert.strictEqual(defaultStudioDocument.sections.find((section) => section.id === 'rsvp').enabled, true);
+assert.strictEqual(validateInvitationDocument(defaultStudioDocument).valid, true);
 
 console.log('Legacy invitation adapter preserves supported fields and quarantines inline assets.');
