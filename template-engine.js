@@ -1923,8 +1923,8 @@ tailwind.config = {
         <span id="vipGuestTickets" class="font-label-caps text-[10px] text-tertiary font-normal">2 Pases Reservados</span>
       </div>
 
-      <!-- Eyebrow: NUESTRA BODA / MIS XV AÑOS (Sans 11-14px Medium MAYÚSCULAS tracking +2 a +3px) -->
-      <p id="heroEyebrow" class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium gsap-eyebrow mb-2 sm:mb-3">
+      <!-- Eyebrow: preserve the configured text casing (Sans 11-14px Medium) -->
+      <p id="heroEyebrow" class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] font-medium gsap-eyebrow mb-2 sm:mb-3">
         ${config.eyebrow || (isWedding ? 'Nuestra Boda' : 'Mis XV Años')}
       </p>
 
@@ -1988,8 +1988,8 @@ tailwind.config = {
         <span id="vipGuestTickets" class="font-label-caps text-[10px] text-white/80 font-normal">2 Pases Reservados</span>
       </div>
 
-      <!-- Eyebrow: NUESTRA BODA / MIS XV AÑOS -->
-      <p id="heroEyebrow" class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] uppercase font-medium gsap-eyebrow mb-2 sm:mb-3">
+      <!-- Eyebrow: preserve the configured text casing -->
+      <p id="heroEyebrow" class="font-label-caps text-[11px] sm:text-[12px] text-antique-gold tracking-[0.25em] font-medium gsap-eyebrow mb-2 sm:mb-3">
         ${config.eyebrow || (isWedding ? 'Nuestra Boda' : 'Mis XV Años')}
       </p>
 
