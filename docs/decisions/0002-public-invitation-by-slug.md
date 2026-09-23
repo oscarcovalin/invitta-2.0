@@ -19,10 +19,12 @@ Por tanto, `status = 'published'` no equivale todavía a una invitación entrega
 Separar explícitamente la edición privada de la entrega pública:
 
 1. Mantener `invitation_projects`, `invitation_documents` y `invitation-assets` privados, con sus políticas actuales. No añadir una política anónima sobre esas tablas o el bucket.
-2. En una fase aditiva, construir un artefacto público derivado y validado de la revisión seleccionada, con una lista permitida de campos para renderizar; excluir datos operativos del editor, credenciales, listas de invitados y otros campos no destinados al invitado. La publicación debe fallar si el renderizador necesita un campo cuya exposición no se haya clasificado.
+2. En una fase aditiva, construir un artefacto público derivado y validado de la revisión seleccionada, con una lista permitida de campos para renderizar; excluir datos operativos del editor, credenciales internas, listas de invitados y otros campos no destinados al invitado. La publicación debe fallar si el renderizador necesita un campo cuya exposición no se haya clasificado.
 3. Asociar el artefacto inmutable al `slug` y a la revisión publicada. Una revisión nueva no modifica lo que ven los invitados hasta otra publicación explícita. Despublicar debe retirar su acceso público sin borrar el borrador.
 4. Publicar sólo los archivos referenciados por ese artefacto, mediante una copia pública controlada o una ruta de lectura que compruebe la referencia publicada. No abrir todo el bucket privado ni reutilizar el proxy autenticado de Studio.
 5. Exponer una URL nueva por slug sin sustituir de golpe `invitacion-boda.html?event=...` ni `invitacion-xv.html?event=...`. Medir sus consumidores y mantenerlas durante la transición. El `slug` generado hoy (`p-<uuid>`) es estable pero poco legible; una edición de slug requerirá una política de unicidad y redirecciones antes de ofrecerse.
+
+El propietario confirmó que los datos bancarios de regalos, los teléfonos de anfitriones y los códigos de álbum y hotel son públicos **una vez publicada la invitación**. Esta decisión aplica sólo a propiedades explícitas de la revisión publicada, no a `legacy.config` íntegro ni a borradores. Cualquiera que obtenga el enlace podrá ver esos datos; el enlace no constituye control de acceso. La revisión previa debe detectar valores de ejemplo antes de activar la URL. `defaultPassCount`, pases y asignaciones individuales no quedan autorizados por esta confirmación.
 
 ## Alternativas consideradas
 

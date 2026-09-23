@@ -15,7 +15,8 @@ Este inventario delimita la futura entrega por `slug`. No concede acceso públic
 | Apariencia | `theme`, `typography`, `decorations`, `sectionBackgrounds`, `familyStyle`, `waxSeal`, `illustrations`, `stardust`, `dressCode` | Sólo valores visuales validados; nunca copiar objetos arbitrarios ni archivos incrustados. Las fuentes y fondos deben tener una ruta de activo publicada. |
 | Medios | `photos`, `music`, imágenes de ceremonia y recepción, logo de `vendorCard` | Publicar únicamente los activos referenciados por la revisión aprobada. No hacer público el bucket privado completo. Validar URLs externas y formatos. |
 | Interacción pública | `instagram`, texto de `rsvp`, `rsvpTitle`, `rsvpDeadlineLabel`, `sharedAlbum.title/subtitle/description/albumUrl`, textos de WhatsApp y `vendorCard` | Mostrar texto y enlaces aprobados; los formularios deben llamar a endpoints separados, con sus propios controles. |
-| Datos sensibles sujetos a decisión editorial | `giftRegistry.bank` (titular/CLABE), `whatsappNumber`, `whatsappHosts`, `lodging.hotels[].code`, `sharedAlbum.accessCode`, `defaultPassCount` | No trasladar por defecto. Algunos se muestran hoy en la plantilla, pero publicar una URL abierta revela esos datos a cualquiera con el slug; exigir aprobación explícita por campo o un mecanismo privado por invitado. |
+| Datos públicos confirmados al publicar | `giftRegistry.bank` (titular/CLABE), `whatsappNumber`, `whatsappHosts`, `lodging.hotels[].code`, `sharedAlbum.accessCode` | El propietario confirmó su exposición a quien tenga el slug. Incorporar sólo estas propiedades a la proyección de la revisión publicada, si la sección correspondiente está habilitada; revisar los valores antes de publicar. Nunca exponer el objeto de origen completo. |
+| Dato pendiente de clasificación | `defaultPassCount` | No trasladar al artefacto público hasta distinguir el cupo genérico de pases o asignaciones individuales. |
 | Nunca en el artefacto público | `rsvpWebhookUrl`, `legacy.config` íntegro, IDs de propietario y membresía, borradores, sesiones, tokens, listas y respuestas de invitados, folios, PIN y asignaciones de mesa | Mantener en APIs y tablas privadas. No devolverlos en JSON, HTML embebido ni enlaces de activos. |
 
 ## Hallazgos que bloquean la publicación automática
@@ -29,5 +30,5 @@ Este inventario delimita la futura entrega por `slug`. No concede acceso públic
 
 - Definir el esquema público con lista permitida hasta nivel de propiedad, sin `legacy` ni datos operativos.
 - Probar con valores trampa que ningún campo excluido aparece en JSON o HTML público.
-- Decidir la exposición de datos bancarios, teléfonos de anfitriones y códigos antes de conectar el botón de publicar con una URL abierta.
+- Exigir revisión previa de los valores bancarios, teléfonos y códigos, especialmente los ejemplos de `defaultConfig`; la autorización de exponer esos campos no autoriza publicar datos de muestra accidentalmente.
 - Comprobar que borradores y revisiones posteriores no alteran la versión pública.
