@@ -50,4 +50,6 @@ Conserva la apariencia actual y puede servir como artefacto derivado, pero exige
 
 ## Riesgos y reversión
 
+La ruta experimental `GET /api/public/invitation?slug=...` entrega sólo la proyección permitida de la revisión publicada y está apagada por defecto. En Preview requiere `INVITTA_PUBLIC_CONTENT_ENABLED=1`, `INVITTA_PUBLIC_CONTENT_PREVIEW_SLUG` y una clave secreta sólo de servidor; responde únicamente para ese slug, sin caché, y vuelve a comprobar la revisión antes de responder. No es la URL final ni sustituye la aprobación editorial o el artefacto inmutable propuesto arriba. La ruta de imágenes tiene su propia habilitación separada.
+
 El principal riesgo es filtrar contenido privado por una proyección incompleta o por el acceso a archivos. El rollback de la fase pública debe retirar la ruta y sus permisos primero; los artefactos derivados pueden conservarse temporalmente para diagnóstico o eliminarse tras respaldo y revisión. No debe tocar las tablas y archivos privados existentes ni las URLs actuales.
