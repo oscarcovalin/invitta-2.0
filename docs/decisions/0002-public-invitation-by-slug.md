@@ -46,6 +46,8 @@ Ya existe un constructor puro del candidato de publicación. Separa `publicArtif
 
 La acción actual de Studio conserva su respuesta, pero ahora lee la revisión guardada con el JWT del usuario y ejecuta esa validación **antes** de marcarla `published`. Una revisión ausente, mal formada, con ejemplos o con rutas inválidas no cambia el estado. Esto es un control preliminar, no la generación persistida del artefacto: `published` sigue sin significar que exista una URL final aprobada.
 
+`POST /api/projects/publication-preview` permite preparar una revisión privada por `projectId` y `documentId` con la sesión de Studio. Devuelve sólo el `publicArtifact` y el número de revisión, con `no-store`; las rutas privadas de Storage y el documento fuente no salen en la respuesta. Es un endpoint de revisión técnica, aún sin interfaz editorial ni persistencia. La lectura conserva las políticas RLS del usuario.
+
 1. Inventariar los campos que el motor de invitación realmente necesita y clasificarlos como públicos o privados; probar que la proyección excluye datos privados.
 2. Crear el almacenamiento aditivo del artefacto y su rollback sin modificar ni borrar documentos privados existentes.
 3. Hacer que la acción de publicar genere y valide el artefacto antes de activar el slug; probar fallos parciales y concurrencia.
