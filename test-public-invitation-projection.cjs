@@ -8,7 +8,7 @@ const document = {
   event: { type: 'wedding', startsAt: '2027-05-01T18:00:00-06:00', timeZone: 'America/Mexico_City', internalNote: 'SECRET_EVENT' },
   content: { title: 'Ana y Luis', welcomeMessage: 'Bienvenidos', internalNote: 'SECRET_CONTENT' },
   design: { theme: 'vino', internalNote: 'SECRET_DESIGN' },
-  sections: [{ id: 'giftRegistry', enabled: true, settings: { internalNote: 'SECRET_SETTINGS' } }, { id: 'lodging', enabled: true }, { id: 'sharedAlbum', enabled: true }, { id: 'details', enabled: true }, { id: 'itinerary', enabled: true }],
+  sections: [{ id: 'giftRegistry', enabled: true, settings: { internalNote: 'SECRET_SETTINGS' } }, { id: 'lodging', enabled: true }, { id: 'sharedAlbum', enabled: true }, { id: 'details', enabled: true }, { id: 'itinerary', enabled: true }, { id: 'rsvp', enabled: true }],
   assets: { hero: { storagePath: 'private/hero.webp' } },
   legacy: { config: {
     eventDateLabel: '1 de mayo de 2027',
@@ -33,11 +33,12 @@ assert.deepEqual(result, {
   event: { type: 'wedding', startsAt: '2027-05-01T18:00:00-06:00', timeZone: 'America/Mexico_City' },
   content: { title: 'Ana y Luis', welcomeMessage: 'Bienvenidos' },
   design: { theme: 'vino' },
-  sections: [{ id: 'giftRegistry', enabled: true }, { id: 'lodging', enabled: true }, { id: 'sharedAlbum', enabled: true }, { id: 'details', enabled: true }, { id: 'itinerary', enabled: true }],
+  sections: [{ id: 'giftRegistry', enabled: true }, { id: 'lodging', enabled: true }, { id: 'sharedAlbum', enabled: true }, { id: 'details', enabled: true }, { id: 'itinerary', enabled: true }, { id: 'rsvp', enabled: true }],
   dateLabels: { long: '1 de mayo de 2027', short: '01 · 05 · 2027' },
   details: { ceremony: { venue: 'Parroquia', address: 'Calle Uno', time: '18:00' }, reception: { venue: 'Jardín', address: 'Calle Dos', time: '20:00' } },
   itinerary: [{ icon: 'church', label: 'Ceremonia', time: '18:00' }],
   giftRegistry: { bank: { bankName: 'Banco', holder: 'Ana', clabe: '123456789012345678' } },
+  rsvp: {},
   whatsappNumber: '5215550001111',
   whatsappHosts: [{ label: 'Ana', phone: '5215550002222' }],
   lodging: { hotels: [{ name: 'Hotel', code: 'FIESTA' }] },
@@ -48,17 +49,23 @@ assert.equal(JSON.stringify(result).includes('private/hero.webp'), false);
 assert.equal(JSON.stringify(result).includes('defaultPassCount'), false);
 
 const hidden = structuredClone(document);
-hidden.sections = [{ id: 'giftRegistry', enabled: false }, { id: 'lodging', enabled: false }, { id: 'sharedAlbum', enabled: false }, { id: 'details', enabled: false }, { id: 'itinerary', enabled: false }];
+hidden.sections = [{ id: 'giftRegistry', enabled: false }, { id: 'lodging', enabled: false }, { id: 'sharedAlbum', enabled: false }, { id: 'details', enabled: false }, { id: 'itinerary', enabled: false }, { id: 'rsvp', enabled: false }];
 const hiddenResult = projectPublicInvitation(hidden);
 assert.equal('giftRegistry' in hiddenResult, false);
 assert.equal('lodging' in hiddenResult, false);
 assert.equal('sharedAlbum' in hiddenResult, false);
 assert.equal('details' in hiddenResult, false);
 assert.equal('itinerary' in hiddenResult, false);
+assert.equal('rsvp' in hiddenResult, false);
+assert.equal('whatsappNumber' in hiddenResult, false);
+assert.equal('whatsappHosts' in hiddenResult, false);
 
 const legacyDisabled = structuredClone(document);
 legacyDisabled.legacy.config.itineraryEnabled = false;
 assert.equal('itinerary' in projectPublicInvitation(legacyDisabled), false);
+legacyDisabled.legacy.config.rsvpEnabled = false;
+assert.equal('whatsappNumber' in projectPublicInvitation(legacyDisabled), false);
+assert.equal('whatsappHosts' in projectPublicInvitation(legacyDisabled), false);
 
 const unclassified = structuredClone(document);
 unclassified.sections = [];
@@ -66,6 +73,8 @@ const unclassifiedResult = projectPublicInvitation(unclassified);
 assert.equal('details' in unclassifiedResult, false);
 assert.equal('itinerary' in unclassifiedResult, false);
 assert.equal('giftRegistry' in unclassifiedResult, false);
+assert.equal('whatsappNumber' in unclassifiedResult, false);
+assert.equal('whatsappHosts' in unclassifiedResult, false);
 
 const links = structuredClone(document);
 links.legacy.config.ceremony.mapsUrl = 'https://maps.google.com/?q=Parroquia';
@@ -95,7 +104,7 @@ assert.equal('wazeUrl' in unsafeResult.details.ceremony, false);
 assert.equal('mapsUrl' in unsafeResult.lodging.hotels[0], false);
 
 const copy = structuredClone(document);
-copy.sections.push({ id: 'story', enabled: true }, { id: 'rsvp', enabled: true });
+copy.sections.push({ id: 'story', enabled: true });
 copy.legacy.config.story = { enabled: true, title: 'Nuestra historia', subtitle: 'Así comenzó', text: 'Nos conocimos en mayo.', photo: 'SECRET_PHOTO', internalNote: 'SECRET_STORY' };
 copy.legacy.config.rsvp = { enabled: true, title: 'Confirma tu asistencia', internalNote: 'SECRET_RSVP' };
 copy.legacy.config.rsvpTitle = 'Título anterior';
@@ -112,12 +121,16 @@ copy.sections.find((section) => section.id === 'story').enabled = false;
 copy.sections.find((section) => section.id === 'rsvp').enabled = false;
 assert.equal('story' in projectPublicInvitation(copy), false);
 assert.equal('rsvp' in projectPublicInvitation(copy), false);
+assert.equal('whatsappNumber' in projectPublicInvitation(copy), false);
+assert.equal('whatsappHosts' in projectPublicInvitation(copy), false);
 copy.sections.find((section) => section.id === 'story').enabled = true;
 copy.sections.find((section) => section.id === 'rsvp').enabled = true;
 copy.legacy.config.story.enabled = false;
 copy.legacy.config.rsvp.enabled = false;
 assert.equal('story' in projectPublicInvitation(copy), false);
 assert.equal('rsvp' in projectPublicInvitation(copy), false);
+assert.equal('whatsappNumber' in projectPublicInvitation(copy), false);
+assert.equal('whatsappHosts' in projectPublicInvitation(copy), false);
 
 assert.throws(() => projectPublicInvitation({ ...document, schemaVersion: 2 }), /Unsupported/);
 console.log('Public invitation projection tests passed.');
