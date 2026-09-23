@@ -37,6 +37,13 @@ function fakeFetch({ firstProject = project, lastProject = project, savedDocumen
   assert.equal(success.calls.length, 4);
   assert.match(success.calls[2].url, /invitation-assets\/20000000-0000-4000-8000-000000000001\/hero/);
 
+  const sampleDocument = structuredClone(document);
+  sampleDocument.content = { primaryName: 'Catalina' };
+  const sample = fakeFetch({ savedDocument: sampleDocument });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: sample.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(sample.calls.length, 2);
+
   for (const [input, expectedCalls] of [
     [{ slug: '../private', field: 'photos.hero' }, 0],
     [{ slug: 'ana-luis', field: 'photos.gallery.0' }, 2],
