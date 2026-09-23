@@ -10,7 +10,7 @@ const config = { url: 'https://example.supabase.co', secretKey: 'sb_secret_serve
 const project = { id: projectId, status: 'published', published_document_id: documentId };
 const document = { schemaVersion: 1, projectId, revision: 1, sections: [{ id: 'hero', enabled: true }], assets: {}, legacy: { config: { photos: { hero: storagePath } } } };
 
-function fakeFetch({ firstProject = project, lastProject = project, savedDocument = document, savedRevision = 1 } = {}) {
+function fakeFetch({ firstProject = project, lastProject = project, savedDocument = document, savedRevision = 1, storageResponse } = {}) {
   const calls = [];
   const fetchImpl = async (url, options) => {
     calls.push({ url, options });
@@ -20,9 +20,9 @@ function fakeFetch({ firstProject = project, lastProject = project, savedDocumen
       return { ok: true, json: async () => item ? [item] : [] };
     }
     if (url.includes('/invitation_documents?')) return { ok: true, json: async () => savedDocument ? [{ revision: savedRevision, document: savedDocument }] : [] };
-    if (url.includes('/storage/v1/object/authenticated/')) return {
+    if (url.includes('/storage/v1/object/authenticated/')) return storageResponse || {
       ok: true, headers: { get: (name) => name === 'content-length' ? '4' : null },
-      arrayBuffer: async () => Uint8Array.from([1, 2, 3, 4]).buffer,
+      body: new ReadableStream({ start(controller) { controller.enqueue(Uint8Array.from([1, 2, 3, 4])); controller.close(); } }),
     };
     throw new Error(`Unexpected request: ${url}`);
   };
@@ -36,6 +36,20 @@ function fakeFetch({ firstProject = project, lastProject = project, savedDocumen
   assert.deepEqual(image.bytes, Buffer.from([1, 2, 3, 4]));
   assert.equal(success.calls.length, 4);
   assert.match(success.calls[2].url, /invitation-assets\/20000000-0000-4000-8000-000000000001\/hero/);
+
+  let cancelled = false;
+  const oversized = fakeFetch({ storageResponse: {
+    ok: true, headers: { get: () => null },
+    body: new ReadableStream({
+      start(controller) { controller.enqueue(new Uint8Array(10 * 1024 * 1024 + 1)); },
+      cancel() { cancelled = true; },
+    }),
+    arrayBuffer: async () => { throw new Error('Unbounded read must not be used.'); },
+  } });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: oversized.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(cancelled, true);
+  assert.equal(oversized.calls.length, 3);
 
   const sampleDocument = structuredClone(document);
   sampleDocument.content = { primaryName: 'Catalina' };
