@@ -1,6 +1,6 @@
 # Inventario de datos para la invitación pública
 
-Este inventario delimita la futura entrega por `slug`. No concede acceso público ni constituye todavía una proyección implementada. Complementa [ADR-0002](../decisions/0002-public-invitation-by-slug.md).
+Este inventario delimita la futura entrega por `slug`. Hay una proyección parcial de datos y un manifiesto interno de imágenes, pero ninguno concede acceso público ni constituye todavía un artefacto renderizable. Complementa [ADR-0002](../decisions/0002-public-invitation-by-slug.md).
 
 ## Estado del contrato
 
@@ -25,6 +25,8 @@ Este inventario delimita la futura entrega por `slug`. No concede acceso públic
 2. El motor visual lee muchos campos de `legacy.config`, incluidos campos sensibles. No debe recibir ese objeto bruto en una ruta anónima. Se necesita una proyección explícita o un renderizado servidor que no incluya datos internos en el resultado.
 3. El RSVP, pases, mesa y álbum pueden requerir datos específicos por invitado. Un slug público no debe convertirse en autorización para leerlos; sus endpoints y enlaces necesitan límites propios.
 4. El bucket `invitation-assets` es privado. Mostrar una imagen en la invitación pública exige una copia aprobada o una ruta que compruebe que el archivo pertenece a la revisión publicada.
+5. El manifiesto interno sólo acepta imágenes privadas de la misma carpeta de proyecto para portada, retrato, sedes, galería, historia y fondos de secciones habilitadas. Las imágenes estáticas de ejemplo (`assets/...`) y otras referencias visuales todavía necesitan clasificación explícita. No conectar este manifiesto a una respuesta anónima tal como está.
+6. Las URL firmadas de Storage tienen vigencia propia y no pueden revocarse individualmente de inmediato según la [documentación de Supabase](https://supabase.com/docs/guides/storage/serving/downloads). Si despublicar debe cortar el acceso al instante, no deben ser el mecanismo principal sin una política de caducidad y revocación aceptada.
 
 ## Criterios para el siguiente incremento
 
