@@ -1,6 +1,7 @@
 const assert = require('node:assert');
 const fs = require('node:fs');
 const vm = require('node:vm');
+const { projectPublicInvitation } = require('./lib/public-invitation-projection.cjs');
 
 const projectId = '20000000-0000-4000-8000-000000000001';
 const assetId = '30000000-0000-4000-8000-000000000001';
@@ -27,6 +28,37 @@ const client = context.window.ProjectAssetClient;
   assert.strictEqual(uploadCalls[0].mimeType, 'image/png');
   assert.strictEqual(uploadCalls[0].base64, 'iVBORw0KGgo=');
 
+  vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
+  const venuePaths = {
+    ceremony: `${projectId}/ceremony/${assetId}.png`,
+    reception: `${projectId}/reception/${assetId}.png`,
+  };
+  const venueUploads = [];
+  const storedVenues = await client.toStoredConfig({
+    ceremony: { venue: 'Capilla Santa Ana', address: 'Calle Uno', time: '18:00', image: inline },
+    reception: { venue: 'Salón Jardín', address: 'Calle Dos', time: '20:00', image: inline },
+  }, {
+    projectId,
+    upload: async ({ slot }) => { venueUploads.push(slot); return { storagePath: venuePaths[slot] }; },
+  });
+  assert.deepStrictEqual(venueUploads, ['ceremony', 'reception']);
+  const venueDocument = context.window.InvitationDocumentAdapter.fromLegacyTemplateConfig(storedVenues, { projectId }).document;
+  const venuePreview = projectPublicInvitation(venueDocument);
+  assert.deepStrictEqual(venuePreview.details, {
+    ceremony: { venue: 'Capilla Santa Ana', address: 'Calle Uno', time: '18:00' },
+    reception: { venue: 'Salón Jardín', address: 'Calle Dos', time: '20:00' },
+  });
+  assert.strictEqual(JSON.stringify(venuePreview).includes(venuePaths.ceremony), false);
+  const restoredVenues = context.window.InvitationDocumentAdapter.toLegacyTemplateConfig(venueDocument);
+  for (const location of ['ceremony', 'reception']) {
+    assert.strictEqual(restoredVenues[location].venue, storedVenues[location].venue);
+    assert.strictEqual(restoredVenues[location].address, storedVenues[location].address);
+    assert.strictEqual(restoredVenues[location].time, storedVenues[location].time);
+    assert.strictEqual(restoredVenues[location].image, venuePaths[location]);
+    assert.strictEqual(client.toDisplayConfig(restoredVenues)[location].image,
+      `/api/projects/asset?path=${encodeURIComponent(venuePaths[location])}`);
+  }
+
   const imported = await client.toStoredConfig({ photos: { hero: 'https://example.com/photo.jpg' } }, {
     projectId,
     importRemote: async (url) => {
@@ -51,7 +83,6 @@ const client = context.window.ProjectAssetClient;
     upload: async ({ slot }) => ({ storagePath: `${projectId}/${slot}/${assetId}.png` }),
   });
   assert.strictEqual(defaultStored.typography.customNamesFile, 'assets/cherolina.ttf');
-  vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
   const firstRevision = context.window.InvitationDocumentAdapter.fromLegacyTemplateConfig(defaultStored, { projectId });
   assert.strictEqual(firstRevision.pendingAssets.length, 0);
 
