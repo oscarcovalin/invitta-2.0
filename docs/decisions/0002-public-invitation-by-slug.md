@@ -42,6 +42,8 @@ Conserva la apariencia actual y puede servir como artefacto derivado, pero exige
 
 ## Secuencia y criterios de salida
 
+Ya existe un constructor puro del candidato de publicación. Separa `publicArtifact` (contenido filtrado, identificadores de imágenes y rutas estáticas permitidas) de `privateImages` (rutas internas de Storage) y de `source` (identidad de revisión). Rechaza ejemplos exactos de Studio e imágenes inválidas. Todavía no persiste el candidato, no concede acceso anónimo y no modifica el comportamiento del botón Publicar.
+
 1. Inventariar los campos que el motor de invitación realmente necesita y clasificarlos como públicos o privados; probar que la proyección excluye datos privados.
 2. Crear el almacenamiento aditivo del artefacto y su rollback sin modificar ni borrar documentos privados existentes.
 3. Hacer que la acción de publicar genere y valide el artefacto antes de activar el slug; probar fallos parciales y concurrencia.
