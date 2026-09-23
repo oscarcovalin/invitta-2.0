@@ -94,5 +94,30 @@ assert.equal('mapsUrl' in unsafeResult.details.ceremony, false);
 assert.equal('wazeUrl' in unsafeResult.details.ceremony, false);
 assert.equal('mapsUrl' in unsafeResult.lodging.hotels[0], false);
 
+const copy = structuredClone(document);
+copy.sections.push({ id: 'story', enabled: true }, { id: 'rsvp', enabled: true });
+copy.legacy.config.story = { enabled: true, title: 'Nuestra historia', subtitle: 'Así comenzó', text: 'Nos conocimos en mayo.', photo: 'SECRET_PHOTO', internalNote: 'SECRET_STORY' };
+copy.legacy.config.rsvp = { enabled: true, title: 'Confirma tu asistencia', internalNote: 'SECRET_RSVP' };
+copy.legacy.config.rsvpTitle = 'Título anterior';
+copy.legacy.config.rsvpDeadlineLabel = 'Confirma antes del 1 de abril';
+assert.deepEqual(projectPublicInvitation(copy).story, {
+  title: 'Nuestra historia', subtitle: 'Así comenzó', text: 'Nos conocimos en mayo.',
+});
+assert.deepEqual(projectPublicInvitation(copy).rsvp, {
+  title: 'Confirma tu asistencia', deadlineLabel: 'Confirma antes del 1 de abril',
+});
+assert.equal(JSON.stringify(projectPublicInvitation(copy)).includes('SECRET_'), false);
+
+copy.sections.find((section) => section.id === 'story').enabled = false;
+copy.sections.find((section) => section.id === 'rsvp').enabled = false;
+assert.equal('story' in projectPublicInvitation(copy), false);
+assert.equal('rsvp' in projectPublicInvitation(copy), false);
+copy.sections.find((section) => section.id === 'story').enabled = true;
+copy.sections.find((section) => section.id === 'rsvp').enabled = true;
+copy.legacy.config.story.enabled = false;
+copy.legacy.config.rsvp.enabled = false;
+assert.equal('story' in projectPublicInvitation(copy), false);
+assert.equal('rsvp' in projectPublicInvitation(copy), false);
+
 assert.throws(() => projectPublicInvitation({ ...document, schemaVersion: 2 }), /Unsupported/);
 console.log('Public invitation projection tests passed.');
