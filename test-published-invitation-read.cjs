@@ -15,11 +15,11 @@ const config = { url: 'https://example.supabase.co', secretKey: 'sb_secret_test_
 function fakeFetch({ first = project, last = project, saved = document, savedRevision = 1 } = {}) {
   const calls = [];
   const fetchImpl = async (url, options) => {
-    calls.push(url);
+    calls.push({ url, options });
     assert.deepEqual(options.headers, { apikey: config.secretKey });
     if (url.includes('/invitation_projects?')) return {
-      ok: true, json: async () => (calls.filter((call) => call.includes('/invitation_projects?')).length === 1 ? first : last) ?
-        [calls.filter((call) => call.includes('/invitation_projects?')).length === 1 ? first : last] : [],
+      ok: true, json: async () => (calls.filter((call) => call.url.includes('/invitation_projects?')).length === 1 ? first : last) ?
+        [calls.filter((call) => call.url.includes('/invitation_projects?')).length === 1 ? first : last] : [],
     };
     if (url.includes('/invitation_documents?')) return { ok: true, json: async () => saved ? [{ revision: savedRevision, document: saved }] : [] };
     throw new Error(`Unexpected request: ${url}`);
@@ -39,6 +39,12 @@ function response() {
   assert.equal(result.details.ceremony.venue, 'Templo');
   assert.doesNotMatch(JSON.stringify(result), /SECRET_|legacy|projectId/);
   assert.equal(ok.calls.length, 3);
+  assert.ok(ok.calls.every((call) => call.options.redirect === 'error'));
+
+  const untrusted = fakeFetch();
+  await assert.rejects(readPublishedInvitation({ slug: 'ana-luis', config: { ...config, url: 'https://attacker.invalid' }, fetchImpl: untrusted.fetchImpl }),
+    (error) => error.status === 503);
+  assert.equal(untrusted.calls.length, 0);
 
   const sampleDocument = structuredClone(document);
   sampleDocument.content.primaryName = 'Catalina';

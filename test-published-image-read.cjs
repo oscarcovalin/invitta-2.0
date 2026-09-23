@@ -36,6 +36,14 @@ function fakeFetch({ firstProject = project, lastProject = project, savedDocumen
   assert.deepEqual(image.bytes, Buffer.from([1, 2, 3, 4]));
   assert.equal(success.calls.length, 4);
   assert.match(success.calls[2].url, /invitation-assets\/20000000-0000-4000-8000-000000000001\/hero/);
+  assert.ok(success.calls.every((call) => call.options.redirect === 'error'));
+
+  for (const badUrl of ['https://attacker.invalid', 'http://127.0.0.1', 'https://example.supabase.co@attacker.invalid']) {
+    const untrusted = fakeFetch();
+    await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero',
+      config: { ...config, url: badUrl }, fetchImpl: untrusted.fetchImpl }), (error) => error.status === 503);
+    assert.equal(untrusted.calls.length, 0);
+  }
 
   let cancelled = false;
   const oversized = fakeFetch({ storageResponse: {
