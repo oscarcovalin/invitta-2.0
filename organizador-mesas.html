@@ -1367,7 +1367,7 @@
       fetch('/api/session', { cache: 'no-store' })
         .then(async (response) => ({ ok: response.ok, data: await response.json() }))
         .then(({ ok, data }) => {
-          if (!ok || !data.authenticated || !data.session || data.session.role !== 'platform_admin') return;
+          if (!ok || data.authenticated !== true || !data.session || data.session.role !== 'platform_admin') return;
           verifiedGlobalAccess = true;
           if (!selectActiveEvent) return;
           selectActiveEvent.replaceChildren();
