@@ -25,6 +25,20 @@ async function loadCloudProject() {
   try {
     const response = await fetch(`/api/projects/latest-revision?projectId=${encodeURIComponent(requestedCloudProjectId)}`);
     const result = await response.json();
+    if (response.status === 404) {
+      const projectResponse = await fetch(`/api/projects/get?projectId=${encodeURIComponent(requestedCloudProjectId)}`);
+      const projectResult = await projectResponse.json();
+      if (!projectResponse.ok || !projectResult.project || projectResult.project.id !== requestedCloudProjectId) {
+        throw new Error('El proyecto no está disponible para esta cuenta.');
+      }
+      currentProjectId = requestedCloudProjectId;
+      loadedCloudRevision = null;
+      savedCloudDocumentId = null;
+      cloudDirty = true;
+      savedCloudConfig = null;
+      if (status) status.textContent = 'Proyecto sin revisiones · guarda la primera versión';
+      return;
+    }
     const savedDocument = result && result.revision && result.revision.document;
     if (!response.ok || !savedDocument || savedDocument.projectId !== requestedCloudProjectId) {
       throw new Error('La revisión no está disponible para esta cuenta.');
@@ -86,6 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupFileUploads();
   setupHeaderActions();
   setupCloudActions();
+  setupProjectCreationAction();
   setupInputListeners();
 
   await loadCloudProject();
@@ -2757,6 +2772,47 @@ function setupCloudActions() {
       showToast(error.message || 'No se pudo publicar.');
     } finally {
       publishButton.disabled = false;
+    }
+  });
+}
+
+function setupProjectCreationAction() {
+  const createButton = document.getElementById('btnCreateCloud');
+  if (!createButton) return;
+  createButton.hidden = Boolean(requestedCloudProjectId);
+  createButton.addEventListener('click', async () => {
+    if (requestedCloudProjectId) return;
+    createButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/create', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({
+          name: currentConfig.name || 'Nueva invitación',
+          eventType: currentConfig.eventType === 'boda' ? 'wedding'
+            : currentConfig.eventType === 'xv' ? 'quinceanera' : 'other'
+        })
+      });
+      const result = await response.json();
+      const projectId = result.project && result.project.id;
+      if (!response.ok || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(projectId || '')) {
+        throw new Error(result.error || 'No fue posible crear el proyecto.');
+      }
+      requestedCloudProjectId = projectId;
+      currentProjectId = projectId;
+      loadedCloudRevision = null;
+      savedCloudDocumentId = null;
+      savedCloudConfig = null;
+      cloudDirty = true;
+      window.history.replaceState(null, '', `invitacion-estudio.html?project=${encodeURIComponent(projectId)}`);
+      createButton.hidden = true;
+      setupCloudActions();
+      const status = document.getElementById('syncStatusText');
+      if (status) status.textContent = 'Proyecto creado · guarda la primera revisión';
+      showToast('Proyecto privado creado. Guarda la primera revisión en nube.');
+    } catch (error) {
+      showToast(error.message || 'No fue posible crear el proyecto.');
+    } finally {
+      createButton.disabled = false;
     }
   });
 }

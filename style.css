@@ -245,6 +245,28 @@ body {
   gap: 8px;
 }
 
+@media (max-width: 1600px) {
+  .app-header {
+    flex-wrap: wrap;
+  }
+
+  .header-actions {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .app-workspace {
+    height: calc(100vh - 120px);
+  }
+}
+
+@media (max-width: 1300px) {
+  .app-workspace {
+    height: calc(100vh - 160px);
+  }
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;

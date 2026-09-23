@@ -1,6 +1,7 @@
 const assert = require('node:assert');
-const { createProjectWithUserToken } = require('./lib/supabase-projects.cjs');
+const { createProjectWithUserToken, getProjectWithUserToken } = require('./lib/supabase-projects.cjs');
 const { createProjectHandler } = require('./lib/create-project-handler.cjs');
+const { createGetProjectHandler } = require('./lib/get-project-handler.cjs');
 
 const userId = '10000000-0000-4000-8000-000000000001';
 const projectId = '20000000-0000-4000-8000-000000000001';
@@ -48,5 +49,30 @@ const config = { url: 'https://example.supabase.co', publishableKey: 'sb_publish
   assert.strictEqual(response.code, 201);
   assert.strictEqual(response.body.project.id, projectId);
   assert.strictEqual(response.headers['Cache-Control'], 'no-store');
+
+  const visible = await getProjectWithUserToken({
+    accessToken: 'user-token', projectId, config,
+    fetchImpl: async (_url, options) => {
+      assert.strictEqual(options.headers.Authorization, 'Bearer user-token');
+      return { ok: true, json: async () => [{ id: projectId, name: 'Boda', status: 'draft' }] };
+    },
+  });
+  assert.strictEqual(visible.id, projectId);
+  await assert.rejects(getProjectWithUserToken({
+    accessToken: 'outsider-token', projectId, config,
+    fetchImpl: async () => ({ ok: true, json: async () => [] }),
+  }), (error) => error.status === 404);
+
+  const getHandler = createGetProjectHandler({
+    authService: {
+      ACCESS_COOKIE: 'invitta_access_token', parseCookies: () => ({ invitta_access_token: 'user-token' }),
+      getAuthConfig: () => config, getAuthenticatedUser: async () => ({ id: userId }),
+    },
+    getProject: async () => visible,
+  });
+  const getResponse = { ...response, headers: {}, setHeader: response.setHeader, status: response.status, json: response.json };
+  await getHandler({ method: 'GET', headers: {}, query: { projectId } }, getResponse);
+  assert.strictEqual(getResponse.code, 200);
+  assert.strictEqual(getResponse.body.project.id, projectId);
   console.log('Project creation uses a verified user JWT and server-generated identity.');
 })().catch((error) => { console.error(error); process.exitCode = 1; });

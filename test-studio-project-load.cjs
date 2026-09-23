@@ -52,6 +52,19 @@ assert.strictEqual(vm.runInContext('currentThemeName', context), 'rosa');
   assert.strictEqual(vm.runInContext('currentConfig.typography.names', context), 'Lora');
   assert.strictEqual(vm.runInContext('loadedCloudRevision', context), 5);
   assert.match(status.textContent, /Revisión 5 cargada/);
+
+  const visited = [];
+  context.fetch = async (url) => {
+    visited.push(url);
+    if (url.includes('latest-revision')) return { ok: false, status: 404, json: async () => ({ success: false }) };
+    return { ok: true, status: 200, json: async () => ({ project: { id: projectId, status: 'draft' } }) };
+  };
+  vm.runInContext("currentConfig = { name: 'Proyecto nuevo' }; loadedCloudRevision = null; cloudLoadError = false;", context);
+  await vm.runInContext('loadCloudProject()', context);
+  assert.strictEqual(vm.runInContext('currentConfig.name', context), 'Proyecto nuevo');
+  assert.strictEqual(vm.runInContext('cloudLoadError', context), false);
+  assert.match(status.textContent, /sin revisiones/);
+  assert.ok(visited.some((url) => url.includes('/api/projects/get?projectId=')));
   console.log('Studio loads a selected project and its latest visible cloud revision.');
 })().catch((error) => {
   console.error(error);
