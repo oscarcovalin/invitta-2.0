@@ -63,6 +63,13 @@ assert.equal('whatsappHosts' in hiddenResult, false);
 const legacyDisabled = structuredClone(document);
 legacyDisabled.legacy.config.itineraryEnabled = false;
 assert.equal('itinerary' in projectPublicInvitation(legacyDisabled), false);
+legacyDisabled.legacy.config.itineraryEnabled = true;
+legacyDisabled.legacy.config.itinerary.push({ label: '   ', time: 'SECRET_TIME' });
+assert.deepEqual(projectPublicInvitation(legacyDisabled).itinerary, [
+  { icon: 'church', label: 'Ceremonia', time: '18:00' }
+]);
+legacyDisabled.legacy.config.itinerary = [{ label: '', time: 'SECRET_TIME' }];
+assert.equal('itinerary' in projectPublicInvitation(legacyDisabled), false);
 legacyDisabled.legacy.config.locations = { enabled: false };
 assert.equal('details' in projectPublicInvitation(legacyDisabled), false);
 legacyDisabled.legacy.config.locations = { enabled: true };
