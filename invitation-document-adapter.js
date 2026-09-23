@@ -122,7 +122,11 @@ function toLegacyTemplateConfig(document) {
   };
 
   for (const key of ASSET_FIELDS) {
-    config[key] = { image: document.assets && document.assets[key] ? document.assets[key].storagePath : '' };
+    const location = config[key] && typeof config[key] === 'object' && !Array.isArray(config[key]) ? config[key] : {};
+    config[key] = {
+      ...location,
+      image: document.assets && document.assets[key] ? document.assets[key].storagePath : ''
+    };
   }
   return config;
 }

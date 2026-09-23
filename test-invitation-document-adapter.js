@@ -19,8 +19,8 @@ const legacy = {
   theme: 'rosa',
   sectionOrder: ['hero', 'itinerary', 'rsvp'],
   sectionVisibility: { hero: true, itinerary: true, rsvp: false },
-  ceremony: { image: '20000000-0000-4000-8000-000000000002/ceremony/30000000-0000-4000-8000-000000000002.webp' },
-  reception: { image: 'data:image/png;base64,AAAA' }
+  ceremony: { venue: 'Capilla Santa Ana', address: 'Calle Uno 12', time: '18:00', image: '20000000-0000-4000-8000-000000000002/ceremony/30000000-0000-4000-8000-000000000002.webp' },
+  reception: { venue: 'Salón Jardín', address: 'Avenida Dos 34', time: '20:00', image: 'data:image/png;base64,AAAA' }
 };
 
 const { document, pendingAssets } = fromLegacyTemplateConfig(legacy, {
@@ -49,6 +49,11 @@ assert.deepStrictEqual(restored.sectionOrder, legacy.sectionOrder);
 assert.deepStrictEqual(restored.sectionVisibility, legacy.sectionVisibility);
 assert.strictEqual(restored.ceremony.image, legacy.ceremony.image);
 assert.strictEqual(restored.reception.image, '');
+for (const location of ['ceremony', 'reception']) {
+  for (const field of ['venue', 'address', 'time']) {
+    assert.strictEqual(restored[location][field], legacy[location][field]);
+  }
+}
 
 const advanced = {
   ...legacy,
