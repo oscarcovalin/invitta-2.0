@@ -47,6 +47,13 @@ function response() {
     (error) => error.status === 404);
   assert.equal(sample.calls.length, 2);
 
+  const emptyInvitation = fakeFetch({ saved: { ...document, sections: [{ id: 'details', enabled: false }] } });
+  await assert.rejects(
+    readPublishedInvitation({ slug: 'ana-luis', config, fetchImpl: emptyInvitation.fetchImpl }),
+    (error) => error.status === 404
+  );
+  assert.equal(emptyInvitation.calls.length, 2);
+
   for (const [input, setup, expectedCalls] of [
     ['../private', {}, 0],
     ['ana-luis', { first: { ...project, status: 'draft' } }, 1],
