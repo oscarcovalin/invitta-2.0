@@ -586,7 +586,7 @@
           </a>
 
           <!-- Rol: Diseñador Creativo -->
-          <a href="invitacion-estudio.html?role=designer" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group">
+          <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group">
             <div>
               <div class="flex items-center justify-between mb-3">
                 <div class="w-10 h-10 rounded-xl bg-[#FAF3E7] border border-[#E5E0D8] text-[#968D5C] flex items-center justify-center shadow-sm">
@@ -1001,7 +1001,7 @@
         const pinCode = e.pin || '4821';
         const hostLink = evm.generateEventMagicLink(e.packageType || 'host_premium', e.slug, 'mesas');
         const plannerLink = `mesas?event=${e.slug}&role=planner`;
-        const studioLink = `invitacion-estudio.html?event=${e.slug}&role=designer`;
+        const studioLink = `invitacion-estudio.html?event=${e.slug}`;
         const previewLink = isBoda ? `invitacion-boda.html?event=${e.slug}` : `invitacion-xv.html?event=${e.slug}`;
         const waShareLink = evm.generateEventWhatsAppUrl(e.packageType || 'host_premium', e.slug, '', 'mesas');
 

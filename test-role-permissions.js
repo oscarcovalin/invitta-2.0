@@ -102,7 +102,7 @@ assert(studioHtml.includes("fetch('/api/session'") && !studioHtml.includes("para
 
 const portalHtml = fs.readFileSync('./portal.html', 'utf-8');
 assert(portalHtml.includes('organizador-mesas.html?role=planner'), 'portal.html contains direct card for Wedding Planner (?role=planner)');
-assert(portalHtml.includes('invitacion-estudio.html?role=designer'), 'portal.html contains direct card for Designer (?role=designer)');
+assert(portalHtml.includes('href="invitacion-estudio.html"'), 'portal.html contains a direct Studio card without URL-granted designer access');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);
