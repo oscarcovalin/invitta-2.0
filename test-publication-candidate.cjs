@@ -33,6 +33,12 @@ const sample = structuredClone(document);
 sample.content.primaryName = 'Catalina';
 assert.throws(() => buildPublicationCandidate({ documentId, document: sample }), /sample/i);
 
+const sampleStory = structuredClone(document);
+sampleStory.sections.push({ id: 'story', enabled: true });
+sampleStory.legacy.config.story = { enabled: true, title: 'Nuestra Historia' };
+assert.throws(() => buildPublicationCandidate({ documentId, document: sampleStory }), (error) =>
+  error.fields.includes('story.title'));
+
 const invalidImage = structuredClone(document);
 invalidImage.assets.hero.storagePath = `${documentId}/hero/${assetId}.webp`;
 assert.throws(() => buildPublicationCandidate({ documentId, document: invalidImage }), /Invalid publication image/);

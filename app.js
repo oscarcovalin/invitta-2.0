@@ -2726,6 +2726,7 @@ function setupCloudActions() {
         if (Array.isArray(result.fields) && result.fields.length) {
           const names = {
             'content.title': 'Título', 'content.primaryName': 'Primer nombre', 'content.secondaryName': 'Segundo nombre',
+            'story.title': 'Título de historia', 'story.subtitle': 'Subtítulo de historia', 'story.text': 'Texto de historia',
             'giftRegistry.bank.holder': 'Titular bancario', 'giftRegistry.bank.clabe': 'CLABE',
             whatsappNumber: 'WhatsApp', 'sharedAlbum.accessCode': 'Código de álbum'
           };

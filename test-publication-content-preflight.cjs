@@ -32,4 +32,16 @@ delete hidden.giftRegistry;
 delete hidden.sharedAlbum;
 hidden.whatsappHosts = [];
 assert.deepEqual(findSamplePublicationFields(hidden), []);
+
+const defaultStory = structuredClone(approved);
+defaultStory.story = {
+  title: 'Nuestra Historia',
+  subtitle: 'Un camino lleno de momentos inolvidables',
+  text: 'Todo comenzó con una mirada y una conversación que duró horas. Desde ese instante supimos que nuestras vidas estarían unidas para siempre. Hoy damos el paso más importante y queremos compartirlo contigo.',
+};
+assert.deepEqual(findSamplePublicationFields(defaultStory), ['story.title', 'story.subtitle', 'story.text']);
+defaultStory.story.text = 'Nos conocimos en mayo.';
+assert.deepEqual(findSamplePublicationFields(defaultStory), ['story.title', 'story.subtitle']);
+delete defaultStory.story;
+assert.deepEqual(findSamplePublicationFields(defaultStory), []);
 console.log('Publication preflight detects exact Studio sample values only in projected fields.');
