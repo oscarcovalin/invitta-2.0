@@ -1,4 +1,5 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const { collectPublicationImages } = require('./lib/publication-image-manifest.cjs');
 
 const projectId = '20000000-0000-4000-8000-000000000001';
@@ -40,6 +41,8 @@ for (const badPath of [
   'https://example.com/photo.webp',
   'data:image/webp;base64,AAAA',
   `${projectId}/gallery/${assetId}.svg`,
+  `${projectId}/hero/${assetId}xwebp`,
+  'assets/hero-catalina-user.jpg',
 ]) {
   const bad = structuredClone(document);
   bad.legacy.config.photos.hero = badPath;
@@ -49,6 +52,19 @@ for (const badPath of [
 const disabledGallery = structuredClone(document);
 disabledGallery.legacy.config.photos.galleryEnabled = false;
 assert.equal(collectPublicationImages(disabledGallery).some((entry) => entry.field.startsWith('photos.gallery')), false);
+
+const bundled = structuredClone(document);
+bundled.legacy.config.photos.hero = 'assets/hero-boda-hd.jpg';
+bundled.legacy.config.photos.portrait = 'assets/portrait-boda-hd.jpg';
+bundled.legacy.config.photos.gallery = ['assets/gallery-boda-1.jpg'];
+assert.deepEqual(collectPublicationImages(bundled).filter((entry) => entry.publicPath), [
+  { field: 'photos.hero', publicPath: 'assets/hero-boda-hd.jpg' },
+  { field: 'photos.portrait', publicPath: 'assets/portrait-boda-hd.jpg' },
+  { field: 'photos.gallery.0', publicPath: 'assets/gallery-boda-1.jpg' },
+]);
+for (const entry of collectPublicationImages(bundled).filter((item) => item.publicPath)) {
+  assert.equal(fs.existsSync(entry.publicPath), true, `${entry.publicPath} must be bundled`);
+}
 
 assert.throws(() => collectPublicationImages({ ...document, projectId: 'bad-id' }), /Invalid publication project/);
 console.log('Publication image manifest tests passed.');
