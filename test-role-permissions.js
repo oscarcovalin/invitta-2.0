@@ -97,7 +97,8 @@ assert(seatingHtml.includes('applyRoleInterface'), 'organizador-mesas.html has a
 const studioHtml = fs.readFileSync('./invitacion-estudio.html', 'utf-8');
 assert(studioHtml.includes('designerRoleBadge'), 'invitacion-estudio.html contains designerRoleBadge');
 assert(studioHtml.includes('adminNavigationLinks'), 'invitacion-estudio.html contains adminNavigationLinks');
-assert(studioHtml.includes('role === \'designer\''), 'invitacion-estudio.html contains designer isolation script');
+assert(studioHtml.includes("fetch('/api/session'") && !studioHtml.includes("params.get('unlock')"),
+  'Studio does not treat a URL role or unlock flag as cloud-edit authorization');
 
 const portalHtml = fs.readFileSync('./portal.html', 'utf-8');
 assert(portalHtml.includes('organizador-mesas.html?role=planner'), 'portal.html contains direct card for Wedding Planner (?role=planner)');

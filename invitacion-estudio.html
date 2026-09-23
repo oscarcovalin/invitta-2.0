@@ -2044,9 +2044,9 @@
         🎨
       </div>
       <div>
-        <h2 style="font-family:'Cinzel',serif; color:#f3e5ab; font-size:20px; font-weight:700; margin:0 0 8px 0;">Diseño Protegido por tu Diseñador</h2>
+        <h2 style="font-family:'Cinzel',serif; color:#f3e5ab; font-size:20px; font-weight:700; margin:0 0 8px 0;">Edición local y acceso en nube</h2>
         <p style="color:#a8a8b3; font-size:13px; line-height:1.6; margin:0;">
-          La maquetación visual, tipografías y efectos de tu invitación están resguardados por el estudio para garantizar la máxima calidad <strong>Haute-Couture</strong>.
+          Puedes explorar y editar una vista local. Para guardar cambios en nube necesitas una sesión válida y permisos sobre el proyecto.
         </p>
       </div>
       <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:14px; width:100%; text-align:left; font-size:12px; color:#d4cfc7;">
@@ -2061,13 +2061,13 @@
           <span>👁️</span> Ver Invitación
         </a>
       </div>
-      <!-- Acciones de desbloqueo para el Diseñador/Admin -->
+      <!-- La verificación de sesión no sustituye los permisos del proyecto en el servidor. -->
       <div style="margin-top:4px; display:flex; flex-direction:column; gap:8px; width:100%;">
         <button type="button" onclick="unlockDesignerMode()" style="background:rgba(212,175,55,0.12); border:1px dashed rgba(212,175,55,0.5); color:#f3e5ab; border-radius:12px; padding:11px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; transition:all 0.2s;">
-          <span>⚡</span> Soy el Diseñador / Administrador (Desbloquear Estudio)
+          <span>⚡</span> Verificar sesión para edición en nube
         </button>
         <button type="button" onclick="closeHostProtectedModal()" style="background:none; border:none; color:#71717a; font-size:11px; cursor:pointer; text-decoration:underline;">
-          Omitir y explorar interfaz de edición
+          Explorar diseño local sin guardar en nube
         </button>
       </div>
     </div>
@@ -2075,7 +2075,6 @@
 
    <!-- Scripts -->
   <script src="event-vault-manager.js"></script>
-  <script src="role-manager.js"></script>
   <script src="decor-assets.js"></script>
   <script src="projects-vault.js"></script>
   <script src="template-engine.js"></script>
@@ -2088,45 +2087,27 @@
       if (protectModal) protectModal.style.display = 'none';
     };
 
-    window.unlockDesignerMode = function() {
-      const rm = window.RoleManager ? window.RoleManager.create() : null;
-      if (rm) {
-        rm.setPersistedRole(rm.ROLES.PLANNER);
-      } else {
-        try { localStorage.setItem('invitta_active_role_v2', 'planner'); } catch(e){}
-      }
-      closeHostProtectedModal();
-      if (typeof showToast === 'function') {
-        showToast('✨ Modo Diseñador / Planner Activado. Estudio desbloqueado.');
+    window.unlockDesignerMode = async function() {
+      try {
+        const response = await fetch('/api/session', { cache: 'no-store', credentials: 'same-origin' });
+        const result = await response.json();
+        if (!response.ok || result.authenticated !== true) throw new Error('Sesión no válida.');
+        window.closeHostProtectedModal();
+        if (typeof showToast === 'function') showToast('Sesión verificada. El proyecto comprobará tus permisos al guardar.');
+      } catch (_) {
+        if (typeof showToast === 'function') showToast('Inicia sesión para guardar cambios en nube.');
       }
     };
 
-    (function() {
-      // Si la URL especifica explícitamente diseñador o planner, o edit=true, desbloquear de inmediato
-      const params = new URLSearchParams(window.location.search);
-      const urlRole = params.get('role');
-      const isEditMode = params.get('edit') === 'true' || params.get('unlock') === 'true';
-      if (urlRole === 'designer' || urlRole === 'planner' || isEditMode) {
-        try {
-          localStorage.setItem('invitta_active_role_v2', urlRole || 'planner');
-        } catch(e){}
-        return;
-      }
-
-      const rm = window.RoleManager ? window.RoleManager.create() : null;
-      if (!rm) return;
-
-      const role = rm.currentRole;
-      if (role === rm.ROLES.HOST_PREMIUM || role === rm.ROLES.HOST_BASIC) {
-        const protectModal = document.getElementById('hostProtectedDesignModal');
-        if (protectModal) protectModal.style.display = 'flex';
-      }
-
-      if (role === rm.ROLES.DESIGNER) {
-        const adminLinks = document.getElementById('adminNavigationLinks');
-        const badge = document.getElementById('designerRoleBadge');
-        if (adminLinks) adminLinks.style.display = 'none';
-        if (badge) badge.style.display = 'inline-flex';
+    (async function() {
+      const protectModal = document.getElementById('hostProtectedDesignModal');
+      if (protectModal) protectModal.style.display = 'flex';
+      try {
+        const response = await fetch('/api/session', { cache: 'no-store', credentials: 'same-origin' });
+        const result = await response.json();
+        if (response.ok && result.authenticated === true) window.closeHostProtectedModal();
+      } catch (_) {
+        // Sin sesión verificable, sólo permanece disponible la edición local.
       }
     })();
   </script>
