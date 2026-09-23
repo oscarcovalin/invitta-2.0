@@ -6,13 +6,13 @@ const projectId = '20000000-0000-4000-8000-000000000001';
 const documentId = '30000000-0000-4000-8000-000000000001';
 const project = { id: projectId, status: 'published', published_document_id: documentId };
 const document = {
-  schemaVersion: 1, projectId, event: { type: 'wedding' }, content: { title: 'Ana y Luis' },
+  schemaVersion: 1, projectId, revision: 1, event: { type: 'wedding' }, content: { title: 'Ana y Luis' },
   sections: [{ id: 'details', enabled: true }],
   legacy: { config: { ceremony: { venue: 'Templo', privateNote: 'SECRET_NOTE' }, internalToken: 'SECRET_TOKEN' } },
 };
 const config = { url: 'https://example.supabase.co', secretKey: 'sb_secret_test_only' };
 
-function fakeFetch({ first = project, last = project, saved = document } = {}) {
+function fakeFetch({ first = project, last = project, saved = document, savedRevision = 1 } = {}) {
   const calls = [];
   const fetchImpl = async (url, options) => {
     calls.push(url);
@@ -21,7 +21,7 @@ function fakeFetch({ first = project, last = project, saved = document } = {}) {
       ok: true, json: async () => (calls.filter((call) => call.includes('/invitation_projects?')).length === 1 ? first : last) ?
         [calls.filter((call) => call.includes('/invitation_projects?')).length === 1 ? first : last] : [],
     };
-    if (url.includes('/invitation_documents?')) return { ok: true, json: async () => saved ? [{ document: saved }] : [] };
+    if (url.includes('/invitation_documents?')) return { ok: true, json: async () => saved ? [{ revision: savedRevision, document: saved }] : [] };
     throw new Error(`Unexpected request: ${url}`);
   };
   return { calls, fetchImpl };
@@ -53,6 +53,19 @@ function response() {
     (error) => error.status === 404
   );
   assert.equal(emptyInvitation.calls.length, 2);
+
+  const invalidImage = fakeFetch({ saved: { ...document, assets: { hero: { storagePath: `${documentId}/hero/${documentId}.webp` } }, sections: [{ id: 'hero', enabled: true }] } });
+  await assert.rejects(
+    readPublishedInvitation({ slug: 'ana-luis', config, fetchImpl: invalidImage.fetchImpl }),
+    (error) => error.status === 404
+  );
+  assert.equal(invalidImage.calls.length, 2);
+
+  const mismatchedRevision = fakeFetch({ savedRevision: 2 });
+  await assert.rejects(
+    readPublishedInvitation({ slug: 'ana-luis', config, fetchImpl: mismatchedRevision.fetchImpl }),
+    (error) => error.status === 404
+  );
 
   for (const [input, setup, expectedCalls] of [
     ['../private', {}, 0],

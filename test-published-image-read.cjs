@@ -8,9 +8,9 @@ const assetId = '40000000-0000-4000-8000-000000000001';
 const storagePath = `${projectId}/hero/${assetId}.webp`;
 const config = { url: 'https://example.supabase.co', secretKey: 'sb_secret_server_only' };
 const project = { id: projectId, status: 'published', published_document_id: documentId };
-const document = { schemaVersion: 1, projectId, sections: [{ id: 'hero', enabled: true }], assets: {}, legacy: { config: { photos: { hero: storagePath } } } };
+const document = { schemaVersion: 1, projectId, revision: 1, sections: [{ id: 'hero', enabled: true }], assets: {}, legacy: { config: { photos: { hero: storagePath } } } };
 
-function fakeFetch({ firstProject = project, lastProject = project, savedDocument = document } = {}) {
+function fakeFetch({ firstProject = project, lastProject = project, savedDocument = document, savedRevision = 1 } = {}) {
   const calls = [];
   const fetchImpl = async (url, options) => {
     calls.push({ url, options });
@@ -19,7 +19,7 @@ function fakeFetch({ firstProject = project, lastProject = project, savedDocumen
       const item = calls.filter((call) => call.url.includes('/invitation_projects?')).length === 1 ? firstProject : lastProject;
       return { ok: true, json: async () => item ? [item] : [] };
     }
-    if (url.includes('/invitation_documents?')) return { ok: true, json: async () => savedDocument ? [{ document: savedDocument }] : [] };
+    if (url.includes('/invitation_documents?')) return { ok: true, json: async () => savedDocument ? [{ revision: savedRevision, document: savedDocument }] : [] };
     if (url.includes('/storage/v1/object/authenticated/')) return {
       ok: true, headers: { get: (name) => name === 'content-length' ? '4' : null },
       arrayBuffer: async () => Uint8Array.from([1, 2, 3, 4]).buffer,
@@ -43,6 +43,11 @@ function fakeFetch({ firstProject = project, lastProject = project, savedDocumen
   await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: sample.fetchImpl }),
     (error) => error.status === 404);
   assert.equal(sample.calls.length, 2);
+
+  const mismatchedRevision = fakeFetch({ savedRevision: 2 });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: mismatchedRevision.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(mismatchedRevision.calls.length, 2);
 
   for (const [input, expectedCalls] of [
     [{ slug: '../private', field: 'photos.hero' }, 0],
