@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 const handler = require('./api/webhooks/mercadopago.js');
 const previousSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
 const previousToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+const previousFetch = global.fetch;
 
 async function send(req) {
   const res = {
@@ -44,6 +45,24 @@ function signedRequest(type = 'payment') {
     assert.equal(noPaymentToken.statusCode, 503);
     assert.notEqual(noPaymentToken.body.verified, true);
 
+    process.env.MERCADOPAGO_ACCESS_TOKEN = 'test-access-token';
+    let paymentReads = 0;
+    global.fetch = async (url, options) => {
+      paymentReads++;
+      assert.equal(url, 'https://api.mercadopago.com/v1/payments/123456789');
+      assert.equal(options.headers.Authorization, 'Bearer test-access-token');
+      return { ok: true, json: async () => ({ id: 123456789, status: 'approved' }) };
+    };
+    const confirmedPayment = await send(signedRequest());
+    assert.equal(confirmedPayment.statusCode, 200);
+    assert.equal(confirmedPayment.body.verified, true);
+    assert.equal(paymentReads, 1);
+
+    global.fetch = async () => ({ ok: false, status: 503 });
+    assert.equal((await send(signedRequest())).statusCode, 503);
+    global.fetch = async () => ({ ok: true, json: async () => ({ id: 42, status: 'approved' }) });
+    assert.equal((await send(signedRequest())).statusCode, 503);
+
     const authenticatedNotification = await send(signedRequest('test'));
     assert.equal(authenticatedNotification.statusCode, 200);
     assert.equal(authenticatedNotification.body.verified, true);
@@ -53,5 +72,6 @@ function signedRequest(type = 'payment') {
     else process.env.MERCADOPAGO_WEBHOOK_SECRET = previousSecret;
     if (previousToken === undefined) delete process.env.MERCADOPAGO_ACCESS_TOKEN;
     else process.env.MERCADOPAGO_ACCESS_TOKEN = previousToken;
+    global.fetch = previousFetch;
   }
 })().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -4,7 +4,7 @@
  * 1. Cryptographic HMAC-SHA256 signature verification over (x-signature, x-request-id, data.id)
  * 2. Mandatory timestamp check against replay attacks (< 5 minutes)
  * 3. Re-fetch payment from Mercado Pago API (payload is never trusted blindly)
- * 4. Idempotent processing
+ * This endpoint acknowledges verified notifications; it does not fulfill orders.
  */
 const crypto = require('crypto');
 
@@ -80,15 +80,23 @@ module.exports = async function handler(req, res) {
     if (!mpToken) {
       return res.status(503).json({ error: 'Verificación de pago no disponible.' });
     }
+    if (!/^\d+$/.test(String(dataId))) {
+      return res.status(400).json({ error: 'Identificador de pago inválido.' });
+    }
     try {
-      const { MercadoPagoConfig, Payment } = require('mercadopago');
-      const client = new MercadoPagoConfig({ accessToken: mpToken });
-      const paymentApi = new Payment(client);
-      const paymentInfo = await paymentApi.get({ id: dataId });
+      const response = await fetch(`https://api.mercadopago.com/v1/payments/${dataId}`, {
+        headers: { Authorization: `Bearer ${mpToken}` },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!response.ok) throw new Error(`Payment API returned ${response.status}`);
+      const paymentInfo = await response.json();
+      if (String(paymentInfo.id) !== String(dataId) || !paymentInfo.status) {
+        throw new Error('Payment API returned an invalid payment');
+      }
 
-      console.log(`✅ Pago Mercado Pago #${dataId} verificado. Estado: ${paymentInfo.status} — Monto: $${paymentInfo.transaction_amount} ${paymentInfo.currency_id}`);
+      console.log(`Pago Mercado Pago #${dataId} consultado. Estado: ${paymentInfo.status}`);
       
-      // Aquí se activa la invitación o se actualiza el estado en Supabase/BD si aplica
+      // No activar invitaciones aquí: falta vinculación del pedido e idempotencia persistente.
     } catch (err) {
       console.error('Error re-consultando estado de pago en Mercado Pago:', err.message);
       return res.status(503).json({ error: 'No se pudo verificar el pago.' });
