@@ -1,6 +1,7 @@
 /**
  * Invitta 2.0 — Webhook Handler para Clip México
- * Powered by PagoKit (Replay safe, Idempotent, Cryptographic audit)
+ * Validates the configured webhook secret before acknowledging notifications.
+ * It does not reconcile orders or provide persistent idempotency yet.
  *
  * Seguridad implementada [C-1]:
  * - Verificación HMAC-SHA256 cuando Clip envía x-clip-signature o x-signature
@@ -104,13 +105,19 @@ module.exports = async function handler(req, res) {
   }
 
   // ── PROCESAMIENTO DEL EVENTO ──────────────────────────────────────────────
-  const eventType = body.event_type || body.type || body.status || 'unknown';
+  const eventType = body.event_type || body.type || body.resource || 'unknown';
   const data = body.data || body.payload || body;
-  const paymentId = data.id || data.payment_id || body.id;
-  const status = (data.status || body.status || '').toLowerCase();
+  const isCheckout = body.resource === 'CHECKOUT';
+  const isRefund = body.resource === 'REFUND';
+  const paymentRequestId = isCheckout ? body.payment_request_id : null;
+  const paymentId = (isCheckout || isRefund) ? body.transaction_id : (data.id || data.payment_id || body.id);
+  const resourceStatus = String(body.resource_status || '').toLowerCase();
+  const status = isCheckout ? resourceStatus
+    : isRefund ? `refund_${resourceStatus}`
+      : String(data.status || body.status || '').toLowerCase();
   const metadata = data.metadata || body.metadata || {};
 
-  const isApproved = (
+  const isApproved = isCheckout ? status === 'completed' : !isRefund && (
     status === 'approved' ||
     status === 'paid' ||
     status === 'success' ||
@@ -119,8 +126,8 @@ module.exports = async function handler(req, res) {
   );
 
   if (isApproved) {
-    console.log(`✅ [PagoKit] Pago Clip APROBADO: ID=${paymentId}, Plan=${metadata.plan_id || 'N/A'}, Ref=${metadata.me_reference_id || 'N/A'}`);
-    // TODO: Activar suscripción / actualizar estado en base de datos
+    console.log(`✅ [PagoKit] Checkout Clip completado: solicitud=${paymentRequestId || 'N/A'}, transacción=${paymentId || 'N/A'}, referencia=${body.me_reference_id || metadata.me_reference_id || 'N/A'}`);
+    // No activar servicios sin conciliar payment_request_id con un pedido persistido.
   } else {
     console.log(`ℹ️ [PagoKit] Evento Clip "${eventType}" con estado: "${status}"`);
   }
@@ -128,8 +135,9 @@ module.exports = async function handler(req, res) {
   return res.status(200).json({
     received: true,
     provider: 'clip',
-    status: isApproved ? 'approved' : status,
+    status,
     paymentId: paymentId || null,
+    paymentRequestId: paymentRequestId || null,
     timestamp: new Date().toISOString()
   });
 };
