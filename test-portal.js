@@ -10,8 +10,8 @@ assert.match(portal, /auth\.loginHostByPin\(code, pin\)/,
   'The host form must authenticate using the supplied code and PIN');
 assert.match(portal, /window\.location\.href = 'organizador-mesas\.html'/,
   'A successful host login must open the internal organizer');
-assert.match(portal, /invitacion-estudio\.html\?event=\$\{e\.slug\}/,
-  'Each event must open its own Studio invitation');
+assert.match(portal, /invitacion-estudio\.html\?project=\$\{encodeURIComponent\(e\.id\)\}/,
+  'Each cloud project must open its own Studio invitation');
 assert.doesNotMatch(portal, /invitacion-estudio\.html\?role=/,
   'Portal links must not grant Studio editing via URL role');
 

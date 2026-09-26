@@ -77,6 +77,9 @@ async function loadCloudProject() {
       console.log('📦 Loaded project from vault:', proj.title);
     }
   }
+  if (projId && window.InvittaProjectPortal) {
+    window.InvittaProjectPortal.applyInitialDraft(currentConfig, projId);
+  }
 })();
 
 // ==================== INICIALIZACIÓN ====================
