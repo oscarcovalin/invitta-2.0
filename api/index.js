@@ -1,11 +1,11 @@
 import dispatcher from '../lib/api-dispatcher.cjs';
 import auth from '../api-handlers/auth.js';
-import checkout from '../api-handlers/checkout.js';
+import checkout from '../api-handlers/checkout.cjs';
 import invitationCreate from '../api-handlers/invitacion/create.js';
 import invitationToken from '../api-handlers/invitacion/token.js';
 import login from '../api-handlers/login.js';
 import logout from '../api-handlers/logout.js';
-import paymentConfig from '../api-handlers/payment-config.js';
+import paymentConfig from '../api-handlers/payment-config.cjs';
 import projectAsset from '../api-handlers/projects/asset.js';
 import projectCreate from '../api-handlers/projects/create.js';
 import projectGet from '../api-handlers/projects/get.js';
@@ -18,9 +18,9 @@ import uploadAsset from '../api-handlers/projects/upload-asset.js';
 import publicImage from '../api-handlers/public/image.js';
 import publicInvitation from '../api-handlers/public/invitation.js';
 import session from '../api-handlers/session.js';
-import clipWebhook from '../api-handlers/webhooks/clip.js';
-import mercadoPagoWebhook from '../api-handlers/webhooks/mercadopago.js';
-import stripeWebhook from '../api-handlers/webhooks/stripe.js';
+import clipWebhook from '../api-handlers/webhooks/clip.cjs';
+import mercadoPagoWebhook from '../api-handlers/webhooks/mercadopago.cjs';
+import stripeWebhook from '../api-handlers/webhooks/stripe.cjs';
 
 const handler = dispatcher.createApiDispatcher({
   handlers: {

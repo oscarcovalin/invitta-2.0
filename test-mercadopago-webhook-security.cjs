@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 
-const handler = require('./api-handlers/webhooks/mercadopago.js');
+const handler = require('./api-handlers/webhooks/mercadopago.cjs');
 const previousSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
 const previousToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 const previousFetch = global.fetch;

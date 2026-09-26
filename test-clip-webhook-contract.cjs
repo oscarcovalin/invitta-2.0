@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 
-const handler = require('./api-handlers/webhooks/clip.js');
+const handler = require('./api-handlers/webhooks/clip.cjs');
 const priorSecret = process.env.CLIP_WEBHOOK_SECRET;
 
 async function send(payload) {
