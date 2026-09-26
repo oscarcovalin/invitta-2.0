@@ -1,48 +1,37 @@
 import dispatcher from '../lib/api-dispatcher.cjs';
-import auth from '../api-handlers/auth.js';
-import checkout from '../api-handlers/checkout.cjs';
-import invitationCreate from '../api-handlers/invitacion/create.js';
-import invitationToken from '../api-handlers/invitacion/token.js';
-import login from '../api-handlers/login.js';
-import logout from '../api-handlers/logout.js';
-import paymentConfig from '../api-handlers/payment-config.cjs';
-import projectAsset from '../api-handlers/projects/asset.js';
-import projectCreate from '../api-handlers/projects/create.js';
-import projectGet from '../api-handlers/projects/get.js';
-import latestRevision from '../api-handlers/projects/latest-revision.js';
-import projectList from '../api-handlers/projects/list.js';
-import publicationPreview from '../api-handlers/projects/publication-preview.js';
-import publishRevision from '../api-handlers/projects/publish-revision.js';
-import saveRevision from '../api-handlers/projects/save-revision.js';
-import uploadAsset from '../api-handlers/projects/upload-asset.js';
-import publicImage from '../api-handlers/public/image.js';
-import publicInvitation from '../api-handlers/public/invitation.js';
-import session from '../api-handlers/session.js';
-import clipWebhook from '../api-handlers/webhooks/clip.cjs';
-import mercadoPagoWebhook from '../api-handlers/webhooks/mercadopago.cjs';
-import stripeWebhook from '../api-handlers/webhooks/stripe.cjs';
+
+function lazy(importHandler) {
+  return async (req, res) => {
+    const imported = await importHandler();
+    const handler = imported.default || imported;
+    return handler(req, res);
+  };
+}
 
 const handler = dispatcher.createApiDispatcher({
   handlers: {
-    auth, checkout,
-    'invitacion/create': invitationCreate,
-    'invitacion/token': invitationToken,
-    login, logout, 'payment-config': paymentConfig,
-    'projects/asset': projectAsset,
-    'projects/create': projectCreate,
-    'projects/get': projectGet,
-    'projects/latest-revision': latestRevision,
-    'projects/list': projectList,
-    'projects/publication-preview': publicationPreview,
-    'projects/publish-revision': publishRevision,
-    'projects/save-revision': saveRevision,
-    'projects/upload-asset': uploadAsset,
-    'public/image': publicImage,
-    'public/invitation': publicInvitation,
-    session,
-    'webhooks/clip': clipWebhook,
-    'webhooks/mercadopago': mercadoPagoWebhook,
-    'webhooks/stripe': stripeWebhook,
+    auth: lazy(() => import('../api-handlers/auth.js')),
+    checkout: lazy(() => import('../api-handlers/checkout.cjs')),
+    'invitacion/create': lazy(() => import('../api-handlers/invitacion/create.js')),
+    'invitacion/token': lazy(() => import('../api-handlers/invitacion/token.js')),
+    login: lazy(() => import('../api-handlers/login.js')),
+    logout: lazy(() => import('../api-handlers/logout.js')),
+    'payment-config': lazy(() => import('../api-handlers/payment-config.cjs')),
+    'projects/asset': lazy(() => import('../api-handlers/projects/asset.js')),
+    'projects/create': lazy(() => import('../api-handlers/projects/create.js')),
+    'projects/get': lazy(() => import('../api-handlers/projects/get.js')),
+    'projects/latest-revision': lazy(() => import('../api-handlers/projects/latest-revision.js')),
+    'projects/list': lazy(() => import('../api-handlers/projects/list.js')),
+    'projects/publication-preview': lazy(() => import('../api-handlers/projects/publication-preview.js')),
+    'projects/publish-revision': lazy(() => import('../api-handlers/projects/publish-revision.js')),
+    'projects/save-revision': lazy(() => import('../api-handlers/projects/save-revision.js')),
+    'projects/upload-asset': lazy(() => import('../api-handlers/projects/upload-asset.js')),
+    'public/image': lazy(() => import('../api-handlers/public/image.js')),
+    'public/invitation': lazy(() => import('../api-handlers/public/invitation.js')),
+    session: lazy(() => import('../api-handlers/session.js')),
+    'webhooks/clip': lazy(() => import('../api-handlers/webhooks/clip.cjs')),
+    'webhooks/mercadopago': lazy(() => import('../api-handlers/webhooks/mercadopago.cjs')),
+    'webhooks/stripe': lazy(() => import('../api-handlers/webhooks/stripe.cjs')),
   },
 });
 
