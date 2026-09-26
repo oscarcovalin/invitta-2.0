@@ -11,6 +11,9 @@ function lazy(importHandler) {
 const handler = dispatcher.createApiDispatcher({
   handlers: {
     auth: lazy(() => import('../api-handlers/auth.js')),
+    'auth/register': lazy(() => import('../api-handlers/auth/register.js')),
+    'auth/recover': lazy(() => import('../api-handlers/auth/recover.js')),
+    'auth/invitations': lazy(() => import('../api-handlers/auth/invitations.js')),
     checkout: lazy(() => import('../api-handlers/checkout.cjs')),
     'invitacion/create': lazy(() => import('../api-handlers/invitacion/create.js')),
     'invitacion/token': lazy(() => import('../api-handlers/invitacion/token.js')),

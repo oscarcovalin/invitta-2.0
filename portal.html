@@ -193,7 +193,7 @@
           <label for="inputAuthProUser" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Usuario o Correo Electrónico</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E9C87] text-lg pointer-events-none">person</span>
-            <input type="text" id="inputAuthProUser" placeholder="tu-correo@ejemplo.com o tu usuario" required
+            <input type="email" id="inputAuthProUser" autocomplete="username" placeholder="tu-correo@ejemplo.com" required
                    class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-all">
           </div>
         </div>
@@ -202,7 +202,7 @@
           <label for="inputAuthProPass" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Contraseña</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E9C87] text-lg pointer-events-none">key</span>
-            <input type="password" id="inputAuthProPass" placeholder="••••••••" required
+            <input type="password" id="inputAuthProPass" autocomplete="current-password" placeholder="••••••••" required
                    class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-all">
           </div>
         </div>
@@ -213,6 +213,30 @@
         </button>
         <div id="feedbackAuthPro" class="text-xs mt-2 hidden"></div>
       </form>
+        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-1 text-xs">
+          <button type="button" id="btnRequestProfessionalAccount" class="font-semibold text-[#377061] hover:underline">Crear cuenta profesional</button>
+          <button type="button" id="btnForgotProfessionalPassword" class="text-[#596562] hover:underline">Olvidé mi contraseña</button>
+        </div>
+        <form id="formProfessionalInvite" class="hidden mt-4 space-y-3 border-t border-[#E5E0D8] pt-4">
+          <p class="text-xs text-[#596562] leading-relaxed">Crea una cuenta básica con tu correo. Confirma el enlace que te enviaremos; los permisos para proyectos o administración deben asignarse por separado.</p>
+          <label for="inputProfessionalInviteEmail" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Correo de la cuenta</label>
+          <input type="email" id="inputProfessionalInviteEmail" autocomplete="email" placeholder="nombre@correo.com" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <label for="inputProfessionalInvitePassword" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Crea una contraseña</label>
+          <input type="password" id="inputProfessionalInvitePassword" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Mínimo 12 caracteres" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <label for="inputProfessionalInvitePasswordConfirm" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Confirma la contraseña</label>
+          <input type="password" id="inputProfessionalInvitePasswordConfirm" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Escríbela otra vez" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <button type="submit" class="w-full py-3 rounded-full bg-[#242928] text-white font-bold text-xs uppercase tracking-widest">Crear cuenta y enviar verificación</button>
+          <div id="feedbackProfessionalInvite" class="text-xs hidden" role="status" aria-live="polite"></div>
+        </form>
+        <form id="formProfessionalRecovery" class="hidden mt-4 space-y-3 border-t border-[#E5E0D8] pt-4">
+          <p id="professionalRecoveryHelp" class="text-xs text-[#596562] leading-relaxed">Te enviaremos un enlace seguro para cambiar tu contraseña.</p>
+          <label for="inputRecoveryEmail" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Correo de la cuenta</label>
+          <input type="email" id="inputRecoveryEmail" autocomplete="email" placeholder="nombre@correo.com" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <label for="inputRecoveryPassword" id="labelRecoveryPassword" class="hidden text-xs font-bold uppercase tracking-wider text-[#377061]">Nueva contraseña</label>
+          <input type="password" id="inputRecoveryPassword" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Mínimo 12 caracteres" class="hidden w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <button type="submit" id="btnRecoverySubmit" class="w-full py-3 rounded-full bg-[#4E9C87] text-white font-bold text-xs uppercase tracking-widest">Enviar enlace de recuperación</button>
+          <div id="feedbackProfessionalRecovery" class="text-xs hidden" role="status" aria-live="polite"></div>
+        </form>
 
     </div>
 
@@ -272,6 +296,22 @@
         </a>
       </div>
     </header>
+
+    <section class="rounded-3xl p-6 bg-white border border-[#E5E0D8] shadow-sm mb-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="font-serif text-xl font-semibold text-[#242928]">Administrar accesos profesionales</h2>
+          <p class="text-xs text-[#596562] mt-1">Envía una invitación verificada. Las cuentas invitadas comienzan sin acceso a eventos ni rol de administración.</p>
+        </div>
+        <button type="button" id="btnToggleProfessionalInviteAdmin" class="px-5 py-3 rounded-full bg-[#4E9C87] text-white font-bold text-xs uppercase tracking-widest">Invitar cuenta</button>
+      </div>
+      <form id="formAdminProfessionalInvite" class="hidden mt-5 max-w-lg space-y-3">
+        <label for="inputAdminProfessionalInviteEmail" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Correo de la cuenta</label>
+        <input type="email" id="inputAdminProfessionalInviteEmail" autocomplete="email" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+        <button type="submit" class="px-5 py-3 rounded-full bg-[#242928] text-white font-bold text-xs uppercase tracking-widest">Enviar invitación</button>
+        <div id="feedbackAdminProfessionalInvite" class="text-xs hidden" role="status" aria-live="polite"></div>
+      </form>
+    </section>
 
     <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
     <main class="w-full space-y-8 sm:space-y-10 mb-16 px-0">
@@ -826,7 +866,7 @@
         formPro.addEventListener('submit', async (e) => {
           e.preventDefault();
           const user = document.getElementById('inputAuthProUser').value.trim();
-          const pass = document.getElementById('inputAuthProPass').value.trim();
+          const pass = document.getElementById('inputAuthProPass').value;
           const feedback = document.getElementById('feedbackAuthPro');
 
           const res = await auth.loginProfessional(user, pass);
@@ -849,6 +889,156 @@
               feedback.textContent = `❌ ${res.error}`;
             }
           }
+        });
+      }
+
+      // 4a. Alta profesional básica: sólo crea identidad; no asigna roles ni proyectos.
+      const accountRequestToggle = document.getElementById('btnRequestProfessionalAccount');
+      const accountRequestForm = document.getElementById('formProfessionalInvite');
+      if (accountRequestToggle && accountRequestForm) {
+        accountRequestToggle.addEventListener('click', () => {
+          const opening = accountRequestForm.classList.contains('hidden');
+          accountRequestForm.classList.toggle('hidden', !opening);
+          document.getElementById('formProfessionalRecovery')?.classList.add('hidden');
+          if (opening) document.getElementById('inputProfessionalInviteEmail')?.focus();
+        });
+        accountRequestForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('feedbackProfessionalInvite');
+          const submit = accountRequestForm.querySelector('button[type="submit"]');
+          if (!feedback || !submit) return;
+          const password = document.getElementById('inputProfessionalInvitePassword').value;
+          const confirmation = document.getElementById('inputProfessionalInvitePasswordConfirm').value;
+          if (password !== confirmation) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'Las contraseñas no coinciden.';
+            return;
+          }
+          submit.disabled = true;
+          try {
+            const response = await fetch('/api/auth/register', {
+              method: 'POST', credentials: 'same-origin',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: document.getElementById('inputProfessionalInviteEmail').value.trim(), password }),
+            });
+            const payload = await response.json();
+            feedback.className = `text-xs p-3 rounded-xl ${response.ok ? 'bg-[#EBF5F2] text-[#377061]' : 'bg-rose-50 text-rose-700'} block`;
+            feedback.textContent = response.ok
+              ? payload.message || 'Cuenta creada. Revisa el correo para confirmar el alta.'
+              : payload.error || 'No fue posible enviar la invitación.';
+            if (response.ok) {
+              accountRequestForm.reset();
+              if (payload.session?.role === 'platform_admin') {
+                setTimeout(async () => { await auth.refreshSession(); updateAuthGateUI(); await refreshCloudProjects(); }, 300);
+              }
+            }
+          } catch (_) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'No fue posible conectar con el servidor. Intenta más tarde.';
+          } finally { submit.disabled = false; }
+        });
+      }
+
+      // 4b. Recuperación: respuesta genérica para no revelar cuentas existentes.
+      const recoveryToggle = document.getElementById('btnForgotProfessionalPassword');
+      const recoveryForm = document.getElementById('formProfessionalRecovery');
+      const recoveryParams = new URLSearchParams(window.location.search);
+      const recoveryHash = new URLSearchParams(String(window.location.hash || '').replace(/^#/, ''));
+      const recoveryError = recoveryHash.get('error_description') || recoveryParams.get('error_description');
+      const recoveryToken = recoveryParams.get('token_hash') || recoveryHash.get('access_token');
+      const recoveryType = recoveryParams.get('type') || recoveryHash.get('type');
+      let recoveryLinkError = Boolean(recoveryError);
+      if (recoveryToken && recoveryType && ['recovery', 'invite', 'signup'].includes(recoveryType)) {
+        try {
+          const verifiedResponse = await fetch('/api/auth/recover', {
+            method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(recoveryHash.get('access_token')
+              ? { action: 'exchange', accessToken: recoveryHash.get('access_token'), refreshToken: recoveryHash.get('refresh_token') || '' }
+              : { action: 'verify', tokenHash: recoveryToken, type: recoveryType }),
+          });
+          if (verifiedResponse.ok) sessionStorage.setItem('invitta_recovery_pending', '1');
+          else recoveryLinkError = true;
+        } catch (_) {
+          recoveryLinkError = true;
+        }
+      }
+      const isRecoveryPending = sessionStorage.getItem('invitta_recovery_pending') === '1';
+      if (recoveryToggle && recoveryForm) {
+        recoveryToggle.addEventListener('click', () => {
+          recoveryForm.classList.toggle('hidden');
+          accountRequestForm?.classList.add('hidden');
+          if (!isRecoveryPending) document.getElementById('inputRecoveryEmail')?.focus();
+        });
+        if (isRecoveryPending || recoveryLinkError) recoveryForm.classList.remove('hidden');
+        if (recoveryLinkError) {
+          const feedback = document.getElementById('feedbackProfessionalRecovery');
+          feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+          feedback.textContent = 'El enlace venció o no es válido. Solicita uno nuevo.';
+        }
+        document.getElementById('inputRecoveryEmail').classList.toggle('hidden', isRecoveryPending);
+        document.querySelector('label[for="inputRecoveryEmail"]').classList.toggle('hidden', isRecoveryPending);
+        document.getElementById('professionalRecoveryHelp').textContent = isRecoveryPending
+          ? 'Crea una contraseña nueva para terminar el alta de tu cuenta profesional.'
+          : 'Te enviaremos un enlace seguro. Si la cuenta existe, llegará a su correo.';
+        document.getElementById('labelRecoveryPassword').classList.toggle('hidden', !isRecoveryPending);
+        document.getElementById('inputRecoveryPassword').classList.toggle('hidden', !isRecoveryPending);
+        document.getElementById('inputRecoveryPassword').required = isRecoveryPending;
+        document.getElementById('btnRecoverySubmit').textContent = isRecoveryPending ? 'Crear contraseña e ingresar' : 'Enviar enlace de recuperación';
+        recoveryForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('feedbackProfessionalRecovery');
+          const submit = document.getElementById('btnRecoverySubmit');
+          submit.disabled = true;
+          try {
+            const response = await fetch('/api/auth/recover', {
+              method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(isRecoveryPending
+                ? { action: 'complete', password: document.getElementById('inputRecoveryPassword').value }
+                : { email: document.getElementById('inputRecoveryEmail').value.trim() }),
+            });
+            const payload = await response.json();
+            feedback.className = `text-xs p-3 rounded-xl ${response.ok ? 'bg-[#EBF5F2] text-[#377061]' : 'bg-rose-50 text-rose-700'} block`;
+            feedback.textContent = payload.message || payload.error || 'No fue posible procesar la solicitud.';
+            if (response.ok && isRecoveryPending) {
+              sessionStorage.removeItem('invitta_recovery_pending');
+              recoveryForm.reset();
+              setTimeout(() => window.location.replace('portal.html'), 1000);
+            }
+          } catch (_) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'No fue posible conectar con el servidor. Intenta más tarde.';
+          } finally { submit.disabled = false; }
+        });
+      }
+
+      // 4c. Las invitaciones salen sólo desde el tablero de plataforma y el API revalida el rol.
+      const adminInviteToggle = document.getElementById('btnToggleProfessionalInviteAdmin');
+      const adminInviteForm = document.getElementById('formAdminProfessionalInvite');
+      if (adminInviteToggle && adminInviteForm) {
+        adminInviteToggle.addEventListener('click', () => {
+          if (!auth?.isSuperadmin()) return;
+          adminInviteForm.classList.toggle('hidden');
+          if (!adminInviteForm.classList.contains('hidden')) document.getElementById('inputAdminProfessionalInviteEmail').focus();
+        });
+        adminInviteForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('feedbackAdminProfessionalInvite');
+          const submit = adminInviteForm.querySelector('button[type="submit"]');
+          if (!auth?.isSuperadmin() || !feedback || !submit) return;
+          submit.disabled = true;
+          try {
+            const response = await fetch('/api/auth/invitations', {
+              method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: document.getElementById('inputAdminProfessionalInviteEmail').value.trim() }),
+            });
+            const payload = await response.json();
+            feedback.className = `text-xs p-3 rounded-xl ${response.ok ? 'bg-[#EBF5F2] text-[#377061]' : 'bg-rose-50 text-rose-700'} block`;
+            feedback.textContent = response.ok ? 'Invitación enviada. La persona recibirá el enlace para crear su contraseña.' : payload.error || 'No fue posible enviar la invitación.';
+            if (response.ok) adminInviteForm.reset();
+          } catch (_) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'No fue posible conectar con el servidor. Intenta más tarde.';
+          } finally { submit.disabled = false; }
         });
       }
 

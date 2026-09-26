@@ -22,6 +22,13 @@ const response = () => ({
     assert.equal(res.body.query.id, 'preserved');
   }
 
+  for (const route of ['auth/register', 'auth/recover', 'auth/invitations']) {
+    const res = response();
+    await dispatch({ method: 'POST', query: { route } }, res);
+    assert.equal(res.statusCode, 209, route);
+    assert.equal(res.body.route, route);
+  }
+
   for (const route of ['../../lib/supabase-auth-service.cjs', 'projects\\list', 'projects//list', '/projects/./list', ['projects/list'], undefined]) {
     const res = response();
     await dispatch({ method: 'GET', query: { route } }, res);

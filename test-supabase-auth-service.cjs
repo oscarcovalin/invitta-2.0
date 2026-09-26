@@ -2,6 +2,11 @@ const assert = require('node:assert');
 
 const {
   authenticateWithPassword,
+  confirmPasswordRecovery,
+  inviteProfessionalUser,
+  isPlatformAdmin,
+  requestPasswordRecovery,
+  registerProfessionalAccount,
   getAuthenticatedUser,
   refreshAuthSession,
   revokeAuthSession,
@@ -13,6 +18,8 @@ const {
 const config = {
   url: 'https://example.supabase.co',
   publishableKey: 'sb_publishable_test',
+  secretKey: 'sb_secret_server_only_test',
+  authRedirectUrl: 'https://preview.example.test/portal.html',
 };
 
 (async () => {
@@ -58,6 +65,75 @@ const config = {
     role: 'platform_admin',
   });
   assert.ok(!JSON.stringify(publicSession).includes('secret'));
+  assert.equal(isPlatformAdmin({ email: 'opl2@yahoo.com' }, { INVITTA_BOOTSTRAP_ADMIN_EMAIL: 'opl2@yahoo.com' }), false);
+  assert.equal(isPlatformAdmin({ email: 'other@example.com', user_metadata: { platform_role: 'platform_admin' } }, {}), false);
+  assert.equal(isPlatformAdmin({ email: 'other@example.com', app_metadata: { platform_role: 'platform_admin' } }, {}), true);
+
+  let inviteRequest;
+  const invited = await inviteProfessionalUser({
+    email: ' Planner@Example.com ', config, accessToken: 'verified-admin-token',
+    fetchImpl: async (url, options) => {
+      inviteRequest = { url, options };
+      return { ok: true, json: async () => ({ id: 'new-user', email: 'planner@example.com' }) };
+    },
+  });
+  assert.equal(inviteRequest.url, `${config.url}/auth/v1/invite?redirect_to=${encodeURIComponent(config.authRedirectUrl)}`);
+  assert.equal(inviteRequest.options.headers.Authorization, `Bearer ${config.secretKey}`);
+  assert.equal(inviteRequest.options.headers.apikey, config.secretKey);
+  assert.deepEqual(JSON.parse(inviteRequest.options.body), { email: 'planner@example.com', data: { platform_role: 'member' } });
+  assert.deepEqual(invited, { id: 'new-user', email: 'planner@example.com' });
+
+  let recoveryRequest;
+  await confirmPasswordRecovery({
+    accessToken: 'recovery-token', newPassword: 'New-password-123!', config,
+    fetchImpl: async (url, options) => {
+      recoveryRequest = { url, options };
+      return { ok: true, json: async () => ({ id: 'new-user' }) };
+    },
+  });
+  assert.equal(recoveryRequest.url, `${config.url}/auth/v1/user`);
+  assert.equal(recoveryRequest.options.headers.Authorization, 'Bearer recovery-token');
+  assert.deepEqual(JSON.parse(recoveryRequest.options.body), { password: 'New-password-123!' });
+
+  await assert.rejects(inviteProfessionalUser({
+    email: 'x@example.com', config,
+    fetchImpl: async () => { throw new Error('should not call without admin token'); },
+  }), (error) => error.code === 'UNAUTHENTICATED' && error.status === 401);
+  await assert.rejects(inviteProfessionalUser({
+    email: 'x@example.com', accessToken: 'verified-admin-token', config: { ...config, secretKey: '' },
+    fetchImpl: async () => { throw new Error('must not invite without a server-only secret'); },
+  }), (error) => error.code === 'AUTH_NOT_CONFIGURED' && error.status === 503);
+
+  let forgotRequest;
+  await requestPasswordRecovery({
+    email: ' Admin@Example.com ', config,
+    fetchImpl: async (url, options) => {
+      forgotRequest = { url, options };
+      return { ok: true };
+    },
+  });
+  assert.equal(forgotRequest.url, `${config.url}/auth/v1/recover?redirect_to=${encodeURIComponent(config.authRedirectUrl)}`);
+  assert.deepEqual(JSON.parse(forgotRequest.options.body), { email: 'admin@example.com' });
+  await assert.rejects(requestPasswordRecovery({ email: 'not-an-email', config, fetchImpl: async () => { throw new Error('invalid email must fail before network'); } }), (error) => error.code === 'INVALID_EMAIL');
+
+  let signupRequest;
+  const signup = await registerProfessionalAccount({
+    email: ' New.User@Example.com ', password: 'Long-password-123!', config,
+    fetchImpl: async (url, options) => {
+      signupRequest = { url, options };
+      return { ok: true, json: async () => ({ user: { id: 'new-member', email: 'new.user@example.com', user_metadata: { role: 'platform_admin' } } }) };
+    },
+  });
+  assert.equal(signupRequest.url, `${config.url}/auth/v1/signup?redirect_to=${encodeURIComponent(config.authRedirectUrl)}`);
+  assert.deepEqual(JSON.parse(signupRequest.options.body), { email: 'new.user@example.com', password: 'Long-password-123!' });
+  assert.equal(signup.session, null);
+  assert.equal(toPublicSession(signup.user).role, 'member');
+  await assert.rejects(registerProfessionalAccount({ email: 'new@example.com', password: 'short', config, fetchImpl: async () => { throw new Error('short password must fail before network'); } }), (error) => error.code === 'INVALID_PASSWORD');
+
+  await assert.rejects(confirmPasswordRecovery({
+    accessToken: 'recovery-token', newPassword: 'short', config,
+    fetchImpl: async () => { throw new Error('should not call with short password'); },
+  }), (error) => error.code === 'INVALID_PASSWORD' && error.status === 400);
 
   const cookies = buildSessionCookies(result, { secure: true });
   assert.strictEqual(cookies.length, 2);
