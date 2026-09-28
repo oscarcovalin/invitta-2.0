@@ -976,6 +976,7 @@
           feedback.textContent = 'El enlace venció o no es válido. Solicita uno nuevo.';
         }
         document.getElementById('inputRecoveryEmail').classList.toggle('hidden', isRecoveryPending);
+        document.getElementById('inputRecoveryEmail').required = !isRecoveryPending;
         document.querySelector('label[for="inputRecoveryEmail"]').classList.toggle('hidden', isRecoveryPending);
         document.getElementById('professionalRecoveryHelp').textContent = isRecoveryPending
           ? 'Crea una contraseña nueva para terminar el alta de tu cuenta profesional.'

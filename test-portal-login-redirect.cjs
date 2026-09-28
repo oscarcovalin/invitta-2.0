@@ -15,6 +15,8 @@ assert.match(portal, /\/api\/auth\/register/);
 assert.match(portal, /Olvidé mi contraseña/);
 assert.match(portal, /\/api\/auth\/invitations/);
 assert.match(portal, /\/api\/auth\/recover/);
+assert.match(portal, /inputRecoveryEmail'\)\.required = !isRecoveryPending/,
+  'The hidden recovery email field must not block password completion');
 assert.match(authHandlers, /isPlatformAdmin\(user\)/);
 assert.doesNotMatch(fs.readFileSync('./lib/supabase-auth-service.cjs', 'utf8'), /INVITTA_BOOTSTRAP_ADMIN_EMAIL/);
 assert.doesNotMatch(authHandlers, /service[_-]?role|secretKey/i);
