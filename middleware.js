@@ -9,6 +9,7 @@
 import { jwtVerify } from 'jose';
 
 const COOKIE_NAME = 'invitta_session';
+const PROFESSIONAL_COOKIE_NAME = 'invitta_access_token';
 
 // Rutas que exigen una sesión válida. Ajusta esta lista según vayas
 // migrando más paneles. Usa rutas exactas o prefijos con /*.
@@ -45,6 +46,39 @@ function requiredRoles(pathname) {
   return key ? ROUTE_ROLES[key] : [];
 }
 
+function readCookie(request, name) {
+  const entry = request.headers.get('cookie')?.split(';').find((part) =>
+    part.trim().startsWith(`${name}=`)
+  );
+  if (!entry) return '';
+  const value = entry.slice(entry.indexOf('=') + 1).trim();
+  try { return decodeURIComponent(value); } catch (_) { return ''; }
+}
+
+async function hasVerifiedProfessionalSession(request) {
+  const token = readCookie(request, PROFESSIONAL_COOKIE_NAME);
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!token || !supabaseUrl || !publishableKey) return false;
+
+  try {
+    const authUrl = new URL('/auth/v1/user', supabaseUrl);
+    if (authUrl.protocol !== 'https:') return false;
+    const response = await fetch(authUrl, {
+      method: 'GET',
+      headers: { apikey: publishableKey, Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+      redirect: 'error',
+    });
+    if (!response.ok) return false;
+    const user = await response.json();
+    return typeof user.id === 'string' && user.id.length > 0 &&
+      typeof user.email === 'string' && user.email.length > 0 && user.is_anonymous !== true;
+  } catch (_) {
+    return false;
+  }
+}
+
 export default async function middleware(request) {
   const { pathname } = new URL(request.url);
 
@@ -52,7 +86,13 @@ export default async function middleware(request) {
     return; // deja pasar rutas públicas (index, portal, invitacion-boda, etc.)
   }
 
-  const token = request.headers.get('cookie')?.split(';').find(c => c.trim().startsWith(COOKIE_NAME + '='))?.split('=')[1];
+  // Studio usa la sesión profesional de Supabase. Los demás módulos
+  // conservan sus permisos de evento y su cookie legacy independiente.
+  if (pathname === '/invitacion-estudio.html' && await hasVerifiedProfessionalSession(request)) {
+    return;
+  }
+
+  const token = readCookie(request, COOKIE_NAME);
 
   if (!token) {
     return redirectToLogin(request, pathname);
