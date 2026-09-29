@@ -67,8 +67,9 @@ async function loadCloudProject() {
   const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
   if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(projId || '')) {
     requestedCloudProjectId = projId;
+    currentProjectId = projId;
   }
-  if (projId && typeof ProjectsVault !== 'undefined') {
+  if (projId && !requestedCloudProjectId && typeof ProjectsVault !== 'undefined') {
     const proj = ProjectsVault.getById(projId);
     if (proj && proj.config) {
       currentConfig = JSON.parse(JSON.stringify(proj.config));
