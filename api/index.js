@@ -33,6 +33,7 @@ const handler = dispatcher.createApiDispatcher({
     'public/invitation': lazy(() => import('../api-handlers/public/invitation.js')),
     'public/review': lazy(() => import('../api-handlers/public/review.js')),
     'public/review-media': lazy(() => import('../api-handlers/public/review-media.js')),
+    'public/share-preview': lazy(() => import('../api-handlers/public/share-preview.js')),
     session: lazy(() => import('../api-handlers/session.js')),
     'webhooks/clip': lazy(() => import('../api-handlers/webhooks/clip.cjs')),
     'webhooks/mercadopago': lazy(() => import('../api-handlers/webhooks/mercadopago.cjs')),
