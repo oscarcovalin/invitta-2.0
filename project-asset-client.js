@@ -1,7 +1,8 @@
 const ProjectAssetClient = (() => {
   const UUID = '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
-  const STORAGE_PATH = new RegExp(`^(${UUID})/(hero|ceremony|reception|gallery|section-background|shared-album|logo)/(${UUID})\\.(jpg|png|webp|gif|mp4)$`, 'i');
+  const STORAGE_PATH = new RegExp(`^(${UUID})/(hero|ceremony|reception|gallery|section-background|shared-album|logo)/(${UUID})\\.(jpg|png|webp|gif|mp4)$|^(${UUID})/music/(${UUID})\\.mp3$`, 'i');
   const PROXY_PREFIX = '/api/projects/asset?path=';
+  const MAX_AUDIO_BYTES = 3_300_000;
 
   function visit(value, convert, keys = []) {
     if (Array.isArray(value)) return value.map((item, index) => visit(item, convert, [...keys, index]));
@@ -24,6 +25,7 @@ const ProjectAssetClient = (() => {
 
   function slotFor(keys) {
     const path = keys.join('.').toLowerCase();
+    if (path === 'music.url') return 'music';
     if (path.includes('ceremony')) return 'ceremony';
     if (path.includes('reception')) return 'reception';
     if (path.includes('gallery')) return 'gallery';
@@ -74,8 +76,17 @@ const ProjectAssetClient = (() => {
       const proxyPath = storagePathFromProxy(value, projectId);
       if (proxyPath) { parent[key] = proxyPath; return; }
       if (/^data:/i.test(value)) {
-        const match = /^data:(image\/(?:jpeg|png|webp|gif));base64,([A-Za-z0-9+/=]+)$/i.exec(value);
-        if (!match) throw new Error(`El archivo incrustado en ${keys.join('.')} no es compatible. Usa JPG, PNG, WebP o GIF.`);
+        const isMusic = keys.join('.').toLowerCase() === 'music.url';
+        const match = isMusic
+          ? /^data:(audio\/mpeg);base64,([A-Za-z0-9+/=]+)$/i.exec(value)
+          : /^data:(image\/(?:jpeg|png|webp|gif));base64,([A-Za-z0-9+/=]+)$/i.exec(value);
+        if (!match) {
+          const allowed = isMusic ? 'MP3' : 'JPG, PNG, WebP o GIF';
+          throw new Error(`El archivo incrustado en ${keys.join('.')} no es compatible. Usa ${allowed}.`);
+        }
+        if (isMusic && match[2].length > Math.ceil(MAX_AUDIO_BYTES * 4 / 3) + 4) {
+          throw new Error('La canción excede el límite de 3.3 MB.');
+        }
         pending.push({ parent, key, slot: slotFor(keys), mimeType: match[1].toLowerCase(), base64: match[2] });
       } else if (/^https?:\/\//i.test(value) && keys.some((part) => /image|photo|logo|banner|gallery|background|savethedate/i.test(String(part)))) {
         if (!importRemote) throw new Error(`La imagen externa en ${keys.join('.')} debe subirse como archivo local antes de guardar en nube.`);
@@ -83,7 +94,7 @@ const ProjectAssetClient = (() => {
       }
     }
     inspect(clone);
-    if (pending.length > 30) throw new Error('Hay demasiadas imágenes para un solo guardado.');
+    if (pending.length > 30) throw new Error('Hay demasiados archivos para un solo guardado.');
     for (const asset of pending) {
       if (!asset.remoteUrl) continue;
       try {
@@ -98,13 +109,13 @@ const ProjectAssetClient = (() => {
     for (const asset of pending) {
       const uploaded = await upload({ projectId, slot: asset.slot, mimeType: asset.mimeType, base64: asset.base64 });
       if (!uploaded || !STORAGE_PATH.test(uploaded.storagePath) || !uploaded.storagePath.startsWith(`${projectId}/`)) {
-        throw new Error('Storage devolvió una ruta de imagen no válida.');
+        throw new Error('Storage devolvió una ruta de archivo no válida.');
       }
       asset.parent[asset.key] = uploaded.storagePath;
     }
     return clone;
   }
 
-  return { importRemoteImage, toDisplayConfig, toStoredConfig };
+  return { importRemoteImage, toDisplayConfig, toStoredConfig, MAX_AUDIO_BYTES };
 })();
 if (typeof window !== 'undefined') window.ProjectAssetClient = ProjectAssetClient;

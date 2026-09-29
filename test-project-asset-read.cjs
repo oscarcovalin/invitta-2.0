@@ -21,6 +21,19 @@ const config = { url: 'https://example.supabase.co', publishableKey: 'sb_publish
   assert.strictEqual(image.mimeType, 'image/png');
   assert.deepStrictEqual(image.bytes, Buffer.from([137, 80, 78, 71]));
 
+  const musicPath = `${projectId}/music/${assetId}.mp3`;
+  const music = await readProjectAsset({
+    path: musicPath, accessToken: 'user-token', config,
+    fetchImpl: async (url, options) => {
+      readUrl = url;
+      assert.strictEqual(options.headers.Authorization, 'Bearer user-token');
+      return { ok: true, headers: { get: () => '14' }, arrayBuffer: async () => Uint8Array.from([0x49, 0x44, 0x33, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xfb, 0x90, 0x64]).buffer };
+    },
+  });
+  assert.strictEqual(music.mimeType, 'audio/mpeg');
+  assert.deepStrictEqual(music.bytes, Buffer.from([0x49, 0x44, 0x33, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xfb, 0x90, 0x64]));
+  assert.strictEqual(readUrl, `https://example.supabase.co/storage/v1/object/authenticated/invitation-music/${musicPath}`);
+
   await assert.rejects(readProjectAsset({ path: '../secret', accessToken: 'user-token', config }),
     (error) => error.status === 422);
   await assert.rejects(readProjectAsset({

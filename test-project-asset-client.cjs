@@ -28,6 +28,28 @@ const client = context.window.ProjectAssetClient;
   assert.strictEqual(uploadCalls[0].mimeType, 'image/png');
   assert.strictEqual(uploadCalls[0].base64, 'iVBORw0KGgo=');
 
+  const audioPath = `${projectId}/music/${assetId}.mp3`;
+  const audioUploads = [];
+  const storedMusic = await client.toStoredConfig({ music: { url: 'data:audio/mpeg;base64,SUQz', title: 'Vals' } }, {
+    projectId,
+    upload: async (asset) => { audioUploads.push(asset); return { storagePath: audioPath }; },
+  });
+  assert.strictEqual(storedMusic.music.url, audioPath);
+  assert.deepStrictEqual(audioUploads.map(({ slot, mimeType, base64 }) => ({ slot, mimeType, base64 })), [
+    { slot: 'music', mimeType: 'audio/mpeg', base64: 'SUQz' },
+  ]);
+  assert.strictEqual(client.toDisplayConfig({ music: { url: audioPath } }).music.url,
+    `/api/projects/asset?path=${encodeURIComponent(audioPath)}`);
+  assert.strictEqual(client.MAX_AUDIO_BYTES, 3300000);
+  await assert.rejects(client.toStoredConfig({ music: { url: `data:audio/mpeg;base64,${'A'.repeat(4400008)}` } }, {
+    projectId,
+    upload: async () => { throw Error('oversized audio must not upload'); },
+  }), /3.3 MB/);
+  await assert.rejects(client.toStoredConfig({ other: { data: 'data:audio/mpeg;base64,SUQz' } }, {
+    projectId,
+    upload: async () => { throw Error('audio outside music field must not upload'); },
+  }), /JPG, PNG, WebP o GIF/);
+
   vm.runInContext(fs.readFileSync('./invitation-document-adapter.js', 'utf8'), context);
   const venuePaths = {
     ceremony: `${projectId}/ceremony/${assetId}.png`,

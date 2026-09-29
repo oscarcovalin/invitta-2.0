@@ -22,6 +22,37 @@ assert.deepStrictEqual(prepared, {
   size: png.length
 });
 
+const mp3 = Buffer.from([0x49, 0x44, 0x33, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xfb, 0x90, 0x64]);
+const preparedMusic = prepareInvitationAsset({
+  projectId,
+  assetId,
+  slot: 'music',
+  declaredMimeType: 'audio/mpeg',
+  bytes: mp3
+});
+assert.deepStrictEqual(preparedMusic, {
+  bucket: 'invitation-music',
+  storagePath: `${projectId}/music/${assetId}.mp3`,
+  mimeType: 'audio/mpeg',
+  size: mp3.length
+});
+
+assert.throws(() => prepareInvitationAsset({
+  projectId,
+  assetId,
+  slot: 'music',
+  declaredMimeType: 'audio/mpeg',
+  bytes: Buffer.from('not an mp3')
+}), (error) => error.code === 'FILE_SIGNATURE_MISMATCH');
+
+assert.throws(() => prepareInvitationAsset({
+  projectId,
+  assetId,
+  slot: 'hero',
+  declaredMimeType: 'audio/mpeg',
+  bytes: mp3
+}), (error) => error.code === 'FILE_SIGNATURE_MISMATCH');
+
 assert.throws(() => prepareInvitationAsset({
   projectId,
   assetId,

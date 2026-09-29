@@ -1839,13 +1839,30 @@ function setupInputListeners() {
     fileAudio.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
+        const isMp3 = file.type === 'audio/mpeg' || /\.mp3$/i.test(file.name) || /\.mpeg$/i.test(file.name);
+        if (!isMp3) {
+          fileAudio.value = '';
+          return showToast('La música debe ser un archivo MP3.');
+        }
+        if (file.size > window.ProjectAssetClient.MAX_AUDIO_BYTES) {
+          fileAudio.value = '';
+          return showToast('La canción excede el límite de 3.3 MB.');
+        }
         const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/[_]/g, " ").trim();
         const reader = new FileReader();
         reader.onload = (re) => {
+          const dataUrl = typeof re.target.result === 'string' ? re.target.result : '';
+          const separator = dataUrl.indexOf(',');
+          const base64 = separator >= 0 ? dataUrl.slice(separator + 1) : '';
+          if (!base64) {
+            fileAudio.value = '';
+            return showToast('No se pudo leer la canción. Intenta seleccionar el MP3 otra vez.');
+          }
+          const musicDataUrl = `data:audio/mpeg;base64,${base64}`;
           if (!currentConfig.music) currentConfig.music = {};
-          currentConfig.music.url = re.target.result;
+          currentConfig.music.url = musicDataUrl;
           currentConfig.music.title = cleanTitle;
-          if (inputMusicUrl) inputMusicUrl.value = re.target.result;
+          if (inputMusicUrl) inputMusicUrl.value = musicDataUrl;
           const inTitle = document.getElementById('inputMusicTitle');
           if (inTitle) inTitle.value = cleanTitle;
           schedulePreviewUpdate();
