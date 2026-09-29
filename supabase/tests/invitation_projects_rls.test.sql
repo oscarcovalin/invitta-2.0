@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(9);
+select plan(10);
 
 insert into auth.users (id, instance_id, aud, role, email, created_at, updated_at)
 values
@@ -33,6 +33,14 @@ select results_eq(
   $$ select count(*)::bigint from public.invitation_projects $$,
   array[1::bigint],
   'owner can read the project'
+);
+select lives_ok(
+  $$ insert into public.invitation_projects (id, owner_user_id, slug, name, event_type)
+     values ('20000000-0000-0000-0000-000000000002',
+             '10000000-0000-0000-0000-000000000001',
+             'owner-created-project', 'Owner-created project', 'other')
+     returning id $$,
+  'owner can create a project and receive the inserted row'
 );
 select lives_ok(
   $$ insert into public.invitation_project_members (project_id, user_id, role) values ('20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000005', 'viewer') $$,
