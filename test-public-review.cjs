@@ -86,7 +86,7 @@ function fakeFetch({ currentProject = project, saved = document } = {}) {
   const denied = response();
   await mediaHandler({ method: 'POST', query: {} }, denied);
   assert.equal(denied.code, 405);
-  const viewer = fs.readFileSync('./invitacion-publica.html', 'utf8');
+  const viewer = fs.readFileSync('./invitacion-publica-client.html', 'utf8');
   assert.match(viewer, /sandbox="allow-scripts allow-forms allow-popups allow-downloads"/);
   assert.doesNotMatch(viewer, /allow-same-origin|portal\.html|invitacion-estudio\.html/);
   assert.match(viewer, /credentials: 'omit'/);

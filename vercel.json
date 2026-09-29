@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/invitacion-publica.html", "destination": "/api/index?route=public/share-preview" },
     { "source": "/api/:route*", "destination": "/api/index?route=:route*" }
   ],
   "headers": [
