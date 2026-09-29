@@ -1017,7 +1017,7 @@ const TemplateEngine = {
 
   generateHTML(config, themeName = "vino", customTheme = null, decorAssets = {}) {
     const activeTheme = themeName === "custom" && customTheme ? customTheme : (this.defaultThemes[themeName] || this.defaultThemes.vino);
-    const configJson = JSON.stringify(config, null, 2);
+    const configJson = JSON.stringify(config, null, 2).replace(/</g, '\\u003c');
 
     const typo = this.resolveTypography(config);
     const isWedding = config.eventType === 'boda';
@@ -4198,19 +4198,21 @@ if (musicPlayer && audio) {
   // 1. Detección automática de invitado autorizado
   function checkAuthorizedGuest() {
     let guestName = urlGuest ? urlGuest.trim() : '';
-    let isUnlocked = sessionStorage.getItem('invitta_album_unlocked') === 'true';
-
-    if (!guestName && sessionStorage.getItem('invitta_album_guest_name')) {
-      guestName = sessionStorage.getItem('invitta_album_guest_name');
-    }
+    let isUnlocked = false;
+    try {
+      isUnlocked = sessionStorage.getItem('invitta_album_unlocked') === 'true';
+      if (!guestName) guestName = sessionStorage.getItem('invitta_album_guest_name') || '';
+    } catch (_) { /* Sandboxed public previews have no session storage. */ }
 
     if (guestName || isUnlocked) {
       if (!guestName) guestName = 'Invitado de Honor';
       if (lockBlock) lockBlock.classList.add('hidden');
       if (uploadBlock) uploadBlock.classList.remove('hidden');
       if (guestLabel) guestLabel.textContent = guestName;
-      sessionStorage.setItem('invitta_album_unlocked', 'true');
-      sessionStorage.setItem('invitta_album_guest_name', guestName);
+      try {
+        sessionStorage.setItem('invitta_album_unlocked', 'true');
+        sessionStorage.setItem('invitta_album_guest_name', guestName);
+      } catch (_) { /* The invitation still renders without browser storage. */ }
     }
   }
 

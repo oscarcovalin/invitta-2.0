@@ -48,6 +48,14 @@ assert.equal(JSON.stringify(result).includes('SECRET_'), false);
 assert.equal(JSON.stringify(result).includes('private/hero.webp'), false);
 assert.equal(JSON.stringify(result).includes('defaultPassCount'), false);
 
+const oldQuinceanera = structuredClone(document);
+oldQuinceanera.event.type = 'quinceanera';
+oldQuinceanera.content = { title: 'Janna Sharlot', primaryName: 'Catalina', secondaryName: 'Julián' };
+oldQuinceanera.legacy.config.name = 'Janna Sharlot';
+const quinceaneraResult = projectPublicInvitation(oldQuinceanera);
+assert.equal(quinceaneraResult.content.primaryName, 'Janna Sharlot');
+assert.equal(quinceaneraResult.content.secondaryName, undefined);
+
 const hidden = structuredClone(document);
 hidden.sections = [{ id: 'giftRegistry', enabled: false }, { id: 'lodging', enabled: false }, { id: 'sharedAlbum', enabled: false }, { id: 'details', enabled: false }, { id: 'itinerary', enabled: false }, { id: 'rsvp', enabled: false }];
 const hiddenResult = projectPublicInvitation(hidden);

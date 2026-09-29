@@ -30,6 +30,8 @@ const { document, pendingAssets } = fromLegacyTemplateConfig(legacy, {
 
 assert.strictEqual(validateInvitationDocument(document).valid, true);
 assert.strictEqual(document.event.type, 'quinceanera');
+assert.strictEqual(document.content.primaryName, legacy.name);
+assert.strictEqual(document.content.secondaryName, '');
 assert.strictEqual(document.revision, 3);
 assert.strictEqual(document.assets.ceremony.storagePath, legacy.ceremony.image);
 assert.strictEqual(document.assets.reception, undefined);
@@ -43,7 +45,7 @@ assert.deepStrictEqual(document.sections.map(({ id, enabled }) => ({ id, enabled
 const restored = toLegacyTemplateConfig(document);
 assert.strictEqual(restored.eventType, legacy.eventType);
 assert.strictEqual(restored.name, legacy.name);
-assert.strictEqual(restored.brideName, legacy.brideName);
+assert.strictEqual(restored.brideName, legacy.name);
 assert.deepStrictEqual(restored.itinerary, legacy.itinerary);
 assert.deepStrictEqual(restored.sectionOrder, legacy.sectionOrder);
 assert.deepStrictEqual(restored.sectionVisibility, legacy.sectionVisibility);

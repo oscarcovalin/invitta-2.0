@@ -87,8 +87,8 @@ function fromLegacyTemplateConfig(config, { projectId, revision = 1 } = {}) {
       },
       content: {
         title: config.name || '',
-        primaryName: config.brideName || '',
-        secondaryName: config.groomName || '',
+        primaryName: config.eventType === 'xv' ? (config.name || '') : (config.brideName || ''),
+        secondaryName: config.eventType === 'xv' ? '' : (config.groomName || ''),
         nameConnector: config.nameConnector == null ? '&' : config.nameConnector,
         welcomeMessage: config.welcomeMessage || '',
         itinerary: Array.isArray(config.itinerary) ? config.itinerary : []
