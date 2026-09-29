@@ -3048,6 +3048,7 @@ tailwind.config = {
           </div>
 
           <button type="submit" id="rsvpSubmit" class="btn-rsvp-submit-clean">Enviar Confirmación</button>
+          <p id="rsvpError" class="hidden mt-3 text-sm text-red-700" role="alert" aria-live="polite"></p>
         </form>
 
         <!-- Vista de Éxito / Pase Digital Pergamino -->
@@ -3585,6 +3586,7 @@ if (musicPlayer && audio) {
   const btnReset = document.getElementById('btnResetRsvp');
   const btnSharePassWhatsapp = document.getElementById('btnSharePassWhatsapp');
   const btnDownloadPassImage = document.getElementById('btnDownloadPassImage');
+  let activeSubmissionId = '';
 
   const guestParam = urlParams.get('guest') || urlParams.get('invitado');
   const ticketsParam = parseInt(urlParams.get('passes') || urlParams.get('pases') || urlParams.get('tickets'), 10) || 2;
@@ -3660,7 +3662,10 @@ if (musicPlayer && audio) {
   // Reset button
   if (btnReset) {
     btnReset.addEventListener('click', () => {
+      activeSubmissionId = '';
       if (rsvpSuccess) rsvpSuccess.classList.add('hidden');
+      const errorEl = document.getElementById('rsvpError');
+      if (errorEl) { errorEl.textContent = ''; errorEl.classList.add('hidden'); }
       if (rsvpForm) {
         rsvpForm.classList.remove('hidden');
         rsvpForm.reset();
@@ -3680,7 +3685,7 @@ if (musicPlayer && audio) {
 
   // Form submit handler
   if (rsvpForm) {
-    rsvpForm.addEventListener('submit', (e) => {
+    rsvpForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!rsvpForm.checkValidity()) { rsvpForm.reportValidity(); return; }
 
@@ -3689,6 +3694,49 @@ if (musicPlayer && audio) {
       const guestEmail = inputEmail ? inputEmail.value.trim() : '';
       const confirmedTickets = isAttending ? (parseInt(inputPases.value, 10) || 1) : 0;
       const allergies = inputDieta ? inputDieta.value.trim() : '';
+
+      const errorEl = document.getElementById('rsvpError');
+      if (errorEl) { errorEl.textContent = ''; errorEl.classList.add('hidden'); }
+      if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.textContent = 'Guardando confirmación…'; }
+      try {
+        if (!activeSubmissionId) {
+          activeSubmissionId = window.crypto && typeof window.crypto.randomUUID === 'function'
+            ? window.crypto.randomUUID()
+            : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+              const random = Math.random() * 16 | 0;
+              return (c === 'x' ? random : (random & 0x3 | 0x8)).toString(16);
+            });
+        }
+        const publicSlug = urlParams.get('slug') || '';
+        const dietaryValue = allergies === 'Menú Infantil' ? 'child_menu'
+          : allergies === 'Alergias' ? 'allergies'
+            : allergies === 'Vegano' ? 'vegan' : '';
+        const saveResponse = await fetch('/api/public/rsvp', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            slug: publicSlug,
+            submissionId: activeSubmissionId,
+            guestName,
+            email: guestEmail,
+            attendance: isAttending ? 'confirmed' : 'declined',
+            passes: confirmedTickets,
+            dietary: dietaryValue,
+          }),
+        });
+        const saveResult = await saveResponse.json().catch(() => ({}));
+        if (!saveResponse.ok || !saveResult.success) {
+          throw new Error(saveResult.error || 'No fue posible guardar la respuesta. Intenta nuevamente.');
+        }
+      } catch (error) {
+        if (errorEl) {
+          errorEl.textContent = error && error.message ? error.message : 'No fue posible guardar la respuesta. Intenta nuevamente.';
+          errorEl.classList.remove('hidden');
+        }
+        if (btnSubmit) { btnSubmit.disabled = false; btnSubmit.textContent = 'Enviar Confirmación'; }
+        return;
+      }
 
       // Generar Folio Logístico: [MESA]-[APELLIDO]-[PASES]
       const cleanTokens = guestName
@@ -3802,35 +3850,12 @@ if (musicPlayer && audio) {
       }
       const primaryPhone = hostPhones.length > 0 ? hostPhones[0].phone : '';
 
-      // ── Disparo a Webhook en la Nube (Opcional) ──
-      if (CONFIG.rsvpWebhookUrl && CONFIG.rsvpWebhookUrl.trim()) {
-        try {
-          fetch(CONFIG.rsvpWebhookUrl.trim(), {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              event: calcDisplayName,
-              guest: guestName,
-              status: isAttending ? 'CONFIRMED' : 'DECLINED',
-              passes: confirmedTickets,
-              table: tableDisplay,
-              folio: folio,
-              email: guestEmail,
-              dietary: allergies,
-              hosts: hostPhones.map(h => h.phone),
-              timestamp: new Date().toISOString()
-            })
-          }).catch(() => {});
-        } catch (e) {}
-      }
-
       // ── Transmisión al Monitor en Vivo / Centro de Envíos ──
       try {
         window.dispatchEvent(new CustomEvent('invitta_guest_confirmed', {
           detail: { guestName, isAttending, confirmedTickets, tableDisplay, folio, dietary: allergies, email: guestEmail }
         }));
-        if (window.parent && window.parent !== window) {
+        if (window.parent && window.parent !== window && window.parent.location.origin === window.location.origin) {
           window.parent.postMessage({
             type: 'INVITTA_GUEST_CONFIRMED',
             guestName,
@@ -3840,7 +3865,7 @@ if (musicPlayer && audio) {
             folio,
             dietary: allergies,
             email: guestEmail
-          }, '*');
+          }, window.location.origin);
         }
       } catch (e) {}
 
@@ -3891,14 +3916,6 @@ if (musicPlayer && audio) {
         btnDownloadPassImage.onclick = () => {
           window.print();
         };
-      }
-
-      // Auto-trigger WhatsApp principal
-      triggerWhatsApp();
-
-      if (btnSubmit) {
-        btnSubmit.disabled = true;
-        btnSubmit.textContent = 'Enviando...';
       }
 
       setTimeout(() => {
