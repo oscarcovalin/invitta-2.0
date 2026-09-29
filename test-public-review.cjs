@@ -6,6 +6,8 @@ const { createPublicReviewHandler, createPublicReviewMediaHandler } = require('.
 const projectId = '20000000-0000-4000-8000-000000000001';
 const documentId = '30000000-0000-4000-8000-000000000001';
 const imagePath = `${projectId}/hero/40000000-0000-4000-8000-000000000001.webp`;
+const countdownPath = `${projectId}/hero/40000000-0000-4000-8000-000000000002.webp`;
+const unusedPath = `${projectId}/hero/40000000-0000-4000-8000-000000000003.webp`;
 const musicPath = `${projectId}/music/50000000-0000-4000-8000-000000000001.mp3`;
 const project = { id: projectId, status: 'published', published_document_id: documentId };
 const document = {
@@ -15,7 +17,8 @@ const document = {
   sections: [{ id: 'hero', enabled: true }],
   legacy: { config: {
     eventType: 'xv', name: 'Janna Sharlot', brideName: 'Catalina', groomName: 'Julián',
-    photos: { hero: imagePath }, music: { enabled: true, url: musicPath },
+    photos: { hero: imagePath, saveTheDate: unusedPath }, countdownPhoto: countdownPath,
+    music: { enabled: true, url: musicPath },
     rsvpWebhookUrl: 'https://private.example/secret', internalToken: 'SECRET_TOKEN',
     vendorCard: { enabled: true, agencyName: 'Invitta Studio' },
   } },
@@ -44,6 +47,8 @@ function fakeFetch({ currentProject = project, saved = document } = {}) {
   assert.equal(review.content.content.primaryName, 'Janna Sharlot');
   assert.equal(review.revision, 2);
   assert.match(review.presentation.photos.hero, /\/api\/public\/review-media\?slug=janna-sharlot&field=photos\.hero/);
+  assert.match(review.presentation.countdownPhoto, /\/api\/public\/review-media\?slug=janna-sharlot&field=countdownPhoto/);
+  assert.equal(review.presentation.photos.saveTheDate, '');
   assert.match(review.presentation.music.url, /field=music/);
   assert.equal(review.presentation.vendorCard.enabled, false);
   assert.equal(review.presentation.brideName, undefined);
@@ -57,6 +62,9 @@ function fakeFetch({ currentProject = project, saved = document } = {}) {
   assert.equal(image.mimeType, 'image/webp');
   assert.deepEqual(image.bytes, Buffer.from([1, 2, 3, 4]));
   assert.match(mediaFetch.calls[2].url, /invitation-assets/);
+
+  const countdownImage = await readPublicReviewMedia({ slug: 'janna-sharlot', field: 'countdownPhoto', config, fetchImpl: fakeFetch().fetchImpl });
+  assert.equal(countdownImage.mimeType, 'image/webp');
 
   const music = await readPublicReviewMedia({ slug: 'janna-sharlot', field: 'music', config, fetchImpl: fakeFetch().fetchImpl });
   assert.equal(music.mimeType, 'audio/mpeg');

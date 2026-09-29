@@ -15,6 +15,7 @@ const document = {
   ],
   assets: { ceremony: { storagePath: image('ceremony') }, reception: { storagePath: image('reception') } },
   legacy: { config: {
+    countdownPhoto: image('hero'),
     photos: { hero: image('hero'), portrait: image('hero'), galleryEnabled: true, gallery: [image('gallery')] },
     sectionBackgrounds: { details: { image: image('section-background') }, story: { image: image('section-background') } },
     ceremony: { image: '' }, reception: { image: '' },
@@ -25,6 +26,7 @@ const document = {
 assert.deepEqual(collectPublicationImages(document), [
   { field: 'photos.hero', storagePath: image('hero') },
   { field: 'photos.portrait', storagePath: image('hero') },
+  { field: 'countdownPhoto', storagePath: image('hero') },
   { field: 'ceremony.image', storagePath: image('ceremony') },
   { field: 'reception.image', storagePath: image('reception') },
   { field: 'photos.gallery.0', storagePath: image('gallery') },
@@ -33,7 +35,11 @@ assert.deepEqual(collectPublicationImages(document), [
 
 const hidden = structuredClone(document);
 hidden.sections = [];
-assert.deepEqual(collectPublicationImages(hidden), []);
+assert.deepEqual(collectPublicationImages(hidden), [{ field: 'countdownPhoto', storagePath: image('hero') }]);
+
+const countdownHidden = structuredClone(document);
+countdownHidden.legacy.config.countdownPhotoEnabled = false;
+assert.equal(collectPublicationImages(countdownHidden).some((entry) => entry.field === 'countdownPhoto'), false);
 
 const legacyHidden = structuredClone(document);
 legacyHidden.legacy.config.locations = { enabled: false };
