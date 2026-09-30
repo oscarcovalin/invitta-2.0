@@ -1021,6 +1021,11 @@ const TemplateEngine = {
 
     const typo = this.resolveTypography(config);
     const isWedding = config.eventType === 'boda';
+    const stardustOverlayTitle = isWedding
+      ? '¡Ilumina a los Novios!'
+      : config.eventType === 'xv'
+        ? '¡Ilumina sus XV años!'
+        : '¡Ilumina la celebración!';
 
     const brideDisplayName = isWedding ? (config.brideName || "Catalina") : (config.name || "Valentina");
     const groomDisplayName = isWedding ? (config.groomName || "Julián") : "";
@@ -3215,7 +3220,7 @@ tailwind.config = {
       <span class="text-4xl sm:text-5xl">✨</span>
     </div>
     <h2 class="font-display-lg text-3xl sm:text-4xl md:text-5xl text-amber-100 font-normal tracking-wide drop-shadow-[0_2px_20px_rgba(255,215,0,0.9)] mb-2">
-      ¡Ilumina a los Novios!
+      ${stardustOverlayTitle}
     </h2>
     <p class="font-display-lg text-xl sm:text-2xl text-amber-200/90 italic font-light max-w-xs drop-shadow-md">
       ${fullDisplayName}
