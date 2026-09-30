@@ -33,7 +33,14 @@ function fakeFetch(project = { id: projectId, status: 'published' }) {
     fetchImpl: async (url, options) => {
       calls.push({ url: String(url), options });
       assert.equal(options.redirect, 'error');
-      if (String(url).includes('/invitation_projects?')) return { ok: true, json: async () => [project] };
+      if (String(url).includes('/invitation_projects?')) {
+        const columns = new URL(String(url)).searchParams.get('select').split(',');
+        const selectedProject = Object.fromEntries(
+          columns.filter((column) => Object.hasOwn(project, column))
+            .map((column) => [column, project[column]]),
+        );
+        return { ok: true, json: async () => [selectedProject] };
+      }
       if (String(url).includes('/invitation_rsvps?')) return { ok: true, status: 201, json: async () => [] };
       throw new Error(`Unexpected URL: ${url}`);
     },
@@ -56,9 +63,13 @@ function fakeFetch(project = { id: projectId, status: 'published' }) {
   ]) assert.throws(() => validateRsvpSubmission(invalid));
 
   const publicDb = fakeFetch();
-  await submitPublicRsvp({ input: submission, config, fetchImpl: publicDb.fetchImpl });
+  await assert.doesNotReject(
+    submitPublicRsvp({ input: submission, config, fetchImpl: publicDb.fetchImpl }),
+    'a published project returned by PostgREST should accept its RSVP',
+  );
   assert.equal(publicDb.calls.length, 2);
   assert.match(publicDb.calls[0].url, /status=eq\.published/);
+  assert.equal(new URL(publicDb.calls[0].url).searchParams.get('select'), 'id,status');
   assert.equal(publicDb.calls[0].options.headers.apikey, config.secretKey);
   assert.equal(publicDb.calls[1].options.headers.apikey, config.secretKey);
   assert.equal(publicDb.calls[1].options.headers.Prefer, 'resolution=ignore-duplicates,return=minimal');
