@@ -3711,23 +3711,53 @@ if (musicPlayer && audio) {
         const dietaryValue = allergies === 'Menú Infantil' ? 'child_menu'
           : allergies === 'Alergias' ? 'allergies'
             : allergies === 'Vegano' ? 'vegan' : '';
-        const saveResponse = await fetch('/api/public/rsvp', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            slug: publicSlug,
-            submissionId: activeSubmissionId,
-            guestName,
-            email: guestEmail,
-            attendance: isAttending ? 'confirmed' : 'declined',
-            passes: confirmedTickets,
-            dietary: dietaryValue,
-          }),
-        });
-        const saveResult = await saveResponse.json().catch(() => ({}));
-        if (!saveResponse.ok || !saveResult.success) {
-          throw new Error(saveResult.error || 'No fue posible guardar la respuesta. Intenta nuevamente.');
+        const rsvpPayload = {
+          slug: publicSlug,
+          submissionId: activeSubmissionId,
+          guestName,
+          email: guestEmail,
+          attendance: isAttending ? 'confirmed' : 'declined',
+          passes: confirmedTickets,
+          dietary: dietaryValue,
+        };
+        if (window.parent !== window && window.location.origin === 'null') {
+          if (typeof window.parent.postMessage !== 'function') {
+            throw new Error('No fue posible conectar con el registro de confirmaciones.');
+          }
+          await new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+              window.removeEventListener('message', handleRsvpResult);
+              reject(new Error('El envío está tardando demasiado. Intenta nuevamente.'));
+            }, 20000);
+            const handleRsvpResult = (event) => {
+              const result = event.data;
+              if (event.source !== window.parent || !result
+                  || result.type !== 'INVITTA_PUBLIC_RSVP_RESULT'
+                  || result.requestId !== activeSubmissionId) return;
+              clearTimeout(timeout);
+              window.removeEventListener('message', handleRsvpResult);
+              if (result.success === true) resolve();
+              else reject(new Error(typeof result.error === 'string'
+                ? result.error : 'No fue posible guardar la respuesta. Intenta nuevamente.'));
+            };
+            window.addEventListener('message', handleRsvpResult);
+            window.parent.postMessage({
+              type: 'INVITTA_PUBLIC_RSVP_SUBMIT',
+              requestId: activeSubmissionId,
+              payload: rsvpPayload,
+            }, '*');
+          });
+        } else {
+          const saveResponse = await fetch('/api/public/rsvp', {
+            method: 'POST',
+            credentials: 'omit',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rsvpPayload),
+          });
+          const saveResult = await saveResponse.json().catch(() => ({}));
+          if (!saveResponse.ok || !saveResult.success) {
+            throw new Error(saveResult.error || 'No fue posible guardar la respuesta. Intenta nuevamente.');
+          }
         }
       } catch (error) {
         if (errorEl) {

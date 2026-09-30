@@ -28,6 +28,8 @@ function response() {
   assert.match(html, /<meta property="og:description" content="Acompáñanos a celebrar los XV años de Janna\./);
   assert.ok(html.includes(`<meta property="og:image" content="${image.replace(/&/g, '&amp;')}">`));
   assert.match(html, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(html, /<script src="\/public-rsvp-bridge\.js"><\/script>/);
+  assert.match(html, /InvittaPublicRsvpBridge\.attach\(frame, slug\)/);
   assert.match(html, /sandbox="allow-scripts allow-forms allow-popups allow-downloads"/);
   assert.doesNotMatch(html, /allow-same-origin|portal\.html|invitacion-estudio\.html/);
   assert.doesNotMatch(renderSharePage({ slug, origin: 'https://invitta.example', review: {

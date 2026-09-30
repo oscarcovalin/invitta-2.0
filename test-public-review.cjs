@@ -87,6 +87,8 @@ function fakeFetch({ currentProject = project, saved = document } = {}) {
   await mediaHandler({ method: 'POST', query: {} }, denied);
   assert.equal(denied.code, 405);
   const viewer = fs.readFileSync('./invitacion-publica-client.html', 'utf8');
+  assert.match(viewer, /<script src="public-rsvp-bridge\.js"><\/script>/);
+  assert.match(viewer, /InvittaPublicRsvpBridge\.attach\(frame, slug\)/);
   assert.match(viewer, /sandbox="allow-scripts allow-forms allow-popups allow-downloads"/);
   assert.doesNotMatch(viewer, /allow-same-origin|portal\.html|invitacion-estudio\.html/);
   assert.match(viewer, /credentials: 'omit'/);
