@@ -41,6 +41,8 @@ La siguiente entrega debe ser un corte vertical pequeño: invitados/mesas vincul
 
 ## Siguientes entregas
 
+Preparación de la siguiente entrega: [contrato propuesto de invitados y mesas](../tasks/SPEC-cloud-schema-rls.md). Define registros por proyecto, permisos dueño/planner, relación de mesa del mismo proyecto y pruebas reales de aislamiento. Pendiente de revisión del alcance antes de redactar el plan e implementar. En este paso sólo se añadió documentación local: ninguna migración, API nueva, dato remoto o despliegue fue ejecutado.
+
 1. Integrar invitados y mesas con `invitation_projects`, membresías y APIs autenticadas. El gestor actual persiste en almacenamiento local y el adaptador antiguo consulta `events`, no el proyecto canónico. Inventariar la base real antes de escribir migraciones; no copiar demostraciones ni mezclar eventos.
 2. Conectar RSVP con invitados identificados, pases y enlaces revocables. Las confirmaciones públicas existentes no demuestran ese flujo individualizado.
 3. Registro de entrada QR atómico e idempotente; mesa y hoja de catering compartidas entre dispositivos. Sin conexión, mostrar pendiente y no confirmar una escritura que no llegó al servidor.
