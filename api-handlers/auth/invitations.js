@@ -1,6 +1,7 @@
 import authService from '../../lib/supabase-auth-service.cjs';
+import requestSession from '../../lib/request-auth-session.cjs';
 
-const { ACCESS_COOKIE, AuthServiceError, getAuthConfig, getAuthenticatedUser, inviteProfessionalUser, isPlatformAdmin, parseCookies } = authService;
+const { AuthServiceError, inviteProfessionalUser, isPlatformAdmin } = authService;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,10 +9,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Método no permitido.' });
   }
   res.setHeader('Cache-Control', 'no-store');
-  const config = getAuthConfig();
   try {
-    const accessToken = parseCookies(req.headers.cookie)[ACCESS_COOKIE];
-    const user = await getAuthenticatedUser({ accessToken, config });
+    const { accessToken, user, config } = await requestSession.resolveRequestSession({ req, res, authService });
     if (!isPlatformAdmin(user)) {
       return res.status(403).json({ success: false, error: 'Sólo un administrador de plataforma puede invitar cuentas.' });
     }

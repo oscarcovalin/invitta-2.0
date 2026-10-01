@@ -148,6 +148,8 @@ const config = {
     fetchImpl: async (url, options) => {
       assert.strictEqual(url, 'https://example.supabase.co/auth/v1/user');
       assert.strictEqual(options.headers.Authorization, 'Bearer access-secret');
+      assert.equal(options.cache, 'no-store');
+      assert.equal(options.redirect, 'error');
       return { ok: true, json: async () => result.user };
     },
   });
@@ -159,6 +161,8 @@ const config = {
     fetchImpl: async (url, options) => {
       assert.strictEqual(url, 'https://example.supabase.co/auth/v1/token?grant_type=refresh_token');
       assert.deepStrictEqual(JSON.parse(options.body), { refresh_token: 'refresh-secret' });
+      assert.equal(options.cache, 'no-store');
+      assert.equal(options.redirect, 'error');
       return {
         ok: true,
         json: async () => ({

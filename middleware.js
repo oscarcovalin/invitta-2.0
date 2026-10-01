@@ -7,6 +7,8 @@
 // (jose funciona en el Edge Runtime; jsonwebtoken/bcrypt NO funcionan ahí).
 
 import { jwtVerify } from 'jose';
+import authService from './lib/supabase-auth-service.cjs';
+import requestSession from './lib/request-auth-session.cjs';
 
 const COOKIE_NAME = 'invitta_session';
 const PROFESSIONAL_COOKIE_NAME = 'invitta_access_token';
@@ -55,27 +57,33 @@ function readCookie(request, name) {
   try { return decodeURIComponent(value); } catch (_) { return ''; }
 }
 
-async function hasVerifiedProfessionalSession(request) {
-  const token = readCookie(request, PROFESSIONAL_COOKIE_NAME);
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
-  if (!token || !supabaseUrl || !publishableKey) return false;
-
+async function professionalStudioAccess(request, onRevokedCookies) {
+  if (!readCookie(request, PROFESSIONAL_COOKIE_NAME) && !readCookie(request, authService.REFRESH_COOKIE)) return false;
+  let sessionCookies;
   try {
-    const authUrl = new URL('/auth/v1/user', supabaseUrl);
-    if (authUrl.protocol !== 'https:') return false;
-    const response = await fetch(authUrl, {
-      method: 'GET',
-      headers: { apikey: publishableKey, Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-      redirect: 'error',
+    if (new URL(authService.getAuthConfig().url).protocol !== 'https:') throw new Error('Auth configuration invalid');
+    const { user } = await requestSession.resolveRequestSession({
+      req: { headers: { cookie: request.headers.get('cookie'), 'x-forwarded-proto': new URL(request.url).protocol.slice(0, -1) } },
+      res: { setHeader(name, value) { if (name === 'Set-Cookie') sessionCookies = value; } },
+      authService,
     });
-    if (!response.ok) return false;
-    const user = await response.json();
-    return typeof user.id === 'string' && user.id.length > 0 &&
+    const verified = typeof user.id === 'string' && user.id.length > 0 &&
       typeof user.email === 'string' && user.email.length > 0 && user.is_anonymous !== true;
-  } catch (_) {
-    return false;
+    if (!verified) return false;
+    if (!sessionCookies) return true;
+    // A same-URL redirect lets the browser install the rotated cookies before
+    // loading Studio and its parallel authenticated asset requests.
+    const headers = new Headers({ Location: request.url, 'Cache-Control': 'private, no-store' });
+    sessionCookies.forEach((cookie) => headers.append('Set-Cookie', cookie));
+    return new Response(null, { status: 307, headers });
+  } catch (error) {
+    if (error.code === 'UNAUTHENTICATED' && error.status === 401) {
+      if (sessionCookies) onRevokedCookies(sessionCookies);
+      return false;
+    }
+    return new Response('No fue posible verificar la sesión. Intenta de nuevo en un momento.', {
+      status: 503, headers: { 'Cache-Control': 'private, no-store' },
+    });
   }
 }
 
@@ -88,14 +96,17 @@ export default async function middleware(request) {
 
   // Studio usa la sesión profesional de Supabase. Los demás módulos
   // conservan sus permisos de evento y su cookie legacy independiente.
-  if (pathname === '/invitacion-estudio.html' && await hasVerifiedProfessionalSession(request)) {
-    return;
+  let revokedCookies = [];
+  if (pathname === '/invitacion-estudio.html') {
+    const professionalAccess = await professionalStudioAccess(request, (cookies) => { revokedCookies = cookies; });
+    if (professionalAccess === true) return;
+    if (professionalAccess instanceof Response) return professionalAccess;
   }
 
   const token = readCookie(request, COOKIE_NAME);
 
   if (!token) {
-    return redirectToLogin(request, pathname);
+    return redirectToLogin(request, pathname, revokedCookies);
   }
 
   try {
@@ -112,15 +123,17 @@ export default async function middleware(request) {
     return;
   } catch (err) {
     // Token ausente, expirado o manipulado.
-    return redirectToLogin(request, pathname);
+    return redirectToLogin(request, pathname, revokedCookies);
   }
 }
 
-function redirectToLogin(request, attemptedPath) {
+function redirectToLogin(request, attemptedPath, revokedCookies = []) {
   const url = new URL('/portal.html', request.url);
   url.searchParams.set('login', 'required');
-  url.searchParams.set('next', attemptedPath);
-  return Response.redirect(url, 302);
+  url.searchParams.set('next', attemptedPath + new URL(request.url).search);
+  const headers = new Headers({ Location: url.toString(), 'Cache-Control': 'private, no-store' });
+  revokedCookies.forEach((cookie) => headers.append('Set-Cookie', cookie));
+  return new Response(null, { status: 302, headers });
 }
 
 // Vercel solo invoca el middleware para rutas que coincidan con este matcher,
