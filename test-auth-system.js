@@ -112,6 +112,97 @@ test('portal restores the server session before deciding which interface to show
   assert.match(portal, /res\.session\.role === 'platform_admin'/);
 });
 
+test('temporary session failures do not mean logout and cannot retain effective admin access', async () => {
+  for (const status of [429, 500, 502, 503]) {
+    const auth = new AuthManager();
+    auth.saveSession({ role: 'platform_admin', email: 'admin@example.test' });
+    global.fetch = async () => ({ status, ...response(false, { authenticated: false }) });
+    assert.strictEqual(await auth.refreshSession(), null);
+    assert.strictEqual(auth.getSessionStatus(), 'unavailable');
+    assert.strictEqual(auth.isSuperadmin(), false);
+    global.fetch = async () => ({ status: 200, ...response(true, {
+      authenticated: true, session: { role: 'platform_admin', email: 'admin@example.test' },
+    }) });
+    await auth.refreshSession();
+    assert.strictEqual(auth.getSessionStatus(), 'authenticated');
+    assert.strictEqual(auth.isSuperadmin(), true);
+  }
+});
+
+test('network and malformed session responses offer retry without claiming an anonymous session', async () => {
+  for (const fetchImpl of [
+    async () => { throw new Error('offline'); },
+    async () => ({ status: 200, ok: true, json: async () => { throw new Error('invalid JSON'); } }),
+    async () => ({ status: 200, ...response(true, {}) }),
+    async () => ({ status: 200, ...response(true, { authenticated: true, session: {} }) }),
+  ]) {
+    global.fetch = fetchImpl;
+    const auth = new AuthManager();
+    await auth.refreshSession();
+    assert.strictEqual(auth.getSessionStatus(), 'unavailable');
+    assert.strictEqual(auth.getCurrentSession(), null);
+  }
+});
+
+test('only an explicit absent or rejected session becomes anonymous', async () => {
+  for (const [status, data] of [[401, {}], [403, {}], [200, { authenticated: false }]]) {
+    global.fetch = async () => ({ status, ...response(status === 200, data) });
+    const auth = new AuthManager();
+    auth.saveSession({ role: 'platform_admin' });
+    await auth.refreshSession();
+    assert.strictEqual(auth.getSessionStatus(), 'anonymous');
+    assert.strictEqual(auth.getCurrentSession(), null);
+  }
+});
+
+test('session validation blocks access while pending, shares concurrent checks, and cannot undo logout', async () => {
+  let resolveResponse;
+  let calls = 0;
+  global.fetch = () => { calls += 1; return new Promise((resolve) => { resolveResponse = resolve; }); };
+  const auth = new AuthManager();
+  auth.saveSession({ role: 'platform_admin' });
+  const first = auth.refreshSession();
+  const second = auth.refreshSession();
+  assert.strictEqual(auth.getSessionStatus(), 'checking');
+  assert.strictEqual(auth.isSuperadmin(), false);
+  assert.strictEqual(calls, 1);
+  global.fetch = async () => response(true, {});
+  await auth.logout();
+  resolveResponse({ status: 200, ...response(true, {
+    authenticated: true, session: { role: 'platform_admin', email: 'admin@example.test' },
+  }) });
+  await Promise.all([first, second]);
+  assert.strictEqual(auth.getSessionStatus(), 'anonymous');
+  assert.strictEqual(auth.getCurrentSession(), null);
+});
+
+test('session requests bypass caches and use only same-origin cookies', async () => {
+  let options;
+  global.fetch = async (_, input) => { options = input; return { status: 401, ...response(false, {}) }; };
+  await new AuthManager().refreshSession();
+  assert.strictEqual(options.cache, 'no-store');
+  assert.strictEqual(options.credentials, 'same-origin');
+});
+
+test('a pending login cannot recreate an admin session after logout', async () => {
+  let resolveLogin;
+  let signal;
+  global.fetch = async (url, options) => {
+    if (url === '/api/logout') return response(true, {});
+    signal = options.signal;
+    return new Promise((resolve) => { resolveLogin = resolve; });
+  };
+  const auth = new AuthManager();
+  const login = auth.loginProfessional('admin@example.test', 'test-only');
+  await auth.logout();
+  resolveLogin(response(true, { success: true, session: { role: 'platform_admin', email: 'admin@example.test' } }));
+  const result = await login;
+  assert.strictEqual(result.success, false);
+  assert.strictEqual(auth.getSessionStatus(), 'anonymous');
+  assert.strictEqual(auth.isSuperadmin(), false);
+  assert.strictEqual(signal.aborted, true);
+});
+
 (async () => {
   let passed = 0;
   for (const { description, fn } of tests) {

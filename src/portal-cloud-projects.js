@@ -6,7 +6,9 @@
     let result;
     try { result = await response.json(); } catch (_) { result = null; }
     if (!response.ok || !result || result.success !== true) {
-      throw new Error(result && result.error || fallback);
+      const error = new Error(result && result.error || fallback);
+      error.status = response.status;
+      throw error;
     }
     return result;
   }

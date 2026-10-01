@@ -49,6 +49,9 @@
       this.b2bKey = options.b2bKey || B2B_ACCOUNTS_KEY;
       this.evm = options.evm || (EventVaultModule && EventVaultModule.create ? EventVaultModule.create() : null);
       this.planners = this.loadPlannerAccounts();
+      this.memorySession = null;
+      this.sessionStatus = 'checking';
+      this.sessionGeneration = 0;
     }
 
     loadPlannerAccounts() {
@@ -80,9 +83,14 @@
         return { success: false, error: 'Ingresa tu usuario y contraseña' };
       }
 
+      const generation = ++this.sessionGeneration;
+      if (this.loginController) this.loginController.abort();
+      const controller = new AbortController();
+      this.loginController = controller;
       try {
         const response = await fetch('/api/auth', {
           method: 'POST',
+          signal: controller.signal,
           headers: {
             'Content-Type': 'application/json'
           },
@@ -90,6 +98,9 @@
         });
 
         const data = await response.json();
+        if (generation !== this.sessionGeneration) {
+          return { success: false, error: 'Esta solicitud de acceso fue cancelada.' };
+        }
 
         if (response.ok && data.success) {
           this.saveSession(data.session);
@@ -98,8 +109,11 @@
           return { success: false, error: data.error || 'Error de autenticación' };
         }
       } catch (err) {
+        if (controller.signal.aborted) return { success: false, error: 'Esta solicitud de acceso fue cancelada.' };
         console.error('Login error:', err);
         return { success: false, error: 'Error de conexión con el servidor.' };
+      } finally {
+        if (this.loginController === controller) this.loginController = null;
       }
     }
 
@@ -136,7 +150,9 @@
     }
 
     saveSession(session) {
+      this.sessionGeneration += 1;
       this.memorySession = session;
+      this.sessionStatus = session ? 'authenticated' : 'anonymous';
       if (typeof sessionStorage !== 'undefined') {
         try { sessionStorage.removeItem(this.sessionKey); } catch (err) {}
       }
@@ -149,15 +165,44 @@
       return this.memorySession || null;
     }
 
+    getSessionStatus() {
+      return this.sessionStatus;
+    }
+
     async refreshSession() {
-      try {
-        const response = await fetch('/api/session', { method: 'GET' });
-        const data = await response.json();
-        this.memorySession = response.ok && data.authenticated ? data.session : null;
-      } catch (err) {
-        this.memorySession = null;
+      if (this.pendingSessionCheck) return this.pendingSessionCheck;
+      const generation = this.sessionGeneration;
+      this.memorySession = null;
+      this.sessionStatus = 'checking';
+      const check = (async () => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await fetch('/api/session', {
+            method: 'GET', credentials: 'same-origin', cache: 'no-store', signal: controller.signal,
+          });
+          const data = response.status === 401 || response.status === 403 ? null : await response.json();
+          if (generation !== this.sessionGeneration) return this.getCurrentSession();
+          if (response.status === 401 || response.status === 403 || (response.ok && data?.authenticated === false)) {
+            this.sessionStatus = 'anonymous';
+          } else if (response.ok && data?.authenticated === true &&
+              typeof data.session?.role === 'string' && typeof data.session?.email === 'string') {
+            this.memorySession = data.session;
+            this.sessionStatus = 'authenticated';
+          } else {
+            this.sessionStatus = 'unavailable';
+          }
+        } catch (err) {
+          if (generation === this.sessionGeneration) this.sessionStatus = 'unavailable';
+        } finally {
+          clearTimeout(timeout);
+        }
+        return this.getCurrentSession();
+      })();
+      this.pendingSessionCheck = check;
+      try { return await check; } finally {
+        if (this.pendingSessionCheck === check) this.pendingSessionCheck = null;
       }
-      return this.memorySession;
     }
 
     isSuperadmin() {
@@ -166,7 +211,10 @@
     }
 
     async logout() {
+      this.sessionGeneration += 1;
+      if (this.loginController) this.loginController.abort();
       this.memorySession = null;
+      this.sessionStatus = 'anonymous';
       if (typeof sessionStorage !== 'undefined') {
         try { sessionStorage.removeItem(this.sessionKey); } catch (err) {}
       }

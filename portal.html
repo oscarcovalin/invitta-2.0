@@ -119,7 +119,12 @@
   </div>
 
   <!-- ==================== GATEWAY DE AUTENTICACIÓN PÚBLICA & BLINDAJE ==================== -->
-  <div id="publicAuthGate" class="max-w-md sm:max-w-lg mx-auto w-full my-auto py-6 px-4">
+  <section id="portalSessionStatus" class="max-w-lg mx-auto w-full my-auto py-8 px-4 text-center" aria-labelledby="portalSessionHeading">
+    <h1 id="portalSessionHeading" class="font-serif text-3xl text-[#242928] mb-4">Acceso a Invitta 2.0</h1>
+    <p id="portalSessionMessage" class="text-sm text-[#596562] mb-4" role="status" aria-live="polite">Verificando tu sesión…</p>
+    <button id="btnRetryPortalSession" type="button" disabled class="px-5 py-3 rounded-xl bg-[#377061] text-white text-sm font-semibold disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#377061]">Reintentar conexión</button>
+  </section>
+  <div id="publicAuthGate" class="hidden max-w-md sm:max-w-lg mx-auto w-full my-auto py-6 px-4">
     
     <!-- Encabezado de Marca Unificado -->
     <div class="text-center mb-8">
@@ -759,6 +764,8 @@
     const evm = window.EventVaultManager ? window.EventVaultManager.create() : null;
     const auth = window.AuthManager ? window.AuthManager.create({ evm }) : null;
     let cloudProjects = [];
+    let cloudProjectLoadState = 'idle';
+    let cloudProjectRequest = 0;
 
     function openCreateEventModal() {
       const modal = document.getElementById('modalCreateEvent');
@@ -776,6 +783,7 @@
 
     async function handleCreateEventSubmit(e) {
       e.preventDefault();
+      if (!auth || !auth.isSuperadmin()) { updateAuthGateUI(); return; }
       const name = document.getElementById('inputNewEventName').value.trim();
       const honoree = document.getElementById('inputNewEventHonoree').value.trim();
       const legacyType = document.getElementById('selectNewEventType').value;
@@ -809,9 +817,9 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       // 1. Verificar Estado de Autenticación
-      if (auth) await auth.refreshSession();
-      updateAuthGateUI();
-      if (auth && auth.isSuperadmin()) await refreshCloudProjects();
+      const retrySession = document.getElementById('btnRetryPortalSession');
+      if (retrySession) retrySession.addEventListener('click', restorePortalSession);
+      await restorePortalSession();
 
       // 2. Control de Pestañas de Acceso (Host vs Pro)
       const tabHost = document.getElementById('tabBtnHost');
@@ -863,19 +871,29 @@
 
       // 4. Formulario Profesional (Superadmin / Planner B2B)
       if (formPro && auth) {
+        let loginPending = false;
         formPro.addEventListener('submit', async (e) => {
           e.preventDefault();
+          if (loginPending) return;
           const user = document.getElementById('inputAuthProUser').value.trim();
           const pass = document.getElementById('inputAuthProPass').value;
           const feedback = document.getElementById('feedbackAuthPro');
 
-          const res = await auth.loginProfessional(user, pass);
+          const submit = formPro.querySelector('button[type="submit"]');
+          loginPending = true;
+          if (submit) submit.disabled = true;
+          let res;
+          try { res = await auth.loginProfessional(user, pass); } finally {
+            loginPending = false;
+            if (submit) submit.disabled = false;
+          }
           if (res.success) {
             if (feedback) {
               feedback.className = 'text-xs mt-3 p-3 rounded-xl bg-[#EBF5F2] border border-[#D5EBE4] text-[#377061] font-semibold block animate-pulse';
               feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.email}! Redirigiendo...`;
             }
             setTimeout(async () => {
+              if (auth.getCurrentSession() !== res.session) return;
               if (res.session.role === 'platform_admin') {
                 updateAuthGateUI();
                 await refreshCloudProjects();
@@ -1048,7 +1066,9 @@
       if (btnLogout && auth) {
         btnLogout.addEventListener('click', async () => {
           await auth.logout();
+          cloudProjectRequest += 1;
           cloudProjects = [];
+          cloudProjectLoadState = 'idle';
           updateAuthGateUI();
         });
       }
@@ -1088,6 +1108,21 @@
       const publicGate = document.getElementById('publicAuthGate');
       const adminDash = document.getElementById('adminVaultDashboard');
       const labelAdminName = document.getElementById('labelAdminSessionName');
+      const statusPanel = document.getElementById('portalSessionStatus');
+      const statusMessage = document.getElementById('portalSessionMessage');
+      const retrySession = document.getElementById('btnRetryPortalSession');
+      const status = auth ? auth.getSessionStatus() : 'unavailable';
+      const pending = status === 'checking' || status === 'unavailable';
+      if (statusPanel) statusPanel.classList[pending ? 'remove' : 'add']('hidden');
+      if (statusMessage) statusMessage.textContent = status === 'checking'
+        ? 'Verificando tu sesión…'
+        : 'No podemos verificar tu sesión por un fallo temporal de conexión. Reintenta; no necesitas volver a escribir tu contraseña todavía.';
+      if (retrySession) retrySession.disabled = status === 'checking';
+      if (pending) {
+        if (publicGate) publicGate.classList.add('hidden');
+        if (adminDash) adminDash.classList.add('hidden');
+        return;
+      }
 
       const isSuper = auth && auth.isSuperadmin();
       if (isSuper) {
@@ -1101,24 +1136,52 @@
       }
     }
 
+    async function restorePortalSession() {
+      const check = auth ? auth.refreshSession() : Promise.resolve();
+      updateAuthGateUI();
+      await check;
+      updateAuthGateUI();
+      if (auth && auth.isSuperadmin()) await refreshCloudProjects();
+    }
+
     async function refreshCloudProjects() {
+      if (!auth || !auth.isSuperadmin()) return;
+      const request = ++cloudProjectRequest;
+      cloudProjectLoadState = 'loading';
+      cloudProjects = [];
       const grid = document.getElementById('vaultProjectsGrid');
       if (grid) grid.innerHTML = '<div class="col-span-full py-8 text-center text-sm text-[#596562]" role="status">Cargando proyectos privados…</div>';
+      ['countFilterAll', 'countFilterBoda', 'countFilterXv'].forEach((id) => {
+        const counter = document.getElementById(id);
+        if (counter) counter.textContent = '—';
+      });
       try {
-        cloudProjects = await window.InvittaProjectPortal.listProjects();
+        const projects = await window.InvittaProjectPortal.listProjects();
+        if (request !== cloudProjectRequest || !auth.isSuperadmin()) return;
+        cloudProjects = projects;
+        cloudProjectLoadState = 'ready';
         renderVaultProjects();
       } catch (error) {
+        if (request !== cloudProjectRequest || !auth.isSuperadmin()) return;
+        cloudProjectLoadState = 'error';
+        if (error.status === 401) {
+          await auth.refreshSession();
+          updateAuthGateUI();
+          if (request !== cloudProjectRequest || !auth.isSuperadmin()) return;
+        }
         if (grid) {
           const message = String(error.message || 'No fue posible cargar los proyectos.')
             .replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-          grid.innerHTML = `<div class="col-span-full py-8 text-center text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-2xl" role="alert">${message}</div>`;
+          grid.innerHTML = `<div class="col-span-full py-8 px-4 text-center text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-2xl"><p role="alert">${message}</p><p class="mt-2">La lista no está disponible; esto no significa que tus proyectos se hayan borrado.</p><button id="btnRetryCloudProjects" type="button" class="mt-4 px-4 py-2 rounded-xl border border-rose-200 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#377061]">Reintentar carga de proyectos</button></div>`;
+          const retryProjects = document.getElementById('btnRetryCloudProjects');
+          if (retryProjects) retryProjects.addEventListener('click', refreshCloudProjects);
         }
       }
     }
 
     function renderVaultProjects(query = '', filter = 'all') {
       const grid = document.getElementById('vaultProjectsGrid');
-      if (!grid) return;
+      if (!grid || cloudProjectLoadState !== 'ready') return;
       const events = cloudProjects
         .filter((project) => /^[0-9a-f-]{36}$/i.test(project.id || ''))
         .map((project) => ({
