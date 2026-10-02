@@ -1,6 +1,6 @@
 # Especificación: invitados y mesas vinculados al proyecto
 
-Estado: propuesta para revisión; no autoriza ejecutar cambios remotos.
+Estado: alcance, plan y tareas aprobados por el usuario el 2026-10-01 para implementación local. No autoriza ejecutar cambios remotos.
 Fecha: 2026-10-01.
 Módulo: `cloud-schema-rls` del [mapa existente](CAPABILITY-MAP.md).
 Primer consumidor previsto: `cloud-data-adapter`, en un incremento posterior.
@@ -18,7 +18,7 @@ Se mantiene la identidad `invitation_projects.id` y la pertenencia existente
 en `invitation_project_members`. La invitación pública, sus documentos, fotos,
 audio y dirección no cambian como efecto de esta entrega.
 
-## Supuestos que requieren revisión
+## Supuestos aprobados
 
 - Un registro de invitado representa una persona o familia/grupo invitado;
   `passes` representa sus lugares autorizados, no asistentes ya admitidos.
@@ -104,9 +104,10 @@ git -c core.whitespace=cr-at-eol diff --check
 ```
 
 No hay scripts de build/lint definidos; no inventarlos ni declarar un build
-exitoso. La CLI de Supabase no se encontró en PATH durante el inventario.
-Antes de implementar, resolver su disponibilidad y acordar el entorno de
-prueba. Comandos previstos cuando exista un entorno local aislado:
+exitoso. La CLI 2.117.0 y Docker existentes se encontraron fuera de PATH. Se
+verificó el entorno desechable `invitta-project-ops-test`, sin enlace remoto,
+API 55421/base 55422 y sin semillas. Los comandos deben apuntar explícitamente
+a ese directorio mediante `--workdir`; no ejecutarlos en el proyecto del cliente:
 
 ```powershell
 supabase migration new add_project_guests_and_tables

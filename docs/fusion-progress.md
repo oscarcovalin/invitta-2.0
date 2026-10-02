@@ -41,7 +41,10 @@ La siguiente entrega debe ser un corte vertical pequeño: invitados/mesas vincul
 
 ## Siguientes entregas
 
-Preparación de la siguiente entrega: [contrato propuesto de invitados y mesas](../tasks/SPEC-cloud-schema-rls.md). Define registros por proyecto, permisos dueño/planner, relación de mesa del mismo proyecto y pruebas reales de aislamiento. Pendiente de revisión del alcance antes de redactar el plan e implementar. En este paso sólo se añadió documentación local: ninguna migración, API nueva, dato remoto o despliegue fue ejecutado.
+El [contrato](../tasks/SPEC-cloud-schema-rls.md), [plan](../tasks/plan.md) y
+[tareas](../tasks/todo.md) de invitados/mesas fueron aprobados el 2026-10-01.
+Su base local ya está implementada y verificada; todavía no está conectada a las
+pantallas ni aplicada al proyecto Supabase del cliente. Véase la entrega siguiente.
 
 1. Integrar invitados y mesas con `invitation_projects`, membresías y APIs autenticadas. El gestor actual persiste en almacenamiento local y el adaptador antiguo consulta `events`, no el proyecto canónico. Inventariar la base real antes de escribir migraciones; no copiar demostraciones ni mezclar eventos.
 2. Conectar RSVP con invitados identificados, pases y enlaces revocables. Las confirmaciones públicas existentes no demuestran ese flujo individualizado.
@@ -52,3 +55,56 @@ Preparación de la siguiente entrega: [contrato propuesto de invitados y mesas](
 7. Pruebas completas con usuarios y dispositivos reales, aislamiento entre eventos, respaldo/reversión y transición controlada antes de retirar código o datos anteriores.
 
 El listado antiguo de `tasks/todo.md` no basta para declarar avance: contrastar cada cierre con código, pruebas y verificación del entorno desplegado. Conservar el enlace público de Janna y no republicar sus datos como efecto de cambios internos.
+
+## Tercera entrega: base operativa por proyecto (2026-10-01)
+
+La migración `20261002022200_add_project_guests_and_tables.sql` añade dos tablas
+sin registros iniciales, restricciones de nombres/pases/capacidad, FK compuesta
+de mesa del mismo proyecto y permisos de lectura/creación/edición para dueño y
+planner. Identidad, fechas y versión no son editables por el cliente; la base
+aumenta la versión al guardar. No concede DELETE directo ni permisos a otros roles.
+Decisión y límites: [ADR-0003](decisions/0003-project-guest-and-table-storage.md).
+
+Se encontraron CLI y Docker existentes fuera de PATH, sin instalar dependencias
+de la app. Docker no iniciaba por endpoints de ejecución obsoletos; se movieron
+dos directorios de endpoints a respaldos locales recuperables, sin borrar
+contenedores, volúmenes, configuraciones ni datos. Respaldos conservados:
+`C:\Users\oscar\AppData\Local\Docker\run.codex-backup-20261001` y
+`C:\Users\oscar\AppData\Local\docker-secrets-engine.codex-backup-20261001`.
+
+Entorno aislado: `..\..\.cache\invitta-project-ops-test`, proyecto sin enlace
+remoto, API local 55421/base 55422, CLI 2.117.0, Docker 29.8.0 y PostgreSQL 17.6.
+Se cargaron las seis migraciones previas sin semillas. Prueba inicial: 4/4
+fallos esperados por tablas ausentes; después se reprodujeron los permisos y
+trigger ausentes antes de implementarlos. `db pull --local` generó la migración
+final, normalizada/revisada con permisos explícitos. Instalación desde cero local
+verificada; otra comparación informó `No schema changes found`.
+
+Resultados comprobados:
+
+- **116 pruebas SQL**: 106 nuevas y 10 previas. La prueba anónima previa esperaba
+  equivocadamente una lista vacía pese a no tener SELECT; ahora exige 42501 sin
+  cambiar los permisos de producción.
+- **68 comprobaciones Auth/PostgREST reales** con usuarios locales sintéticos:
+  roles, acceso directo, campos gestionados, cruces de proyecto, revocación y
+  dos PATCH concurrentes por versión. Un único ganador por recurso; cero filas
+  para la escritura obsoleta. Los consumidores futuros deben manejar ese conflicto.
+- **111/111 archivos JavaScript** pasan; sintaxis y diferencias verificadas.
+- Asesores locales de seguridad/rendimiento sin advertencias o errores.
+- Limpieza verificada: cero usuarios y proyectos sintéticos al terminar.
+
+La clave privilegiada local se usó sólo para preparar/eliminar fixtures, nunca
+en las operaciones bajo prueba. No se imprimieron credenciales ni se consultaron
+datos personales para estos tests. Script reproducible:
+`scripts/test-project-operations-local.cjs <directorio-aislado> <CLI-Supabase>`.
+El script rechaza proyectos enlazados y direcciones que no sean las locales de prueba.
+
+Revisión independiente: un hallazgo Required en limpieza del arnés se reprodujo
+y corrigió con una nueva prueba de seguridad; ahora exige eliminación verificable
+por UUID, no sólo respuesta HTTP exitosa. Cierre sin Required/Critical pendientes.
+
+Estado: **sólo local, sin cambios remotos ni despliegue**. No se modificó la
+invitación, sus activos o el enlace de Janna. Falta el corte vertical de APIs y
+organizador por proyecto, verificarlo entre dispositivos, revisar/aplicar la
+migración remotamente y desplegar. Las pruebas actuales no convierten el gestor
+heredado de almacenamiento local en un gestor sincronizado.
