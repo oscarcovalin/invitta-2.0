@@ -2,7 +2,9 @@
 
 ## Estado
 
-Aceptado e implementado localmente el 2026-10-01. Sin aplicación remota ni despliegue.
+Aceptado e implementado localmente el 2026-10-01. Activado en Supabase
+`invitta-2-preview` y Vercel vista previa el 2026-10-02; evidencia en
+`docs/fusion-progress.md`. No promovido a main.
 
 ## Fecha
 
@@ -68,8 +70,10 @@ Revisión independiente sin Required/Critical pendientes.
 
 ## Riesgos y reversión
 
-Los tests locales no prueban el despliegue remoto. Revisar y aplicar la migración,
-publicar código y verificar usuarios/dispositivos reales en un paso separado.
+Los tests locales no prueban por sí solos el despliegue remoto. Migración aplicada,
+código publicado y sesión/lectura verificadas con la cuenta existente el 2026-10-02.
+No se escribieron datos ficticios en proyectos reales ni se verificó una nueva
+alta real del cliente en esta comprobación remota.
 Para detener el consumidor, retirar su entrada del portal antes de desactivar
 las APIs; preservar registros. No borrar tablas con datos para revertir.
 La invitación pública de Janna y su enlace no cambian con este incremento.

@@ -183,7 +183,33 @@ y mesas iniciales; no se importaron registros antiguos ni se modificó Janna.
 El asesor de seguridad mantiene únicamente la advertencia previa de protección
 contra contraseñas filtradas desactivada; no aparecen advertencias nuevas.
 
-La publicación de código y la comprobación del despliegue se registrarán al
-concluir. Punto de reversión previo: rama `b78a562`, despliegue Vercel
+Código publicado en `preview/invitta-cloud-client-flow`, commit `e1ab464`.
+GitHub registra Vercel success / Deployment has completed, despliegue
+`Fvv9WyEjyob7sQby25EkmhZebFKc`. Rama principal no modificada.
+
+Comprobaciones remotas posteriores:
+
+- Cuenta profesional existente reconocida; el portal lista Janna y ofrece la
+  entrada de invitados/mesas por proyecto.
+- Organizador: “Datos confirmados desde Supabase”, formularios habilitados,
+  cero registros iniciales. Sin escrituras de prueba sobre proyectos reales.
+- Studio abre Janna Sharlot y carga “revisión 6 guardada”, sin volver al login.
+- Nuevo cliente abre el formulario y ofrece “CREAR BORRADOR Y ABRIR STUDIO”.
+  No se envió el formulario sin datos del nuevo cliente.
+- GET invitados/mesas sin sesión responde 401; POST desde otro origen, 403.
+- Invitación pública responde 200, título `XV Janna | Invitta Studio` y
+  metadatos de imagen para compartir; enlace original conservado.
+- Suite repetida tras alinear el historial: 115/115 archivos pasan.
+- El portal/Studio heredados siguen usando Tailwind CDN y generan su aviso de
+  producción. No se presenta esta comprobación como consola global sin avisos.
+- Asesor de rendimiento: INFO de índices en tablas anteriores y del índice
+  nuevo aún no usado; no se eliminan índices por falta de uso inicial.
+
+Las altas/ediciones, conflicto y recuperación se verificaron con Auth/PostgREST
+local real; el smoke remoto verifica sesión, permisos y lectura, no una escritura
+real del cliente. Se evita crear clientes ficticios o cambiar la revisión publicada.
+QR, importación RSVP, álbum, catering compartido y pagos no se dan por terminados.
+
+Punto de reversión previo: rama `b78a562`, despliegue Vercel
 `3Av7SjUEKQPnBfMg3MCgvBScrKLB`. Revertir el código no exige eliminar tablas;
 conservar siempre los registros que el cliente haya creado.

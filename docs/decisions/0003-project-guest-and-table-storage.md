@@ -2,7 +2,9 @@
 
 ## Estado
 
-Aceptado para implementación local el 2026-10-01. No aplicado al Supabase del cliente ni desplegado.
+Aceptado para implementación local el 2026-10-01. Aplicado a `invitta-2-preview`
+el 2026-10-02 como migración `20261002222510`; consumidor desplegado en Vercel
+vista previa. Evidencia y alcance en `docs/fusion-progress.md`.
 
 ## Fecha
 
