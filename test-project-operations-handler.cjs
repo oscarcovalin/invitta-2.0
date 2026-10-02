@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 const auth = require('./lib/supabase-auth-service.cjs');
 const { createProjectOperationsHandler } = require('./lib/project-operations-handler.cjs');
+const { operate } = require('./lib/project-operations-store.cjs');
 const projectId = '10000000-0000-4000-8000-000000000001';
 const id = '20000000-0000-4000-8000-000000000001';
 const authService = { ...auth, getAuthConfig: () => ({ url: 'https://test.invalid', publishableKey: 'public-test' }),
@@ -27,6 +28,14 @@ async function call(request, service = authService, operate = async args => ({ a
   assert.equal((await call(missing)).statusCode, 401);
   const anonymous = await call(req(), { ...authService, getAuthenticatedUser: async () => ({ id, is_anonymous: true }) });
   assert.equal(anonymous.statusCode, 403);
+  const malformedIdentity = await call(req(), { ...authService, getAuthenticatedUser: async () => ({ id: 'bad-id', is_anonymous: false }) }, operate);
+  assert.equal(malformedIdentity.statusCode, 502); assert.equal(malformedIdentity.body.code, 'STORE_UNAVAILABLE');
+  for (const host of [undefined, ['localhost:8080'], 'localhost:8080/path']) {
+    const request = req('POST'); request.headers.host = host;
+    assert.equal((await call(request)).statusCode, 403);
+  }
+  const forwarded = req('POST'); forwarded.headers['x-forwarded-host'] = 'evil.test';
+  assert.equal((await call(forwarded)).statusCode, 201, 'forwarded host does not override the actual origin');
   const refreshed = req(); refreshed.headers.cookie = 'invitta_access_token=expired; invitta_refresh_token=test';
   const recovered = await call(refreshed);
   assert.equal(recovered.body.args.accessToken, 'valid'); assert(recovered.headers['Set-Cookie'].length === 2);

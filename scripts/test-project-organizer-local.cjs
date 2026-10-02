@@ -2,6 +2,8 @@
 // Runs only inside the existing fixture harness, whose project/link/ports are checked.
 const assert = require('node:assert/strict');
 const http = require('node:http');
+const { readFile } = require('node:fs/promises');
+const { resolve, extname } = require('node:path');
 const { randomUUID } = require('node:crypto');
 const { main } = require('./test-project-operations-local.cjs');
 const authService = require('../lib/supabase-auth-service.cjs');
@@ -13,8 +15,28 @@ async function verifyConsumer({ users, projects, request, env }) {
   const services = { ...authService, getAuthConfig: () => config };
   const handlers = Object.fromEntries(['guests', 'tables'].map(resource => [resource,
     createProjectOperationsHandler({ resource, authService: services, operate: store.operate })]));
+  const browserMode = process.argv.includes('--browser');
+  const staticFiles = new Set(['organizador-mesas.html', 'role-manager.js', 'event-vault-manager.js', 'guest-manager.js',
+    'seating-module/seating-planner.js', 'src/project-organizer-client.js', 'src/project-organizer.js', 'css/project-organizer.css', 'css/main.css', 'theme.css']);
+  let browserProject, failNextWrite = false;
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://127.0.0.1');
+    if (browserMode && browserProject && url.pathname.startsWith('/__fixture/')) {
+      const role = url.pathname.split('/').at(-1);
+      const user = users.find(u => u.role === role);
+      if (user) {
+        res.setHeader('Set-Cookie', authService.buildSessionCookies({ accessToken: user.token, refreshToken: '', expiresIn: 3600 }, { secure: false }));
+      } else if (role === 'fail-save') failNextWrite = true;
+      else { res.writeHead(404); res.end(); return; }
+      res.writeHead(302, { Location: `/organizador-mesas.html?project=${browserProject}` }); res.end(); return;
+    }
+    if (browserMode && staticFiles.has(url.pathname.slice(1))) {
+      try {
+        const data = await readFile(resolve(__dirname, '..', url.pathname.slice(1)));
+        const type = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' }[extname(url.pathname)];
+        res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-store' }); res.end(data);
+      } catch (_) { res.writeHead(404); res.end(); } return;
+    }
     const resource = url.pathname.match(/^\/api\/projects\/(guests|tables)$/)?.[1];
     if (!resource) { res.writeHead(404); res.end(); return; }
     req.query = Object.fromEntries(url.searchParams);
@@ -22,9 +44,12 @@ async function verifyConsumer({ users, projects, request, env }) {
     req.body = body;
     res.status = code => { res.statusCode = code; return res; };
     res.json = value => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(value)); };
+    if (failNextWrite && ['POST', 'PATCH'].includes(req.method)) {
+      failNextWrite = false; res.status(502).json({ success: false, code: 'STORE_UNAVAILABLE', error: 'Fallo sintético local: verifica antes de reintentar.' }); return;
+    }
     await handlers[resource](req, res);
   });
-  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  await new Promise(resolve => server.listen(browserMode ? 8099 : 0, '127.0.0.1', resolve));
   const origin = `http://127.0.0.1:${server.address().port}`;
   const [owner, planner, designer, , , , outsider] = users;
   const [a, b] = projects;
@@ -73,6 +98,17 @@ async function verifyConsumer({ users, projects, request, env }) {
     await request(`/rest/v1/invitation_project_members?project_id=eq.${a}&user_id=eq.${planner.id}`, owner.token, 'DELETE');
     await api('guests', planner, 'GET', { projectId: a }, 404);
     console.log(`PASS: ${checks} real HTTP handler/Auth/PostgREST consumer checks`);
+    if (browserMode) {
+      browserProject = randomUUID(); projects.push(browserProject);
+      const created = await request('/rest/v1/invitation_projects', owner.token, 'POST', { id: browserProject, owner_user_id: owner.id,
+        slug: `browser-${randomUUID()}`, name: 'Synthetic browser project', event_type: 'other' });
+      assert.equal(created.status, 201);
+      await request('/rest/v1/invitation_project_members', owner.token, 'POST', { project_id: browserProject, user_id: planner.id, role: 'planner' });
+      console.log('BROWSER READY: http://localhost:8099/__fixture/owner');
+      console.log('SECOND SESSION: http://127.0.0.1:8099/__fixture/planner');
+      console.log('Stop with Ctrl+C to clean up exact synthetic fixtures.');
+      await new Promise(resolve => { process.once('SIGINT', resolve); process.once('SIGTERM', resolve); });
+    }
   } finally { await new Promise(resolve => server.close(resolve)); }
 }
 if (require.main === module) main({ verifyConsumer }).catch(e => { console.error(e.message); process.exitCode = 1; });
