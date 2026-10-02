@@ -91,9 +91,10 @@ select results_eq(
 reset role;
 set local role anon;
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
-select results_eq(
+select throws_ok(
   $$ select count(*)::bigint from public.invitation_projects $$,
-  array[0::bigint],
+  '42501',
+  null,
   'anonymous users cannot read private projects'
 );
 
