@@ -1,5 +1,17 @@
 # Plan: base compartida de invitados y mesas
 
+## Extensión aprobada: consumidor por proyecto (2026-10-01)
+
+Contrato: [SPEC-cloud-data-adapter.md](SPEC-cloud-data-adapter.md). Continuar
+sin aprobaciones intermedias; sólo local. Orden: validación y operaciones con
+JWT/RLS → handlers con sesión/origen → cliente de estado → pantalla separada
+del gestor antiguo → acceso desde portal → integración local y revisión.
+Cada incremento se prueba antes de expandirlo y se conserva en un commit local.
+Riesgos principales: confirmar un guardado desconocido, sobrescribir versiones,
+mostrar una denegación como vacío y cargar demostraciones en el proyecto.
+Mitigaciones: UUID estable, filtro de versión atómico, errores explícitos y
+no inicializar el modo heredado con `project`. No cambiar publicación/Janna.
+
 Estado: aprobado por el usuario el 2026-10-01; implementación local y sus tres tareas verificadas. Sin aplicación remota ni conexión de pantallas.
 Módulo: `cloud-schema-rls`.
 Alcance aprobado: [SPEC-cloud-schema-rls.md](SPEC-cloud-schema-rls.md).

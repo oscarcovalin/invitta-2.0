@@ -1,5 +1,29 @@
 # Tareas: invitados y mesas por proyecto
 
+## Extensión: cloud-data-adapter aprobado 2026-10-01
+
+- [ ] A. Validación y almacenamiento con JWT: permisos explícitos, paginación,
+  creación estable y PATCH con versión. Archivos: servicio y prueba (2).
+  Verificar RED/GREEN, errores y filtros; depende del esquema ya terminado.
+- [ ] B. Handler GET/POST/PATCH: sesión renovable, origen de escritura y errores
+  uniformes. Archivos: handler, prueba y dos envoltorios (4); depende de A.
+- [ ] C. Registrar rutas aditivas: dispatcher, API y prueba (3); depende de B.
+  Verificar métodos y regresiones antes de conectar la pantalla.
+- [ ] D. Cliente en memoria: paginación, conflicto, resultado desconocido y
+  cargas obsoletas. Archivos: cliente y prueba (2); depende de C.
+- [ ] E. Pantalla acotada por proyecto sin demos ni almacenamiento heredado.
+  Archivos: controlador, estilos, organizador y prueba (4); depende de D.
+- [ ] F. Entrada desde portal y middleware profesional sólo con proyecto.
+  Archivos: portal, middleware y pruebas (4); depende de E.
+- [ ] G. Integración con handlers y Auth/PostgREST real local, dos sesiones y
+  conflicto concurrente. Script y prueba de seguridad (2); depende de C.
+- [ ] H. Navegador: crear/asignar/editar/recargar, fallo recuperable y móvil;
+  suite completa, revisión y evidencia en docs (máximo 3); depende de E–G.
+
+No hay build/lint. Comando común: Node `scripts/run-legacy-tests.cjs` con
+archivos concretos durante RED/GREEN y suite completa en los checkpoints.
+No cerrar otros módulos ni publicar hasta verificar este incremento.
+
 Estado: desglose del [plan](plan.md) aprobado por el usuario el 2026-10-01, implementado y verificado localmente. Sin despliegue ni aplicación remota.
 Especificación: [cloud-schema-rls](SPEC-cloud-schema-rls.md).
 Este registro no reemplaza el historial de entregas de `docs/fusion-progress.md`.
