@@ -12,6 +12,15 @@ mostrar una denegación como vacío y cargar demostraciones en el proyecto.
 Mitigaciones: UUID estable, filtro de versión atómico, errores explícitos y
 no inicializar el modo heredado con `project`. No cambiar publicación/Janna.
 
+Resultado: consumidor, rutas, pantalla y entrada por proyecto implementados
+localmente. 115/115 archivos JavaScript, 116 pgTAP y 24 comprobaciones HTTP
+del consumidor más 68 Auth/PostgREST directas. Navegador: dos sesiones locales,
+guardado/asignación/desasignación, conflicto, borrador conservado, recuperación
+y recarga; tamaños 320/768/1024/1440 px sin desbordamiento. Sin cambios remotos.
+Revisión independiente sin hallazgos Required/Critical pendientes.
+
+## Historial del incremento de esquema
+
 Estado: aprobado por el usuario el 2026-10-01; implementación local y sus tres tareas verificadas. Sin aplicación remota ni conexión de pantallas.
 Módulo: `cloud-schema-rls`.
 Alcance aprobado: [SPEC-cloud-schema-rls.md](SPEC-cloud-schema-rls.md).

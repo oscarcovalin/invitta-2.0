@@ -1,6 +1,6 @@
 # Especificación: organizador conectado por proyecto
 
-Estado: aprobado el 2026-10-01, implementación local en curso. El usuario
+Estado: aprobado el 2026-10-01, implementado y verificado localmente. El usuario
 autoriza continuar con plan, pruebas e implementación sin confirmaciones
 intermedias. No autoriza cambios remotos.
 Módulo: `cloud-data-adapter` del [mapa existente](CAPABILITY-MAP.md).

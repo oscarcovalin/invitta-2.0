@@ -46,7 +46,7 @@ El [contrato](../tasks/SPEC-cloud-schema-rls.md), [plan](../tasks/plan.md) y
 Su base local ya está implementada y verificada; todavía no está conectada a las
 pantallas ni aplicada al proyecto Supabase del cliente. Véase la entrega siguiente.
 
-1. Integrar invitados y mesas con `invitation_projects`, membresías y APIs autenticadas. El gestor actual persiste en almacenamiento local y el adaptador antiguo consulta `events`, no el proyecto canónico. Inventariar la base real antes de escribir migraciones; no copiar demostraciones ni mezclar eventos.
+1. Aplicar y desplegar el consumidor de invitados/mesas por proyecto ya verificado localmente; comprobarlo con usuarios/dispositivos reales. El modo heredado sigue separado y no se importan demostraciones automáticamente.
 2. Conectar RSVP con invitados identificados, pases y enlaces revocables. Las confirmaciones públicas existentes no demuestran ese flujo individualizado.
 3. Registro de entrada QR atómico e idempotente; mesa y hoja de catering compartidas entre dispositivos. Sin conexión, mostrar pendiente y no confirmar una escritura que no llegó al servidor.
 4. Migrar el álbum colaborativo de Firebase a Supabase, con pertenencia al evento, autorización de carga y moderación.
@@ -108,3 +108,59 @@ invitación, sus activos o el enlace de Janna. Falta el corte vertical de APIs y
 organizador por proyecto, verificarlo entre dispositivos, revisar/aplicar la
 migración remotamente y desplegar. Las pruebas actuales no convierten el gestor
 heredado de almacenamiento local en un gestor sincronizado.
+
+## Cuarta entrega: organizador por proyecto conectado (2026-10-01)
+
+Contrato `cloud-data-adapter` aprobado e implementado localmente. La tarjeta del
+portal añade “Invitados y mesas del proyecto”. Con `?project=<UUID>` se abre
+una pantalla acotada de nombres, pases, mesas y asignaciones; no se inicializan
+los gestores anteriores ni se leen/escriben sus datos locales. Sin parámetro,
+se conserva el organizador anterior. Decisión: [ADR-0004](decisions/0004-project-organizer-user-jwt.md).
+
+GET/POST/PATCH por recurso validan campos y respuestas. Sesión renovable,
+origen propio en escrituras con cookie y JWT del usuario en PostgREST, sin clave
+privilegiada en la aplicación. Membresía explícita y RLS dueño/planner; identidad
+malformada falla como indisponibilidad. Edición filtrada por proyecto/id/versión
+con una fila confirmada; conflicto no sobrescribe ni vacía el formulario.
+
+Estado del cliente en memoria, paginación sin listas incompletas, UUID de alta
+estable y bloqueo durante resultado desconocido. Verificar antes de reintentar;
+coincidencia de intención/versión confirma y diferencia requiere decisión
+explícita. No se promete offline, sincronización inmediata, admisión ni garantía
+transaccional de capacidad. Descartar borradores exige confirmación inline.
+
+Evidencia de cierre:
+
+- **115/115 archivos JavaScript** pasan. RED/GREEN de servicio, rutas, cliente y
+  entrada profesional; prueba de aislamiento incluye scripts legacy externos.
+- **116 pgTAP** pasan. La primera repetición coexistió con los fixtures del
+  navegador y falló correctamente las dos expectativas de base sin registros.
+  Tras limpiar esos fixtures, pasan sin alterar la prueba ni los permisos.
+- **24 comprobaciones HTTP reales del consumidor + 68 Auth/PostgREST directas**:
+  dueño/planner, roles excluidos, proyecto ajeno, duplicado, paginación, revocación
+  y un único ganador en dos PATCH concurrentes. Fixtures eliminados por UUID,
+  verificados por el arnés; ninguna cuenta del cliente utilizada.
+- Navegador integrado sobre servidor/Supabase locales: crear mesa y familia,
+  asignar/desasignar, abrir segunda sesión, conflicto con borrador conservado,
+  consulta de versión actual y recarga. Fallo sintético de guardado → verificación
+  → reintento del mismo registro, sin duplicado.
+- 320/768/1024/1440 px sin desbordamiento horizontal; una columna en móvil y dos
+  desde 768 px. Captura visual inspeccionada. Sin avisos/errores en consola de
+  las sesiones nuevas tras completar el flujo.
+- El diálogo nativo de descarte bloqueó una pestaña local del navegador integrado.
+  Se sustituyó por aviso inline con foco y Escape; conservar/descartar/conflicto
+  se volvieron a comprobar en sesiones nuevas. No se recargó Studio remoto.
+- Revisión independiente: sin Required/Critical pendientes; dos hallazgos de
+  clasificación de autoridad malformada corregidos. Sin build/lint definidos,
+  dependencias nuevas ni cambios al archivo de bloqueo.
+
+Reproducción: `scripts/test-project-organizer-local.cjs <directorio-aislado>
+<CLI-Supabase>`; `--browser` habilita únicamente fixtures y archivos locales
+permitidos para comprobar dos sesiones en localhost/127.0.0.1. No publicar
+este servidor de prueba. La suite SQL debe ejecutarse sin fixtures persistentes.
+
+Estado: **implementado y verificado localmente, no activado remotamente**.
+La migración todavía debe revisarse/aplicarse en Supabase del cliente y el código
+debe publicarse/desplegarse. No cambió ningún dato, foto, revisión o enlace de
+Janna. QR, importación RSVP, álbum, catering compartido y pagos siguen pendientes;
+este incremento no equivale a terminar la fusión completa.
