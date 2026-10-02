@@ -15,7 +15,7 @@ function removedUser(result, verification) {
   return result.status >= 200 && result.status < 300 && verification?.status === 404;
 }
 
-async function main() {
+async function main({ verifyConsumer } = {}) {
   const workdir = resolve(process.argv[2] || '');
   const cli = process.argv[3];
   assert(cli && process.argv[2], 'Usage: node scripts/test-project-operations-local.cjs <disposable-workdir> <supabase-cli>');
@@ -142,6 +142,7 @@ async function main() {
       check((await rows(`${resource}?project_id=eq.${a}`, planner.token)).length === 0, 'Revoked planner loses read access with same JWT');
       check((await rows(`${resource}?project_id=eq.${a}`, planner.token, 'PATCH', { name: 'Revoked' })).length === 0, 'Revoked planner loses edit access');
     }
+    if (verifyConsumer) await verifyConsumer({ users, projects, request, env });
     console.log(`PASS: ${checks} real local Auth/PostgREST checks`);
   } finally {
     // Exact UUID fixtures only, in the already-validated disposable API. Never clear whole tables.
@@ -163,5 +164,5 @@ async function main() {
     console.log('PASS: synthetic fixtures removed');
   }
 }
-module.exports = { removedProject, removedUser };
+module.exports = { removedProject, removedUser, main };
 if (require.main === module) main().catch(error => { console.error(error.message); process.exitCode = 1; });

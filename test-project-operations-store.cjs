@@ -68,6 +68,10 @@ function boundary({ owner = userId, role = 'planner', records = [row], status = 
     assert.equal(fake.requests.length, 2);
   }
   await assert.rejects(run('GET', { projectId }, boundary({ owner: null })), e => e.status === 404);
+  for (const role of [{}, 7, 'unexpected']) {
+    await assert.rejects(run('GET', { projectId }, boundary({ owner: id, role })), e => e.status === 502);
+  }
+  await assert.rejects(store.operate({ resource: 'guests', method: 'GET', input: { projectId }, userId: 'malformed', accessToken: 'verified-test-jwt', config }), e => e.status === 502);
   await assert.rejects(run('PATCH', { projectId, id, expectedVersion: 1, passes: 3 }, boundary({ records: [] })), e => e.status === 409);
   for (const records of [null, {}, [{ ...row, project_id: id }], [{ ...row, passes: '2' }], [{ ...row, version: 0 }]]) {
     await assert.rejects(run('GET', { projectId }, boundary({ records })), e => e.status === 502);
