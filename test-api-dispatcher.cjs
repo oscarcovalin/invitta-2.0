@@ -22,7 +22,7 @@ const response = () => ({
     assert.equal(res.body.query.id, 'preserved');
   }
 
-  for (const route of ['auth/register', 'auth/recover', 'auth/invitations']) {
+  for (const route of ['auth/register', 'auth/recover', 'auth/invitations', 'projects/guests', 'projects/tables']) {
     const res = response();
     await dispatch({ method: 'POST', query: { route } }, res);
     assert.equal(res.statusCode, 209, route);
