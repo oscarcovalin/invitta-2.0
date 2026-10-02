@@ -58,7 +58,7 @@ El listado antiguo de `tasks/todo.md` no basta para declarar avance: contrastar 
 
 ## Tercera entrega: base operativa por proyecto (2026-10-01)
 
-La migración `20261002022200_add_project_guests_and_tables.sql` añade dos tablas
+La migración `20261002222510_add_project_guests_and_tables.sql` añade dos tablas
 sin registros iniciales, restricciones de nombres/pases/capacidad, FK compuesta
 de mesa del mismo proyecto y permisos de lectura/creación/edición para dueño y
 planner. Identidad, fechas y versión no son editables por el cliente; la base
@@ -164,3 +164,26 @@ La migración todavía debe revisarse/aplicarse en Supabase del cliente y el có
 debe publicarse/desplegarse. No cambió ningún dato, foto, revisión o enlace de
 Janna. QR, importación RSVP, álbum, catering compartido y pagos siguen pendientes;
 este incremento no equivale a terminar la fusión completa.
+
+## Activación de invitados y mesas en vista previa (2026-10-02)
+
+Continuación autorizada por el cliente para aplicar las tablas privadas en
+`invitta-2-preview` y desplegar el código probado en la rama de vista previa.
+Se incorporó `b78a562` remoto sin sobrescribirlo: su ajuste de texto stardust
+coincide con el commit local `c7c90d1`. Las 115/115 pruebas vuelven a pasar.
+
+Supabase `gwgnufusldpikwwoeism` aplicó `add_project_guests_and_tables` como
+`20261002222510`. Se renombró el archivo local, sin cambiar su SQL, para
+mantener el historial de migraciones alineado con el servicio. RLS habilitado,
+seis políticas dueño/planner, permisos de columnas y dos triggers verificados.
+Anónimo sin SELECT y usuario autenticado sin DELETE en ambas tablas.
+
+Antes/después: 1 proyecto y 6 documentos, con huellas idénticas. Cero invitados
+y mesas iniciales; no se importaron registros antiguos ni se modificó Janna.
+El asesor de seguridad mantiene únicamente la advertencia previa de protección
+contra contraseñas filtradas desactivada; no aparecen advertencias nuevas.
+
+La publicación de código y la comprobación del despliegue se registrarán al
+concluir. Punto de reversión previo: rama `b78a562`, despliegue Vercel
+`3Av7SjUEKQPnBfMg3MCgvBScrKLB`. Revertir el código no exige eliminar tablas;
+conservar siempre los registros que el cliente haya creado.
