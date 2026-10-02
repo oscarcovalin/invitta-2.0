@@ -88,19 +88,21 @@ async function professionalStudioAccess(request, onRevokedCookies) {
 }
 
 export default async function middleware(request) {
-  const { pathname } = new URL(request.url);
+  const { pathname, searchParams } = new URL(request.url);
 
   if (!isProtected(pathname)) {
     return; // deja pasar rutas públicas (index, portal, invitacion-boda, etc.)
   }
 
-  // Studio usa la sesión profesional de Supabase. Los demás módulos
-  // conservan sus permisos de evento y su cookie legacy independiente.
+  // Studio and the project organizer use the verified professional session.
+  // Event-mode routes keep their separate legacy permissions.
   let revokedCookies = [];
-  if (pathname === '/invitacion-estudio.html') {
+  const projectOrganizer = pathname === '/organizador-mesas.html' && searchParams.has('project');
+  if (pathname === '/invitacion-estudio.html' || projectOrganizer) {
     const professionalAccess = await professionalStudioAccess(request, (cookies) => { revokedCookies = cookies; });
     if (professionalAccess === true) return;
     if (professionalAccess instanceof Response) return professionalAccess;
+    if (projectOrganizer) return redirectToLogin(request, pathname, revokedCookies);
   }
 
   const token = readCookie(request, COOKIE_NAME);

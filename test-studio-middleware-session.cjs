@@ -21,6 +21,15 @@ async function main() {
     });
     assert.equal(await middleware(studio), undefined, 'verified professional session opens Studio');
     assert.equal(calls.length, 1);
+
+    const organizer = new Request('https://invitta.example/organizador-mesas.html?project=project-123', {
+      headers: { cookie: 'invitta_access_token=valid-professional-token' },
+    });
+    assert.equal(await middleware(organizer), undefined, 'verified professional session opens project organizer');
+    assert.equal(calls.length, 2);
+    const organizerLogin = await middleware(new Request(organizer.url));
+    assert.equal(organizerLogin.status, 302);
+    assert.equal(new URL(organizerLogin.headers.get('location')).searchParams.get('next'), '/organizador-mesas.html?project=project-123');
     assert.equal(String(calls[0].url), 'https://example.supabase.co/auth/v1/user');
     assert.equal(calls[0].options.headers.apikey, 'test-publishable-key');
     assert.equal(calls[0].options.headers.Authorization, 'Bearer valid-professional-token');
@@ -29,7 +38,7 @@ async function main() {
       headers: { cookie: 'invitta_access_token=valid-professional-token' },
     });
     assert.equal((await middleware(otherModule)).status, 302, 'professional cookie does not unlock legacy modules');
-    assert.equal(calls.length, 1);
+    assert.equal(calls.length, 2);
 
     for (const cookie of [
       'invitta_access_token=expired; invitta_refresh_token=valid-refresh',
