@@ -1,0 +1,15 @@
+'use strict';
+const assert = require('node:assert/strict');
+const { removedProject, removedUser } = require('./scripts/test-project-operations-local.cjs');
+const id = '21000000-0000-0000-0000-000000000001';
+const other = '21000000-0000-0000-0000-000000000002';
+assert.equal(removedProject({ status: 200, data: [] }, id), false, 'empty DELETE is not proof of deletion');
+assert.equal(removedProject({ status: 200, data: [{ id: other }] }, id), false, 'different fixture is not proof');
+assert.equal(removedProject({ status: 200, data: [{ id }, { id: other }] }, id), false, 'multiple deletions are rejected');
+assert.equal(removedProject({ status: 200, data: [{ id }] }, id), true);
+assert.equal(removedProject({ status: 500, data: [{ id }] }, id), false);
+assert.equal(removedUser({ status: 200, data: {} }, { status: 200, data: { id } }), false, 'user still present');
+assert.equal(removedUser({ status: 200, data: {} }, { status: 403 }), false, 'denied verification is not deletion');
+assert.equal(removedUser({ status: 200, data: {} }, { status: 404 }), true, 'Auth DELETE has empty response; exact-user GET must be not found');
+assert.equal(removedUser({ status: 500 }, { status: 404 }), false);
+console.log('PASS: local integration cleanup requires exact fixture identity');
