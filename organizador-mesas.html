@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Invitta 2.0 Beta — Organizador de Mesas & Centro de Control de Invitados</title>
+  <script>
+    if (new URLSearchParams(window.location.search).has('project')) document.documentElement.setAttribute('data-project-organizer', '');
+  </script>
+  <link rel="stylesheet" href="css/project-organizer.css">
 
   <!-- Google Fonts Invitta 1.0 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1320,6 +1324,7 @@
   <script src="guest-manager.js"></script>
 
   <script>
+    if (!new URLSearchParams(window.location.search).has('project')) {
 
     async function generateSecureLink(folio, btn) {
       const originalHtml = btn.innerHTML;
@@ -2503,11 +2508,13 @@
     document.querySelectorAll('.btn-close-access-modal').forEach(btn => {
       btn.addEventListener('click', () => modalShareAccess.classList.add('hidden'));
     });
+    }
   </script>
 
   <script>
   /* Mobile More Dropdown — populated at runtime */
   (function() {
+    if (new URLSearchParams(window.location.search).has('project')) return;
     const drop = document.getElementById('mobileMoreDropdown');
     if (!drop) return;
     drop.innerHTML = `
@@ -2543,6 +2550,7 @@
   <script>
   // --- PINCH-TO-ZOOM for Plano 2D (mobile) ---
   (function() {
+    if (new URLSearchParams(window.location.search).has('project')) return;
     var fpContainer = document.getElementById('floorPlanCanvas')
       || document.getElementById('viewFloorPlanContainer')
       || document.querySelector('#tablesContainer');
@@ -2574,5 +2582,8 @@
     });
   })();
   </script>
+  <main id="project-organizer" hidden><p>Cargando el organizador del proyecto…</p></main>
+  <script src="src/project-organizer-client.js"></script>
+  <script src="src/project-organizer.js"></script>
 </body>
 </html>
