@@ -1,5 +1,19 @@
 # Estado verificable de la fusión
 
+## Activación de boletos en vista previa (2026-10-02, en verificación)
+
+Usuario aprobó activar esquema, firma y código en vista previa, probar sólo un
+proyecto ficticio y conservar registros privados sin borrado automático. Supabase
+registró `20261003021708_add_project_door_passes_verified`; firma sensible sólo
+en la rama `preview/invitta-cloud-client-flow`, sin copiar su valor localmente.
+120/120 archivos JS volvieron a pasar. Catálogo y smoke transaccional remoto
+verificados; datos de esa prueba revertidos. Despliegue/recorrido publicados
+pendientes de verificación. No hay autorización para publicar en main/producción.
+
+No modifica Janna ni envía mensajes. El nuevo deseo del usuario —anfitrión que
+personaliza nombres y pases desde una página sencilla— es una capacidad separada
+por definir; no se presenta el boleto de emergencia de 24 h como entrega anticipada.
+
 ## Incremento local: boletos y puerta por proyecto (2026-10-02)
 
 Implementado únicamente en la copia local, con alcance aprobado. No se envió

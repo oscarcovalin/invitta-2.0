@@ -2,8 +2,11 @@
 
 ## Estado
 
-Alcance aprobado e implementado localmente el 2026-10-02. Sin aplicación remota,
-push, despliegue ni modificación de Janna. No sustituye todavía la puerta heredada.
+Alcance aprobado e implementado localmente el 2026-10-02. Activación en vista
+previa aprobada por el usuario ese día: esquema instalado remotamente y firma
+privada configurada sólo para `preview/invitta-cloud-client-flow`; despliegue y
+recorrido publicado en verificación. No sustituye todavía la puerta heredada.
+No se modifica Janna ni se envían mensajes.
 
 ## Fecha
 
@@ -128,6 +131,21 @@ Restauración de intención tras recarga cubierta por test del cliente; el aviso
 beforeunload impidió comprobar esa recarga incierta en el navegador disponible.
 
 ## Riesgos y reversión
+
+Retención de vista previa aprobada: registros privados, sin purga automática,
+hasta solicitud explícita de exportación/eliminación. El borrado en cascada de
+un proyecto sigue existiendo; esto no añade una pantalla para borrar ni promete
+un exportador implementado. No rotar la firma durante boletos vigentes.
+
+La migración local generada originalmente como `20261003000557` conserva el mismo
+SQL bajo `20261003021708`, versión registrada por la aplicación remota. Permisos
+verificados en catálogo: RLS en ambas tablas, sin acceso directo de anon,
+authenticated o service_role; ejecución privada sólo en funciones acotadas.
+Smoke SQL remoto en transacción: emisión/replay, parcial/replay, límite de pases,
+reducción, lector mínimo, rechazo anónimo y revocación; todos los datos sintéticos
+se revirtieron. Los avisos INFO de RLS sin políticas son deliberados (tablas
+privadas accesibles sólo por funciones); permanece el WARN previo de protección
+de contraseñas filtradas desactivada. No se cambió Auth fuera de este alcance.
 
 Activar remotamente exige revisión/aprobación del esquema, secreto y despliegue,
 asignaciones explícitas y definición operativa de retención/exportación/eliminación.
