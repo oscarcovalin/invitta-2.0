@@ -1268,6 +1268,10 @@
                   <span class="material-symbols-outlined text-sm">table_restaurant</span>
                   <span>Invitados y mesas del proyecto</span>
                 </a>
+                <a href="puerta-proyecto.html?project=${encodeURIComponent(e.id)}" class="col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-[#FAF8F5] border border-[#E5E0D8] text-[#377061] text-xs font-bold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">qr_code_scanner</span>
+                  <span>Boletos y puerta del proyecto</span>
+                </a>
                 ${e.status === 'published' || e.status === 'archived' ? `
                 <a href="rsvp-responses.html?project=${encodeURIComponent(e.id)}" class="col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-[#FAF8F5] border border-[#E5E0D8] text-[#377061] text-xs font-bold tracking-wider transition-all">
                   <span class="material-symbols-outlined text-sm">how_to_reg</span>

@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict');
+const {DoorClient}=require('./src/project-door-client.js');
+const projectId='aaaabbbb-cccc-4ddd-8eee-ffffffffffff';
+const values=new Map(); const storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)};
+let calls=[],online=false;
+const send=async body=>{calls.push(body);if(!online)throw Error('network');return {success:true,admission:{admitted:2,remaining:2}};};
+(async()=>{
+  let client=new DoorClient({projectId,storage,send,uuid:()=> 'bbbbcccc-dddd-4eee-8fff-aaaaaaaaaaaa'});
+  await assert.rejects(client.write({action:'admit',credential:'synthetic',count:2}));
+  assert(client.pending.uncertain); assert.equal(client.pending.body.count,2);
+  await assert.rejects(client.write({action:'admit',credential:'different',count:1}),/pendiente/);
+  assert.equal(calls.length,1);
+  client=new DoorClient({projectId,storage,send});
+  assert(client.pending.uncertain,'Reload preserves pending intent');
+  online=true; await client.retry();
+  assert.deepEqual(calls[0],calls[1]); assert.equal(client.pending,null); assert.equal(values.size,0);
+  const refused=new DoorClient({projectId,storage,send:async()=>{const e=Error('invalid');e.status=422;throw e;}});
+  await assert.rejects(refused.write({action:'issue',name:'Bad',passes:0})); assert.equal(refused.pending,null);
+  let release; const busy=new DoorClient({projectId,storage,send:()=>new Promise(r=>{release=r;})});
+  const first=busy.write({action:'admit',credential:'synthetic',count:1});
+  await assert.rejects(busy.retry(),/procesando/); release({success:true}); await first;
+  console.log('PASS: stable intent, reload recovery, double-click guard and unknown result');
+})().catch(e=>{console.error(e);process.exitCode=1;});

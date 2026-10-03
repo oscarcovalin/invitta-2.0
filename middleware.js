@@ -19,6 +19,7 @@ const PROTECTED_PATHS = [
   '/organizador-mesas.html',
   '/generador-emergencia.html',
   '/scanner-acceso.html',
+  '/puerta-proyecto.html',
   '/invitacion-estudio.html',
   '/catering-module', // prefijo: protege todo lo que cuelgue de esta carpeta
 ];
@@ -98,11 +99,20 @@ export default async function middleware(request) {
   // Event-mode routes keep their separate legacy permissions.
   let revokedCookies = [];
   const projectOrganizer = pathname === '/organizador-mesas.html' && searchParams.has('project');
-  if (pathname === '/invitacion-estudio.html' || projectOrganizer) {
+  const projectDoor = pathname === '/puerta-proyecto.html' ||
+    (['/generador-emergencia.html','/scanner-acceso.html'].includes(pathname) && searchParams.has('project'));
+  if (pathname === '/invitacion-estudio.html' || projectOrganizer || projectDoor) {
     const professionalAccess = await professionalStudioAccess(request, (cookies) => { revokedCookies = cookies; });
-    if (professionalAccess === true) return;
+    if (professionalAccess === true) {
+      if (projectDoor && pathname !== '/puerta-proyecto.html') {
+        const target = new URL('/puerta-proyecto.html', request.url);
+        target.searchParams.set('project', searchParams.get('project'));
+        return new Response(null, {status:307,headers:{Location:target.href,'Cache-Control':'private, no-store'}});
+      }
+      return;
+    }
     if (professionalAccess instanceof Response) return professionalAccess;
-    if (projectOrganizer) return redirectToLogin(request, pathname, revokedCookies);
+    if (projectOrganizer || projectDoor) return redirectToLogin(request, pathname, revokedCookies);
   }
 
   const token = readCookie(request, COOKIE_NAME);
@@ -142,6 +152,7 @@ function redirectToLogin(request, attemptedPath, revokedCookies = []) {
 // así evitamos overhead en assets estáticos (css/js/imágenes).
 export const config = {
   matcher: [
+    '/puerta-proyecto.html',
     '/organizador-mesas.html',
     '/generador-emergencia.html',
     '/scanner-acceso.html',
