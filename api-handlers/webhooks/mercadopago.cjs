@@ -4,10 +4,9 @@
  * 1. Cryptographic HMAC-SHA256 signature verification over (x-signature, x-request-id, data.id)
  * 2. Mandatory timestamp check against replay attacks (< 5 minutes)
  * 3. Re-fetch payment from Mercado Pago API (payload is never trusted blindly)
- * 4. Idempotent processing
+ * This endpoint acknowledges verified notifications; it does not fulfill orders.
  */
 const crypto = require('crypto');
-const { MercadoPagoConfig, Payment } = require('mercadopago');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,10 +18,9 @@ module.exports = async function handler(req, res) {
   const requestId = req.headers['x-request-id'];
   const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
 
-  // Si no hay secret configurado, registramos advertencia y retornamos 200 en desarrollo
   if (!webhookSecret) {
-    console.warn('⚠️ MERCADOPAGO_WEBHOOK_SECRET no configurado. Validación criptográfica omitida.');
-    return res.status(200).json({ received: true, verified: false, notice: 'webhook_secret_missing' });
+    console.error('MERCADOPAGO_WEBHOOK_SECRET no configurado.');
+    return res.status(503).json({ error: 'Verificación de webhook no disponible.' });
   }
 
   if (!signatureHeader || !requestId) {
@@ -39,7 +37,7 @@ module.exports = async function handler(req, res) {
   const ts = parts.ts;
   const v1 = parts.v1;
 
-  if (!ts || !v1) {
+  if (!/^\d+$/.test(ts || '') || !/^[0-9a-f]{64}$/i.test(v1 || '')) {
     return res.status(401).json({ error: 'Formato de x-signature inválido.' });
   }
 
@@ -56,10 +54,10 @@ module.exports = async function handler(req, res) {
   }
   body = body || {};
 
-  const dataId = (body.data && body.data.id) || req.query['data.id'] || req.query.id;
+  const query = req.query || {};
+  const dataId = (body.data && body.data.id) || query['data.id'] || query.id;
   if (!dataId) {
-    // Evento de ping o notificación genérica
-    return res.status(200).json({ received: true });
+    return res.status(400).json({ error: 'Falta el identificador de la notificación.' });
   }
 
   // 2. VERIFICACIÓN CRIPTOGRÁFICA HMAC SHA256 (Template PagoKit)
@@ -78,17 +76,30 @@ module.exports = async function handler(req, res) {
 
   // 3. RE-FETCH AUTORITATIVO DE LA TRANSACCIÓN (Regla de oro PagoKit)
   const mpToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
-  if (mpToken && body.type === 'payment') {
+  if (body.type === 'payment') {
+    if (!mpToken) {
+      return res.status(503).json({ error: 'Verificación de pago no disponible.' });
+    }
+    if (!/^\d+$/.test(String(dataId))) {
+      return res.status(400).json({ error: 'Identificador de pago inválido.' });
+    }
     try {
-      const client = new MercadoPagoConfig({ accessToken: mpToken });
-      const paymentApi = new Payment(client);
-      const paymentInfo = await paymentApi.get({ id: dataId });
+      const response = await fetch(`https://api.mercadopago.com/v1/payments/${dataId}`, {
+        headers: { Authorization: `Bearer ${mpToken}` },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!response.ok) throw new Error(`Payment API returned ${response.status}`);
+      const paymentInfo = await response.json();
+      if (String(paymentInfo.id) !== String(dataId) || !paymentInfo.status) {
+        throw new Error('Payment API returned an invalid payment');
+      }
 
-      console.log(`✅ Pago Mercado Pago #${dataId} verificado. Estado: ${paymentInfo.status} — Monto: $${paymentInfo.transaction_amount} ${paymentInfo.currency_id}`);
+      console.log(`Pago Mercado Pago #${dataId} consultado. Estado: ${paymentInfo.status}`);
       
-      // Aquí se activa la invitación o se actualiza el estado en Supabase/BD si aplica
+      // No activar invitaciones aquí: falta vinculación del pedido e idempotencia persistente.
     } catch (err) {
       console.error('Error re-consultando estado de pago en Mercado Pago:', err.message);
+      return res.status(503).json({ error: 'No se pudo verificar el pago.' });
     }
   }
 

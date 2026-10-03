@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://invitta.mx/schemas/invitation-document.v1.json",
+  "title": "INVITTA Invitation Document v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "projectId", "revision", "event", "content", "design", "sections", "assets"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "projectId": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+    },
+    "revision": { "type": "integer", "minimum": 1 },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "startsAt", "timeZone"],
+      "properties": {
+        "type": { "enum": ["wedding", "quinceanera", "other"] },
+        "startsAt": { "type": "string", "format": "date-time" },
+        "timeZone": { "type": "string", "minLength": 1 },
+        "durationMinutes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "content": { "type": "object", "additionalProperties": true },
+    "design": { "type": "object", "additionalProperties": true },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "enabled"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "enabled": { "type": "boolean" },
+          "settings": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["storagePath"],
+        "properties": {
+          "storagePath": { "type": "string", "minLength": 1, "pattern": "^(?!data:|https?://).+" },
+          "alt": { "type": "string" },
+          "mimeType": { "type": "string" }
+        }
+      }
+    },
+    "legacy": { "type": "object", "additionalProperties": true }
+  }
+}

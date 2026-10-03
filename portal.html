@@ -119,7 +119,12 @@
   </div>
 
   <!-- ==================== GATEWAY DE AUTENTICACIÓN PÚBLICA & BLINDAJE ==================== -->
-  <div id="publicAuthGate" class="max-w-md sm:max-w-lg mx-auto w-full my-auto py-6 px-4">
+  <section id="portalSessionStatus" class="max-w-lg mx-auto w-full my-auto py-8 px-4 text-center" aria-labelledby="portalSessionHeading">
+    <h1 id="portalSessionHeading" class="font-serif text-3xl text-[#242928] mb-4">Acceso a Invitta 2.0</h1>
+    <p id="portalSessionMessage" class="text-sm text-[#596562] mb-4" role="status" aria-live="polite">Verificando tu sesión…</p>
+    <button id="btnRetryPortalSession" type="button" disabled class="px-5 py-3 rounded-xl bg-[#377061] text-white text-sm font-semibold disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#377061]">Reintentar conexión</button>
+  </section>
+  <div id="publicAuthGate" class="hidden max-w-md sm:max-w-lg mx-auto w-full my-auto py-6 px-4">
     
     <!-- Encabezado de Marca Unificado -->
     <div class="text-center mb-8">
@@ -193,7 +198,7 @@
           <label for="inputAuthProUser" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Usuario o Correo Electrónico</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E9C87] text-lg pointer-events-none">person</span>
-            <input type="text" id="inputAuthProUser" placeholder="tu-correo@ejemplo.com o tu usuario" required
+            <input type="email" id="inputAuthProUser" autocomplete="username" placeholder="tu-correo@ejemplo.com" required
                    class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-all">
           </div>
         </div>
@@ -202,7 +207,7 @@
           <label for="inputAuthProPass" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Contraseña</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[#4E9C87] text-lg pointer-events-none">key</span>
-            <input type="password" id="inputAuthProPass" placeholder="••••••••" required
+            <input type="password" id="inputAuthProPass" autocomplete="current-password" placeholder="••••••••" required
                    class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-all">
           </div>
         </div>
@@ -213,6 +218,30 @@
         </button>
         <div id="feedbackAuthPro" class="text-xs mt-2 hidden"></div>
       </form>
+        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-1 text-xs">
+          <button type="button" id="btnRequestProfessionalAccount" class="font-semibold text-[#377061] hover:underline">Crear cuenta profesional</button>
+          <button type="button" id="btnForgotProfessionalPassword" class="text-[#596562] hover:underline">Olvidé mi contraseña</button>
+        </div>
+        <form id="formProfessionalInvite" class="hidden mt-4 space-y-3 border-t border-[#E5E0D8] pt-4">
+          <p class="text-xs text-[#596562] leading-relaxed">Crea una cuenta básica con tu correo. Confirma el enlace que te enviaremos; los permisos para proyectos o administración deben asignarse por separado.</p>
+          <label for="inputProfessionalInviteEmail" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Correo de la cuenta</label>
+          <input type="email" id="inputProfessionalInviteEmail" autocomplete="email" placeholder="nombre@correo.com" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <label for="inputProfessionalInvitePassword" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Crea una contraseña</label>
+          <input type="password" id="inputProfessionalInvitePassword" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Mínimo 12 caracteres" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <label for="inputProfessionalInvitePasswordConfirm" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Confirma la contraseña</label>
+          <input type="password" id="inputProfessionalInvitePasswordConfirm" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Escríbela otra vez" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <button type="submit" class="w-full py-3 rounded-full bg-[#242928] text-white font-bold text-xs uppercase tracking-widest">Crear cuenta y enviar verificación</button>
+          <div id="feedbackProfessionalInvite" class="text-xs hidden" role="status" aria-live="polite"></div>
+        </form>
+        <form id="formProfessionalRecovery" class="hidden mt-4 space-y-3 border-t border-[#E5E0D8] pt-4">
+          <p id="professionalRecoveryHelp" class="text-xs text-[#596562] leading-relaxed">Te enviaremos un enlace seguro para cambiar tu contraseña.</p>
+          <label for="inputRecoveryEmail" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Correo de la cuenta</label>
+          <input type="email" id="inputRecoveryEmail" autocomplete="email" placeholder="nombre@correo.com" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <label for="inputRecoveryPassword" id="labelRecoveryPassword" class="hidden text-xs font-bold uppercase tracking-wider text-[#377061]">Nueva contraseña</label>
+          <input type="password" id="inputRecoveryPassword" autocomplete="new-password" minlength="12" maxlength="128" placeholder="Mínimo 12 caracteres" class="hidden w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+          <button type="submit" id="btnRecoverySubmit" class="w-full py-3 rounded-full bg-[#4E9C87] text-white font-bold text-xs uppercase tracking-widest">Enviar enlace de recuperación</button>
+          <div id="feedbackProfessionalRecovery" class="text-xs hidden" role="status" aria-live="polite"></div>
+        </form>
 
     </div>
 
@@ -273,6 +302,22 @@
       </div>
     </header>
 
+    <section class="rounded-3xl p-6 bg-white border border-[#E5E0D8] shadow-sm mb-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="font-serif text-xl font-semibold text-[#242928]">Administrar accesos profesionales</h2>
+          <p class="text-xs text-[#596562] mt-1">Envía una invitación verificada. Las cuentas invitadas comienzan sin acceso a eventos ni rol de administración.</p>
+        </div>
+        <button type="button" id="btnToggleProfessionalInviteAdmin" class="px-5 py-3 rounded-full bg-[#4E9C87] text-white font-bold text-xs uppercase tracking-widest">Invitar cuenta</button>
+      </div>
+      <form id="formAdminProfessionalInvite" class="hidden mt-5 max-w-lg space-y-3">
+        <label for="inputAdminProfessionalInviteEmail" class="block text-xs font-bold uppercase tracking-wider text-[#377061]">Correo de la cuenta</label>
+        <input type="email" id="inputAdminProfessionalInviteEmail" autocomplete="email" required class="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] focus:outline-none focus:border-[#4E9C87]">
+        <button type="submit" class="px-5 py-3 rounded-full bg-[#242928] text-white font-bold text-xs uppercase tracking-widest">Enviar invitación</button>
+        <div id="feedbackAdminProfessionalInvite" class="text-xs hidden" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+
     <!-- ==================== CUADRÍCULA DE MÓDULOS ACTIVOS ==================== -->
     <main class="w-full space-y-8 sm:space-y-10 mb-16 px-0">
 
@@ -323,7 +368,7 @@
               Invitaciones Producidas &amp; Eventos
             </h2>
             <p class="text-xs sm:text-sm text-[#596562] mt-1 max-w-xl font-light">
-              Gestiona, visualiza, edita o descarga tus invitaciones creadas con 1 solo clic.
+              Clientes y borradores privados guardados en Invitta 2.0. Crear un proyecto no lo publica.
             </p>
           </div>
 
@@ -331,7 +376,7 @@
           <div class="flex flex-wrap items-center gap-3">
             <button id="btnNewProjectModal" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#4E9C87] hover:bg-[#377061] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-[#4E9C87]/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
               <span class="material-symbols-outlined text-lg">add_circle</span>
-              <span>+ Nueva Invitación</span>
+              <span>+ Nuevo Cliente / Invitación</span>
             </button>
             
             <label class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#EBF5F2] border border-[#E5E0D8] hover:border-[#D5EBE4] text-[#377061] font-semibold text-xs uppercase tracking-wider cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]">
@@ -586,7 +631,7 @@
           </a>
 
           <!-- Rol: Diseñador Creativo -->
-          <a href="invitacion-estudio.html?role=designer" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group">
+          <a href="invitacion-estudio.html" class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between group">
             <div>
               <div class="flex items-center justify-between mb-3">
                 <div class="w-10 h-10 rounded-xl bg-[#FAF3E7] border border-[#E5E0D8] text-[#968D5C] flex items-center justify-center shadow-sm">
@@ -637,6 +682,12 @@
                    class="w-full px-4 py-2.5 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-colors">
           </div>
 
+          <div>
+            <label for="inputNewEventHonoree" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Nombre de la festejada / anfitriones</label>
+            <input type="text" id="inputNewEventHonoree" required maxlength="160" placeholder="Ej. Janna Sharlot o Sofía & Mateo"
+                   class="w-full px-4 py-2.5 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-colors">
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label for="selectNewEventType" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Tipo de Evento</label>
@@ -664,8 +715,8 @@
             </div>
 
             <div>
-              <label for="inputNewEventCapacity" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Capacidad Estimada (Pax)</label>
-              <input type="number" id="inputNewEventCapacity" value="150" min="10" max="1000"
+              <label for="inputNewEventTime" class="block text-xs font-bold uppercase tracking-wider text-[#377061] mb-1.5">Hora de inicio</label>
+              <input type="time" id="inputNewEventTime" value="19:30" required
                      class="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-xs text-[#242928] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-colors">
             </div>
           </div>
@@ -676,49 +727,18 @@
                    class="w-full px-4 py-2.5 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] text-sm text-[#242928] placeholder-[#8F9E9B] focus:outline-none focus:border-[#4E9C87] focus:ring-2 focus:ring-[#4E9C87]/20 transition-colors">
           </div>
 
+          <div id="newProjectFeedback" class="text-xs hidden" role="status" aria-live="polite"></div>
+
           <div class="pt-4 border-t border-[#E5E0D8] flex items-center justify-end gap-3">
             <button type="button" onclick="closeCreateEventModal()" class="px-5 py-2.5 rounded-full bg-[#FAF8F5] hover:bg-[#E5E0D8] text-xs font-semibold text-[#596562] transition-colors cursor-pointer">
               Cancelar
             </button>
-            <button type="submit" class="px-6 py-2.5 rounded-full bg-[#4E9C87] hover:bg-[#377061] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-[#4E9C87]/20 transition-all cursor-pointer">
-              ✨ Dar de Alta &amp; Generar Accesos
+            <button type="submit" id="btnSubmitNewProject" class="px-6 py-2.5 rounded-full bg-[#4E9C87] hover:bg-[#377061] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-[#4E9C87]/20 transition-all cursor-pointer">
+              ✨ Crear Borrador y Abrir Studio
             </button>
           </div>
 
         </form>
-      </div>
-    </div>
-
-    <!-- ==================== MODAL: ACCESOS DEL CLIENTE CREADO ==================== -->
-    <div id="modalClientAccessReady" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-      <div class="bg-white border border-[#E5E0D8] rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative text-center space-y-4">
-        <div class="w-16 h-16 rounded-full bg-[#EBF5F2] border border-[#D5EBE4] text-[#4E9C87] flex items-center justify-center mx-auto text-3xl">
-          🎉
-        </div>
-        <div>
-          <h3 class="font-serif text-2xl font-semibold text-[#242928] mb-1">¡Evento Registrado Exitosamente!</h3>
-          <p id="labelCreatedEventTitle" class="text-sm text-[#377061] font-semibold"></p>
-          <p class="text-xs text-[#596562] mt-1 font-light">El espacio privado ha sido aislado y los Magic Links están listos para entregarse.</p>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E5E0D8] text-left space-y-2">
-          <label for="inputCreatedMagicLink" class="block text-[11px] font-bold uppercase tracking-wider text-[#377061]">Enlace Privado del Anfitrión:</label>
-          <div class="flex items-center gap-2">
-            <input type="text" id="inputCreatedMagicLink" readonly class="w-full px-3 py-2 rounded-lg bg-white border border-[#E5E0D8] text-xs text-[#242928] font-mono outline-none">
-            <button type="button" onclick="copyCreatedLink()" class="px-4 py-2 rounded-lg bg-[#4E9C87] text-white font-bold text-xs hover:bg-[#377061] transition-colors flex-shrink-0 cursor-pointer">
-              Copiar
-            </button>
-          </div>
-        </div>
-
-        <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <a id="btnWhatsAppCreatedClient" href="#" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-6 py-3 rounded-full bg-[#4E9C87] hover:bg-[#377061] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#4E9C87]/20 transition-all flex items-center justify-center gap-2">
-            <span>📲 Enviar Enlace por WhatsApp</span>
-          </a>
-          <button type="button" onclick="closeCreatedAccessModal()" class="w-full sm:w-auto px-5 py-3 rounded-full bg-[#FAF8F5] hover:bg-[#E5E0D8] text-[#596562] text-xs font-semibold transition-colors cursor-pointer">
-            Cerrar
-          </button>
-        </div>
       </div>
     </div>
 
@@ -738,15 +758,20 @@
   <script src="auth-manager.js"></script>
   <script src="role-manager.js"></script>
   <script src="projects-vault.js"></script>
+  <script src="src/portal-cloud-projects.js"></script>
   <script src="template-engine.js"></script>
   <script>
     const evm = window.EventVaultManager ? window.EventVaultManager.create() : null;
     const auth = window.AuthManager ? window.AuthManager.create({ evm }) : null;
+    let cloudProjects = [];
+    let cloudProjectLoadState = 'idle';
+    let cloudProjectRequest = 0;
 
     function openCreateEventModal() {
       const modal = document.getElementById('modalCreateEvent');
       if (modal) {
-        document.getElementById('inputNewEventDate').value = '2027-03-20';
+        const feedback = document.getElementById('newProjectFeedback');
+        if (feedback) { feedback.textContent = ''; feedback.classList.add('hidden'); }
         modal.classList.remove('hidden');
       }
     }
@@ -756,67 +781,45 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function closeCreatedAccessModal() {
-      const modal = document.getElementById('modalClientAccessReady');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function handleCreateEventSubmit(e) {
+    async function handleCreateEventSubmit(e) {
       e.preventDefault();
-      const name = document.getElementById('inputNewEventName').value;
-      const type = document.getElementById('selectNewEventType').value;
+      if (!auth || !auth.isSuperadmin()) { updateAuthGateUI(); return; }
+      const name = document.getElementById('inputNewEventName').value.trim();
+      const honoree = document.getElementById('inputNewEventHonoree').value.trim();
+      const legacyType = document.getElementById('selectNewEventType').value;
       const packageType = document.getElementById('selectNewEventPackage').value;
       const date = document.getElementById('inputNewEventDate').value;
-      const capacity = document.getElementById('inputNewEventCapacity').value;
+      const time = document.getElementById('inputNewEventTime').value;
       const venue = document.getElementById('inputNewEventVenue').value;
-
-      if (!evm) return;
-
-      const dateObj = new Date(date + 'T18:00:00');
-      const dateLabel = dateObj.toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
-
-      const newEv = evm.createEvent({
-        name: name.trim(),
-        type: type,
-        packageType: packageType,
-        dateISO: date + 'T18:00',
-        dateLabel: dateLabel,
-        capacity: parseInt(capacity, 10) || 150,
-        venue: venue.trim() || 'Salón Principal'
-      });
-
-      closeCreateEventModal();
-      renderVaultProjects();
-
-      // Mostrar modal de accesos generados
-      const readyModal = document.getElementById('modalClientAccessReady');
-      const labelTitle = document.getElementById('labelCreatedEventTitle');
-      const inputLink = document.getElementById('inputCreatedMagicLink');
-      const btnWa = document.getElementById('btnWhatsAppCreatedClient');
-
-      if (readyModal && labelTitle && inputLink && btnWa) {
-        labelTitle.textContent = `${newEv.type === 'boda' ? '💍' : '👑'} ${newEv.name} · ${newEv.dateLabel} (PIN: ${newEv.pin})`;
-        const magicLink = evm.generateEventMagicLink(newEv.packageType, newEv.slug, 'mesas');
-        inputLink.value = magicLink;
-        btnWa.href = evm.generateEventWhatsAppUrl(newEv.packageType, newEv.slug, '', 'mesas');
-        readyModal.classList.remove('hidden');
-      }
-    }
-
-    function copyCreatedLink() {
-      const inputLink = document.getElementById('inputCreatedMagicLink');
-      if (inputLink) {
-        navigator.clipboard.writeText(inputLink.value).then(() => {
-          alert('¡Enlace del anfitrión copiado al portapapeles!');
-        }).catch(() => {
-          prompt('Copia el enlace de acceso:', inputLink.value);
+      const feedback = document.getElementById('newProjectFeedback');
+      const submitButton = document.getElementById('btnSubmitNewProject');
+      const eventType = legacyType === 'boda' ? 'wedding' : legacyType === 'xv' ? 'quinceanera' : 'other';
+      const startDate = new Date(`${date}T${time}`);
+      if (!feedback || !window.InvittaProjectPortal || Number.isNaN(startDate.getTime())) return;
+      feedback.className = 'text-xs p-3 rounded-xl bg-[#EBF5F2] border border-[#D5EBE4] text-[#377061]';
+      feedback.textContent = 'Creando el cliente como borrador privado en la nube…';
+      submitButton.disabled = true;
+      try {
+        const { project, initialDraftStored } = await window.InvittaProjectPortal.createProject({
+          name, honoree, eventType, startsAt: startDate.toISOString(), venue, packageType,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Mexico_City',
         });
+        feedback.textContent = initialDraftStored
+          ? 'Cliente creado en la bóveda segura. Abriendo Invitta Studio…'
+          : 'Cliente creado. Abriendo Studio; confirma los datos iniciales allí.';
+        window.location.href = `invitacion-estudio.html?project=${encodeURIComponent(project.id)}`;
+      } catch (error) {
+        feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700';
+        feedback.textContent = error.message || 'No fue posible crear el proyecto.';
+        submitButton.disabled = false;
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // 1. Verificar Estado de Autenticación
-      updateAuthGateUI();
+      const retrySession = document.getElementById('btnRetryPortalSession');
+      if (retrySession) retrySession.addEventListener('click', restorePortalSession);
+      await restorePortalSession();
 
       // 2. Control de Pestañas de Acceso (Host vs Pro)
       const tabHost = document.getElementById('tabBtnHost');
@@ -854,8 +857,7 @@
               feedback.className = 'text-xs mt-3 p-3 rounded-xl bg-[#EBF5F2] border border-[#D5EBE4] text-[#377061] font-semibold block animate-pulse';
               feedback.textContent = '✨ ¡Acceso concedido! Redirigiendo a tu espacio privado...';
               setTimeout(() => {
-                const next = new URLSearchParams(window.location.search).get('next') || 'organizador-mesas.html';
-                window.location.href = next;
+                window.location.href = 'organizador-mesas.html';
               }, 300);
             }
           } else {
@@ -869,21 +871,32 @@
 
       // 4. Formulario Profesional (Superadmin / Planner B2B)
       if (formPro && auth) {
+        let loginPending = false;
         formPro.addEventListener('submit', async (e) => {
           e.preventDefault();
+          if (loginPending) return;
           const user = document.getElementById('inputAuthProUser').value.trim();
-          const pass = document.getElementById('inputAuthProPass').value.trim();
+          const pass = document.getElementById('inputAuthProPass').value;
           const feedback = document.getElementById('feedbackAuthPro');
 
-          const res = await auth.loginProfessional(user, pass);
+          const submit = formPro.querySelector('button[type="submit"]');
+          loginPending = true;
+          if (submit) submit.disabled = true;
+          let res;
+          try { res = await auth.loginProfessional(user, pass); } finally {
+            loginPending = false;
+            if (submit) submit.disabled = false;
+          }
           if (res.success) {
             if (feedback) {
               feedback.className = 'text-xs mt-3 p-3 rounded-xl bg-[#EBF5F2] border border-[#D5EBE4] text-[#377061] font-semibold block animate-pulse';
-              feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.name}! Redirigiendo...`;
+              feedback.textContent = `✨ ¡Sesión iniciada como ${res.session.email}! Redirigiendo...`;
             }
-            setTimeout(() => {
-              if (res.session.role === 'superadmin') {
+            setTimeout(async () => {
+              if (auth.getCurrentSession() !== res.session) return;
+              if (res.session.role === 'platform_admin') {
                 updateAuthGateUI();
+                await refreshCloudProjects();
               } else {
                 window.location.href = res.redirectUrl;
               }
@@ -897,11 +910,165 @@
         });
       }
 
+      // 4a. Alta profesional básica: sólo crea identidad; no asigna roles ni proyectos.
+      const accountRequestToggle = document.getElementById('btnRequestProfessionalAccount');
+      const accountRequestForm = document.getElementById('formProfessionalInvite');
+      if (accountRequestToggle && accountRequestForm) {
+        accountRequestToggle.addEventListener('click', () => {
+          const opening = accountRequestForm.classList.contains('hidden');
+          accountRequestForm.classList.toggle('hidden', !opening);
+          document.getElementById('formProfessionalRecovery')?.classList.add('hidden');
+          if (opening) document.getElementById('inputProfessionalInviteEmail')?.focus();
+        });
+        accountRequestForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('feedbackProfessionalInvite');
+          const submit = accountRequestForm.querySelector('button[type="submit"]');
+          if (!feedback || !submit) return;
+          const password = document.getElementById('inputProfessionalInvitePassword').value;
+          const confirmation = document.getElementById('inputProfessionalInvitePasswordConfirm').value;
+          if (password !== confirmation) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'Las contraseñas no coinciden.';
+            return;
+          }
+          submit.disabled = true;
+          try {
+            const response = await fetch('/api/auth/register', {
+              method: 'POST', credentials: 'same-origin',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: document.getElementById('inputProfessionalInviteEmail').value.trim(), password }),
+            });
+            const payload = await response.json();
+            feedback.className = `text-xs p-3 rounded-xl ${response.ok ? 'bg-[#EBF5F2] text-[#377061]' : 'bg-rose-50 text-rose-700'} block`;
+            feedback.textContent = response.ok
+              ? payload.message || 'Cuenta creada. Revisa el correo para confirmar el alta.'
+              : payload.error || 'No fue posible enviar la invitación.';
+            if (response.ok) {
+              accountRequestForm.reset();
+              if (payload.session?.role === 'platform_admin') {
+                setTimeout(async () => { await auth.refreshSession(); updateAuthGateUI(); await refreshCloudProjects(); }, 300);
+              }
+            }
+          } catch (_) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'No fue posible conectar con el servidor. Intenta más tarde.';
+          } finally { submit.disabled = false; }
+        });
+      }
+
+      // 4b. Recuperación: respuesta genérica para no revelar cuentas existentes.
+      const recoveryToggle = document.getElementById('btnForgotProfessionalPassword');
+      const recoveryForm = document.getElementById('formProfessionalRecovery');
+      const recoveryParams = new URLSearchParams(window.location.search);
+      const recoveryHash = new URLSearchParams(String(window.location.hash || '').replace(/^#/, ''));
+      const recoveryError = recoveryHash.get('error_description') || recoveryParams.get('error_description');
+      const recoveryToken = recoveryParams.get('token_hash') || recoveryHash.get('access_token');
+      const recoveryType = recoveryParams.get('type') || recoveryHash.get('type');
+      let recoveryLinkError = Boolean(recoveryError);
+      if (recoveryToken && recoveryType && ['recovery', 'invite', 'signup'].includes(recoveryType)) {
+        try {
+          const verifiedResponse = await fetch('/api/auth/recover', {
+            method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(recoveryHash.get('access_token')
+              ? { action: 'exchange', accessToken: recoveryHash.get('access_token'), refreshToken: recoveryHash.get('refresh_token') || '' }
+              : { action: 'verify', tokenHash: recoveryToken, type: recoveryType }),
+          });
+          if (verifiedResponse.ok) sessionStorage.setItem('invitta_recovery_pending', '1');
+          else recoveryLinkError = true;
+        } catch (_) {
+          recoveryLinkError = true;
+        }
+      }
+      const isRecoveryPending = sessionStorage.getItem('invitta_recovery_pending') === '1';
+      if (recoveryToggle && recoveryForm) {
+        recoveryToggle.addEventListener('click', () => {
+          recoveryForm.classList.toggle('hidden');
+          accountRequestForm?.classList.add('hidden');
+          if (!isRecoveryPending) document.getElementById('inputRecoveryEmail')?.focus();
+        });
+        if (isRecoveryPending || recoveryLinkError) recoveryForm.classList.remove('hidden');
+        if (recoveryLinkError) {
+          const feedback = document.getElementById('feedbackProfessionalRecovery');
+          feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+          feedback.textContent = 'El enlace venció o no es válido. Solicita uno nuevo.';
+        }
+        document.getElementById('inputRecoveryEmail').classList.toggle('hidden', isRecoveryPending);
+        document.getElementById('inputRecoveryEmail').required = !isRecoveryPending;
+        document.querySelector('label[for="inputRecoveryEmail"]').classList.toggle('hidden', isRecoveryPending);
+        document.getElementById('professionalRecoveryHelp').textContent = isRecoveryPending
+          ? 'Crea una contraseña nueva para terminar el alta de tu cuenta profesional.'
+          : 'Te enviaremos un enlace seguro. Si la cuenta existe, llegará a su correo.';
+        document.getElementById('labelRecoveryPassword').classList.toggle('hidden', !isRecoveryPending);
+        document.getElementById('inputRecoveryPassword').classList.toggle('hidden', !isRecoveryPending);
+        document.getElementById('inputRecoveryPassword').required = isRecoveryPending;
+        document.getElementById('btnRecoverySubmit').textContent = isRecoveryPending ? 'Crear contraseña e ingresar' : 'Enviar enlace de recuperación';
+        recoveryForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('feedbackProfessionalRecovery');
+          const submit = document.getElementById('btnRecoverySubmit');
+          submit.disabled = true;
+          try {
+            const response = await fetch('/api/auth/recover', {
+              method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(isRecoveryPending
+                ? { action: 'complete', password: document.getElementById('inputRecoveryPassword').value }
+                : { email: document.getElementById('inputRecoveryEmail').value.trim() }),
+            });
+            const payload = await response.json();
+            feedback.className = `text-xs p-3 rounded-xl ${response.ok ? 'bg-[#EBF5F2] text-[#377061]' : 'bg-rose-50 text-rose-700'} block`;
+            feedback.textContent = payload.message || payload.error || 'No fue posible procesar la solicitud.';
+            if (response.ok && isRecoveryPending) {
+              sessionStorage.removeItem('invitta_recovery_pending');
+              recoveryForm.reset();
+              setTimeout(() => window.location.replace('portal.html'), 1000);
+            }
+          } catch (_) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'No fue posible conectar con el servidor. Intenta más tarde.';
+          } finally { submit.disabled = false; }
+        });
+      }
+
+      // 4c. Las invitaciones salen sólo desde el tablero de plataforma y el API revalida el rol.
+      const adminInviteToggle = document.getElementById('btnToggleProfessionalInviteAdmin');
+      const adminInviteForm = document.getElementById('formAdminProfessionalInvite');
+      if (adminInviteToggle && adminInviteForm) {
+        adminInviteToggle.addEventListener('click', () => {
+          if (!auth?.isSuperadmin()) return;
+          adminInviteForm.classList.toggle('hidden');
+          if (!adminInviteForm.classList.contains('hidden')) document.getElementById('inputAdminProfessionalInviteEmail').focus();
+        });
+        adminInviteForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('feedbackAdminProfessionalInvite');
+          const submit = adminInviteForm.querySelector('button[type="submit"]');
+          if (!auth?.isSuperadmin() || !feedback || !submit) return;
+          submit.disabled = true;
+          try {
+            const response = await fetch('/api/auth/invitations', {
+              method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: document.getElementById('inputAdminProfessionalInviteEmail').value.trim() }),
+            });
+            const payload = await response.json();
+            feedback.className = `text-xs p-3 rounded-xl ${response.ok ? 'bg-[#EBF5F2] text-[#377061]' : 'bg-rose-50 text-rose-700'} block`;
+            feedback.textContent = response.ok ? 'Invitación enviada. La persona recibirá el enlace para crear su contraseña.' : payload.error || 'No fue posible enviar la invitación.';
+            if (response.ok) adminInviteForm.reset();
+          } catch (_) {
+            feedback.className = 'text-xs p-3 rounded-xl bg-rose-50 text-rose-700 block';
+            feedback.textContent = 'No fue posible conectar con el servidor. Intenta más tarde.';
+          } finally { submit.disabled = false; }
+        });
+      }
+
       // 5. Botón Cerrar Sesión Superadmin
       const btnLogout = document.getElementById('btnLogoutAdmin');
       if (btnLogout && auth) {
-        btnLogout.addEventListener('click', () => {
-          auth.logout();
+        btnLogout.addEventListener('click', async () => {
+          await auth.logout();
+          cloudProjectRequest += 1;
+          cloudProjects = [];
+          cloudProjectLoadState = 'idle';
           updateAuthGateUI();
         });
       }
@@ -941,25 +1108,89 @@
       const publicGate = document.getElementById('publicAuthGate');
       const adminDash = document.getElementById('adminVaultDashboard');
       const labelAdminName = document.getElementById('labelAdminSessionName');
+      const statusPanel = document.getElementById('portalSessionStatus');
+      const statusMessage = document.getElementById('portalSessionMessage');
+      const retrySession = document.getElementById('btnRetryPortalSession');
+      const status = auth ? auth.getSessionStatus() : 'unavailable';
+      const pending = status === 'checking' || status === 'unavailable';
+      if (statusPanel) statusPanel.classList[pending ? 'remove' : 'add']('hidden');
+      if (statusMessage) statusMessage.textContent = status === 'checking'
+        ? 'Verificando tu sesión…'
+        : 'No podemos verificar tu sesión por un fallo temporal de conexión. Reintenta; no necesitas volver a escribir tu contraseña todavía.';
+      if (retrySession) retrySession.disabled = status === 'checking';
+      if (pending) {
+        if (publicGate) publicGate.classList.add('hidden');
+        if (adminDash) adminDash.classList.add('hidden');
+        return;
+      }
 
       const isSuper = auth && auth.isSuperadmin();
       if (isSuper) {
         if (publicGate) publicGate.classList.add('hidden');
         if (adminDash) adminDash.classList.remove('hidden');
         const session = auth.getCurrentSession();
-        if (labelAdminName && session) labelAdminName.textContent = session.username || 'Usuario Profesional';
-        renderVaultProjects();
+        if (labelAdminName && session) labelAdminName.textContent = session.email || 'Usuario Profesional';
       } else {
         if (publicGate) publicGate.classList.remove('hidden');
         if (adminDash) adminDash.classList.add('hidden');
       }
     }
 
+    async function restorePortalSession() {
+      const check = auth ? auth.refreshSession() : Promise.resolve();
+      updateAuthGateUI();
+      await check;
+      updateAuthGateUI();
+      if (auth && auth.isSuperadmin()) await refreshCloudProjects();
+    }
+
+    async function refreshCloudProjects() {
+      if (!auth || !auth.isSuperadmin()) return;
+      const request = ++cloudProjectRequest;
+      cloudProjectLoadState = 'loading';
+      cloudProjects = [];
+      const grid = document.getElementById('vaultProjectsGrid');
+      if (grid) grid.innerHTML = '<div class="col-span-full py-8 text-center text-sm text-[#596562]" role="status">Cargando proyectos privados…</div>';
+      ['countFilterAll', 'countFilterBoda', 'countFilterXv'].forEach((id) => {
+        const counter = document.getElementById(id);
+        if (counter) counter.textContent = '—';
+      });
+      try {
+        const projects = await window.InvittaProjectPortal.listProjects();
+        if (request !== cloudProjectRequest || !auth.isSuperadmin()) return;
+        cloudProjects = projects;
+        cloudProjectLoadState = 'ready';
+        renderVaultProjects();
+      } catch (error) {
+        if (request !== cloudProjectRequest || !auth.isSuperadmin()) return;
+        cloudProjectLoadState = 'error';
+        if (error.status === 401) {
+          await auth.refreshSession();
+          updateAuthGateUI();
+          if (request !== cloudProjectRequest || !auth.isSuperadmin()) return;
+        }
+        if (grid) {
+          const message = String(error.message || 'No fue posible cargar los proyectos.')
+            .replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+          grid.innerHTML = `<div class="col-span-full py-8 px-4 text-center text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-2xl"><p role="alert">${message}</p><p class="mt-2">La lista no está disponible; esto no significa que tus proyectos se hayan borrado.</p><button id="btnRetryCloudProjects" type="button" class="mt-4 px-4 py-2 rounded-xl border border-rose-200 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#377061]">Reintentar carga de proyectos</button></div>`;
+          const retryProjects = document.getElementById('btnRetryCloudProjects');
+          if (retryProjects) retryProjects.addEventListener('click', refreshCloudProjects);
+        }
+      }
+    }
+
     function renderVaultProjects(query = '', filter = 'all') {
       const grid = document.getElementById('vaultProjectsGrid');
-      if (!grid || !evm) return;
-
-      const events = evm.getAllEvents();
+      if (!grid || cloudProjectLoadState !== 'ready') return;
+      const events = cloudProjects
+        .filter((project) => /^[0-9a-f-]{36}$/i.test(project.id || ''))
+        .map((project) => ({
+          ...project,
+          type: project.event_type === 'wedding' ? 'boda' : project.event_type === 'quinceanera' ? 'xv' : 'social',
+          dateLabel: project.status === 'published' ? 'Publicado' : project.status === 'archived' ? 'Archivado' : 'Borrador privado',
+          slug: project.id,
+          packageType: 'host_basic',
+        }));
       
       // Actualizar contadores
       const cAll = document.getElementById('countFilterAll');
@@ -986,8 +1217,8 @@
         grid.innerHTML = `
           <div class="col-span-full py-12 text-center text-[#596562] bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl">
             <span class="material-symbols-outlined text-4xl text-[#8F9E9B] mb-2">folder_open</span>
-            <p class="text-sm font-medium text-[#242928]">No se encontraron clientes guardados con ese criterio.</p>
-            <p class="text-xs text-[#596562] mt-1">Haz clic en "+ Nueva Invitación" para dar de alta a tu primer cliente.</p>
+            <p class="text-sm font-medium text-[#242928]">Aún no hay proyectos de Invitta 2.0 para mostrar.</p>
+            <p class="text-xs text-[#596562] mt-1">Usa “Nuevo Cliente / Invitación” para crear un borrador privado.</p>
           </div>
         `;
         return;
@@ -995,82 +1226,60 @@
 
       grid.innerHTML = filtered.map(e => {
         const isBoda = e.type === 'boda';
-        const isPremium = e.packageType === 'host_premium';
-        const dateStr = e.dateLabel || 'Fecha por definir';
-        const readableCode = e.slug.replace(/^(boda-|xv-)/, '').toUpperCase();
-        const pinCode = e.pin || '4821';
-        const hostLink = evm.generateEventMagicLink(e.packageType || 'host_premium', e.slug, 'mesas');
-        const plannerLink = `mesas?event=${e.slug}&role=planner`;
-        const studioLink = `invitacion-estudio.html?event=${e.slug}&role=designer`;
-        const previewLink = isBoda ? `invitacion-boda.html?event=${e.slug}` : `invitacion-xv.html?event=${e.slug}`;
-        const waShareLink = evm.generateEventWhatsAppUrl(e.packageType || 'host_premium', e.slug, '', 'mesas');
+        const studioLink = `invitacion-estudio.html?project=${encodeURIComponent(e.id)}`;
+        const statusText = e.status === 'published' ? 'Publicado' : e.status === 'archived' ? 'Archivado' : 'Borrador privado';
+        const safeName = String(e.name || '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+        const updatedLabel = new Date(e.updated_at || e.created_at).toLocaleDateString('es-MX');
 
         return `
           <div class="glass-portal-card rounded-2xl p-5 flex flex-col justify-between border border-[#E5E0D8] bg-white hover:border-[#4E9C87] transition-all group shadow-sm hover:shadow-md">
             <div>
               <div class="flex items-center justify-between mb-3">
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${isBoda ? 'bg-[#FAF3E7] border border-[#E5E0D8] text-[#968D5C]' : 'bg-[#FBEAF0] border border-[#F3C5D8] text-[#C25983]'}">
-                  <span>${isBoda ? '💍 Boda' : '👑 Mis XV'}</span>
+                  <span>${isBoda ? '💍 Boda' : e.type === 'xv' ? '👑 Mis XV' : '🎉 Social'}</span>
                 </span>
                 
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${isPremium ? 'bg-[#EBF5F2] text-[#377061] border border-[#D5EBE4]' : 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]'}">
-                  <span>${isPremium ? '💎 Premium' : '💌 Esencial'}</span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#EBF5F2] text-[#377061] border border-[#D5EBE4]">
+                  <span>${statusText}</span>
                 </span>
               </div>
 
-              <h3 class="font-serif text-xl font-semibold text-[#242928] group-hover:text-[#4E9C87] transition-colors mb-1 truncate" title="${e.name}">
-                ${e.name}
+              <h3 class="font-serif text-xl font-semibold text-[#242928] group-hover:text-[#4E9C87] transition-colors mb-1 truncate" title="${safeName}">
+                ${safeName}
               </h3>
 
               <div class="space-y-1 text-xs text-[#596562] font-light mb-3">
                 <p class="flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-[15px] text-[#4E9C87]">calendar_today</span>
-                  <span>${dateStr}</span>
-                </p>
-                <p class="flex items-center gap-1.5 truncate" title="${e.venue || 'Salón Principal'}">
-                  <span class="material-symbols-outlined text-[15px] text-[#4E9C87]">location_on</span>
-                  <span class="truncate">${e.venue || 'Salón Principal'} (${e.capacity || 100} pax)</span>
+                  <span class="material-symbols-outlined text-[15px] text-[#4E9C87]">schedule</span>
+                  <span>${statusText} · Actualizado ${updatedLabel}</span>
                 </p>
               </div>
 
-              <!-- Código de Acceso & PIN del Cliente -->
-              <div class="mb-4 px-3 py-2 rounded-xl bg-[#FAF8F5] border border-[#E5E0D8] flex items-center justify-between text-xs font-mono">
-                <span class="text-[#596562] flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[14px] text-[#4E9C87]">key</span> Código:
-                  <strong class="text-[#242928] font-bold tracking-wider">${readableCode}</strong>
-                </span>
-                <span class="text-[#596562] flex items-center gap-1 border-l border-[#E5E0D8] pl-2">
-                  <span class="material-symbols-outlined text-[14px] text-[#377061]">lock</span> PIN:
-                  <strong class="text-[#377061] font-bold tracking-wider">${pinCode}</strong>
-                </span>
-              </div>
             </div>
 
             <!-- Suite de Acciones Rápidas -->
             <div class="pt-4 border-t border-[#E5E0D8] space-y-2">
               <div class="grid grid-cols-2 gap-2">
-                <a href="${plannerLink}" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#EBF5F2] hover:bg-[#D5EBE4] border border-[#D5EBE4] text-[#377061] text-xs font-bold tracking-wider transition-all">
+                <a href="${studioLink}" class="col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#EBF5F2] hover:bg-[#D5EBE4] border border-[#D5EBE4] text-[#377061] text-xs font-bold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">palette</span>
+                  <span>Abrir en Invitta Studio 2.0</span>
+                </a>
+                <a href="organizador-mesas.html?project=${encodeURIComponent(e.id)}" class="col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-[#FAF8F5] border border-[#E5E0D8] text-[#377061] text-xs font-bold tracking-wider transition-all">
                   <span class="material-symbols-outlined text-sm">table_restaurant</span>
-                  <span>Mesas Master</span>
+                  <span>Invitados y mesas del proyecto</span>
                 </a>
+                <a href="puerta-proyecto.html?project=${encodeURIComponent(e.id)}" class="col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-[#FAF8F5] border border-[#E5E0D8] text-[#377061] text-xs font-bold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">qr_code_scanner</span>
+                  <span>Boletos y puerta del proyecto</span>
+                </a>
+                ${e.status === 'published' || e.status === 'archived' ? `
+                <a href="rsvp-responses.html?project=${encodeURIComponent(e.id)}" class="col-span-2 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-[#FAF8F5] border border-[#E5E0D8] text-[#377061] text-xs font-bold tracking-wider transition-all">
+                  <span class="material-symbols-outlined text-sm">how_to_reg</span>
+                  <span>Ver confirmaciones RSVP</span>
+                </a>` : ''}
                 
-                <a href="${waShareLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#4E9C87] hover:bg-[#377061] text-white text-xs font-bold tracking-wider transition-all">
-                  <span>📲 WhatsApp</span>
-                </a>
               </div>
 
-              <!-- Menú de Acciones Secundarias -->
-              <div class="flex items-center justify-between pt-1 text-xs text-[#596562]">
-                <a href="${studioLink}" class="hover:text-[#4E9C87] transition-colors inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">palette</span> Diseño
-                </a>
-                <a href="${previewLink}" target="_blank" rel="noopener noreferrer" class="hover:text-[#4E9C87] transition-colors inline-flex items-center gap-1">
-                  <span class="material-symbols-outlined text-xs">visibility</span> Invitación ↗
-                </a>
-                <button type="button" onclick="navigator.clipboard.writeText('${hostLink}').then(()=>alert('Enlace del anfitrión copiado al portapapeles: ${hostLink}'));" class="hover:text-[#4E9C87] transition-colors inline-flex items-center gap-1 cursor-pointer" title="Copiar enlace del cliente">
-                  <span class="material-symbols-outlined text-xs">link</span> Magic Link
-                </button>
-              </div>
             </div>
 
           </div>

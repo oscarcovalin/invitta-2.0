@@ -245,6 +245,53 @@ body {
   gap: 8px;
 }
 
+.publication-preview-dialog {
+  width: min(42rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  padding: 1.5rem;
+  color: var(--text-main);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+}
+
+.publication-preview-dialog::backdrop { background: rgba(0, 0, 0, 0.75); }
+.publication-preview-dialog h2 { margin: 0 0 0.75rem; font-family: var(--font-display); }
+.publication-preview-dialog p { color: var(--text-secondary); line-height: 1.5; }
+.publication-preview-dialog pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  line-height: 1.6;
+}
+.publication-preview-dialog details { margin: 1rem 0; }
+.publication-preview-dialog summary { cursor: pointer; color: var(--text-gold); }
+.publication-preview-dialog form { text-align: right; }
+
+@media (max-width: 1600px) {
+  .app-header {
+    flex-wrap: wrap;
+  }
+
+  .header-actions {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .app-workspace {
+    height: calc(100vh - 120px);
+  }
+}
+
+@media (max-width: 1300px) {
+  .app-workspace {
+    height: calc(100vh - 160px);
+  }
+}
+
 /* Buttons */
 .btn {
   display: inline-flex;
@@ -1064,3 +1111,5 @@ input[type="range"]::-webkit-slider-thumb:hover {
   opacity: 1;
   pointer-events: auto;
 }
+/* Keep cloud actions out of the local-only editor regardless of .btn display rules. */
+.header-actions button[hidden] { display: none !important; }

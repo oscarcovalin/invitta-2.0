@@ -1,0 +1,128 @@
+const assert = require('node:assert/strict');
+const { readPublishedImage } = require('./lib/published-image-read.cjs');
+const { createPublishedImageHandler } = require('./lib/published-image-handler.cjs');
+
+const projectId = '20000000-0000-4000-8000-000000000001';
+const documentId = '30000000-0000-4000-8000-000000000001';
+const assetId = '40000000-0000-4000-8000-000000000001';
+const storagePath = `${projectId}/hero/${assetId}.webp`;
+const config = { url: 'https://example.supabase.co', secretKey: 'sb_secret_server_only' };
+const project = { id: projectId, status: 'published', published_document_id: documentId };
+const document = { schemaVersion: 1, projectId, revision: 1, sections: [{ id: 'hero', enabled: true }], assets: {}, legacy: { config: { photos: { hero: storagePath } } } };
+
+function fakeFetch({ firstProject = project, lastProject = project, savedDocument = document, savedRevision = 1, storageResponse } = {}) {
+  const calls = [];
+  const fetchImpl = async (url, options) => {
+    calls.push({ url, options });
+    assert.deepEqual(options.headers, { apikey: config.secretKey });
+    if (url.includes('/invitation_projects?')) {
+      const item = calls.filter((call) => call.url.includes('/invitation_projects?')).length === 1 ? firstProject : lastProject;
+      return { ok: true, json: async () => item ? [item] : [] };
+    }
+    if (url.includes('/invitation_documents?')) return { ok: true, json: async () => savedDocument ? [{ revision: savedRevision, document: savedDocument }] : [] };
+    if (url.includes('/storage/v1/object/authenticated/')) return storageResponse || {
+      ok: true, headers: { get: (name) => name === 'content-length' ? '4' : null },
+      body: new ReadableStream({ start(controller) { controller.enqueue(Uint8Array.from([1, 2, 3, 4])); controller.close(); } }),
+    };
+    throw new Error(`Unexpected request: ${url}`);
+  };
+  return { calls, fetchImpl };
+}
+
+(async () => {
+  const success = fakeFetch();
+  const image = await readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: success.fetchImpl });
+  assert.equal(image.mimeType, 'image/webp');
+  assert.deepEqual(image.bytes, Buffer.from([1, 2, 3, 4]));
+  assert.equal(success.calls.length, 4);
+  assert.match(success.calls[2].url, /invitation-assets\/20000000-0000-4000-8000-000000000001\/hero/);
+  assert.ok(success.calls.every((call) => call.options.redirect === 'error'));
+
+  for (const badUrl of ['https://attacker.invalid', 'http://127.0.0.1', 'https://example.supabase.co@attacker.invalid']) {
+    const untrusted = fakeFetch();
+    await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero',
+      config: { ...config, url: badUrl }, fetchImpl: untrusted.fetchImpl }), (error) => error.status === 503);
+    assert.equal(untrusted.calls.length, 0);
+  }
+
+  let cancelled = false;
+  const oversized = fakeFetch({ storageResponse: {
+    ok: true, headers: { get: () => null },
+    body: new ReadableStream({
+      start(controller) { controller.enqueue(new Uint8Array(10 * 1024 * 1024 + 1)); },
+      cancel() { cancelled = true; },
+    }),
+    arrayBuffer: async () => { throw new Error('Unbounded read must not be used.'); },
+  } });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: oversized.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(cancelled, true);
+  assert.equal(oversized.calls.length, 3);
+
+  const sampleDocument = structuredClone(document);
+  sampleDocument.content = { primaryName: 'Catalina' };
+  const sample = fakeFetch({ savedDocument: sampleDocument });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: sample.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(sample.calls.length, 2);
+
+  const mismatchedRevision = fakeFetch({ savedRevision: 2 });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: mismatchedRevision.fetchImpl }),
+    (error) => error.status === 404);
+  assert.equal(mismatchedRevision.calls.length, 2);
+
+  for (const [input, expectedCalls] of [
+    [{ slug: '../private', field: 'photos.hero' }, 0],
+    [{ slug: 'ana-luis', field: 'photos.gallery.0' }, 2],
+  ]) {
+    const attempt = fakeFetch();
+    await assert.rejects(readPublishedImage({ ...input, config, fetchImpl: attempt.fetchImpl }), (error) => error.status === 404);
+    assert.equal(attempt.calls.length, expectedCalls);
+  }
+
+  const draft = fakeFetch({ firstProject: { ...project, status: 'draft' } });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: draft.fetchImpl }), (error) => error.status === 404);
+  assert.equal(draft.calls.length, 1);
+
+  const changed = fakeFetch({ lastProject: { ...project, published_document_id: assetId } });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: changed.fetchImpl }), (error) => error.status === 404);
+
+  const foreign = structuredClone(document);
+  foreign.projectId = assetId;
+  const wrongProject = fakeFetch({ savedDocument: foreign });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: wrongProject.fetchImpl }), (error) => error.status === 404);
+  assert.equal(wrongProject.calls.length, 2);
+
+  const unsupported = fakeFetch({ savedDocument: { ...document, schemaVersion: 2 } });
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config, fetchImpl: unsupported.fetchImpl }), (error) => error.status === 404);
+  assert.equal(unsupported.calls.length, 2);
+
+  await assert.rejects(readPublishedImage({ slug: 'ana-luis', field: 'photos.hero', config: { url: config.url } }), (error) => error.status === 503);
+
+  const handler = createPublishedImageHandler({ readImage: async () => image, env: {} });
+  const response = { code: null, headers: {}, body: null, setHeader(k, v) { this.headers[k] = v; }, status(n) { this.code = n; return this; }, json(v) { this.body = v; return this; }, send(v) { this.body = v; return this; } };
+  await handler({ method: 'GET', query: { slug: 'ana-luis', field: 'photos.hero' } }, response);
+  assert.equal(response.code, 503);
+  assert.equal(response.headers['Cache-Control'], 'no-store');
+
+  let received;
+  const enabledHandler = createPublishedImageHandler({
+    env: { INVITTA_PUBLIC_ASSETS_ENABLED: '1', INVITTA_PUBLIC_ASSET_PREVIEW_SLUG: 'ana-luis', SUPABASE_URL: config.url, SUPABASE_SECRET_KEY: config.secretKey },
+    readImage: async (input) => { received = input; return image; },
+  });
+  const enabledResponse = { ...response, code: null, headers: {}, body: null };
+  await enabledHandler({ method: 'GET', query: { slug: 'ana-luis', field: 'photos.hero' } }, enabledResponse);
+  assert.equal(enabledResponse.code, 200);
+  assert.equal(enabledResponse.headers['Content-Type'], 'image/webp');
+  assert.deepEqual(enabledResponse.body, image.bytes);
+  assert.deepEqual(received, { slug: 'ana-luis', field: 'photos.hero', config });
+
+  const wrongSlugResponse = { ...response, code: null, headers: {}, body: null };
+  await enabledHandler({ method: 'GET', query: { slug: 'otro-evento', field: 'photos.hero' } }, wrongSlugResponse);
+  assert.equal(wrongSlugResponse.code, 404);
+
+  const methodResponse = { ...response, code: null, headers: {}, body: null };
+  await enabledHandler({ method: 'POST', query: {} }, methodResponse);
+  assert.equal(methodResponse.code, 405);
+  console.log('Published image reads require the current published revision and remain disabled by default.');
+})().catch((error) => { console.error(error); process.exitCode = 1; });

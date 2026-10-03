@@ -1,0 +1,32 @@
+html[data-project-organizer] body { display: block; height: auto; overflow: auto; user-select: text; }
+html[data-project-organizer] body > :not(#project-organizer) { display: none !important; }
+#project-organizer { --ink: #242928; --muted: #596562; --accent: #377061; --line: #e5e0d8; color: var(--ink); max-width: 72rem; margin: auto; padding: 1.5rem; }
+#project-organizer[hidden] { display: none; }
+#project-organizer h1, #project-organizer h2 { font-family: 'Cormorant Garamond', Georgia, serif; line-height: 1.2; }
+#project-organizer h1 { font-size: 2.5rem; margin: 1rem 0; }
+#project-organizer h2 { font-size: 1.75rem; margin: 0 0 1rem; }
+#project-organizer p { margin: .75rem 0; }
+#project-organizer header, #project-organizer .actions { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+#project-organizer .project-id { overflow-wrap: anywhere; color: var(--muted); font-size: .875rem; }
+#project-organizer .workspace { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+#project-organizer section { min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: .75rem; padding: 1.5rem; }
+#project-organizer label { display: block; font-weight: 500; margin-bottom: 1rem; }
+#project-organizer input, #project-organizer select { display: block; width: 100%; background: #faf8f5; padding: .75rem; border: 1px solid var(--line); border-radius: .5rem; color: var(--ink); margin-top: .25rem; box-sizing: border-box; }
+#project-organizer button, #project-organizer a { min-height: 2.75rem; padding: .625rem 1rem; border: 1px solid var(--accent); border-radius: .5rem; color: var(--accent); text-decoration: none; font: inherit; background: white; cursor: pointer; }
+#project-organizer button[type=submit] { color: white; background: var(--accent); }
+#project-organizer button:disabled { opacity: .55; cursor: not-allowed; }
+#project-organizer :focus-visible { outline: 3px solid #377061; outline-offset: 3px; }
+#project-organizer fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+#project-organizer [role=status] { border-left: .25rem solid var(--accent); background: #ebf5f2; padding: 1rem; }
+#project-organizer [data-kind=error] { color: #82372b; border-color: #82372b; background: #fff1ee; }
+#project-organizer ul { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+#project-organizer li { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; padding: 1rem 0; border-top: 1px solid var(--line); }
+#project-organizer li span { flex: 1 1 12rem; overflow-wrap: anywhere; }
+#project-organizer small { display: block; color: var(--muted); margin-top: .25rem; }
+#project-organizer .warning { color: #82372b; }
+@media (max-width: 767px) {
+  #project-organizer { padding: 1rem; }
+  #project-organizer .workspace { grid-template-columns: 1fr; gap: 1rem; }
+  #project-organizer section { padding: 1rem; }
+  #project-organizer h1 { font-size: 2rem; }
+}

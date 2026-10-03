@@ -690,6 +690,14 @@ class GuestManager {
     return `${mesaCode}-${apellidoCode}-${passes}P`;
   }
 
+  generateSyncId() {
+    if (typeof globalThis !== 'undefined' && globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function') {
+      return globalThis.crypto.randomUUID();
+    }
+
+    return `sync_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+  }
+
   checkInGuest(queryOrFolio, admittedPasses) {
     if (!queryOrFolio) return { success: false, error: 'Query o Folio requerido' };
     const q = String(queryOrFolio).trim().toLowerCase();
@@ -1078,7 +1086,8 @@ class GuestManager {
 
   
   isEventFrozen() {
-    const eventDate = window.CONFIG ? new Date(window.CONFIG.eventDate) : new Date('2026-10-18T16:00:00');
+    const runtimeConfig = typeof window !== 'undefined' ? window.CONFIG : null;
+    const eventDate = runtimeConfig ? new Date(runtimeConfig.eventDate) : new Date('2026-10-18T16:00:00');
     // For testing/QA purposes, if you want to force freeze, uncomment:
     // return true;
     const freezeDate = new Date(eventDate.getTime() - (48 * 60 * 60 * 1000));

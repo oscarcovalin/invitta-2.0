@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Invitta 2.0 Beta — Organizador de Mesas & Centro de Control de Invitados</title>
+  <script>
+    if (new URLSearchParams(window.location.search).has('project')) document.documentElement.setAttribute('data-project-organizer', '');
+  </script>
+  <link rel="stylesheet" href="css/project-organizer.css">
 
   <!-- Google Fonts Invitta 1.0 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1320,6 +1324,7 @@
   <script src="guest-manager.js"></script>
 
   <script>
+    if (!new URLSearchParams(window.location.search).has('project')) {
 
     async function generateSecureLink(folio, btn) {
       const originalHtml = btn.innerHTML;
@@ -1344,44 +1349,49 @@
     const evm = window.EventVaultManager ? window.EventVaultManager.create() : null;
     const activeSlug = evm ? evm.activeEventSlug : 'boda-catalina-julian';
     const activeEvent = evm ? evm.getActiveEvent() : { name: 'Catalina & Julián', dateLabel: '20 de Marzo, 2027', venue: 'Hacienda San José' };
-    const isSingleMode = evm ? evm.isSingleEventMode() : false;
-
     // Poblar Selector o Badge de Evento en Header
     const eventSwitcherContainer = document.getElementById('eventSwitcherContainer');
     const selectActiveEvent = document.getElementById('selectActiveEvent');
+    let verifiedGlobalAccess = false;
 
     if (evm && eventSwitcherContainer) {
-      if (isSingleMode) {
-        // 🔒 MODO EVENTO AISLADO: Bloqueo de selector para no filtrar eventos ajenos al Planner/Salón
-        eventSwitcherContainer.className = "flex items-center bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30 text-xs shadow-xs";
-        eventSwitcherContainer.innerHTML = `
-          <span class="text-amber-950 font-bold flex items-center gap-1.5">
-            <span>${activeEvent.type === 'boda' ? '💍' : '👑'}</span>
-            <span class="truncate max-w-[200px]">${activeEvent.name}</span>
-          </span>
-        `;
+      // Aislar de inmediato; nunca usar ?role= como prueba de privilegio.
+      eventSwitcherContainer.className = "flex items-center bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/30 text-xs shadow-xs";
+      const badge = document.createElement('span');
+      badge.className = 'text-amber-950 font-bold flex items-center gap-1.5';
+      badge.textContent = `${activeEvent.type === 'boda' ? '💍' : '👑'} ${activeEvent.name}`;
+      eventSwitcherContainer.replaceChildren(badge);
 
-        // Blindar logo del sidebar para que se mantenga dentro del espacio del evento
-        const sidebarLogoLink = document.getElementById('sidebarLogoLink');
-        if (sidebarLogoLink) {
-          const curRole = window.RoleManager ? window.RoleManager.create().currentRole : 'planner';
-          sidebarLogoLink.href = `mesas?event=${activeSlug}&role=${curRole}`;
-          sidebarLogoLink.title = activeEvent.name;
-        }
-      } else if (selectActiveEvent) {
-        // 👑 MODO SUPERADMINISTRADOR GLOBAL
-        const allEvs = evm.getAllEvents();
-        selectActiveEvent.innerHTML = allEvs.map(e => `
-          <option value="${e.slug}" ${e.slug === activeSlug ? 'selected' : ''}>
-            ${e.type === 'boda' ? '💍' : '👑'} ${e.name}
-          </option>
-        `).join('');
+      const sidebarLogoLink = document.getElementById('sidebarLogoLink');
+      if (sidebarLogoLink) {
+        const curRole = window.RoleManager ? window.RoleManager.create().currentRole : 'planner';
+        sidebarLogoLink.href = `mesas?event=${activeSlug}&role=${curRole}`;
+        sidebarLogoLink.title = activeEvent.name;
       }
+
+      fetch('/api/session', { cache: 'no-store' })
+        .then(async (response) => ({ ok: response.ok, data: await response.json() }))
+        .then(({ ok, data }) => {
+          if (!ok || data.authenticated !== true || !data.session || data.session.role !== 'platform_admin') return;
+          verifiedGlobalAccess = true;
+          if (!selectActiveEvent) return;
+          selectActiveEvent.replaceChildren();
+          evm.getAllEvents().forEach((event) => {
+            const option = document.createElement('option');
+            option.value = event.slug;
+            option.textContent = `${event.type === 'boda' ? '💍' : '👑'} ${event.name}`;
+            option.selected = event.slug === activeSlug;
+            selectActiveEvent.appendChild(option);
+          });
+          eventSwitcherContainer.className = "hidden sm:flex items-center bg-surface-container rounded-xl px-3 py-1.5 border border-outline-variant text-xs shadow-2xs";
+          eventSwitcherContainer.replaceChildren(selectActiveEvent);
+        })
+        .catch(() => {});
     }
 
     window.switchEvent = function(slug) {
-      if (!slug) return;
-      if (evm) evm.setActiveEventSlug(slug);
+      if (!verifiedGlobalAccess || !evm || !evm.getAllEvents().some((event) => event.slug === slug)) return;
+      evm.setActiveEventSlug(slug);
       const currentRole = window.RoleManager ? window.RoleManager.create().currentRole : 'planner';
       window.location.href = `mesas?event=${slug}&role=${currentRole}`;
     };
@@ -2498,11 +2508,13 @@
     document.querySelectorAll('.btn-close-access-modal').forEach(btn => {
       btn.addEventListener('click', () => modalShareAccess.classList.add('hidden'));
     });
+    }
   </script>
 
   <script>
   /* Mobile More Dropdown — populated at runtime */
   (function() {
+    if (new URLSearchParams(window.location.search).has('project')) return;
     const drop = document.getElementById('mobileMoreDropdown');
     if (!drop) return;
     drop.innerHTML = `
@@ -2538,6 +2550,7 @@
   <script>
   // --- PINCH-TO-ZOOM for Plano 2D (mobile) ---
   (function() {
+    if (new URLSearchParams(window.location.search).has('project')) return;
     var fpContainer = document.getElementById('floorPlanCanvas')
       || document.getElementById('viewFloorPlanContainer')
       || document.querySelector('#tablesContainer');
@@ -2569,5 +2582,8 @@
     });
   })();
   </script>
+  <main id="project-organizer" hidden><p>Cargando el organizador del proyecto…</p></main>
+  <script src="src/project-organizer-client.js"></script>
+  <script src="src/project-organizer.js"></script>
 </body>
 </html>

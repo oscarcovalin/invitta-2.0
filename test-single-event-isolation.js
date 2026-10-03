@@ -1,4 +1,5 @@
 const eventVaultModule = require('./event-vault-manager.js');
+const fs = require('node:fs');
 let passed = 0;
 let failed = 0;
 
@@ -17,9 +18,16 @@ console.log('\n🧪 Testing Single-Event B2B Planner Isolation Suite...\n');
 const { EventVaultManager, create } = eventVaultModule;
 const evm = create();
 
-// 1. In Superadmin mode (no query params), all events are visible
-assert(evm.isSingleEventMode('?role=superadmin') === false, 'Superadmin mode is NOT single event mode');
-assert(evm.getVisibleEvents('?role=superadmin').length >= 2, 'Superadmin sees all registered events');
+// 1. A role claim in the URL cannot authorize a global view.
+global.window = { location: { search: '?role=superadmin' } };
+assert(evm.isSingleEventMode('?role=superadmin') === true, 'URL role cannot disable event isolation');
+assert(evm.getVisibleEvents('?role=superadmin').length === 1, 'URL role cannot reveal other events');
+delete global.window;
+const organizerHtml = fs.readFileSync('./organizador-mesas.html', 'utf8');
+assert(organizerHtml.includes("fetch('/api/session'") && organizerHtml.includes("data.session.role !== 'platform_admin'"),
+  'Global event selector requires a verified administrator session');
+assert(organizerHtml.includes('if (!verifiedGlobalAccess || !evm'),
+  'Event switching remains blocked until administrator verification');
 
 // 2. In Single-Event Planner mode (?event=boda-catalina-julian&role=planner)
 const plannerQuery = '?event=boda-catalina-julian&role=planner&token=tok_cat_9823';

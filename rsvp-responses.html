@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Confirmaciones RSVP · Invitta</title>
+  <style>
+    :root { color-scheme: light; --ink:#242928; --muted:#596562; --green:#377061; --pale:#ebf5f2; --line:#e5e0d8; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:linear-gradient(120deg,#f3f8f6,#fffaf5); color:var(--ink); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:min(1080px,calc(100% - 32px)); margin:36px auto 72px; }
+    a { color:var(--green); }
+    .back { display:inline-block; padding:9px 14px; background:white; border:1px solid var(--line); border-radius:999px; text-decoration:none; font-size:13px; }
+    h1 { margin:28px 0 4px; font:500 clamp(28px,4vw,42px)/1.15 Georgia,serif; }
+    .muted { color:var(--muted); }
+    .summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:24px 0; }
+    .metric,.panel { background:white; border:1px solid var(--line); border-radius:18px; box-shadow:0 8px 30px #244a3d0b; }
+    .metric { padding:16px 18px; }
+    .metric strong { display:block; color:var(--green); font-size:26px; }
+    .metric span { color:var(--muted); font-size:13px; }
+    .panel { overflow:hidden; }
+    .panel-heading { padding:17px 20px; border-bottom:1px solid var(--line); }
+    .panel-heading h2 { margin:0; font:500 22px Georgia,serif; }
+    .notice { padding:12px 14px; margin:18px 0; border:1px solid #d5ebe4; border-radius:12px; background:var(--pale); color:#315f53; font-size:13px; }
+    .status { padding:28px 18px; text-align:center; color:var(--muted); }
+    .table-scroll { overflow-x:auto; }
+    table { width:100%; min-width:720px; border-collapse:collapse; }
+    th,td { padding:13px 15px; border-bottom:1px solid #f0ede8; text-align:left; vertical-align:top; }
+    th { background:#fbfaf8; color:var(--muted); font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+    td { font-size:13px; }
+    .guest { font-weight:650; }
+    .subtext { display:block; margin-top:3px; color:var(--muted); overflow-wrap:anywhere; }
+    .badge { display:inline-block; padding:3px 9px; border-radius:999px; background:var(--pale); color:var(--green); font-size:11px; font-weight:700; }
+    .badge.no { background:#f7eeee; color:#8d4545; }
+    .delete { border:1px solid var(--line); border-radius:9px; padding:6px 9px; background:white; color:#8d4545; cursor:pointer; }
+    .delete:hover { background:#fff5f5; border-color:#e3baba; }
+    .delete:disabled { opacity:.55; cursor:wait; }
+    .error { padding:12px 14px; margin:14px 0; border-radius:10px; background:#fff0ef; color:#8c3028; }
+    @media(max-width:600px) { main { margin-top:20px; } .summary { gap:7px; } .metric { padding:12px 10px; } .metric strong { font-size:22px; } .metric span { font-size:11px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a id="backLink" class="back" href="portal.html">← Volver al portal</a>
+    <h1 id="pageTitle">Confirmaciones RSVP</h1>
+    <p class="muted">Respuestas visibles sólo para la cuenta propietaria de este proyecto.</p>
+    <div id="error" class="error" role="alert" hidden></div>
+    <section class="summary" aria-label="Resumen de respuestas">
+      <div class="metric"><strong id="confirmedCount">—</strong><span>Asistencias confirmadas</span></div>
+      <div class="metric"><strong id="declinedCount">—</strong><span>No podrán asistir</span></div>
+      <div class="metric"><strong id="passCount">—</strong><span>Lugares confirmados</span></div>
+    </section>
+    <p class="notice">Por privacidad, cada respuesta se elimina automáticamente después de 180 días. También puedes borrarla antes desde esta pantalla.</p>
+    <section class="panel" aria-labelledby="listTitle">
+      <div class="panel-heading"><h2 id="listTitle">Respuestas recibidas</h2></div>
+      <div id="status" class="status" role="status">Cargando confirmaciones…</div>
+      <div id="tableWrap" class="table-scroll" hidden>
+        <table>
+          <thead><tr><th>Invitado</th><th>Respuesta</th><th>Lugares</th><th>Menú</th><th>Recibida</th><th></th></tr></thead>
+          <tbody id="responsesBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const projectId = new URLSearchParams(window.location.search).get('project') || '';
+      const endpoint = `/api/projects/rsvps?projectId=${encodeURIComponent(projectId)}`;
+      const errorEl = document.getElementById('error');
+      const statusEl = document.getElementById('status');
+      const tableWrap = document.getElementById('tableWrap');
+      const body = document.getElementById('responsesBody');
+      document.getElementById('backLink').href = `portal.html${projectId ? `?project=${encodeURIComponent(projectId)}` : ''}`;
+
+      function showError(message) {
+        errorEl.textContent = message;
+        errorEl.hidden = false;
+      }
+
+      function addCell(row, value, className = '') {
+        const cell = document.createElement('td');
+        if (className) cell.className = className;
+        cell.textContent = value;
+        row.appendChild(cell);
+        return cell;
+      }
+
+      function formatDate(value) {
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? '—' : new Intl.DateTimeFormat('es-MX', {
+          dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Mexico_City',
+        }).format(date);
+      }
+
+      function render(result) {
+        const responses = Array.isArray(result.responses) ? result.responses : [];
+        document.getElementById('pageTitle').textContent = result.project && result.project.name
+          ? `RSVP · ${result.project.name}` : 'Confirmaciones RSVP';
+        document.getElementById('confirmedCount').textContent = responses.filter((item) => item.attendance === 'confirmed').length;
+        document.getElementById('declinedCount').textContent = responses.filter((item) => item.attendance === 'declined').length;
+        document.getElementById('passCount').textContent = responses.reduce((sum, item) => sum + (item.attendance === 'confirmed' ? Number(item.passes) || 0 : 0), 0);
+        body.replaceChildren();
+        if (!responses.length) {
+          tableWrap.hidden = true;
+          statusEl.hidden = false;
+          statusEl.textContent = 'Todavía no hay respuestas. Cuando alguien confirme desde la invitación, aparecerá aquí.';
+          return;
+        }
+        responses.forEach((item) => {
+          const row = document.createElement('tr');
+          const guestCell = addCell(row, item.guest_name || '—', 'guest');
+          if (item.email) {
+            const email = document.createElement('span');
+            email.className = 'subtext';
+            email.textContent = item.email;
+            guestCell.appendChild(email);
+          }
+          const statusCell = document.createElement('td');
+          const badge = document.createElement('span');
+          badge.className = `badge${item.attendance === 'declined' ? ' no' : ''}`;
+          badge.textContent = item.attendance === 'declined' ? 'No asistirá' : 'Asistirá';
+          statusCell.appendChild(badge);
+          row.appendChild(statusCell);
+          addCell(row, item.attendance === 'confirmed' ? String(item.passes || 0) : '—');
+          const dietary = { child_menu: 'Menú infantil', allergies: 'Alergias', vegan: 'Vegano' }[item.dietary_option] || '—';
+          addCell(row, dietary);
+          addCell(row, formatDate(item.created_at));
+          const actionCell = document.createElement('td');
+          const remove = document.createElement('button');
+          remove.type = 'button';
+          remove.className = 'delete';
+          remove.textContent = 'Borrar';
+          remove.setAttribute('aria-label', `Borrar respuesta de ${item.guest_name || 'invitado'}`);
+          remove.addEventListener('click', async () => {
+            if (!window.confirm(`¿Eliminar la respuesta de ${item.guest_name || 'este invitado'}? No se puede recuperar.`)) return;
+            remove.disabled = true;
+            try {
+              const url = `${endpoint}&responseId=${encodeURIComponent(item.id)}`;
+              const response = await fetch(url, { method: 'DELETE', credentials: 'same-origin' });
+              const payload = await response.json().catch(() => ({}));
+              if (response.status === 401) return redirectToLogin();
+              if (!response.ok || !payload.success) throw new Error(payload.error || 'No se pudo borrar la respuesta.');
+              await load();
+            } catch (error) {
+              showError(error.message || 'No se pudo borrar la respuesta.');
+              remove.disabled = false;
+            }
+          });
+          actionCell.appendChild(remove);
+          row.appendChild(actionCell);
+          body.appendChild(row);
+        });
+        statusEl.hidden = true;
+        tableWrap.hidden = false;
+      }
+
+      function redirectToLogin() {
+        const next = `/rsvp-responses.html?project=${encodeURIComponent(projectId)}`;
+        window.location.assign(`/portal.html?login=required&next=${encodeURIComponent(next)}`);
+      }
+
+      async function load() {
+        errorEl.hidden = true;
+        statusEl.hidden = false;
+        statusEl.textContent = 'Cargando confirmaciones…';
+        tableWrap.hidden = true;
+        if (!/^[0-9a-f-]{36}$/i.test(projectId)) {
+          statusEl.textContent = 'El enlace del proyecto no es válido.';
+          return;
+        }
+        try {
+          const response = await fetch(endpoint, { credentials: 'same-origin', cache: 'no-store' });
+          const result = await response.json().catch(() => ({}));
+          if (response.status === 401) return redirectToLogin();
+          if (!response.ok || !result.success) throw new Error(result.error || 'No fue posible cargar las confirmaciones.');
+          render(result);
+        } catch (error) {
+          statusEl.hidden = true;
+          showError(error.message || 'No fue posible cargar las confirmaciones.');
+        }
+      }
+
+      load();
+    })();
+  </script>
+</body>
+</html>
