@@ -1,5 +1,36 @@
 # Estado verificable de la fusión
 
+## Incremento local: boletos y puerta por proyecto (2026-10-02)
+
+Implementado únicamente en la copia local, con alcance aprobado. No se envió
+código a GitHub, no se aplicó SQL remoto ni se cambió Janna. El generador/escáner
+global heredado sigue separado y no se declara fiable para operaciones compartidas.
+
+Nueva entrada desde tarjeta de proyecto: propietario/planner emiten y revocan;
+propietario/planner/hostess asignada registran ingresos parciales. Supabase local
+impide superar pases y cuenta una sola vez el mismo reintento. QR firmado con
+clave independiente; lector público de un boleto sin navegación privada. Sin red
+no se confirma ingreso. No hay envío automático, datos de contacto ni importación.
+
+Verificación final: 120/120 archivos JavaScript, 146 pgTAP, 174 checks HTTP reales,
+246–248 checks directos de puerta según orden de carreras (última corrida 246)
+más 68 base Auth/PostgREST; cinco QR codificados/decodificados con bibliotecas
+fijadas y SRI. Migración CLI `20261003000557` instalada desde cero en entorno
+desechable sin semillas después de verificar limpieza. Asesor local sin problemas.
+
+Navegador owner/hostess: emisión, QR visible, grupos 2+2, recuperación después
+de respuesta perdida postcommit y revocación tras recarga. La versión del middleware
+incluye página nueva en protección y matcher. Se reprodujo/corrigió permiso de
+cámara tardío tras detenerla y rechazo anónimo incluso en RPC directo.
+Revisión independiente sin Required/Critical; fixtures sintéticos eliminados.
+
+Pendiente antes de uso real: activar esquema/secreto/código con autorización
+separada; acordar retención/exportación/eliminación; probar cámara y dos móviles.
+El override de tamaño no afectó el navegador disponible: no se afirma una prueba
+móvil real. El aviso de solicitud pendiente impidió probar recarga incierta aquí;
+la restauración está cubierta por pruebas del cliente. No hay build/lint definidos.
+Detalles de contrato, operación y reversión: [ADR-0005](decisions/0005-project-door-passes.md).
+
 ## Primera entrega: continuidad de sesión (2026-10-01)
 
 Problema reproducido: las operaciones de proyectos rechazaban una cookie de acceso vencida o ausente incluso con un refresh token válido. `/api/session` sí intentaba renovar, pero ese comportamiento no se compartía con guardar, cargar, publicar o subir archivos. La entrada a Studio también rechazaba una sesión renovable y descartaba el parámetro de proyecto al enviar al portal.

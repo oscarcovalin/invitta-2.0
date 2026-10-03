@@ -1,5 +1,24 @@
 # Tareas: invitados y mesas por proyecto
 
+## Extensión: door-scanner-sync aprobado 2026-10-02 (sólo local)
+
+- [x] I. Pruebas de base y funciones atómicas: permisos, último pase concurrente,
+  repetición, conflicto de intención, revocación/expiración y reducción de pases.
+- [x] J. Firma independiente, validación y API con sesión/origen; sin contactos,
+  secretos/logs ni acceso público a listas. RED/GREEN y fallos de proveedor.
+- [x] K. Generador/escáner por proyecto, cliente de reintento estable y pase mínimo;
+  ingreso manual y cámara iniciada por usuario; entrada desde portal.
+- [x] L. Auth/PostgREST y HTTP reales locales, QR real y navegador; regresiones,
+  revisión de seguridad, documentación y limitaciones. Sin cambios remotos.
+
+Entrega local: 120/120 archivos JS, 146 pgTAP, 174 HTTP, última corrida 246
+checks de puerta +68 base; cinco QR decodificados. Migración instalada desde
+cero y revisión sin Required/Critical. Fixtures eliminados; Janna intacta.
+Pendientes de lanzamiento, no ocultos por estas casillas: cámara/dispositivo móvil
+reales, aprobación remota, secreto y retención/exportación/eliminación operativa.
+Véase ADR-0005. El modo global heredado no se declara sincronizado/verificado.
+
+
 ## Extensión: cloud-data-adapter aprobado 2026-10-01
 
 - [x] A. Validación y almacenamiento con JWT: permisos explícitos, paginación,

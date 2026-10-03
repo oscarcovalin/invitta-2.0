@@ -1,5 +1,30 @@
 # Plan: base compartida de invitados y mesas
 
+## Extensión aprobada: door-scanner-sync (2026-10-02)
+
+Contrato: SPEC-door-scanner-sync.md. Sólo local, sin modificar Janna ni publicar.
+Orden: pruebas de atomicidad/RLS → funciones transaccionales → credencial y API
+→ cliente y pantallas por proyecto → integración real y revisión.
+Credencial IV2.projectUUID.ticketUUID.HMAC; ticketUUID es el UUID estable de
+emisión. HMAC-SHA256 usa INVITTA_PASS_QR_SECRET independiente, mínimo 32 bytes.
+La base guarda sólo SHA256 de la credencial y vencimiento generado por servidor.
+Los reintentos reconstruyen la misma credencial; no hay segunda escritura de firma.
+Funciones privadas comprobadas con wrappers SECURITY INVOKER: emitir, inspeccionar,
+admitir y revocar. Lectura pública sólo por digest de alta entropía, sin listados.
+Admisión bloquea invitado antes de boleto; reducción de pases toma ese mismo bloqueo.
+Todos los POST privados exigen sesión renovable/origen; no usan service_role.
+Ruta única /api/projects/passes con action context/issue/inspect/admit/revoke, y
+/api/public/pass para lectura mínima. La credencial pública va en fragmento del
+enlace a pase.html, nunca en query ni logs. Reintento conserva operationId/cuerpo.
+Revisión remota posterior: secreto, retención/exportación y migración/despliegue.
+
+Implementación local verificada: 120 archivos JS, 146 SQL, 174 HTTP reales,
+246–248 verificaciones de puerta/PostgREST según orden de concurrencia más 68 base.
+Instalación de migración desde cero y revisión independiente completadas.
+Evidencia, uso y límites en docs/decisions/0005-project-door-passes.md.
+Cámara física, prueba móvil efectiva y activación remota todavía pendientes.
+
+
 ## Extensión aprobada: consumidor por proyecto (2026-10-01)
 
 Contrato: [SPEC-cloud-data-adapter.md](SPEC-cloud-data-adapter.md). Continuar
