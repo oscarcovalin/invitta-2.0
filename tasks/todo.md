@@ -15,8 +15,25 @@ Entrega local: 120/120 archivos JS, 146 pgTAP, 174 HTTP, última corrida 246
 checks de puerta +68 base; cinco QR decodificados. Migración instalada desde
 cero y revisión sin Required/Critical. Fixtures eliminados; Janna intacta.
 Pendientes de lanzamiento, no ocultos por estas casillas: cámara/dispositivo móvil
-reales, aprobación remota, secreto y retención/exportación/eliminación operativa.
+reales y recorrido remoto con otros roles. Aprobación remota, secreto y retención
+se resolvieron en la activación posterior siguiente; no hay exportador nuevo.
 Véase ADR-0005. El modo global heredado no se declara sincronizado/verificado.
+
+## Activación posterior de puerta en vista previa (2026-10-02)
+
+- [x] Aprobación del esquema, firma, despliegue y prueba sólo ficticia; retención
+  privada sin purga automática. Sin Janna, mensajes ni main/producción.
+- [x] Migración remota `20261003021708`, catálogo ACL/RLS y smoke SQL transaccional.
+- [x] Firma sensible sólo para la rama de vista previa; código desplegado READY.
+- [x] Navegador publicado: emisión cuatro, ingreso 2+2, saldo tras recarga,
+  revocación y rechazo público; una emisión/dos admisiones confirmadas en Supabase.
+- [x] Limpieza exacta del proyecto ficticio y comparación de huellas de Janna.
+- [ ] Cámara física y dos dispositivos móviles reales.
+- [ ] Recorrido publicado con sesión distinta de planner/hostess asignada.
+- [ ] Revisar mapa de entrega sencilla para anfitriones antes de especificar módulos.
+
+Evidencia: [estado de fusión](../docs/fusion-progress.md) y ADR-0005. La nueva
+página de personalización está propuesta, no implementada; emergencia sigue 24 h.
 
 
 ## Extensión: cloud-data-adapter aprobado 2026-10-01

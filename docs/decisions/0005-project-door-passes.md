@@ -4,8 +4,8 @@
 
 Alcance aprobado e implementado localmente el 2026-10-02. Activación en vista
 previa aprobada por el usuario ese día: esquema instalado remotamente y firma
-privada configurada sólo para `preview/invitta-cloud-client-flow`; despliegue y
-recorrido publicado en verificación. No sustituye todavía la puerta heredada.
+privada configurada sólo para `preview/invitta-cloud-client-flow`; despliegue READY y
+recorrido publicado verificado con un proyecto ficticio. No sustituye todavía la puerta heredada.
 No se modifica Janna ni se envían mensajes.
 
 ## Fecha
@@ -147,6 +147,20 @@ se revirtieron. Los avisos INFO de RLS sin políticas son deliberados (tablas
 privadas accesibles sólo por funciones); permanece el WARN previo de protección
 de contraseñas filtradas desactivada. No se cambió Auth fuera de este alcance.
 
+Vercel `dpl_AhvQTkkFJyqKNP7KpHaoXMutyqsR` (commit `1ca912b`) quedó READY;
+alias estable de vista previa verificado. En navegador con propietario: emisión
+de cuatro pases, parcial 2+2, saldo persistente al recargar y revocación; lector
+público rechazó después el boleto, sin QR ni enlaces privados. Consolas limpias.
+Base remota confirmó una emisión y dos admisiones, total cuatro conservado al
+revocar. APIs privadas rechazaron HTTP sin sesión. No hubo prueba física de
+cámara/móviles ni sesión remota de hostess; permisos multirol se probaron localmente.
+
+La prueba UI sólo creó el proyecto desechable
+`f19c2b1e-f9c2-4a63-bb3d-26242d11a67a`, sin documentos/publicación. Se eliminó
+tras verificar id/slug/propietario/borrador; cero invitados/boletos/admisiones restantes.
+Proyecto Janna y seis documentos conservaron sus huellas del inicio de la activación
+(`657f86bc8600a03b37d11c23bce16a39`, `acc5305fd644b0d70215a8497c37cc9d`).
+
 Activar remotamente exige revisión/aprobación del esquema, secreto y despliegue,
 asignaciones explícitas y definición operativa de retención/exportación/eliminación.
 La cascada existente de eliminación de proyecto incluye boletos/logs; no se añade
@@ -156,4 +170,4 @@ Para revertir después de activar: detener el consumidor nuevo, preservar/export
 datos y revisar una migración de reversión. No borrar tablas con admisiones reales.
 Antes de sustituir una puerta existente, resolver compatibilidad de códigos viejos
 y probar dos dispositivos, conexión perdida, último pase y revocación en vista previa.
-Este incremento local no declara terminada la fusión ni afecta la invitación pública.
+Esta activación de vista previa no declara terminada la fusión ni afecta la invitación pública.

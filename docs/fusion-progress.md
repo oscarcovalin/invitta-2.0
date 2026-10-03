@@ -1,18 +1,39 @@
 # Estado verificable de la fusión
 
-## Activación de boletos en vista previa (2026-10-02, en verificación)
+## Activación de boletos en vista previa (2026-10-02, verificada)
 
 Usuario aprobó activar esquema, firma y código en vista previa, probar sólo un
 proyecto ficticio y conservar registros privados sin borrado automático. Supabase
 registró `20261003021708_add_project_door_passes_verified`; firma sensible sólo
 en la rama `preview/invitta-cloud-client-flow`, sin copiar su valor localmente.
 120/120 archivos JS volvieron a pasar. Catálogo y smoke transaccional remoto
-verificados; datos de esa prueba revertidos. Despliegue/recorrido publicados
-pendientes de verificación. No hay autorización para publicar en main/producción.
+verificados; datos de esa prueba revertidos. Despliegue Vercel
+`dpl_AhvQTkkFJyqKNP7KpHaoXMutyqsR`, commit `1ca912b`, READY y alias estable
+apuntando a él. No hay autorización para publicar en main/producción.
+
+Recorrido publicado con la sesión existente del propietario y proyecto ficticio:
+emitir cuatro pases, enlace/QR público, admitir dos grupos de dos, recargar e
+inspeccionar saldo 4 ingresados/0 disponibles; confirmar ingreso quedó deshabilitado.
+Revocación tras recarga confirmada: lector público rechazó el boleto y ocultó QR;
+sin errores/avisos de consola. Supabase confirmó una emisión, dos admisiones y
+total cuatro, preservados después de revocar. HTTP sin sesión: API privada 401,
+credencial pública inválida 422, páginas privadas redirigidas a autenticación.
+
+Proyecto ficticio `f19c2b1e-f9c2-4a63-bb3d-26242d11a67a` eliminado con guardas de
+id/slug/propietario/borrador/no publicación y cero documentos. Conteos posteriores
+de proyecto, invitados, boletos y admisiones: cero. Janna conservó las huellas
+del inicio de esta activación: proyecto `657f86bc8600a03b37d11c23bce16a39`, seis
+documentos `acc5305fd644b0d70215a8497c37cc9d`. No se eliminaron usuarios Auth.
+
+Cámara física, dos móviles y recorrido remoto con otra sesión/rol siguen
+pendientes: las pruebas locales de esos permisos no se presentan como uso remoto
+real. Los pases de emergencia siguen venciendo a las 24 h; no son entrega anticipada.
 
 No modifica Janna ni envía mensajes. El nuevo deseo del usuario —anfitrión que
 personaliza nombres y pases desde una página sencilla— es una capacidad separada
-por definir; no se presenta el boleto de emergencia de 24 h como entrega anticipada.
+por definir en [el mapa propuesto](../tasks/CAPABILITIES-host-delivery.md), aún sin
+implementar ni activar. Retención aprobada: registros privados sin purga automática;
+exportación/eliminación por solicitud, sin prometer una interfaz nueva para ello.
 
 ## Incremento local: boletos y puerta por proyecto (2026-10-02)
 
@@ -38,8 +59,9 @@ incluye página nueva en protección y matcher. Se reprodujo/corrigió permiso d
 cámara tardío tras detenerla y rechazo anónimo incluso en RPC directo.
 Revisión independiente sin Required/Critical; fixtures sintéticos eliminados.
 
-Pendiente antes de uso real: activar esquema/secreto/código con autorización
-separada; acordar retención/exportación/eliminación; probar cámara y dos móviles.
+Pendiente en el cierre local original: activar esquema/secreto/código con autorización
+separada y acordar retención. Estas acciones se completaron en la activación superior;
+probar cámara y dos móviles sigue pendiente antes de uso real.
 El override de tamaño no afectó el navegador disponible: no se afirma una prueba
 móvil real. El aviso de solicitud pendiente impidió probar recarga incierta aquí;
 la restauración está cubierta por pruebas del cliente. No hay build/lint definidos.
