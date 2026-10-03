@@ -3,6 +3,7 @@ const { ROUTE_KEYS, createApiDispatcher, normalizeRoute } = require('./lib/api-d
 
 const response = () => ({
   statusCode: null, body: null,
+  setHeader() {},
   status(code) { this.statusCode = code; return this; },
   json(body) { this.body = body; return this; },
 });
@@ -36,5 +37,13 @@ const response = () => ({
     assert.equal(res.body.success, false);
   }
   assert.equal(normalizeRoute('/projects/list/'), 'projects/list');
+  const deployedDispatch=(await import('./api/index.js')).default;
+  for(const route of ['projects/passes','public/pass']) {
+    assert(ROUTE_KEYS.includes(route),'Door route must be explicitly allowlisted');
+    const res=response();
+    await deployedDispatch({method:'GET',query:{route},headers:{}},res);
+    assert.equal(res.statusCode,405,'Actual lazy wrapper imports and executes');
+    assert.equal(res.body.code,'METHOD_NOT_ALLOWED');
+  }
   console.log(`API dispatcher maps ${ROUTE_KEYS.length} allowlisted routes and rejects malformed paths.`);
 })().catch((error) => { console.error(error); process.exitCode = 1; });
