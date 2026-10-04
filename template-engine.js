@@ -14,6 +14,25 @@
  * 11. Footer (Con Amor, Nombres y Pie de Página)
  */
 
+// Shared by generated markup and its embedded RSVP script; never trust a phone as a URL.
+function resolveRsvpHosts(config) {
+  const hosts = (Array.isArray(config.whatsappHosts) ? config.whatsappHosts : []).slice(0, 10)
+    .filter(h => h && typeof h.phone === 'string')
+    .map(h => {
+      let label = typeof h.label === 'string' ? h.label.trim() : '';
+      if (config.eventType === 'boda') {
+        if (label === 'Anfitrión Principal / Novia') label = config.brideName || 'Novia';
+        if (label === 'Segundo Anfitrión / Novio') label = config.groomName || 'Novio';
+      }
+      return { label: String(label || 'Anfitrión').slice(0, 80), phone: h.phone.replace(/[\s()+.-]/g, '') };
+    }).filter(h => /^[1-9][0-9]{7,14}$/.test(h.phone));
+  if (!hosts.length && typeof config.whatsappNumber === 'string') {
+    const phone = config.whatsappNumber.replace(/[\s()+.-]/g, '');
+    if (/^[1-9][0-9]{7,14}$/.test(phone)) hosts.push({ label: 'Anfitrión', phone });
+  }
+  return hosts;
+}
+
 function hexToRgba(hex, alpha = 0.55) {
   if (!hex) return `rgba(18, 18, 20, ${alpha})`;
   let c = hex.replace('#', '');
@@ -1022,6 +1041,10 @@ const TemplateEngine = {
     const typo = this.resolveTypography(config);
     const isWedding = config.eventType === 'boda';
     const isXv = config.eventType === 'xv';
+    const rsvpHosts = resolveRsvpHosts(config);
+    const namedHostConfirmation = isWedding && rsvpHosts.length > 1;
+    const encodeHostLabel = text => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const albumRecipient = isWedding ? 'los novios' : isXv ? 'la quinceañera' : 'los anfitriones';
     const albumOwner = isWedding ? 'Novios' : isXv ? 'la Quinceañera' : 'los Anfitriones';
     const stardustMoment = isWedding ? 'Primer Baile' : isXv ? 'Vals Principal' : 'Momento Mágico';
@@ -1690,6 +1713,10 @@ tailwind.config = {
     transform: translateY(0) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   }
+
+  #rsvpHostSubmitButtons .btn-rsvp-submit-clean { min-height: 48px; white-space: normal !important; color: #1F1419 !important; }
+  .btn-rsvp-submit-clean:disabled { opacity: 0.6; cursor: wait; }
+  .btn-rsvp-submit-clean:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
 
   .mensaje-personalizado-pergamino, .mensaje-personalizado {
     background-color: rgba(163, 128, 71, 0.07);
@@ -3007,7 +3034,7 @@ tailwind.config = {
         </div>
 
         ${(() => {
-          const rawTitle = (config.rsvp && config.rsvp.title) || config.rsvpTitle || 'Confirmación de Asistencia';
+          const rawTitle = namedHostConfirmation ? 'Confirmación de Asistencia' : (config.rsvp && config.rsvp.title) || config.rsvpTitle || 'Confirmación de Asistencia';
           const isShort = rawTitle.trim().toUpperCase() === 'RSVP';
           return `
             <h2 class="font-display-lg font-normal text-deep-onyx mb-1 uppercase ${isShort ? 'rsvp-title-short' : 'rsvp-title-long'}" id="tituloRsvpPergamino">
@@ -3067,7 +3094,10 @@ tailwind.config = {
             </select>
           </div>
 
-          <button type="submit" id="rsvpSubmit" class="btn-rsvp-submit-clean">Enviar Confirmación</button>
+          ${namedHostConfirmation ? `<div id="rsvpHostSubmitButtons">${rsvpHosts.map((host, index) =>
+            `<button type="submit" id="${index ? 'rsvpSubmitHost' + index : 'rsvpSubmit'}" data-rsvp-host="${index}" class="btn-rsvp-submit-clean">Confirmar con ${encodeHostLabel(host.label)}</button>`
+          ).join('')}</div><p class="text-xs text-tertiary mt-3 text-center">Guardaremos tu respuesta y abriremos WhatsApp. Pulsa Enviar en el chat para avisar al contacto elegido.</p>`
+            : '<button type="submit" id="rsvpSubmit" class="btn-rsvp-submit-clean">Enviar Confirmación</button>'}
           <p id="rsvpError" class="hidden mt-3 text-sm text-red-700" role="alert" aria-live="polite"></p>
         </form>
 
@@ -3607,6 +3637,16 @@ if (musicPlayer && audio) {
   const btnSharePassWhatsapp = document.getElementById('btnSharePassWhatsapp');
   const btnDownloadPassImage = document.getElementById('btnDownloadPassImage');
   let activeSubmissionId = '';
+  let savingRsvp = false;
+  const hostPhones = (${resolveRsvpHosts.toString()})(CONFIG);
+  const namedHostConfirmation = isWedding && hostPhones.length > 1;
+  const submitButtons = namedHostConfirmation
+    ? Array.from(document.querySelectorAll('[data-rsvp-host]')) : [btnSubmit].filter(Boolean);
+  const setSubmitState = (busy) => submitButtons.forEach((button, index) => {
+    button.disabled = busy;
+    button.textContent = busy ? 'Guardando confirmación…' : namedHostConfirmation
+      ? 'Confirmar con ' + hostPhones[index].label : 'Enviar Confirmación';
+  });
 
   const guestParam = urlParams.get('guest') || urlParams.get('invitado');
   const ticketsParam = parseInt(urlParams.get('passes') || urlParams.get('pases') || urlParams.get('tickets'), 10) || 2;
@@ -3657,7 +3697,7 @@ if (musicPlayer && audio) {
     if (inputNombre) inputNombre.value = '';
     if (inputPases) {
       inputPases.innerHTML = '';
-      for (let i = 1; i <= 6; i++) {
+      for (let i = 1; i <= (namedHostConfirmation ? 5 : 6); i++) {
         const opt = document.createElement('option');
         opt.value = i;
         opt.textContent = i === 1 ? '1 Lugar' : (i + ' Lugares');
@@ -3675,13 +3715,14 @@ if (musicPlayer && audio) {
       const campoDietas = document.getElementById('campo-dietas-container');
       if (campoPases) campoPases.style.display = isNo ? 'none' : 'block';
       if (campoDietas) campoDietas.style.display = isNo ? 'none' : 'block';
-      if (btnSubmit) btnSubmit.textContent = isNo ? 'Enviar Aviso (No podré asistir)' : 'Enviar Confirmación';
+      if (btnSubmit && !namedHostConfirmation && !savingRsvp) btnSubmit.textContent = isNo ? 'Enviar Aviso (No podré asistir)' : 'Enviar Confirmación';
     });
   }
 
   // Reset button
   if (btnReset) {
     btnReset.addEventListener('click', () => {
+      if (savingRsvp) return;
       activeSubmissionId = '';
       if (rsvpSuccess) rsvpSuccess.classList.add('hidden');
       const errorEl = document.getElementById('rsvpError');
@@ -3690,10 +3731,7 @@ if (musicPlayer && audio) {
         rsvpForm.classList.remove('hidden');
         rsvpForm.reset();
       }
-      if (btnSubmit) {
-        btnSubmit.disabled = false;
-        btnSubmit.textContent = 'Enviar Confirmación';
-      }
+      setSubmitState(false);
       if (inputEmail) inputEmail.value = '';
       if (inputDieta) inputDieta.value = '';
       if (guestParam && inputNombre) {
@@ -3707,7 +3745,19 @@ if (musicPlayer && audio) {
   if (rsvpForm) {
     rsvpForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (savingRsvp) return;
       if (!rsvpForm.checkValidity()) { rsvpForm.reportValidity(); return; }
+
+      const selectedHostIndex = e.submitter ? Number(e.submitter.dataset.rsvpHost) : 0;
+      const selectedHost = namedHostConfirmation ? hostPhones[selectedHostIndex] || hostPhones[0] : null;
+      // Reserve the tab during the user gesture, then navigate only after a successful save.
+      let pendingChat = null;
+      if (selectedHost) {
+        try {
+          pendingChat = window.open('about:blank', '_blank');
+          if (pendingChat) pendingChat.opener = null;
+        } catch (error) { pendingChat = null; }
+      }
 
       const isAttending = inputAsistencia ? inputAsistencia.value === 'si' : true;
       const guestName = (inputNombre ? inputNombre.value : (guestParam || 'Invitado de Honor')).trim();
@@ -3717,7 +3767,8 @@ if (musicPlayer && audio) {
 
       const errorEl = document.getElementById('rsvpError');
       if (errorEl) { errorEl.textContent = ''; errorEl.classList.add('hidden'); }
-      if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.textContent = 'Guardando confirmación…'; }
+      savingRsvp = true;
+      setSubmitState(true);
       try {
         if (!activeSubmissionId) {
           activeSubmissionId = window.crypto && typeof window.crypto.randomUUID === 'function'
@@ -3784,7 +3835,9 @@ if (musicPlayer && audio) {
           errorEl.textContent = error && error.message ? error.message : 'No fue posible guardar la respuesta. Intenta nuevamente.';
           errorEl.classList.remove('hidden');
         }
-        if (btnSubmit) { btnSubmit.disabled = false; btnSubmit.textContent = 'Enviar Confirmación'; }
+        if (pendingChat && !pendingChat.closed) pendingChat.close();
+        savingRsvp = false;
+        setSubmitState(false);
         return;
       }
 
@@ -3858,6 +3911,16 @@ if (musicPlayer && audio) {
 
       // ── Mensajes Estructurados ──
       const buildHostMessageText = () => {
+        if (namedHostConfirmation) {
+          const lines = ['💌 *Confirmación · ' + calcDisplayName + '*', '👤 *Nombre:* ' + guestName,
+            '*Respuesta:* ' + (isAttending ? '¡Sí, ahí estaré!' : 'No podré asistir')];
+          if (guestEmail) lines.push('*Correo:* ' + guestEmail);
+          if (isAttending) {
+            lines.push('*Lugares:* ' + confirmedTickets);
+            if (allergies) lines.push('*Dieta:* ' + allergies);
+          }
+          return lines.join(String.fromCharCode(10));
+        }
         const attendLine = isAttending ? '✅ Sí, confirmamos nuestra asistencia' : '❌ No podremos asistir';
         const lines = [
           '✨ *Confirmación Pergamino · ' + (CONFIG.eyebrow || 'Evento') + ' de ' + calcDisplayName + '*',
@@ -3889,16 +3952,14 @@ if (musicPlayer && audio) {
       };
 
       // ── Resolución de Anfitriones Multi-WhatsApp ──
-      const hostPhones = [];
-      if (Array.isArray(CONFIG.whatsappHosts) && CONFIG.whatsappHosts.length > 0) {
-        CONFIG.whatsappHosts.forEach(h => {
-          if (h && h.phone && h.phone.trim()) hostPhones.push(h);
-        });
+      const primaryPhone = selectedHost ? selectedHost.phone : hostPhones.length > 0 ? hostPhones[0].phone : '';
+      let chatOpened = false;
+      if (selectedHost && pendingChat && !pendingChat.closed) {
+        try {
+          pendingChat.location.replace('https://wa.me/' + selectedHost.phone + '?text=' + encodeURIComponent(buildHostMessageText()));
+          chatOpened = true;
+        } catch (error) { pendingChat.close(); }
       }
-      if (hostPhones.length === 0 && CONFIG.whatsappNumber && CONFIG.whatsappNumber.trim()) {
-        hostPhones.push({ label: 'Anfitrión Principal', phone: CONFIG.whatsappNumber });
-      }
-      const primaryPhone = hostPhones.length > 0 ? hostPhones[0].phone : '';
 
       // ── Transmisión al Monitor en Vivo / Centro de Envíos ──
       try {
@@ -3929,6 +3990,7 @@ if (musicPlayer && audio) {
       };
 
       if (btnSharePassWhatsapp) {
+        if (selectedHost) btnSharePassWhatsapp.textContent = 'Abrir WhatsApp con ' + selectedHost.label;
         btnSharePassWhatsapp.onclick = triggerWhatsApp;
       }
 
@@ -3947,14 +4009,14 @@ if (musicPlayer && audio) {
         multiHostList.innerHTML = '';
         if (hostPhones.length > 1) {
           multiHostContainer.classList.remove('hidden');
-          hostPhones.slice(1).forEach(h => {
+          (selectedHost ? hostPhones.filter(h => h !== selectedHost) : hostPhones.slice(1)).forEach(h => {
             const btn = document.createElement('a');
             btn.className = 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/90 border border-antique-gold/40 text-[10.5px] font-semibold text-deep-onyx hover:bg-champagne-cream transition-colors shadow-xs';
             btn.target = '_blank';
             btn.rel = 'noopener,noreferrer';
             const cleanP = h.phone.replace(/[^\d]/g, '');
             btn.href = 'https://wa.me/' + cleanP + '?text=' + encodeURIComponent(buildHostMessageText());
-            btn.innerHTML = '<span>📲 ' + (h.label || 'Anfitrión') + '</span>';
+            btn.textContent = '📲 ' + (h.label || 'Anfitrión');
             multiHostList.appendChild(btn);
           });
         } else {
@@ -3969,6 +4031,7 @@ if (musicPlayer && audio) {
       }
 
       setTimeout(() => {
+        savingRsvp = false;
         rsvpForm.classList.add('hidden');
         if (rsvpSuccess) {
           rsvpSuccess.classList.remove('hidden');
@@ -3984,7 +4047,16 @@ if (musicPlayer && audio) {
           if (nameEl) nameEl.textContent = guestName;
           if (folioEl) folioEl.textContent = 'FOLIO: ' + folio;
 
-          if (isAttending) {
+          if (namedHostConfirmation) {
+            // A generic RSVP is not an issued, server-verified admission ticket.
+            const ticket = document.getElementById('passTicketPergamino');
+            if (ticket) ticket.style.display = 'none';
+            if (btnSendToMyWhatsapp) btnSendToMyWhatsapp.style.display = 'none';
+            if (btnDownloadPassImage) btnDownloadPassImage.style.display = 'none';
+            if (msgEl) msgEl.textContent = chatOpened
+              ? 'Tu respuesta quedó guardada. Pulsa Enviar en WhatsApp para avisar a ' + selectedHost.label + '.'
+              : 'Tu respuesta quedó guardada. Pulsa Abrir WhatsApp con ' + selectedHost.label + ' para enviar el aviso.';
+          } else if (isAttending) {
             if (ticketsEl) ticketsEl.textContent = 'Pase autorizado para: ' + confirmedTickets + ' persona' + (confirmedTickets === 1 ? '' : 's');
             if (msgEl) msgEl.textContent = 'Tu respuesta ha sido registrada exitosamente en el sistema oficial.';
             if (labelTableEl) labelTableEl.textContent = tableDisplay.toUpperCase();

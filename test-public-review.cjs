@@ -108,7 +108,7 @@ function fakeFetch({ currentProject = project, saved = document } = {}) {
   const viewer = fs.readFileSync('./invitacion-publica-client.html', 'utf8');
   assert.match(viewer, /<script src="public-rsvp-bridge\.js"><\/script>/);
   assert.match(viewer, /InvittaPublicRsvpBridge\.attach\(frame, slug\)/);
-  assert.match(viewer, /sandbox="allow-scripts allow-forms allow-popups allow-downloads"/);
+  assert.match(viewer, /sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"/);
   assert.doesNotMatch(viewer, /allow-same-origin|portal\.html|invitacion-estudio\.html/);
   assert.match(viewer, /credentials: 'omit'/);
   const template = fs.readFileSync('./template-engine.js', 'utf8');
