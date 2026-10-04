@@ -150,3 +150,13 @@ Evidencia de cierre: 116 pruebas SQL (106 nuevas + 10 existentes), 68 comprobaci
 Auth/PostgREST, 111/111 archivos JavaScript; instalación desde cero y asesores
 locales sin advertencias/errores. Revisión independiente aprobada tras corregir
 la comprobación de limpieza. Ningún dato remoto o publicación alterado.
+
+## Integración selectiva de New-Invitta
+
+- [x] Contenido por evento: boda, XV y otros sin textos cruzados cuando falta
+  personalización; conservar textos propios. Verificar prueba enfocada y suite.
+- [ ] Título Stardust editable y seguro, con respaldo actual si queda vacío;
+  comprobar recorrido Studio → documento → presentación pública en pruebas.
+- [ ] Navegador local y revisión del incremento antes de publicar código.
+- [ ] Firebase: revisar configuración/rutas/reglas y autorización por proyecto
+  antes de implementar cargas remotas. No tocar invitaciones reales como prueba.

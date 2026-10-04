@@ -145,3 +145,29 @@ revisión. Cierre: 116 pgTAP, 68 comprobaciones Auth/PostgREST y 111/111 archivo
 JavaScript; asesores locales sin advertencias/errores. Revisión independiente
 sin hallazgos Required/Critical pendientes. Evidencia y límites en
 [fusion-progress.md](../docs/fusion-progress.md).
+
+## Integración selectiva de New-Invitta: contenido por evento
+
+Fuente revisada: New-Invitta `93a79d93ef3f2f314e20aa506589096a2b634e13`.
+Base: vista previa `8b7c748`, con visibilidad de familia corregida. No incorporar
+la rama local de validez de boletos ni sustituir autenticación, publicación o RSVP.
+
+1. Adaptar textos de respaldo de Stardust, álbum y música para boda, XV y otros
+   eventos. Criterios: tres tipos distinguidos; textos personalizados intactos;
+   escape de configuración y confirmación persistente conservados.
+   Verificar pruebas enfocadas y suite completa. Archivos: motor, prueba y
+   documentación; depende de la base desplegada.
+2. Incorporar título personalizado del overlay Stardust y control en Studio.
+   Criterios: campo vacío usa el título actual; texto guardado/importado aparece
+   en editor y presentación pública; caracteres HTML se muestran como texto.
+   Verificar pruebas RED/GREEN, importación/exportación y navegador local.
+   Depende de 1; archivos: motor, Studio, controlador y pruebas.
+3. Revisar integración Firebase separadamente: identidad del proyecto, rutas,
+   permisos y almacenamiento real antes de habilitar cargas. No migrar datos
+   ni reglas remotas como parte de las entregas de contenido.
+
+Punto de revisión: pruebas y navegador local antes de solicitar publicación.
+No modificar documentos, fotos, audio, revisiones o slugs reales de Janna/Mara.
+Riesgos: cambio involuntario de mensajes escritos por el usuario (sólo usar
+respaldos cuando no haya valor); regresión RSVP (conservar flujo confirmado y
+tests existentes); importación amplia insegura (cambios selectivos, no reemplazo).

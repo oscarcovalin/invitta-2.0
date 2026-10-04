@@ -280,3 +280,24 @@ QR, importación RSVP, álbum, catering compartido y pagos no se dan por termina
 Punto de reversión previo: rama `b78a562`, despliegue Vercel
 `3Av7SjUEKQPnBfMg3MCgvBScrKLB`. Revertir el código no exige eliminar tablas;
 conservar siempre los registros que el cliente haya creado.
+
+## 2026-10-04 — Integración selectiva de New-Invitta: textos por evento (local)
+
+Base desplegada `8b7c748`; fuente New-Invitta `93a79d93`. No reemplazar el
+motor completo: la fuente pierde confirmaciones RSVP persistentes y el escape
+de CONFIG. No incorporar cambios de permisos/validez de boletos sin desplegar.
+
+Primera entrega: respaldos de Stardust, álbum y música diferenciados para boda,
+XV y otros eventos. Los mensajes personalizados se conservan; no se migran ni
+reescriben textos guardados, incluso si contienen referencias a otro evento.
+
+Prueba nueva primero RED (etiqueta XV faltante), después 3/3 pruebas enfocadas
+y 121/121 archivos de la suite. Navegador integrado sobre servidor loopback con
+documentos sintéticos: XV muestra Vals Principal y overlay XV; boda Primer Baile
+y destinatarios novios; otros Momento Mágico y anfitriones. Sin escrituras remotas
+ni cambios en proyectos publicados. Revisión del diff: sólo respaldos de texto;
+flujo RSVP, serialización y publicación preservados. Sin herramientas de build,
+lint o tipado configuradas en package.json. Pendiente publicar previa revisión.
+
+Esta entrega no verifica ni habilita almacenamiento del álbum: Firebase necesita
+revisión independiente de rutas, reglas y autorización por proyecto.

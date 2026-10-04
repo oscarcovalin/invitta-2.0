@@ -1021,6 +1021,15 @@ const TemplateEngine = {
 
     const typo = this.resolveTypography(config);
     const isWedding = config.eventType === 'boda';
+    const isXv = config.eventType === 'xv';
+    const albumRecipient = isWedding ? 'los novios' : isXv ? 'la quinceañera' : 'los anfitriones';
+    const albumOwner = isWedding ? 'Novios' : isXv ? 'la Quinceañera' : 'los Anfitriones';
+    const stardustMoment = isWedding ? 'Primer Baile' : isXv ? 'Vals Principal' : 'Momento Mágico';
+    const stardustDefaultText = isWedding
+      ? 'Al caer la noche, encenderemos juntos una constelación de luces y bengalas para iluminar nuestro primer baile.'
+      : isXv
+        ? 'Al caer la noche, encenderemos juntos una constelación de luces y bengalas para iluminar mi vals principal y llenar la pista de magia.'
+        : 'Al caer la noche, encenderemos juntos una constelación de luces y bengalas para celebrar este momento inolvidable.';
     const stardustOverlayTitle = isWedding
       ? '¡Ilumina a los Novios!'
       : config.eventType === 'xv'
@@ -2802,12 +2811,12 @@ tailwind.config = {
         ${(config.stardust && config.stardust.time) ? `
         <div class="mb-3">
           <span class="font-mono text-[11px] font-semibold text-antique-gold bg-black/60 px-3 py-0.5 rounded-full border border-antique-gold/40 inline-block" id="stardustTime">
-            ${config.stardust.time} · Primer Baile
+            ${config.stardust.time} · ${stardustMoment}
           </span>
         </div>` : ''}
 
         <p class="font-display-lg text-[15px] sm:text-[16.5px] text-[#f7f6ec]/90 max-w-md mx-auto leading-relaxed font-light mb-6 tracking-wide" id="stardustText">
-          ${(config.stardust && config.stardust.text) || 'Al caer la noche, encenderemos juntos una constelación de luces y bengalas para iluminar nuestro primer baile.'}
+          ${(config.stardust && config.stardust.text) || stardustDefaultText}
         </p>
 
         <button type="button" id="btnOpenStardustLight" class="btn-luxury-primary text-[11.5px] sm:text-[12.5px] py-3 px-8 uppercase tracking-[0.25em] font-semibold inline-flex items-center gap-2.5 shadow-[0_0_25px_rgba(212,175,55,0.5)] hover:shadow-[0_0_35px_rgba(212,175,55,0.8)] transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
@@ -2843,7 +2852,7 @@ tailwind.config = {
       </h3>
 
       <p class="font-display-lg text-[15.5px] sm:text-[17px] text-deep-onyx/85 leading-[1.7] mb-6 max-w-md mx-auto font-light tracking-wide" id="albumDescription">
-        ${(config.sharedAlbum && config.sharedAlbum.description) || '¡Ayúdanos a capturar cada momento! Deposita aquí todas las fotos y videos que tomes. Se guardarán en la cápsula privada de recuerdos de los novios.'}
+        ${(config.sharedAlbum && config.sharedAlbum.description) || `¡Ayúdanos a capturar cada momento! Deposita aquí todas las fotos y videos que tomes. Se guardarán en la cápsula privada de recuerdos de ${albumRecipient}.`}
       </p>
 
       <!-- TARJETA MOTIVACIONAL: ÚLTIMAS 3 FOTOS DE INVITADOS -->
@@ -2879,7 +2888,7 @@ tailwind.config = {
         </p>
 
         <div class="flex items-center gap-2">
-          <input id="inputAlbumUnlockCode" type="text" placeholder="Ej: ${(config.sharedAlbum && config.sharedAlbum.accessCode) || 'BODA2027'} o tu Folio" 
+          <input id="inputAlbumUnlockCode" type="text" placeholder="Ej: ${(config.sharedAlbum && config.sharedAlbum.accessCode) || (isWedding ? 'BODA2027' : isXv ? 'XV2027' : 'EVENTO2027')} o tu Folio"
                  class="w-full text-center font-mono font-bold text-xs uppercase bg-white border border-antique-gold/40 rounded-xl py-2 px-3 outline-none focus:border-antique-gold">
           <button type="button" id="btnUnlockAlbumUpload" class="btn-luxury-primary text-[11px] py-2 px-3.5 whitespace-nowrap uppercase tracking-wider font-semibold">
             Desbloquear
@@ -2913,7 +2922,7 @@ tailwind.config = {
         <div id="albumSelectedPreviews" class="grid grid-cols-3 gap-2 mb-4 hidden"></div>
 
         <!-- Campo de Dedicatoria -->
-        <textarea id="inputAlbumDedication" rows="2" placeholder="Dedicatoria o mensaje para los novios (opcional)..." 
+        <textarea id="inputAlbumDedication" rows="2" placeholder="Dedicatoria o mensaje para ${albumRecipient} (opcional)..."
                   class="w-full text-xs p-3 rounded-xl border border-antique-gold/40 bg-white/90 outline-none focus:border-antique-gold resize-none mb-4 placeholder:text-neutral-400"></textarea>
 
         <!-- Botón de Envío al Buzón -->
@@ -2928,7 +2937,7 @@ tailwind.config = {
         <span class="text-3xl mb-2 block">💌</span>
         <h4 class="font-display-lg text-lg text-deep-onyx font-bold mb-1">¡Recuerdos Entregados con Éxito!</h4>
         <p id="albumSuccessText" class="text-xs text-deep-onyx/80 mb-4 max-w-sm mx-auto leading-relaxed">
-          Tus fotos han sido depositadas de forma segura y privada en la cápsula de los novios. ¡Muchas gracias por capturar estos momentos!
+          Tus fotos han sido depositadas de forma segura y privada en la cápsula de ${albumRecipient}. ¡Muchas gracias por capturar estos momentos!
         </p>
         <button type="button" id="btnUploadMoreAlbumPhotos" class="btn-luxury-primary text-[10.5px] py-1.5 px-4 uppercase tracking-wider font-semibold">
           Subir Más Fotos
@@ -2939,7 +2948,7 @@ tailwind.config = {
       <div class="mt-8 pt-5 border-t border-antique-gold/25 flex flex-col items-center">
         <button type="button" id="btnOpenBrideGalleryModal" class="text-[11px] sm:text-xs text-antique-gold/85 hover:text-antique-gold font-semibold flex items-center gap-1.5 hover:underline transition-all">
           ${I.lock}
-          <span>Acceso Exclusivo Novios: Ver Galería Privada</span>
+          <span>Acceso Exclusivo ${isWedding ? 'Novios' : isXv ? 'Quinceañera' : 'Anfitriones'}: Ver Galería Privada</span>
         </button>
       </div>
 
@@ -3190,7 +3199,7 @@ tailwind.config = {
   <div id="musicPillLabel" class="hidden sm:group-hover:flex items-center gap-1.5 ml-2 px-2.5 py-1 bg-white/90 backdrop-blur-md border border-antique-gold/40 rounded-full shadow-sm text-left pointer-events-none transition-all duration-300 animate-fadeIn">
     <span id="musicStatus" class="font-label-caps text-[8px] uppercase tracking-[0.15em] text-antique-gold font-bold">Música</span>
     <span id="musicTitle" class="font-label-caps text-[9.5px] text-deep-onyx tracking-wider max-w-[120px] truncate font-medium">
-      ${musicConfig.title || 'Canción de los Novios'}
+      ${musicConfig.title || (isWedding ? 'Canción de los Novios' : isXv ? 'Canción de la Quinceañera' : 'Música del Evento')}
     </span>
   </div>
 </div>
@@ -3271,9 +3280,9 @@ tailwind.config = {
       <!-- Encabezado de Galería -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-antique-gold/30 mb-4">
         <div>
-          <span class="font-label-caps text-[10px] text-antique-gold tracking-widest uppercase font-semibold block">Cápsula Nupcial</span>
+          <span class="font-label-caps text-[10px] text-antique-gold tracking-widest uppercase font-semibold block">${isWedding ? 'Cápsula Nupcial' : 'Cápsula de Recuerdos'}</span>
           <h3 class="font-display-lg text-xl sm:text-2xl text-white font-normal flex items-center gap-2">
-            <span>👑 Galería Privada de Novios</span>
+            <span>👑 Galería Privada de ${albumOwner}</span>
           </h3>
           <span id="labelTotalAlbumPhotos" class="text-xs text-neutral-400 font-mono">0 fotos recopiladas</span>
         </div>
