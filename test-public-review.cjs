@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const TemplateEngine = require('./template-engine.js');
 const { readPublicReview, readPublicReviewMedia } = require('./lib/public-review.cjs');
 const { createPublicReviewHandler, createPublicReviewMediaHandler } = require('./lib/public-review-handler.cjs');
 
@@ -56,6 +57,24 @@ function fakeFetch({ currentProject = project, saved = document } = {}) {
   assert.equal(review.presentation.rsvpWebhookUrl, undefined);
   assert.doesNotMatch(JSON.stringify(review), /SECRET_TOKEN|private\.example|invitation-assets|\/music\/5000/);
   assert.equal(reviewFetch.calls.length, 3);
+
+  // Public rendering must honor the same family visibility switches as Studio.
+  for (const familyConfig of [
+    { family: { enabled: false, internalNote: 'PRIVATE_FAMILY_NOTE' } },
+    { familyEnabled: false },
+    { family: { enabled: true }, familyEnabled: false },
+    { family: { enabled: false }, familyEnabled: true },
+    { family: { enabled: true }, familyEnabled: true },
+  ]) {
+    const saved = structuredClone(document);
+    Object.assign(saved.legacy.config, familyConfig);
+    const familyReview = await readPublicReview({ slug: 'family-visibility', config, fetchImpl: fakeFetch({ saved }).fetchImpl });
+    const html = TemplateEngine.generateHTML(familyReview.presentation, 'vino');
+    const familyClass = html.match(/<section id="family" class="([^"]*)"/)[1];
+    const hidden = familyConfig.family?.enabled === false || familyConfig.familyEnabled === false;
+    assert.equal(/\bhidden\b/.test(familyClass), hidden, JSON.stringify(familyConfig));
+    assert.doesNotMatch(JSON.stringify(familyReview), /PRIVATE_FAMILY_NOTE/);
+  }
 
   const mediaFetch = fakeFetch();
   const image = await readPublicReviewMedia({ slug: 'janna-sharlot', field: 'photos.hero', config, fetchImpl: mediaFetch.fetchImpl });
