@@ -155,8 +155,9 @@ la comprobación de limpieza. Ningún dato remoto o publicación alterado.
 
 - [x] Contenido por evento: boda, XV y otros sin textos cruzados cuando falta
   personalización; conservar textos propios. Verificar prueba enfocada y suite.
-- [ ] Título Stardust editable y seguro, con respaldo actual si queda vacío;
+- [x] Título Stardust editable y seguro, con respaldo actual si queda vacío;
   comprobar recorrido Studio → documento → presentación pública en pruebas.
-- [ ] Navegador local y revisión del incremento antes de publicar código.
+- [x] Navegador local y revisión del incremento antes de publicar código.
+- [ ] Aprobación humana y publicación del bloque de contenido en vista previa.
 - [ ] Firebase: revisar configuración/rutas/reglas y autorización por proyecto
   antes de implementar cargas remotas. No tocar invitaciones reales como prueba.

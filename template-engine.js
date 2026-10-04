@@ -1030,11 +1030,17 @@ const TemplateEngine = {
       : isXv
         ? 'Al caer la noche, encenderemos juntos una constelación de luces y bengalas para iluminar mi vals principal y llenar la pista de magia.'
         : 'Al caer la noche, encenderemos juntos una constelación de luces y bengalas para celebrar este momento inolvidable.';
-    const stardustOverlayTitle = isWedding
+    const stardustDefaultOverlayTitle = isWedding
       ? '¡Ilumina a los Novios!'
-      : config.eventType === 'xv'
+      : isXv
         ? '¡Ilumina sus XV años!'
         : '¡Ilumina la celebración!';
+    const customOverlayTitle = typeof config.stardust?.overlayTitle === 'string'
+      ? config.stardust.overlayTitle.trim() : '';
+    // This field is plain text, including when imported from a project JSON.
+    const stardustOverlayTitle = (customOverlayTitle || stardustDefaultOverlayTitle)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
     const brideDisplayName = isWedding ? (config.brideName || "Catalina") : (config.name || "Valentina");
     const groomDisplayName = isWedding ? (config.groomName || "Julián") : "";
@@ -3228,7 +3234,7 @@ tailwind.config = {
     <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-amber-300/30 border border-amber-300/60 flex items-center justify-center shadow-[0_0_70px_rgba(255,215,0,0.85)] mb-6 animate-bounce">
       <span class="text-4xl sm:text-5xl">✨</span>
     </div>
-    <h2 class="font-display-lg text-3xl sm:text-4xl md:text-5xl text-amber-100 font-normal tracking-wide drop-shadow-[0_2px_20px_rgba(255,215,0,0.9)] mb-2">
+    <h2 id="stardustOverlayTitle" class="font-display-lg text-3xl sm:text-4xl md:text-5xl text-amber-100 font-normal tracking-wide drop-shadow-[0_2px_20px_rgba(255,215,0,0.9)] mb-2">
       ${stardustOverlayTitle}
     </h2>
     <p class="font-display-lg text-xl sm:text-2xl text-amber-200/90 italic font-light max-w-xs drop-shadow-md">

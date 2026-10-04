@@ -1367,11 +1367,13 @@ function populateForm() {
   // Polvo de Estrellas
   const stardust = currentConfig.stardust || TemplateEngine.defaultConfig.stardust || {};
   const inSdTitle = document.getElementById('inputStardustTitle');
+  const inSdOverlayTitle = document.getElementById('inputStardustOverlayTitle');
   const inSdSub = document.getElementById('inputStardustSubtitle');
   const inSdTime = document.getElementById('inputStardustTime');
   const inSdBtn = document.getElementById('inputStardustBtnText');
   const inSdText = document.getElementById('inputStardustText');
   if (inSdTitle) inSdTitle.value = stardust.title || 'Polvo de Estrellas';
+  if (inSdOverlayTitle) inSdOverlayTitle.value = typeof stardust.overlayTitle === 'string' ? stardust.overlayTitle : '';
   if (inSdSub) inSdSub.value = stardust.subtitle || 'Momento Mágico';
   if (inSdTime) inSdTime.value = stardust.time || '21:30 HRS';
   if (inSdBtn) inSdBtn.value = stardust.buttonText || '✨ Encender mi Luz';
@@ -1693,6 +1695,7 @@ function setupInputListeners() {
     { id: 'inputReceptionMap', path: 'reception.mapsUrl' },
     { id: 'inputReceptionWaze', path: 'reception.wazeUrl' },
     { id: 'inputStardustTitle', path: 'stardust.title' },
+    { id: 'inputStardustOverlayTitle', path: 'stardust.overlayTitle' },
     { id: 'inputStardustSubtitle', path: 'stardust.subtitle' },
     { id: 'inputStardustTime', path: 'stardust.time' },
     { id: 'inputStardustBtnText', path: 'stardust.buttonText' },

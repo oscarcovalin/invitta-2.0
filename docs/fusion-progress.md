@@ -301,3 +301,29 @@ lint o tipado configuradas en package.json. Pendiente publicar previa revisión.
 
 Esta entrega no verifica ni habilita almacenamiento del álbum: Firebase necesita
 revisión independiente de rutas, reglas y autorización por proyecto.
+
+Segunda entrega local: campo «Título al encender la luz» dentro de Polvo de
+Estrellas. `stardust.overlayTitle` se conserva mediante el adaptador existente;
+el motor acepta sólo cadenas, ignora espacios vacíos y codifica caracteres HTML.
+No se cambia el título automático de proyectos anteriores ni la lógica RSVP.
+
+Verificación: prueba nueva primero RED y luego GREEN, incluyendo HTML hostil,
+valor no textual, campo vacío, binding/hidratación reales de Studio, round-trip
+de documento/JSON y proyección pública con respuestas sintéticas. Suite final
+122/122; comprobaciones de sintaxis de app.js y template-engine.js correctas.
+Diff revisado en cinco ejes; whitespace comprobado respetando CRLF existente.
+Sin dependencias nuevas ni migración. El motor grande permanece como deuda
+existente: se añade un campo a su módulo, sin refactorización amplia en este bloque.
+
+Navegador local: edición → preview → guardado en memoria → recarga recupera el
+título. Overlay visible a ancho de escritorio y dentro de un iframe de 390 px,
+sin desbordamiento del encabezado. El override del navegador no cambió el ancho
+observado; se restableció y se usó el iframe explícito para verificar el ancho.
+La sesión/API son fixtures locales, no una verificación remota de Supabase.
+Consola: persiste el aviso heredado de Tailwind CDN; no se promete cero avisos.
+Capturas en outputs/new-invitta-studio-field.jpg y
+outputs/new-invitta-stardust-mobile-390.jpg, fuera del repositorio.
+
+Uso del campo documentado en [stardust-customization.md](stardust-customization.md).
+Pendiente aprobación humana y despliegue de los dos commits locales. Punto de
+reversión del bloque completo: `8b7c748`, sin cambios de datos o permisos remotos.
