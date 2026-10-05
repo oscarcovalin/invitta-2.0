@@ -6,6 +6,9 @@ apertura interactiva. Mantenerla activada; el monograma se configura en
 `waxSeal.openingStyle = 'initials'` conserva el botón de apertura y su gesto
 para iniciar música, sin imagen/sello, frase ni nombres completos duplicados.
 Usa la familia tipográfica de los nombres y un tamaño medio de 48–64 px.
+La apertura tiene fondo de papel beige y las iniciales se apilan en vertical
+(M, &, F), según la referencia del cliente; no copia nombres, frases ni flechas.
+Reutiliza la textura decorativa existente, sin nuevas imágenes/dependencias.
 Sin modo nuevo, modo desconocido o apertura desactivada: comportamiento anterior.
 No cambia otras invitaciones automáticamente, auth, activos, SQL ni permisos.
 
@@ -36,3 +39,8 @@ Auditoría npm de dependencias runtime: cero vulnerabilidades; no instalaciones.
 Sintaxis y diff --check (CRLF del repositorio) correctos; pruebas de galería,
 guardado, tipografía, monograma y música conservadas. No se publica el cambio
 ni se aplica sobre datos remotos mientras el usuario mantiene edición abierta.
+
+Revisión visual del fondo claro: RED por ausencia de líneas verticales;
+GREEN conserva botón, música, texto codificado y modo opt-in. Cuatro tamaños
+verificados nuevamente sin desbordes; fuente LocalCustomNames cargada.
+Captura local: ta/.cache/mara-initials-paper-proof.png. No es publicación pública.

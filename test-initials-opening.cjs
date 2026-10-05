@@ -12,7 +12,10 @@ config.eventType = 'boda'; config.name = 'Test couple'; config.brideName = 'Mara
 config.monogram = 'M & F'; config.waxSeal = { enabled: true, openingStyle: 'initials', customImage: 'assets/seal.png' };
 const opening = engine.generateHTML(config, 'vino').match(/<div id="waxSealCurtain"[\s\S]*?<!-- Capa de Fondo/)[0];
 assert.match(opening, /<button[^>]+id="btnBreakWaxSeal"/, 'Initials are a keyboard-accessible opening button');
-assert.match(opening, /class="opening-initials font-names"[^>]*>M &amp; F<\/span>/, 'Only initials use the invitation names font');
+assert.match(opening, /class="opening-initials font-names"/, 'Initials use the invitation names font');
+assert.match(opening, /<span class="opening-initial-line">M<\/span><span class="opening-initial-line">&amp;<\/span><span class="opening-initial-line">F<\/span>/, 'Initials are stacked like the reference, without names');
+assert.match(opening, /class="opening-initials-curtain /, 'Initials opening has its own light paper background');
+assert.match(opening, /class="paper-grain-overlay opening-paper-grain" aria-hidden="true"/, 'Paper texture reuses the existing decoration');
 assert.doesNotMatch(opening, /<svg|<img|Toca el sello|Mara|Fer/, 'No seal, duplicate full names, or seal hint');
 const html = engine.generateHTML(config, 'vino');
 assert.match(html, /font-size: clamp\(3rem, 6vw, 4rem\)/, 'Medium responsive size: 48–64px');
@@ -34,7 +37,7 @@ assert.equal(adapter.toLegacyTemplateConfig(doc).waxSeal.openingStyle, 'initials
 const candidate = buildPublicationCandidate({documentId:'30000000-0000-4000-8000-000000000003',document:doc});
 const publicConfig = publicPresentation({slug:'test-couple',document:doc,candidate});
 assert.equal(publicConfig.waxSeal.openingStyle, 'initials', 'Published presentation retains mode');
-assert.match(engine.generateHTML(publicConfig, 'vino'), /class="opening-initials font-names">M &amp; F/);
+assert.match(engine.generateHTML(publicConfig, 'vino'), /class="opening-initial-line">M/);
 config.monogram = '<img src=x onerror=alert(1)>';
 const hostileOpening = engine.generateHTML(config, 'vino').match(/<div id="waxSealCurtain"[\s\S]*?<!-- Capa de Fondo/)[0];
 assert.doesNotMatch(hostileOpening, /<img/, 'Initials are encoded as text, not executable markup');

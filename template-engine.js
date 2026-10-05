@@ -1304,9 +1304,12 @@ tailwind.config = {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-  .opening-initials-button { border: 0; background: transparent; padding: 1rem; max-width: 100%; color: #f7f6ec; cursor: pointer; }
+  .opening-initials-curtain { --opening-ink: #29261f; background: radial-gradient(ellipse at 50% 35%, #f2e2c5, #e3c99e); }
+  .opening-initials-curtain .opening-paper-grain { position: absolute; width: 100%; height: 100%; z-index: 0; opacity: 0.08; }
+  .opening-initials-button { position: relative; z-index: 1; border: 0; background: transparent; padding: 1rem; max-width: 100%; color: var(--opening-ink); cursor: pointer; }
   .opening-initials-button:focus-visible { outline: 2px solid currentColor; outline-offset: 8px; }
-  .opening-initials { display: block; font-size: clamp(3rem, 6vw, 4rem); line-height: 1.4; font-weight: 400; overflow-wrap: anywhere; }
+  .opening-initials { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; font-size: clamp(3rem, 6vw, 4rem); line-height: 1.2; font-weight: 400; overflow-wrap: anywhere; }
+  .opening-initial-line { max-width: 100%; }
   ${typo.localFontFaces}
 
   /* White deckled paper rim; natural image height, no fixed aspect ratio. */
@@ -1910,10 +1913,12 @@ tailwind.config = {
 
     if (ws.openingStyle === 'initials') {
       const initials = headerMonogram.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      const initialsLines = initials.split(/(&amp;)/).map(part => `<span class="opening-initial-line">${part.trim()}</span>`).join('');
       return `
-      <div id="waxSealCurtain" class="fixed inset-0 z-[9995] bg-[#090b10]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center select-none transition-all duration-700">
+      <div id="waxSealCurtain" class="opening-initials-curtain fixed inset-0 z-[9995] flex flex-col items-center justify-center p-6 text-center select-none transition-all duration-700">
+        <div class="paper-grain-overlay opening-paper-grain" aria-hidden="true"></div>
         <button type="button" id="btnBreakWaxSeal" class="opening-initials-button" aria-label="Abrir invitación">
-          <span class="opening-initials font-names">${initials}</span>
+          <span class="opening-initials font-names">${initialsLines}</span>
         </button>
       </div>`;
     }
