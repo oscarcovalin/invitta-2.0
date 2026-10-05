@@ -4,11 +4,13 @@ Added: Studio permite seleccionar «Sólo iniciales, sin sello» dentro de la
 apertura interactiva. Mantenerla activada; el monograma se configura en
 «Monograma / Iniciales (apertura y encabezado)». El campo
 `waxSeal.openingStyle = 'initials'` conserva el botón de apertura y su gesto
-para iniciar música, sin imagen/sello, frase ni nombres completos duplicados.
+para iniciar música, sin imagen/sello ni nombres completos duplicados.
 Usa la familia tipográfica de los nombres y un tamaño medio de 48–64 px.
 La apertura tiene fondo azul marino (#0D1524) y letras marfil (#f7f6ec).
 Las iniciales se apilan en vertical
-(M, &, F), según la referencia del cliente; no copia nombres, frases ni flechas.
+(M, &, F), según la referencia del cliente; no copia nombres ni flechas.
+Debajo aparecen «Tenemos una noticia…» y «Haz click» en marfil, con espacio
+entre ambas frases. Las dos son parte del mismo botón accesible de apertura.
 Reutiliza la textura decorativa existente, sin nuevas imágenes/dependencias.
 Sin modo nuevo, modo desconocido o apertura desactivada: comportamiento anterior.
 No cambia otras invitaciones automáticamente, auth, activos, SQL ni permisos.
@@ -49,4 +51,8 @@ letras marfil; mantiene posición, tipografía, tamaño, textura y gesto de aper
 Verificación azul/marfil: RED de paleta, GREEN y 125/125 archivos de pruebas;
 colores calculados rgb(13,21,36)/rgb(247,246,236), fuente cargada y sin
 desbordes en los cuatro tamaños. Enter sigue abriendo e iniciando música.
-Captura vigente: ta/.cache/mara-initials-blue-proof.jpg. No es publicación pública.
+Textos de apertura: RED por ausencia de anuncio e indicación; GREEN y
+125/125 archivos de pruebas. Visibles a 320/768/1024/1440 px sin desbordes;
+16 px para anuncio y 12 px para indicación, misma tinta marfil. Enter conserva
+la apertura y música. Sin cambios de datos remotos ni recarga de Studio.
+Captura vigente: ta/.cache/mara-initials-text-proof.jpg. No es publicación pública.

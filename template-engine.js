@@ -1310,6 +1310,8 @@ tailwind.config = {
   .opening-initials-button:focus-visible { outline: 2px solid currentColor; outline-offset: 8px; }
   .opening-initials { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; font-size: clamp(3rem, 6vw, 4rem); line-height: 1.2; font-weight: 400; overflow-wrap: anywhere; }
   .opening-initial-line { max-width: 100%; }
+  .opening-announcement { display: block; margin-top: 1.5rem; font-family: var(--font-display); font-size: 1rem; line-height: 1.5; }
+  .opening-action-hint { display: block; margin-top: 2rem; font-family: var(--font-body); font-size: 0.75rem; line-height: 1.5; letter-spacing: 0.16em; text-transform: uppercase; }
   ${typo.localFontFaces}
 
   /* White deckled paper rim; natural image height, no fixed aspect ratio. */
@@ -1919,6 +1921,8 @@ tailwind.config = {
         <div class="paper-grain-overlay opening-paper-grain" aria-hidden="true"></div>
         <button type="button" id="btnBreakWaxSeal" class="opening-initials-button" aria-label="Abrir invitación">
           <span class="opening-initials font-names">${initialsLines}</span>
+          <span class="opening-announcement">Tenemos una noticia…</span>
+          <span class="opening-action-hint">Haz click</span>
         </button>
       </div>`;
     }

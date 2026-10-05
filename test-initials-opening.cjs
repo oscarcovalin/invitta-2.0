@@ -17,6 +17,7 @@ assert.match(opening, /<span class="opening-initial-line">M<\/span><span class="
 assert.match(opening, /class="opening-initials-curtain /, 'Initials opening has its own background');
 assert.match(opening, /class="paper-grain-overlay opening-paper-grain" aria-hidden="true"/, 'Paper texture reuses the existing decoration');
 assert.doesNotMatch(opening, /<svg|<img|Toca el sello|Mara|Fer/, 'No seal, duplicate full names, or seal hint');
+assert.match(opening, /opening-initials font-names[\s\S]*?class="opening-announcement">Tenemos una noticia…<\/span>[\s\S]*?class="opening-action-hint">Haz click<\/span>[\s\S]*?<\/button>/, 'Announcement and hint appear below initials inside the opening button');
 const html = engine.generateHTML(config, 'vino');
 assert.match(html, /\.opening-initials-curtain \{ --opening-ink: #f7f6ec; background: #0D1524; \}/, 'Ivory initials on the existing navy palette');
 assert.match(html, /font-size: clamp\(3rem, 6vw, 4rem\)/, 'Medium responsive size: 48–64px');
