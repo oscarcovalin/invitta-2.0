@@ -1304,6 +1304,9 @@ tailwind.config = {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
+  .opening-initials-button { border: 0; background: transparent; padding: 1rem; max-width: 100%; color: #f7f6ec; cursor: pointer; }
+  .opening-initials-button:focus-visible { outline: 2px solid currentColor; outline-offset: 8px; }
+  .opening-initials { display: block; font-size: clamp(3rem, 6vw, 4rem); line-height: 1.4; font-weight: 400; overflow-wrap: anywhere; }
   ${typo.localFontFaces}
 
   /* White deckled paper rim; natural image height, no fixed aspect ratio. */
@@ -1904,6 +1907,16 @@ tailwind.config = {
   ${(() => {
     const ws = config.waxSeal || { enabled: true, preset: 'gold', promptText: 'Toca el sello para abrir' };
     if (ws.enabled === false) return '';
+
+    if (ws.openingStyle === 'initials') {
+      const initials = headerMonogram.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      return `
+      <div id="waxSealCurtain" class="fixed inset-0 z-[9995] bg-[#090b10]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center select-none transition-all duration-700">
+        <button type="button" id="btnBreakWaxSeal" class="opening-initials-button" aria-label="Abrir invitación">
+          <span class="opening-initials font-names">${initials}</span>
+        </button>
+      </div>`;
+    }
 
     const preset = ws.preset || 'gold';
     const prompt = ws.promptText || 'Toca el sello para abrir';

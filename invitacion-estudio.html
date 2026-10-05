@@ -190,11 +190,19 @@
                 <label class="toggle-switch" for="checkWaxSealEnabled" style="margin:0;">
                   <input type="checkbox" id="checkWaxSealEnabled" checked>
                   <span class="toggle-slider"></span>
-                  <span class="toggle-label-text">👑 Sello de Cera / Lacra Interactivo</span>
+                  <span class="toggle-label-text">Apertura interactiva (sello o iniciales)</span>
                 </label>
               </div>
 
               <div id="waxSealControls" style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+                <div class="form-group">
+                  <label for="selectOpeningStyle">Estilo de apertura</label>
+                  <select id="selectOpeningStyle">
+                    <option value="seal">Sello de cera (original)</option>
+                    <option value="initials">Sólo iniciales, sin sello</option>
+                  </select>
+                  <p class="help-text">Las iniciales usan la tipografía de los nombres y un tamaño medio. Tócalas para abrir.</p>
+                </div>
                 <!-- Subir Sello Personalizado (PNG Transparente) -->
                 <div class="form-group">
                   <label for="fileWaxSeal">Sello Personalizado <span class="hint">(PNG transparente sin fondo)</span></label>
@@ -228,7 +236,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="inputMonogram">Monograma / Iniciales del Sello Superior (Opcional)</label>
+              <label for="inputMonogram">Monograma / Iniciales (apertura y encabezado)</label>
               <input type="text" id="inputMonogram" placeholder="Dejar vacío para auto: C & J o V">
             </div>
             <div class="form-group">

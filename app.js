@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupGalleryFrameControl();
   setupFamilyStyleControls();
   setupWaxSealControls();
+  setupOpeningStyleControl();
   setupVendorCardLogoControls();
   setupFileUploads();
   setupHeaderActions();
@@ -1038,6 +1039,8 @@ function populateForm() {
 
   // Sincronizar Sello de Cera
   const ws = currentConfig.waxSeal || { enabled: true, preset: 'gold', promptText: 'Toca el sello para abrir', customImage: '' };
+  const openingStyle = document.getElementById('selectOpeningStyle');
+  if (openingStyle) openingStyle.value = ws.openingStyle === 'initials' ? 'initials' : 'seal';
   const chkWax = document.getElementById('checkWaxSealEnabled');
   const selWax = document.getElementById('selectWaxSealPreset');
   const inWaxPrompt = document.getElementById('inputWaxSealPrompt');
@@ -3055,6 +3058,16 @@ window.addEventListener('message', (event) => {
 
 
 // ==================== WAX SEAL CONTROLS ====================
+function setupOpeningStyleControl() {
+  const control = document.getElementById('selectOpeningStyle');
+  if (!control) return;
+  control.addEventListener('change', (e) => {
+    if (!currentConfig.waxSeal) currentConfig.waxSeal = {};
+    currentConfig.waxSeal.openingStyle = e.target.value === 'initials' ? 'initials' : 'seal';
+    schedulePreviewUpdate();
+  });
+}
+
 function setupWaxSealControls() {
   const checkEnabled = document.getElementById('checkWaxSealEnabled');
   const controlsDiv = document.getElementById('waxSealControls');
