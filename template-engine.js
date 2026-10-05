@@ -1156,6 +1156,9 @@ const TemplateEngine = {
     const isLodgingEnabled = (config.lodging ? config.lodging.enabled !== false : true) && !!(config.lodging && config.lodging.hotels && config.lodging.hotels.length > 0);
     const isDressCodeEnabled = (config.dressCode ? config.dressCode.enabled !== false : true);
     const isGalleryEnabled = (config.photos ? config.photos.galleryEnabled !== false : true) && !!(config.photos && config.photos.gallery && config.photos.gallery.length > 0);
+    const paperGallery = config.photos?.galleryFrame === 'torn-paper';
+    // Local vector mask: no image upload, external dependency, or project-wide default.
+    const paperMask = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="none"><defs><filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".075" numOctaves="3" seed="7"/><feDisplacementMap in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter></defs><path fill="white" filter="url(#rough)" d="M9 26 L35 22 57 12 85 9 114 17 145 13 174 17 207 10 236 12 264 6 289 15 325 10 354 13 390 5 421 9 448 15 475 9 510 13 548 10 574 15 581 45 589 76 585 110 593 148 589 175 593 211 587 246 594 277 589 304 595 345 580 366 550 372 519 378 486 375 454 385 421 379 390 387 356 380 325 390 294 384 260 390 227 381 198 384 166 375 135 384 102 377 72 380 45 370 28 364 21 333 14 305 20 274 13 243 17 212 10 181 15 148 10 113 13 82 8 55 Z"/></svg>');
     const isGiftRegistryEnabled = config.giftRegistry && config.giftRegistry.enabled !== false;
     const isItineraryEnabled = config.itineraryEnabled !== false && (config.itinerary ? config.itinerary.enabled !== false : true) && itinerarySteps.length > 0;
     const isSharedAlbumEnabled = config.sharedAlbum && config.sharedAlbum.enabled !== false;
@@ -1302,6 +1305,19 @@ tailwind.config = {
 
 <style>
   ${typo.localFontFaces}
+
+  /* White deckled paper rim; natural image height, no fixed aspect ratio. */
+  #galleryGrid .gallery-paper { filter: drop-shadow(0 4px 5px rgba(0,0,0,.12)); }
+  #galleryGrid .gallery-paper-frame { padding: 10px; background: #faf8f3; }
+  #galleryGrid .gallery-paper-photo { overflow: hidden; }
+  @supports (mask-image: url("")) or (-webkit-mask-image: url("")) {
+    #galleryGrid .gallery-paper-frame, #galleryGrid .gallery-paper-photo {
+      -webkit-mask-image: url("${paperMask}"); mask-image: url("${paperMask}");
+      -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+      -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+      mask-mode: alpha;
+    }
+  }
 
   :root {
     --champagne: ${activeTheme['cream'] || '#FAF8F5'};
@@ -2680,7 +2696,17 @@ tailwind.config = {
       
       <!-- Galería Editorial: Fotos Completas, Sin Esquinas Redondeadas, Con Parallax Individual -->
       <div class="w-full flex flex-col gap-4" id="galleryGrid">
-        ${((config.photos && config.photos.gallery) || []).map((url, i) => url ? `
+        ${((config.photos && config.photos.gallery) || []).map((url, i) => url ? paperGallery ? `
+          <div class="gallery-item-wrap gallery-paper w-full relative">
+            <div class="gallery-paper-frame">
+              <div class="gallery-paper-photo">
+                <img src="${url}" alt="Foto ${i+1}" loading="eager" decoding="async"
+                  class="gallery-photo w-full h-auto block" style="display:block;width:100%;height:auto;"
+                  onload="if(typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();"/>
+              </div>
+            </div>
+          </div>
+        ` : `
           <div class="gallery-item-wrap w-full relative" style="overflow: visible;">
             <!-- Marco interior que contiene la foto sin recortar -->
             <div class="w-full relative overflow-hidden bg-black/20" style="border-radius: 0; border: 1px solid rgba(193,150,79,0.35); min-height: 220px;">
@@ -4833,6 +4859,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // El contenedor interno (overflow:hidden) sólo oculta el margen de escala, nunca la foto.
     // ─────────────────────────────────────────────────────────────────────────
     document.querySelectorAll('.gallery-item-wrap').forEach((wrap) => {
+      if (wrap.classList.contains('gallery-paper')) return;
       const photo = wrap.querySelector('.gallery-photo');
       const inner = wrap.querySelector('div');
       if (photo && inner) {

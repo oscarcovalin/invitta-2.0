@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupDressCodeControls();
   setupInstagramControls();
   setupDynamicLists();
+  setupGalleryFrameControl();
   setupFamilyStyleControls();
   setupWaxSealControls();
   setupVendorCardLogoControls();
@@ -993,6 +994,8 @@ function setupBackgroundControls() {
 
 // ==================== FORM POPULATION & BINDING ====================
 function populateForm() {
+  const galleryFrame = document.getElementById('selectGalleryFrame');
+  if (galleryFrame) galleryFrame.value = currentConfig.photos?.galleryFrame === 'torn-paper' ? 'torn-paper' : 'plain';
   const isWedding = currentConfig.eventType === 'boda';
   document.getElementById('selectEventType').value = currentConfig.eventType || 'xv';
   
@@ -2613,6 +2616,16 @@ function renderGiftStoresInputs() {
     });
 
     container.appendChild(row);
+  });
+}
+
+function setupGalleryFrameControl() {
+  const control = document.getElementById('selectGalleryFrame');
+  if (!control) return;
+  control.addEventListener('change', (e) => {
+    if (!currentConfig.photos) currentConfig.photos = {};
+    currentConfig.photos.galleryFrame = e.target.value === 'torn-paper' ? 'torn-paper' : 'plain';
+    schedulePreviewUpdate();
   });
 }
 

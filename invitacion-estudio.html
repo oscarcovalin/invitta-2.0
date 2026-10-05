@@ -760,6 +760,14 @@
               </div>
 
               <label style="margin-top:8px;">Fotos de la Galería Continua (Sin Cortes)</label>
+              <div class="form-group">
+                <label for="selectGalleryFrame">Borde de las fotos de la galería</label>
+                <select id="selectGalleryFrame">
+                  <option value="plain">Recto (original)</option>
+                  <option value="torn-paper">Papel rasgado con borde blanco</option>
+                </select>
+                <p class="help-text">Sólo afecta esta galería. Conserva las fotos originales y su proporción.</p>
+              </div>
               <div class="dynamic-list" id="galleryPhotosList"></div>
               <button type="button" class="btn btn-secondary" id="btnAddGalleryPhoto" style="width:100%; justify-content:center;">
                 <span class="material-symbols-outlined">add</span> Añadir Foto a la Galería
