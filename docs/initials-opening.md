@@ -56,3 +56,18 @@ Textos de apertura: RED por ausencia de anuncio e indicación; GREEN y
 16 px para anuncio y 12 px para indicación, misma tinta marfil. Enter conserva
 la apertura y música. Sin cambios de datos remotos ni recarga de Studio.
 Captura vigente: ta/.cache/mara-initials-text-proof.jpg. No es publicación pública.
+
+Entrega verificada: bbaad5c3 en preview/invitta-cloud-client-flow; Vercel
+dpl_7xHyvjiA8GJbrGyjwJvTrTQN3qH4 READY, alias de vista previa conservado.
+Studio cargó la revisión 7 guardada por el usuario; se seleccionó únicamente
+el estilo de apertura «Sólo iniciales, sin sello», y se guardó/publicó revisión 8.
+El enlace público muestra M / & / F, «Tenemos una noticia…» y «HAZ CLICK»;
+fondo rgb(13,21,36), texto rgb(247,246,236), tipografía LocalCustomNames.
+Prueba pública en viewport 390x844: apertura visible, clic elimina la cortina,
+audio reproduciendo sin error, foto principal y nueve imágenes de galería
+cargadas; nueve marcos de papel. Liverpool sigue en /51981370, misa 6 pm,
+recepción 7 pm; sin enlaces a Studio/portal en el documento público.
+Captura pública: ta/.cache/mara-initials-public-proof.jpg, fuera del repositorio.
+Se restableció el viewport al terminar. Sin errores capturados en el tab público;
+permanece advertencia previa de Tailwind CDN: no se afirma consola sin avisos.
+No se modificó Janna ni se añadieron fotos/audio/datos personales al Git.
