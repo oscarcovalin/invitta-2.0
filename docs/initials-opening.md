@@ -6,7 +6,8 @@ apertura interactiva. Mantenerla activada; el monograma se configura en
 `waxSeal.openingStyle = 'initials'` conserva el botón de apertura y su gesto
 para iniciar música, sin imagen/sello, frase ni nombres completos duplicados.
 Usa la familia tipográfica de los nombres y un tamaño medio de 48–64 px.
-La apertura tiene fondo de papel beige y las iniciales se apilan en vertical
+La apertura tiene fondo azul marino (#0D1524) y letras marfil (#f7f6ec).
+Las iniciales se apilan en vertical
 (M, &, F), según la referencia del cliente; no copia nombres, frases ni flechas.
 Reutiliza la textura decorativa existente, sin nuevas imágenes/dependencias.
 Sin modo nuevo, modo desconocido o apertura desactivada: comportamiento anterior.
@@ -43,4 +44,9 @@ ni se aplica sobre datos remotos mientras el usuario mantiene edición abierta.
 Revisión visual del fondo claro: RED por ausencia de líneas verticales;
 GREEN conserva botón, música, texto codificado y modo opt-in. Cuatro tamaños
 verificados nuevamente sin desbordes; fuente LocalCustomNames cargada.
-Captura local: ta/.cache/mara-initials-paper-proof.png. No es publicación pública.
+La preferencia final del cliente reemplaza el fondo beige por azul marino y
+letras marfil; mantiene posición, tipografía, tamaño, textura y gesto de apertura.
+Verificación azul/marfil: RED de paleta, GREEN y 125/125 archivos de pruebas;
+colores calculados rgb(13,21,36)/rgb(247,246,236), fuente cargada y sin
+desbordes en los cuatro tamaños. Enter sigue abriendo e iniciando música.
+Captura vigente: ta/.cache/mara-initials-blue-proof.jpg. No es publicación pública.

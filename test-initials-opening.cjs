@@ -14,10 +14,11 @@ const opening = engine.generateHTML(config, 'vino').match(/<div id="waxSealCurta
 assert.match(opening, /<button[^>]+id="btnBreakWaxSeal"/, 'Initials are a keyboard-accessible opening button');
 assert.match(opening, /class="opening-initials font-names"/, 'Initials use the invitation names font');
 assert.match(opening, /<span class="opening-initial-line">M<\/span><span class="opening-initial-line">&amp;<\/span><span class="opening-initial-line">F<\/span>/, 'Initials are stacked like the reference, without names');
-assert.match(opening, /class="opening-initials-curtain /, 'Initials opening has its own light paper background');
+assert.match(opening, /class="opening-initials-curtain /, 'Initials opening has its own background');
 assert.match(opening, /class="paper-grain-overlay opening-paper-grain" aria-hidden="true"/, 'Paper texture reuses the existing decoration');
 assert.doesNotMatch(opening, /<svg|<img|Toca el sello|Mara|Fer/, 'No seal, duplicate full names, or seal hint');
 const html = engine.generateHTML(config, 'vino');
+assert.match(html, /\.opening-initials-curtain \{ --opening-ink: #f7f6ec; background: #0D1524; \}/, 'Ivory initials on the existing navy palette');
 assert.match(html, /font-size: clamp\(3rem, 6vw, 4rem\)/, 'Medium responsive size: 48–64px');
 assert.match(html, /\.opening-initials-button:focus-visible/, 'Visible keyboard focus');
 for (const mode of [undefined, 'seal', 'unexpected']) {

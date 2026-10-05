@@ -1304,7 +1304,7 @@ tailwind.config = {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-  .opening-initials-curtain { --opening-ink: #29261f; background: radial-gradient(ellipse at 50% 35%, #f2e2c5, #e3c99e); }
+  .opening-initials-curtain { --opening-ink: #f7f6ec; background: #0D1524; }
   .opening-initials-curtain .opening-paper-grain { position: absolute; width: 100%; height: 100%; z-index: 0; opacity: 0.08; }
   .opening-initials-button { position: relative; z-index: 1; border: 0; background: transparent; padding: 1rem; max-width: 100%; color: var(--opening-ink); cursor: pointer; }
   .opening-initials-button:focus-visible { outline: 2px solid currentColor; outline-offset: 8px; }
