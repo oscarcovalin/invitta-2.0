@@ -38,9 +38,9 @@
     </div>
 
     <!-- Live Sync Status Pill -->
-    <div class="sync-indicator" id="syncStatusIndicator" title="Todos los cambios se procesan en tiempo real">
+    <div class="sync-indicator" id="syncStatusIndicator" title="La vista previa se actualiza en esta página; guardar en nube es una acción separada">
       <span class="sync-dot"></span>
-      <span id="syncStatusText">Sincronizado</span>
+      <span id="syncStatusText" role="status" aria-live="polite">Vista local</span>
     </div>
 
     <div class="header-actions">
@@ -76,7 +76,27 @@
 
       <button type="button" class="btn btn-secondary" id="btnExportJson" title="Guardar configuración (.json)">
         <span class="material-symbols-outlined">save</span>
-        Guardar
+        Descargar JSON
+      </button>
+
+      <button type="button" class="btn btn-secondary" id="btnCreateCloud" title="Crear un proyecto privado en nube a partir del diseño abierto">
+        <span class="material-symbols-outlined">add_to_drive</span>
+        Crear proyecto en nube
+      </button>
+
+      <button type="button" class="btn btn-secondary" id="btnSaveCloud" hidden title="Guardar una nueva revisión privada en nube">
+        <span class="material-symbols-outlined">cloud_upload</span>
+        Guardar en nube
+      </button>
+
+      <button type="button" class="btn btn-secondary" id="btnPreviewPublication" hidden title="Revisar los datos que quedarían públicos en la revisión guardada">
+        <span class="material-symbols-outlined">fact_check</span>
+        Revisar publicación
+      </button>
+
+      <button type="button" class="btn btn-secondary" id="btnPublishCloud" hidden title="Marcar la última revisión como publicada dentro del proyecto; no crea aún una URL pública">
+        <span class="material-symbols-outlined">publish</span>
+        Marcar publicada
       </button>
 
       <button type="button" class="btn btn-secondary" id="btnOpenNewTab" title="Ver invitación en pestaña completa">
@@ -95,6 +115,17 @@
       </button>
     </div>
   </header>
+
+  <dialog id="publicationPreviewDialog" class="publication-preview-dialog" aria-labelledby="publicationPreviewTitle">
+    <h2 id="publicationPreviewTitle">Revisión antes de publicar</h2>
+    <p>Estos datos podrían ser visibles para cualquier persona con el enlace cuando se habilite la invitación pública. Esta revisión no publica ni activa el enlace.</p>
+    <pre id="publicationPreviewSummary" class="publication-preview-summary"></pre>
+    <details>
+      <summary>Ver todos los datos permitidos</summary>
+      <pre id="publicationPreviewJson" class="publication-preview-json"></pre>
+    </details>
+    <form method="dialog"><button type="submit" class="btn btn-secondary">Cerrar</button></form>
+  </dialog>
 
   <!-- ==================== MAIN WORKSPACE ==================== -->
   <main class="app-workspace">
@@ -159,11 +190,19 @@
                 <label class="toggle-switch" for="checkWaxSealEnabled" style="margin:0;">
                   <input type="checkbox" id="checkWaxSealEnabled" checked>
                   <span class="toggle-slider"></span>
-                  <span class="toggle-label-text">👑 Sello de Cera / Lacra Interactivo</span>
+                  <span class="toggle-label-text">Apertura interactiva (sello o iniciales)</span>
                 </label>
               </div>
 
               <div id="waxSealControls" style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+                <div class="form-group">
+                  <label for="selectOpeningStyle">Estilo de apertura</label>
+                  <select id="selectOpeningStyle">
+                    <option value="seal">Sello de cera (original)</option>
+                    <option value="initials">Sólo iniciales, sin sello</option>
+                  </select>
+                  <p class="help-text">Las iniciales usan la tipografía de los nombres y un tamaño medio. Tócalas para abrir.</p>
+                </div>
                 <!-- Subir Sello Personalizado (PNG Transparente) -->
                 <div class="form-group">
                   <label for="fileWaxSeal">Sello Personalizado <span class="hint">(PNG transparente sin fondo)</span></label>
@@ -197,7 +236,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="inputMonogram">Monograma / Iniciales del Sello Superior (Opcional)</label>
+              <label for="inputMonogram">Monograma / Iniciales (apertura y encabezado)</label>
               <input type="text" id="inputMonogram" placeholder="Dejar vacío para auto: C & J o V">
             </div>
             <div class="form-group">
@@ -531,7 +570,7 @@
                 <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
                   <input type="text" id="inputCeremonyImage" placeholder="URL o sube foto de la iglesia..." style="flex:1;">
                   <label class="file-btn" style="cursor:pointer; margin:0;">
-                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileCeremonyImage" accept="image/*" style="display:none;">
+                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileCeremonyImage" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;">
                   </label>
                   <button type="button" class="btn btn-secondary btn-sm" id="btnClearCeremonyImage" title="Quitar fotografía" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
                 </div>
@@ -569,7 +608,7 @@
                 <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
                   <input type="text" id="inputReceptionImage" placeholder="URL o sube foto del salón..." style="flex:1;">
                   <label class="file-btn" style="cursor:pointer; margin:0;">
-                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileReceptionImage" accept="image/*" style="display:none;">
+                    <span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="fileReceptionImage" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;">
                   </label>
                   <button type="button" class="btn btn-secondary btn-sm" id="btnClearReceptionImage" title="Quitar fotografía" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
                 </div>
@@ -707,7 +746,7 @@
                 <label>Foto Principal (Hero Portada)</label>
                 <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
                   <input type="text" id="inputPhotoHero" placeholder="URL o sube una imagen" style="flex:1;">
-                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoHero" accept="image/*" style="display:none;"></label>
+                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoHero" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;"></label>
                   <button type="button" class="btn btn-secondary btn-sm" id="btnClearPhotoHero" title="Quitar foto de portada" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
                 </div>
               </div>
@@ -715,7 +754,7 @@
                 <label>Foto Save The Date (Fondo 2)</label>
                 <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
                   <input type="text" id="inputPhotoDate" placeholder="URL o sube una imagen" style="flex:1;">
-                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoDate" accept="image/*" style="display:none;"></label>
+                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoDate" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;"></label>
                   <button type="button" class="btn btn-secondary btn-sm" id="btnClearPhotoDate" title="Quitar foto Save The Date" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
                 </div>
               </div>
@@ -723,12 +762,20 @@
                 <label>Retrato Circular de Bienvenida</label>
                 <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
                   <input type="text" id="inputPhotoPortrait" placeholder="URL o sube una imagen" style="flex:1;">
-                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoPortrait" accept="image/*" style="display:none;"></label>
+                  <label class="file-btn" style="cursor:pointer; margin:0;"><span class="material-symbols-outlined">upload_file</span> Subir <input type="file" id="filePhotoPortrait" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;"></label>
                   <button type="button" class="btn btn-secondary btn-sm" id="btnClearPhotoPortrait" title="Quitar retrato de bienvenida" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
                 </div>
               </div>
 
               <label style="margin-top:8px;">Fotos de la Galería Continua (Sin Cortes)</label>
+              <div class="form-group">
+                <label for="selectGalleryFrame">Borde de las fotos de la galería</label>
+                <select id="selectGalleryFrame">
+                  <option value="plain">Recto (original)</option>
+                  <option value="torn-paper">Papel rasgado con borde blanco</option>
+                </select>
+                <p class="help-text">Sólo afecta esta galería. Conserva las fotos originales y su proporción.</p>
+              </div>
               <div class="dynamic-list" id="galleryPhotosList"></div>
               <button type="button" class="btn btn-secondary" id="btnAddGalleryPhoto" style="width:100%; justify-content:center;">
                 <span class="material-symbols-outlined">add</span> Añadir Foto a la Galería
@@ -1170,6 +1217,11 @@
                   <label for="inputStardustSubtitle">Insignia / Subtítulo</label>
                   <input type="text" id="inputStardustSubtitle" placeholder="Momento Mágico">
                 </div>
+              </div>
+              <div class="form-group">
+                <label for="inputStardustOverlayTitle">Título al encender la luz</label>
+                <input type="text" id="inputStardustOverlayTitle" maxlength="140" placeholder="Vacío: título automático según el evento" aria-describedby="stardustOverlayTitleHelp">
+                <p id="stardustOverlayTitleHelp" class="text-muted" style="font-size:11px; margin-top:5px;">Se muestra en la pantalla de estrellas. Déjalo vacío para conservar el título automático.</p>
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -1864,7 +1916,7 @@
                 <div class="input-file-wrapper" style="display:flex; gap:6px; align-items:center;">
                   <input type="url" id="inputMusicUrl" placeholder="URL de audio .mp3" style="flex:1;">
                   <label class="file-btn" style="cursor:pointer; margin:0;">
-                    <span class="material-symbols-outlined">upload_file</span> Subir MP3 <input type="file" id="fileMusicAudio" accept="audio/*" style="display:none;">
+                    <span class="material-symbols-outlined">upload_file</span> Subir MP3 (máx. 3.3 MB) <input type="file" id="fileMusicAudio" accept="audio/mpeg,.mp3,.mpeg" style="display:none;">
                   </label>
                   <button type="button" class="btn btn-secondary btn-sm" id="btnClearMusicAudio" title="Quitar archivo de audio" style="padding:6px 10px; display:inline-flex; align-items:center; justify-content:center; height:36px;"><span class="material-symbols-outlined" style="font-size:16px;">close</span></button>
                 </div>
@@ -2013,9 +2065,9 @@
         🎨
       </div>
       <div>
-        <h2 style="font-family:'Cinzel',serif; color:#f3e5ab; font-size:20px; font-weight:700; margin:0 0 8px 0;">Diseño Protegido por tu Diseñador</h2>
+        <h2 style="font-family:'Cinzel',serif; color:#f3e5ab; font-size:20px; font-weight:700; margin:0 0 8px 0;">Edición local y acceso en nube</h2>
         <p style="color:#a8a8b3; font-size:13px; line-height:1.6; margin:0;">
-          La maquetación visual, tipografías y efectos de tu invitación están resguardados por el estudio para garantizar la máxima calidad <strong>Haute-Couture</strong>.
+          Puedes explorar y editar una vista local. Para guardar cambios en nube necesitas una sesión válida y permisos sobre el proyecto.
         </p>
       </div>
       <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:14px; width:100%; text-align:left; font-size:12px; color:#d4cfc7;">
@@ -2030,13 +2082,13 @@
           <span>👁️</span> Ver Invitación
         </a>
       </div>
-      <!-- Acciones de desbloqueo para el Diseñador/Admin -->
+      <!-- La verificación de sesión no sustituye los permisos del proyecto en el servidor. -->
       <div style="margin-top:4px; display:flex; flex-direction:column; gap:8px; width:100%;">
         <button type="button" onclick="unlockDesignerMode()" style="background:rgba(212,175,55,0.12); border:1px dashed rgba(212,175,55,0.5); color:#f3e5ab; border-radius:12px; padding:11px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; transition:all 0.2s;">
-          <span>⚡</span> Soy el Diseñador / Administrador (Desbloquear Estudio)
+          <span>⚡</span> Verificar sesión para edición en nube
         </button>
         <button type="button" onclick="closeHostProtectedModal()" style="background:none; border:none; color:#71717a; font-size:11px; cursor:pointer; text-decoration:underline;">
-          Omitir y explorar interfaz de edición
+          Explorar diseño local sin guardar en nube
         </button>
       </div>
     </div>
@@ -2044,10 +2096,12 @@
 
    <!-- Scripts -->
   <script src="event-vault-manager.js"></script>
-  <script src="role-manager.js"></script>
   <script src="decor-assets.js"></script>
   <script src="projects-vault.js"></script>
   <script src="template-engine.js"></script>
+  <script src="invitation-document-adapter.js"></script>
+  <script src="project-asset-client.js"></script>
+  <script src="src/portal-cloud-projects.js"></script>
   <script src="app.js"></script>
   <script>
     window.closeHostProtectedModal = function() {
@@ -2055,45 +2109,27 @@
       if (protectModal) protectModal.style.display = 'none';
     };
 
-    window.unlockDesignerMode = function() {
-      const rm = window.RoleManager ? window.RoleManager.create() : null;
-      if (rm) {
-        rm.setPersistedRole(rm.ROLES.PLANNER);
-      } else {
-        try { localStorage.setItem('invitta_active_role_v2', 'planner'); } catch(e){}
-      }
-      closeHostProtectedModal();
-      if (typeof showToast === 'function') {
-        showToast('✨ Modo Diseñador / Planner Activado. Estudio desbloqueado.');
+    window.unlockDesignerMode = async function() {
+      try {
+        const response = await fetch('/api/session', { cache: 'no-store', credentials: 'same-origin' });
+        const result = await response.json();
+        if (!response.ok || result.authenticated !== true) throw new Error('Sesión no válida.');
+        window.closeHostProtectedModal();
+        if (typeof showToast === 'function') showToast('Sesión verificada. El proyecto comprobará tus permisos al guardar.');
+      } catch (_) {
+        if (typeof showToast === 'function') showToast('Inicia sesión para guardar cambios en nube.');
       }
     };
 
-    (function() {
-      // Si la URL especifica explícitamente diseñador o planner, o edit=true, desbloquear de inmediato
-      const params = new URLSearchParams(window.location.search);
-      const urlRole = params.get('role');
-      const isEditMode = params.get('edit') === 'true' || params.get('unlock') === 'true';
-      if (urlRole === 'designer' || urlRole === 'planner' || isEditMode) {
-        try {
-          localStorage.setItem('invitta_active_role_v2', urlRole || 'planner');
-        } catch(e){}
-        return;
-      }
-
-      const rm = window.RoleManager ? window.RoleManager.create() : null;
-      if (!rm) return;
-
-      const role = rm.currentRole;
-      if (role === rm.ROLES.HOST_PREMIUM || role === rm.ROLES.HOST_BASIC) {
-        const protectModal = document.getElementById('hostProtectedDesignModal');
-        if (protectModal) protectModal.style.display = 'flex';
-      }
-
-      if (role === rm.ROLES.DESIGNER) {
-        const adminLinks = document.getElementById('adminNavigationLinks');
-        const badge = document.getElementById('designerRoleBadge');
-        if (adminLinks) adminLinks.style.display = 'none';
-        if (badge) badge.style.display = 'inline-flex';
+    (async function() {
+      const protectModal = document.getElementById('hostProtectedDesignModal');
+      if (protectModal) protectModal.style.display = 'flex';
+      try {
+        const response = await fetch('/api/session', { cache: 'no-store', credentials: 'same-origin' });
+        const result = await response.json();
+        if (response.ok && result.authenticated === true) window.closeHostProtectedModal();
+      } catch (_) {
+        // Sin sesión verificable, sólo permanece disponible la edición local.
       }
     })();
   </script>

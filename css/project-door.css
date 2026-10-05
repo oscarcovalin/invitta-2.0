@@ -1,0 +1,14 @@
+:root{--ink:#242928;--muted:#596562;--accent:#377061;--line:#e5e0d8;--surface:#faf8f5;--error:#82372b}
+*{box-sizing:border-box}body{margin:0;background:var(--surface);color:var(--ink);font:1rem/1.5 system-ui,sans-serif}
+main{max-width:64rem;margin:auto;padding:1.5rem}header,nav,.actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+h1,h2{font-family:Georgia,serif;line-height:1.25}h1{font-size:2.25rem}h2{font-size:1.5rem}p{margin:.75rem 0}
+.workspace{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem}section{background:white;border:1px solid var(--line);border-radius:.75rem;padding:1.5rem;min-width:0}
+label{display:block;margin:.75rem 0;font-weight:500}input,select,textarea{display:block;width:100%;margin-top:.25rem;padding:.75rem;border:1px solid var(--line);border-radius:.5rem;color:var(--ink);background:var(--surface);font:inherit}
+input[type=checkbox]{display:inline;width:auto;margin-right:.5rem}button,a{display:inline-block;min-height:2.75rem;padding:.625rem 1rem;border:1px solid var(--accent);border-radius:.5rem;color:var(--accent);background:white;font:inherit;cursor:pointer;text-decoration:none}
+button[type=submit]{background:var(--accent);color:white}button:disabled{opacity:.6;cursor:not-allowed}fieldset{border:0;padding:0;margin:0;min-width:0}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}
+[role=status]{padding:1rem;margin:1rem 0;border-left:.25rem solid var(--accent);background:#ebf5f2}
+[data-kind=error]{color:var(--error);border-color:var(--error);background:#fff1ee}small,.muted{color:var(--muted)}
+textarea{min-height:6rem;overflow-wrap:anywhere}.ticket{margin-top:1rem;overflow-wrap:anywhere}.ticket img,.ticket canvas{max-width:100%;height:auto}.ticket canvas{display:block!important}.ticket img{display:none!important}
+video{width:100%;max-height:24rem;background:#242928}#scan-canvas{display:none}.balance{font-size:1.25rem;font-weight:600}.public-pass{max-width:36rem}
+@media(max-width:767px){main{padding:1rem}.workspace{grid-template-columns:1fr}section{padding:1rem}h1{font-size:1.75rem}}

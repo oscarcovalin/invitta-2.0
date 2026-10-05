@@ -28,7 +28,8 @@ assert(studioHtml.includes('btnExportHtml'), 'Contains export HTML button');
 // 2. Check portal.html contains link to invitacion-estudio.html
 const portalHtml = fs.readFileSync(path.join(__dirname, 'portal.html'), 'utf8');
 assert(portalHtml.includes('invitacion-estudio.html'), 'portal.html links to invitacion-estudio.html');
-assert(portalHtml.includes('Estudio de Invitación Digital'), 'portal.html contains original studio card');
+assert(portalHtml.includes('Nuevo Cliente / Invitación'), 'portal.html exposes the cloud client invitation flow');
+assert(!portalHtml.includes('role=designer'), 'Studio links do not imply URL-based designer access');
 
 // 3. Check portal.html contains link to invitacion-estudio.html
 const indexHtml = fs.readFileSync(path.join(__dirname, 'portal.html'), 'utf8');
@@ -39,8 +40,10 @@ const liveHtml = fs.readFileSync(path.join(__dirname, 'invitacion.html'), 'utf8'
 assert(liveHtml.includes('Catalina & Julián') || liveHtml.includes('Nuestra Boda'), 'invitacion.html contains full wedding invitation content');
 assert(liveHtml.includes('id="vipBanner"'), 'invitacion.html includes VIP banner personalization');
 assert(liveHtml.includes('id="itinerario"'), 'invitacion.html includes full itinerary program');
-assert(indexHtml.includes('href="invitacion.html"'), 'portal.html links to invitacion.html for Ver Invitación Real');
-assert(portalHtml.includes('href="invitacion.html"'), 'portal.html links to invitacion.html for Invitación Real');
+assert(indexHtml.includes('href="invitacion-boda.html"'), 'portal.html links to the wedding demo');
+assert(portalHtml.includes('href="invitacion-xv.html"'), 'portal.html links to the XV demo');
+assert(portalHtml.includes('invitacion-estudio.html?project=${encodeURIComponent(e.id)}'),
+  'portal.html opens the selected cloud project in Studio 2.0');
 
 // 5. Test GuestManager with custom invitation config
 const manager = new GuestManager();

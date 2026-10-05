@@ -6,11 +6,11 @@ const crypto = require('crypto');
 
 console.log('=== TEST 1: FILE EXISTENCE & SYNTAX ===');
 const requiredFiles = [
-  'api/payment-config.js',
-  'api/checkout.js',
-  'api/webhooks/mercadopago.js',
-  'api/webhooks/stripe.js',
-  'api/webhooks/clip.js',
+  'api-handlers/payment-config.cjs',
+  'api-handlers/checkout.cjs',
+  'api-handlers/webhooks/mercadopago.cjs',
+  'api-handlers/webhooks/stripe.cjs',
+  'api-handlers/webhooks/clip.cjs',
   'pago-exitoso.html',
   'pago-pendiente.html',
   'package.json'
@@ -23,7 +23,7 @@ requiredFiles.forEach(f => {
 });
 
 console.log('\n=== TEST 2: PAYMENT CONFIG ENDPOINT ===');
-const paymentConfigHandler = require('./api/payment-config.js');
+const paymentConfigHandler = require('./api-handlers/payment-config.cjs');
 let configResult = null;
 const mockRes = {
   setHeader: () => {},
@@ -46,7 +46,7 @@ console.log('- Has WhatsApp fallback:', !!(configResult && configResult.whatsapp
 console.log('- Has plans catalog:', !!(configResult && configResult.plans && configResult.plans.basico));
 
 console.log('\n=== TEST 3: CHECKOUT ENDPOINT FALLBACK & VALIDATION ===');
-const checkoutHandler = require('./api/checkout.js');
+const checkoutHandler = require('./api-handlers/checkout.cjs');
 let checkoutResult = null;
 const mockResCheckout = {
   setHeader: () => {},
@@ -79,7 +79,7 @@ console.log('- Checkout fallback triggered:', checkoutResult && checkoutResult.f
 console.log('- Fallback URL contains WhatsApp:', checkoutResult && checkoutResult.url && checkoutResult.url.includes('wa.me'));
 
 console.log('\n=== TEST 4: MERCADO PAGO WEBHOOK CRYPTOGRAPHIC VALIDATION ===');
-const mpWebhookHandler = require('./api/webhooks/mercadopago.js');
+const mpWebhookHandler = require('./api-handlers/webhooks/mercadopago.cjs');
 process.env.MERCADOPAGO_WEBHOOK_SECRET = 'test_secret_key_12345';
 
 let webhookStatus = null;
@@ -165,7 +165,7 @@ console.log('- Clip checkout fallback triggered:', clipCheckoutResult && clipChe
 console.log('- Clip fallback URL contains WhatsApp:', clipCheckoutResult && clipCheckoutResult.url && clipCheckoutResult.url.includes('wa.me'));
 
 // Test Clip Webhook
-const clipWebhookHandler = require('./api/webhooks/clip.js');
+const clipWebhookHandler = require('./api-handlers/webhooks/clip.cjs');
 let clipWebhookStatus = null;
 let clipWebhookData = null;
 const mockResClipWebhook = {

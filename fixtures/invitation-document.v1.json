@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "projectId": "20000000-0000-4000-8000-000000000001",
+  "revision": 1,
+  "event": {
+    "type": "wedding",
+    "startsAt": "2026-12-18T18:00:00-06:00",
+    "timeZone": "America/Mexico_City",
+    "durationMinutes": 360
+  },
+  "content": {
+    "title": "Catalina & Julián",
+    "hosts": ["Catalina", "Julián"],
+    "welcomeMessage": "Tenemos el honor de invitarte.",
+    "itinerary": [
+      { "time": "18:00", "label": "Ceremonia Religiosa" },
+      { "time": "20:00", "label": "Recepción" }
+    ]
+  },
+  "design": {
+    "theme": "vino",
+    "nameConnector": "&"
+  },
+  "sections": [
+    { "id": "hero", "enabled": true },
+    { "id": "countdown", "enabled": true },
+    { "id": "itinerary", "enabled": true },
+    { "id": "rsvp", "enabled": true }
+  ],
+  "assets": {
+    "hero": {
+      "storagePath": "20000000-0000-4000-8000-000000000001/hero/30000000-0000-4000-8000-000000000001.webp",
+      "alt": "Catalina y Julián",
+      "mimeType": "image/webp"
+    }
+  }
+}

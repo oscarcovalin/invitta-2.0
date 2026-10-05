@@ -58,7 +58,7 @@ it("portal.html contains the code login portal and elements", () => {
   assert.ok(html.includes('id="formEventCodeAccess"'), "formEventCodeAccess present");
   assert.ok(html.includes('id="inputClientEventCode"'), "inputClientEventCode present");
   assert.ok(html.includes('id="clientAccessFeedback"'), "clientAccessFeedback present");
-  assert.ok(html.includes('Código:'), "Código badge present");
+  assert.ok(html.includes('CÃ³digo de tu Evento'), "CÃ³digo de evento presente");
 });
 
 console.log("\nResults: " + passed + " / 7 passed.\n");

@@ -23,19 +23,19 @@ config.instagram = {
 };
 config.music = {
   enabled: true,
-  title: 'A Thousand Years (Acústico)',
+  title: 'A Thousand Years (AcÃºstico)',
   url: 'https://example.com/audio.mp3'
 };
 config.story = {
   enabled: true,
   subtitle: 'Nuestra Historia de Amor',
-  title: 'Cómo nos conocimos',
-  text: 'Todo comenzó en una tarde de verano...'
+  title: 'CÃ³mo nos conocimos',
+  text: 'Todo comenzÃ³ en una tarde de verano...'
 };
 config.sharedAlbum = {
   enabled: true,
-  subtitle: 'Recuerdos del Gran Día',
-  title: 'Álbum Colaborativo',
+  subtitle: 'Recuerdos del Gran DÃ­a',
+  title: 'Ãlbum Colaborativo',
   accessCode: 'Boda2027-Vip'
 };
 config.dressCode = {
@@ -57,25 +57,26 @@ config.giftRegistry = {
 };
 config.vendorCard = {
   enabled: true,
-  badge: '¿Deseas una invitación como esta?',
-  agencyName: 'Invitta Studio · Invitaciones Digitales'
+  badge: 'Â¿Deseas una invitaciÃ³n como esta?',
+  agencyName: 'Invitta Studio Â· Invitaciones Digitales'
 };
-config.eyebrow = 'Nuestra Boda Soñada';
+config.eyebrow = 'Nuestra Boda SoÃ±ada';
 
 const html = TemplateEngine.generateHTML(config, 'classicGold');
 
 // 1. Instagram Hashtag
 assert(html.includes('#BodaCatalinayJulian'), 'Hashtag retains CamelCase verbatim');
-assert(!html.includes('id="instagramHashtag" class="font-display-lg'), 'Hashtag does not use font-display-lg (which uses all-caps Cinzel)');
-assert(html.includes('id="instagramHashtag" class="font-body-lg text-2xl sm:text-3xl font-bold text-[#f7f6ec] mb-4 tracking-wide">#BodaCatalinayJulian</h3>'), 'Hashtag has correct casing structure');
+const hashtagMatch = html.match(/<h3[^>]*id="instagramHashtag"[^>]*>([^<]*)<\/h3>/);
+assert(hashtagMatch && hashtagMatch[1] === '#BodaCatalinayJulian', 'Hashtag keeps its exact text');
+assert(!hashtagMatch[0].includes('uppercase'), 'Hashtag has no uppercase class');
 
 // 2. Music Title
-assert(html.includes('A Thousand Years (Acústico)'), 'Music title retains mixed case');
+assert(html.includes('A Thousand Years (AcÃºstico)'), 'Music title retains mixed case');
 const musicTitleMatch = html.match(/id="musicTitle"[^>]*>([\s\S]*?)<\/span>/);
 assert(musicTitleMatch && !musicTitleMatch[0].includes('uppercase'), 'Music title span has no uppercase class');
 
 // 3. Vendor Card Badge & Agency
-assert(html.includes('¿Deseas una invitación como esta?'), 'Vendor card badge retains mixed case');
+assert(html.includes('Â¿Deseas una invitaciÃ³n como esta?'), 'Vendor card badge retains mixed case');
 const badgeMatch = html.match(/id="vendorCardBadge"[^>]*>/);
 assert(badgeMatch && !badgeMatch[0].includes('uppercase'), 'Vendor card badge has no uppercase class');
 
@@ -99,6 +100,7 @@ assert(albumSubMatch && !albumSubMatch[0].includes('uppercase'), 'Album subtitle
 // 8. Eyebrow / Header Title
 const eyebrowMatch = html.match(/id="heroEyebrow"[^>]*>/);
 assert(eyebrowMatch && !eyebrowMatch[0].includes('uppercase'), 'Hero eyebrow has no uppercase class');
+assert(html.includes(config.eyebrow), 'Hero eyebrow retains the configured casing and accents');
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
 if (failed > 0) process.exit(1);

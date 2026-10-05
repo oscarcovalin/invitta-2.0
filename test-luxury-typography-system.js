@@ -24,13 +24,13 @@ assert(html.includes('"script-accent": ["var(--font-script)", "\'Parisienne\'", 
 // 3. ESCALA HERO NAMES (Serif, 44-56px, Light/Regular, NUNCA BOLD)
 const brideNameMatch = html.match(/<h1[^>]*id="heroBrideName"[^>]*>/);
 assert(brideNameMatch, 'heroBrideName exists');
-assert(brideNameMatch[0].includes('font-display-lg'), 'Hero bride name uses font-display-lg (Serif)');
+assert(brideNameMatch[0].includes('font-names') && brideNameMatch[0].includes('var(--font-names'), 'Hero bride name uses the configurable names font');
 assert(brideNameMatch[0].includes('font-light'), 'Hero bride name uses font-light');
 assert(!brideNameMatch[0].includes('font-bold'), 'Hero bride name is NEVER bold');
 
 const groomNameMatch = html.match(/<h1[^>]*id="heroGroomName"[^>]*>/);
 assert(groomNameMatch, 'heroGroomName exists');
-assert(groomNameMatch[0].includes('font-display-lg'), 'Hero groom name uses font-display-lg (Serif)');
+assert(groomNameMatch[0].includes('font-names') && groomNameMatch[0].includes('var(--font-names'), 'Hero groom name uses the configurable names font');
 assert(groomNameMatch[0].includes('font-light'), 'Hero groom name uses font-light');
 assert(!groomNameMatch[0].includes('font-bold'), 'Hero groom name is NEVER bold');
 
@@ -47,11 +47,11 @@ assert(dateDayMatch, 'heroDateDay exists');
 assert(dateDayMatch[0].includes('font-display-lg'), 'Date day number uses font-display-lg');
 assert(dateDayMatch[0].includes('font-light'), 'Date day number uses font-light');
 
-// 6. LABELS & EYEBROWS (Sans 11-14px Medium MAYÚSCULAS tracking +2 a +3px)
+// 6. LABELS & EYEBROWS (Sans 11-14px Medium; preserve the author's casing)
 const eyebrowMatch = html.match(/<p[^>]*id="heroEyebrow"[^>]*>/);
 assert(eyebrowMatch, 'heroEyebrow exists');
 assert(eyebrowMatch[0].includes('font-label-caps'), 'Eyebrow uses font-label-caps (Inter)');
-assert(eyebrowMatch[0].includes('uppercase'), 'Eyebrow is uppercase');
+assert(!eyebrowMatch[0].includes('uppercase'), 'Eyebrow preserves the configured text casing');
 assert(eyebrowMatch[0].includes('font-medium'), 'Eyebrow uses font-medium');
 
 // 7. CUERPO EDITORIAL / NARRATIVA (Serif Cormorant Garamond 17-19px Light)
@@ -63,13 +63,15 @@ assert(welcomeMsgMatch[0].includes('font-light'), 'Welcome message uses font-lig
 // 8. BOTONES / CTA (Sans 11-12px Medium MAYÚSCULAS tracking +3px)
 const rsvpSubmitMatch = html.match(/<button[^>]*id="rsvpSubmit"[^>]*>/);
 assert(rsvpSubmitMatch, 'rsvpSubmit exists');
-assert(rsvpSubmitMatch[0].includes('uppercase'), 'RSVP submit button is uppercase');
-assert(rsvpSubmitMatch[0].includes('tracking-'), 'RSVP submit button has tracking');
+assert(rsvpSubmitMatch[0].includes('btn-rsvp-submit-clean'), 'RSVP submit button uses its dedicated style');
+assert(/\.btn-rsvp-submit-clean\s*\{[^}]*text-transform:\s*uppercase/.test(html), 'RSVP submit style is uppercase');
+assert(/\.btn-rsvp-submit-clean\s*\{[^}]*letter-spacing:\s*0\.2em/.test(html), 'RSVP submit style has tracking');
 
-// 9. PALETA CÁLIDA PAPEL/CREMA Y ONYX
-assert(html.includes('--champagne: #FAF8F5'), 'Champagne variable is warm paper cream #FAF8F5');
-assert(html.includes('--onyx: #1E1E1E'), 'Onyx variable is deep charcoal #1E1E1E');
-assert(html.includes('--gold: #A38047'), 'Gold variable is satin antique gold #A38047');
+// 9. PALETA ACTIVA VINO
+const vino = TemplateEngine.defaultThemes.vino;
+assert(html.includes(`--champagne: ${vino.cream}`), 'Champagne variable uses the selected theme cream');
+assert(html.includes(`--onyx: ${vino['ink-900']}`), 'Onyx variable uses the selected theme ink');
+assert(html.includes(`--gold: ${vino['gold-500']}`), 'Gold variable uses the selected theme gold');
 
 // 10. SIN GLOW O SOMBRAS PESADAS EN HERO
 assert(!brideNameMatch[0].includes('drop-shadow-'), 'Hero bride name has no artificial drop-shadow');

@@ -1,18 +1,11 @@
 
 let currentProjectId = null;
-(function initVaultProject() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
-  if (projId && typeof ProjectsVault !== 'undefined') {
-    const proj = ProjectsVault.getById(projId);
-    if (proj && proj.config) {
-      currentConfig = JSON.parse(JSON.stringify(proj.config));
-      currentProjectId = proj.id;
-      if (proj.theme) currentTheme = proj.theme;
-      console.log('📦 Loaded project from vault:', proj.title);
-    }
-  }
-})();
+let requestedCloudProjectId = null;
+let loadedCloudRevision = null;
+let cloudLoadError = false;
+let savedCloudDocumentId = null;
+let cloudDirty = false;
+let savedCloudConfig = null;
 
 /**
  * Lógica principal del Dashboard Generador de Invitaciones de Lujo (XV Años & Bodas)
@@ -25,8 +18,73 @@ let customTheme = JSON.parse(JSON.stringify(TemplateEngine.defaultThemes.vino));
 let debounceTimer = null;
 let currentVipUrl = "";
 
+async function loadCloudProject() {
+  if (!requestedCloudProjectId) return;
+  const status = document.getElementById('syncStatusText');
+  if (status) status.textContent = 'Cargando proyecto...';
+  try {
+    const response = await fetch(`/api/projects/latest-revision?projectId=${encodeURIComponent(requestedCloudProjectId)}`);
+    const result = await response.json();
+    if (response.status === 404) {
+      const projectResponse = await fetch(`/api/projects/get?projectId=${encodeURIComponent(requestedCloudProjectId)}`);
+      const projectResult = await projectResponse.json();
+      if (!projectResponse.ok || !projectResult.project || projectResult.project.id !== requestedCloudProjectId) {
+        throw new Error('El proyecto no está disponible para esta cuenta.');
+      }
+      currentProjectId = requestedCloudProjectId;
+      loadedCloudRevision = null;
+      savedCloudDocumentId = null;
+      cloudDirty = true;
+      savedCloudConfig = null;
+      if (status) status.textContent = 'Proyecto sin revisiones · guarda la primera versión';
+      return;
+    }
+    const savedDocument = result && result.revision && result.revision.document;
+    if (!response.ok || !savedDocument || savedDocument.projectId !== requestedCloudProjectId) {
+      throw new Error('La revisión no está disponible para esta cuenta.');
+    }
+    if (!window.InvitationDocumentAdapter) throw new Error('El adaptador de invitaciones no está disponible.');
+    currentConfig = window.ProjectAssetClient.toDisplayConfig(
+      window.InvitationDocumentAdapter.toLegacyTemplateConfig(savedDocument)
+    );
+    currentProjectId = requestedCloudProjectId;
+    loadedCloudRevision = result.revision.revision;
+    savedCloudDocumentId = result.revision.id || null;
+    cloudDirty = false;
+    savedCloudConfig = JSON.stringify(currentConfig);
+    currentThemeName = currentConfig.theme || 'vino';
+    customTheme = JSON.parse(JSON.stringify(TemplateEngine.defaultThemes[currentThemeName] || TemplateEngine.defaultThemes.vino));
+    if (status) status.textContent = `Revisión ${result.revision.revision} cargada`;
+  } catch (error) {
+    cloudLoadError = true;
+    if (status) status.textContent = 'Sin acceso a la revisión en nube';
+    showToast(error.message || 'No fue posible cargar el proyecto.');
+  }
+}
+
+(function initVaultProject() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const projId = urlParams.get('project') || urlParams.get('proj') || urlParams.get('id');
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(projId || '')) {
+    requestedCloudProjectId = projId;
+    currentProjectId = projId;
+  }
+  if (projId && !requestedCloudProjectId && typeof ProjectsVault !== 'undefined') {
+    const proj = ProjectsVault.getById(projId);
+    if (proj && proj.config) {
+      currentConfig = JSON.parse(JSON.stringify(proj.config));
+      currentProjectId = proj.id;
+      if (proj.theme) currentThemeName = proj.theme;
+      console.log('📦 Loaded project from vault:', proj.title);
+    }
+  }
+  if (projId && window.InvittaProjectPortal) {
+    window.InvittaProjectPortal.applyInitialDraft(currentConfig, projId);
+  }
+})();
+
 // ==================== INICIALIZACIÓN ====================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   setupAccordion();
   setupDeviceSwitcher();
   setupThemePicker();
@@ -40,13 +98,18 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDressCodeControls();
   setupInstagramControls();
   setupDynamicLists();
+  setupGalleryFrameControl();
   setupFamilyStyleControls();
   setupWaxSealControls();
+  setupOpeningStyleControl();
   setupVendorCardLogoControls();
   setupFileUploads();
   setupHeaderActions();
+  setupCloudActions();
+  setupProjectCreationAction();
   setupInputListeners();
 
+  await loadCloudProject();
   populateForm();
   updatePreview(true);
 });
@@ -932,6 +995,8 @@ function setupBackgroundControls() {
 
 // ==================== FORM POPULATION & BINDING ====================
 function populateForm() {
+  const galleryFrame = document.getElementById('selectGalleryFrame');
+  if (galleryFrame) galleryFrame.value = currentConfig.photos?.galleryFrame === 'torn-paper' ? 'torn-paper' : 'plain';
   const isWedding = currentConfig.eventType === 'boda';
   document.getElementById('selectEventType').value = currentConfig.eventType || 'xv';
   
@@ -974,6 +1039,8 @@ function populateForm() {
 
   // Sincronizar Sello de Cera
   const ws = currentConfig.waxSeal || { enabled: true, preset: 'gold', promptText: 'Toca el sello para abrir', customImage: '' };
+  const openingStyle = document.getElementById('selectOpeningStyle');
+  if (openingStyle) openingStyle.value = ws.openingStyle === 'initials' ? 'initials' : 'seal';
   const chkWax = document.getElementById('checkWaxSealEnabled');
   const selWax = document.getElementById('selectWaxSealPreset');
   const inWaxPrompt = document.getElementById('inputWaxSealPrompt');
@@ -1290,12 +1357,14 @@ function populateForm() {
 
   // Ubicaciones
   document.getElementById('inputCeremonyVenue').value = currentConfig.ceremony.venue || '';
+  document.getElementById('inputCeremonyImage').value = currentConfig.ceremony.image || '';
   document.getElementById('inputCeremonyAddress').value = currentConfig.ceremony.address || '';
   document.getElementById('inputCeremonyTime').value = currentConfig.ceremony.time || '';
   document.getElementById('inputCeremonyMap').value = currentConfig.ceremony.mapsUrl || '';
   document.getElementById('inputCeremonyWaze').value = currentConfig.ceremony.wazeUrl || '';
 
   document.getElementById('inputReceptionVenue').value = currentConfig.reception.venue || '';
+  document.getElementById('inputReceptionImage').value = currentConfig.reception.image || '';
   document.getElementById('inputReceptionAddress').value = currentConfig.reception.address || '';
   document.getElementById('inputReceptionTime').value = currentConfig.reception.time || '';
   document.getElementById('inputReceptionMap').value = currentConfig.reception.mapsUrl || '';
@@ -1304,11 +1373,13 @@ function populateForm() {
   // Polvo de Estrellas
   const stardust = currentConfig.stardust || TemplateEngine.defaultConfig.stardust || {};
   const inSdTitle = document.getElementById('inputStardustTitle');
+  const inSdOverlayTitle = document.getElementById('inputStardustOverlayTitle');
   const inSdSub = document.getElementById('inputStardustSubtitle');
   const inSdTime = document.getElementById('inputStardustTime');
   const inSdBtn = document.getElementById('inputStardustBtnText');
   const inSdText = document.getElementById('inputStardustText');
   if (inSdTitle) inSdTitle.value = stardust.title || 'Polvo de Estrellas';
+  if (inSdOverlayTitle) inSdOverlayTitle.value = typeof stardust.overlayTitle === 'string' ? stardust.overlayTitle : '';
   if (inSdSub) inSdSub.value = stardust.subtitle || 'Momento Mágico';
   if (inSdTime) inSdTime.value = stardust.time || '21:30 HRS';
   if (inSdBtn) inSdBtn.value = stardust.buttonText || '✨ Encender mi Luz';
@@ -1618,16 +1689,19 @@ function setupInputListeners() {
     { id: 'inputGodmother', path: 'godmother' },
     { id: 'inputGodfather', path: 'godfather' },
     { id: 'inputCeremonyVenue', path: 'ceremony.venue' },
+    { id: 'inputCeremonyImage', path: 'ceremony.image' },
     { id: 'inputCeremonyAddress', path: 'ceremony.address' },
     { id: 'inputCeremonyTime', path: 'ceremony.time' },
     { id: 'inputCeremonyMap', path: 'ceremony.mapsUrl' },
     { id: 'inputCeremonyWaze', path: 'ceremony.wazeUrl' },
     { id: 'inputReceptionVenue', path: 'reception.venue' },
+    { id: 'inputReceptionImage', path: 'reception.image' },
     { id: 'inputReceptionAddress', path: 'reception.address' },
     { id: 'inputReceptionTime', path: 'reception.time' },
     { id: 'inputReceptionMap', path: 'reception.mapsUrl' },
     { id: 'inputReceptionWaze', path: 'reception.wazeUrl' },
     { id: 'inputStardustTitle', path: 'stardust.title' },
+    { id: 'inputStardustOverlayTitle', path: 'stardust.overlayTitle' },
     { id: 'inputStardustSubtitle', path: 'stardust.subtitle' },
     { id: 'inputStardustTime', path: 'stardust.time' },
     { id: 'inputStardustBtnText', path: 'stardust.buttonText' },
@@ -1775,13 +1849,30 @@ function setupInputListeners() {
     fileAudio.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
+        const isMp3 = file.type === 'audio/mpeg' || /\.mp3$/i.test(file.name) || /\.mpeg$/i.test(file.name);
+        if (!isMp3) {
+          fileAudio.value = '';
+          return showToast('La música debe ser un archivo MP3.');
+        }
+        if (file.size > window.ProjectAssetClient.MAX_AUDIO_BYTES) {
+          fileAudio.value = '';
+          return showToast('La canción excede el límite de 3.3 MB.');
+        }
         const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/[_]/g, " ").trim();
         const reader = new FileReader();
         reader.onload = (re) => {
+          const dataUrl = typeof re.target.result === 'string' ? re.target.result : '';
+          const separator = dataUrl.indexOf(',');
+          const base64 = separator >= 0 ? dataUrl.slice(separator + 1) : '';
+          if (!base64) {
+            fileAudio.value = '';
+            return showToast('No se pudo leer la canción. Intenta seleccionar el MP3 otra vez.');
+          }
+          const musicDataUrl = `data:audio/mpeg;base64,${base64}`;
           if (!currentConfig.music) currentConfig.music = {};
-          currentConfig.music.url = re.target.result;
+          currentConfig.music.url = musicDataUrl;
           currentConfig.music.title = cleanTitle;
-          if (inputMusicUrl) inputMusicUrl.value = re.target.result;
+          if (inputMusicUrl) inputMusicUrl.value = musicDataUrl;
           const inTitle = document.getElementById('inputMusicTitle');
           if (inTitle) inTitle.value = cleanTitle;
           schedulePreviewUpdate();
@@ -2531,6 +2622,16 @@ function renderGiftStoresInputs() {
   });
 }
 
+function setupGalleryFrameControl() {
+  const control = document.getElementById('selectGalleryFrame');
+  if (!control) return;
+  control.addEventListener('change', (e) => {
+    if (!currentConfig.photos) currentConfig.photos = {};
+    currentConfig.photos.galleryFrame = e.target.value === 'torn-paper' ? 'torn-paper' : 'plain';
+    schedulePreviewUpdate();
+  });
+}
+
 function renderGalleryPhotosInputs() {
   const container = document.getElementById('galleryPhotosList');
   container.innerHTML = '';
@@ -2585,7 +2686,9 @@ function setupFileUploads() {
   const map = [
     { fileId: 'filePhotoHero', inputId: 'inputPhotoHero', clearBtnId: 'btnClearPhotoHero', path: 'photos.hero', name: 'Foto de portada' },
     { fileId: 'filePhotoDate', inputId: 'inputPhotoDate', clearBtnId: 'btnClearPhotoDate', path: 'photos.saveTheDate', name: 'Foto Save The Date' },
-    { fileId: 'filePhotoPortrait', inputId: 'inputPhotoPortrait', clearBtnId: 'btnClearPhotoPortrait', path: 'photos.portrait', name: 'Retrato de bienvenida' }
+    { fileId: 'filePhotoPortrait', inputId: 'inputPhotoPortrait', clearBtnId: 'btnClearPhotoPortrait', path: 'photos.portrait', name: 'Retrato de bienvenida' },
+    { fileId: 'fileCeremonyImage', inputId: 'inputCeremonyImage', clearBtnId: 'btnClearCeremonyImage', path: 'ceremony.image', name: 'Foto de ceremonia' },
+    { fileId: 'fileReceptionImage', inputId: 'inputReceptionImage', clearBtnId: 'btnClearReceptionImage', path: 'reception.image', name: 'Foto de recepción' }
   ];
 
   map.forEach(({ fileId, inputId, clearBtnId, path, name }) => {
@@ -2597,6 +2700,12 @@ function setupFileUploads() {
       fileEl.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
+          if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)
+              || !Number.isFinite(file.size) || file.size < 1 || file.size > 3 * 1024 * 1024) {
+            fileEl.value = '';
+            showToast('Usa una foto JPG, PNG, WebP o GIF de hasta 3 MB.');
+            return;
+          }
           const reader = new FileReader();
           reader.onload = (re) => {
             inputEl.value = re.target.result;
@@ -2623,8 +2732,9 @@ function setupFileUploads() {
 
 // ==================== PREVIEW GENERATOR ====================
 function schedulePreviewUpdate() {
+  if (requestedCloudProjectId) cloudDirty = true;
   const syncText = document.getElementById('syncStatusText');
-  if (syncText) syncText.textContent = 'Sincronizando...';
+  if (syncText && !cloudLoadError) syncText.textContent = 'Actualizando vista...';
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
     updatePreview(false);
@@ -2637,7 +2747,186 @@ function updatePreview(forced = false) {
   const html = TemplateEngine.generateHTML(currentConfig, currentThemeName, customTheme, decorAssets);
   iframe.srcdoc = html;
   const syncText = document.getElementById('syncStatusText');
-  if (syncText) syncText.textContent = 'Sincronizado';
+  if (syncText && !cloudLoadError) {
+    syncText.textContent = loadedCloudRevision
+      ? `Vista actualizada · revisión ${loadedCloudRevision}${cloudDirty ? ' · cambios sin guardar' : ' guardada'}`
+      : 'Vista actualizada · sin guardar en nube';
+  }
+}
+
+function setupCloudActions() {
+  const saveButton = document.getElementById('btnSaveCloud');
+  const previewButton = document.getElementById('btnPreviewPublication');
+  const publishButton = document.getElementById('btnPublishCloud');
+  if (!requestedCloudProjectId || !saveButton || !publishButton) return;
+  saveButton.hidden = false;
+  if (previewButton) previewButton.hidden = false;
+  publishButton.hidden = false;
+
+  if (previewButton) previewButton.addEventListener('click', async () => {
+    if (cloudLoadError || !savedCloudDocumentId || cloudDirty || JSON.stringify(currentConfig) !== savedCloudConfig) {
+      return showToast('Guarda primero los cambios en nube para revisar la publicación.');
+    }
+    previewButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/publication-preview', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ projectId: requestedCloudProjectId, documentId: savedCloudDocumentId })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.preview || !result.preview.artifact) {
+        if (Array.isArray(result.fields) && result.fields.length) {
+          const names = {
+            'content.title': 'Título', 'content.primaryName': 'Primer nombre', 'content.secondaryName': 'Segundo nombre',
+            'event.startsAt': 'Fecha del evento', 'dateLabels.long': 'Fecha escrita', 'dateLabels.short': 'Fecha abreviada',
+            'story.title': 'Título de historia', 'story.subtitle': 'Subtítulo de historia', 'story.text': 'Texto de historia',
+            'giftRegistry.bank.holder': 'Titular bancario', 'giftRegistry.bank.clabe': 'CLABE',
+            whatsappNumber: 'WhatsApp', 'sharedAlbum.accessCode': 'Código de álbum'
+          };
+          const labels = result.fields.map(field => names[field]
+            || (field.startsWith('whatsappHosts[') ? 'Teléfono de anfitrión' : null)
+            || (field.startsWith('lodging.hotels[') ? 'Código de hotel' : null)
+            || 'Otro dato');
+          const reason = result.code === 'PUBLICATION_DATE_MISMATCH'
+            ? 'Estas fechas no coinciden con la fecha del evento'
+            : 'Corrige estos datos de ejemplo';
+          throw new Error(`${reason}: ${labels.join(', ')}.`);
+        }
+        throw new Error(result.error || 'No se pudo preparar la revisión.');
+      }
+      const artifact = result.preview.artifact;
+      const publicContent = artifact.content || {};
+      const venues = publicContent.details || {};
+      const bank = publicContent.giftRegistry && publicContent.giftRegistry.bank || {};
+      const lines = [
+        `Revisión ${result.preview.revision}`,
+        `Título: ${publicContent.content && publicContent.content.title || 'Sin título'}`,
+        `Fecha: ${publicContent.dateLabels && publicContent.dateLabels.long || publicContent.event && publicContent.event.startsAt || 'Sin fecha'}`,
+        venues.ceremony && venues.ceremony.venue ? `Ceremonia: ${venues.ceremony.venue}` : '',
+        venues.reception && venues.reception.venue ? `Recepción: ${venues.reception.venue}` : '',
+        bank.clabe ? `Cuenta bancaria: ${bank.bankName || ''} · ${bank.holder || ''} · ${bank.clabe}` : '',
+        publicContent.whatsappNumber ? `WhatsApp: ${publicContent.whatsappNumber}` : '',
+        ...(publicContent.whatsappHosts || []).filter(host => host.phone).map(host => `Contacto: ${host.label || 'Anfitrión'} · ${host.phone}`),
+        ...(publicContent.lodging && publicContent.lodging.hotels || []).filter(hotel => hotel.code).map(hotel => `Hotel: ${hotel.name || ''} · código ${hotel.code}`),
+        publicContent.sharedAlbum && publicContent.sharedAlbum.accessCode ? `Código de álbum: ${publicContent.sharedAlbum.accessCode}` : '',
+        `Imágenes: ${(artifact.imageFields || []).length}`
+      ].filter(Boolean);
+      document.getElementById('publicationPreviewSummary').textContent = lines.join('\n');
+      document.getElementById('publicationPreviewJson').textContent = JSON.stringify(artifact, null, 2);
+      document.getElementById('publicationPreviewDialog').showModal();
+    } catch (error) {
+      showToast(error.message || 'No se pudo preparar la revisión.');
+    } finally {
+      previewButton.disabled = false;
+    }
+  });
+
+  saveButton.addEventListener('click', async () => {
+    if (cloudLoadError) return showToast('No se puede guardar: primero resuelve el acceso al proyecto.');
+    const configAtSave = JSON.stringify(currentConfig);
+    saveButton.disabled = true;
+    try {
+      const storedConfig = await window.ProjectAssetClient.toStoredConfig(currentConfig, {
+        projectId: requestedCloudProjectId,
+        importRemote: window.ProjectAssetClient.importRemoteImage,
+        upload: async (asset) => {
+          const uploadResponse = await fetch('/api/projects/upload-asset', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+            body: JSON.stringify(asset)
+          });
+          const uploadResult = await uploadResponse.json();
+          if (!uploadResponse.ok || !uploadResult.asset) throw new Error(uploadResult.error || 'No se pudo subir la imagen.');
+          return uploadResult.asset;
+        }
+      });
+      const { document: invitation, pendingAssets } = window.InvitationDocumentAdapter.fromLegacyTemplateConfig(
+        storedConfig, { projectId: requestedCloudProjectId, revision: (loadedCloudRevision || 0) + 1 }
+      );
+      if (pendingAssets.length) throw new Error('Quedan archivos sin migrar; no se guardó una revisión incompleta.');
+      const response = await fetch('/api/projects/save-revision', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ document: invitation, expectedRevision: loadedCloudRevision || 0 })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.revision || !result.revision.id) throw new Error(result.error || 'No se pudo guardar.');
+      loadedCloudRevision = result.revision.revision;
+      savedCloudDocumentId = result.revision.id;
+      const savedDisplayConfig = window.ProjectAssetClient.toDisplayConfig(storedConfig);
+      if (JSON.stringify(currentConfig) === configAtSave) {
+        currentConfig = savedDisplayConfig;
+        populateForm();
+      }
+      savedCloudConfig = JSON.stringify(savedDisplayConfig);
+      cloudDirty = JSON.stringify(currentConfig) !== savedCloudConfig;
+      updatePreview(false);
+      showToast(`Revisión ${loadedCloudRevision} guardada en nube.`);
+    } catch (error) {
+      showToast(error.message || 'No se pudo guardar en nube.');
+    } finally {
+      saveButton.disabled = false;
+    }
+  });
+
+  publishButton.addEventListener('click', async () => {
+    if (cloudLoadError || !savedCloudDocumentId || cloudDirty || JSON.stringify(currentConfig) !== savedCloudConfig) {
+      return showToast('Guarda primero los cambios en nube antes de publicar.');
+    }
+    publishButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/publish-revision', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ projectId: requestedCloudProjectId, documentId: savedCloudDocumentId })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.project) throw new Error(result.error || 'No se pudo publicar.');
+      showToast(`Revisión ${loadedCloudRevision} marcada como publicada. La entrega pública requiere un paso adicional.`);
+    } catch (error) {
+      showToast(error.message || 'No se pudo publicar.');
+    } finally {
+      publishButton.disabled = false;
+    }
+  });
+}
+
+function setupProjectCreationAction() {
+  const createButton = document.getElementById('btnCreateCloud');
+  if (!createButton) return;
+  createButton.hidden = Boolean(requestedCloudProjectId);
+  createButton.addEventListener('click', async () => {
+    if (requestedCloudProjectId) return;
+    createButton.disabled = true;
+    try {
+      const response = await fetch('/api/projects/create', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({
+          name: currentConfig.name || 'Nueva invitación',
+          eventType: currentConfig.eventType === 'boda' ? 'wedding'
+            : currentConfig.eventType === 'xv' ? 'quinceanera' : 'other'
+        })
+      });
+      const result = await response.json();
+      const projectId = result.project && result.project.id;
+      if (!response.ok || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(projectId || '')) {
+        throw new Error(result.error || 'No fue posible crear el proyecto.');
+      }
+      requestedCloudProjectId = projectId;
+      currentProjectId = projectId;
+      loadedCloudRevision = null;
+      savedCloudDocumentId = null;
+      savedCloudConfig = null;
+      cloudDirty = true;
+      window.history.replaceState(null, '', `invitacion-estudio.html?project=${encodeURIComponent(projectId)}`);
+      createButton.hidden = true;
+      setupCloudActions();
+      const status = document.getElementById('syncStatusText');
+      if (status) status.textContent = 'Proyecto creado · guarda la primera revisión';
+      showToast('Proyecto privado creado. Guarda la primera revisión en nube.');
+    } catch (error) {
+      showToast(error.message || 'No fue posible crear el proyecto.');
+    } finally {
+      createButton.disabled = false;
+    }
+  });
 }
 
 // ==================== HEADER ACTIONS & EXPORT ====================
@@ -2769,6 +3058,16 @@ window.addEventListener('message', (event) => {
 
 
 // ==================== WAX SEAL CONTROLS ====================
+function setupOpeningStyleControl() {
+  const control = document.getElementById('selectOpeningStyle');
+  if (!control) return;
+  control.addEventListener('change', (e) => {
+    if (!currentConfig.waxSeal) currentConfig.waxSeal = {};
+    currentConfig.waxSeal.openingStyle = e.target.value === 'initials' ? 'initials' : 'seal';
+    schedulePreviewUpdate();
+  });
+}
+
 function setupWaxSealControls() {
   const checkEnabled = document.getElementById('checkWaxSealEnabled');
   const controlsDiv = document.getElementById('waxSealControls');

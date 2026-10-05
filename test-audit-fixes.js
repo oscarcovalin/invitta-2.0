@@ -2,6 +2,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 // Mock localStorage and window for testing environment if needed
 if (typeof window === 'undefined') {
@@ -124,6 +125,7 @@ test('backup-manager CORE_FILES includes guest-manager.js and essential componen
 // 6. Test backup-manager sanitizes labels against command injection
 test('backup-manager safely handles special characters in snapshot labels', () => {
   const bm = new BackupManager();
+  const headBefore = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
   // Safe label test with quotes, semicolons, dollar signs
   const specialLabel = 'test "label"; echo injection $(calc)';
   const snapshot = bm.createSnapshot(specialLabel);
@@ -131,6 +133,8 @@ test('backup-manager safely handles special characters in snapshot labels', () =
   assert(snapshot.id, 'Snapshot should have an ID');
   assert(!snapshot.id.includes(';'), 'Snapshot ID should be sanitized');
   assert(!snapshot.id.includes('"'), 'Snapshot ID should not contain quotes');
+  const headAfter = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  assert.strictEqual(headAfter, headBefore, 'Creating a file snapshot must not commit or tag Git by default');
 });
 
 console.log(`\nResults: ${passed} passed, ${failed} failed.\n`);
