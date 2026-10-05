@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const engine = require('./template-engine.js');
 const { getShareMetadata, renderSharePage, createPublicSharePreviewHandler } = require('./lib/public-share-preview-handler.cjs');
 
 const slug = 'p-a769a84d-ca84-4dad-a1bd-6e35ac66ea21';
@@ -30,8 +31,24 @@ function response() {
   assert.match(html, /<meta name="twitter:card" content="summary_large_image">/);
   assert.match(html, /<script src="\/public-rsvp-bridge\.js"><\/script>/);
   assert.match(html, /InvittaPublicRsvpBridge\.attach\(frame, slug\)/);
-  assert.match(html, /sandbox="allow-scripts allow-forms allow-popups allow-downloads"/);
+  const sandbox = html.match(/<iframe id="invitation"[^>]*sandbox="([^"]+)"/)[1].split(' ');
+  assert.ok(sandbox.includes('allow-popups-to-escape-sandbox'),
+    'External registry tabs must not inherit the invitation sandbox.');
+  assert.deepEqual(sandbox, [
+    'allow-scripts', 'allow-forms', 'allow-popups',
+    'allow-popups-to-escape-sandbox', 'allow-downloads',
+  ]);
+  assert.ok(!sandbox.includes('allow-same-origin'));
+  assert.ok(!sandbox.some((permission) => permission.startsWith('allow-top-navigation')));
   assert.doesNotMatch(html, /allow-same-origin|portal\.html|invitacion-estudio\.html/);
+  const registryConfig = structuredClone(engine.defaultConfig);
+  registryConfig.giftRegistry.enabled = true;
+  registryConfig.giftRegistry.stores = [{
+    name: 'Liverpool', url: 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/51981370',
+  }];
+  assert.match(engine.generateHTML(registryConfig, 'vino'),
+    /href="https:\/\/mesaderegalos\.liverpool\.com\.mx\/milistaderegalos\/51981370" target="_blank" rel="noopener noreferrer"/,
+    'The external registry must retain opener and referrer isolation.');
   assert.doesNotMatch(renderSharePage({ slug, origin: 'https://invitta.example', review: {
     presentation: { ...review.presentation, photos: { hero: 'https://attacker.example/preview.jpg' } },
   } }), /attacker\.example/);
